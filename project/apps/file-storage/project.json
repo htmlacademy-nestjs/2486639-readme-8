@@ -1,7 +1,7 @@
 {
   "name": "file-storage",
-  "$schema": "../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "file-storage/src",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/file-storage/src",
   "projectType": "application",
   "tags": [],
   "targets": {

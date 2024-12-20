@@ -3,7 +3,7 @@ const { join } = require('path');
 
 module.exports = {
   output: {
-    path: join(__dirname, '../dist/file-storage'),
+    path: join(__dirname, '../../dist/apps/file-storage'),
   },
   plugins: [
     new NxAppWebpackPlugin({

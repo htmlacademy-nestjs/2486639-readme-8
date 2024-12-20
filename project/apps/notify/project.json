@@ -1,7 +1,7 @@
 {
   "name": "notify",
-  "$schema": "../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "notify/src",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/notify/src",
   "projectType": "application",
   "tags": [],
   "targets": {

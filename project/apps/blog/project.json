@@ -1,7 +1,7 @@
 {
   "name": "blog",
-  "$schema": "../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "blog/src",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/blog/src",
   "projectType": "application",
   "tags": [],
   "targets": {
