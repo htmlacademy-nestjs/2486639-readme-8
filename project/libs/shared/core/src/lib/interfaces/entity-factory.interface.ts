@@ -1,6 +1,5 @@
-import { ReturnTypeToPOJOFunction } from '../types/return-to-pojo.type';
 import { StorableEntity } from './storable-entity.interface';
 
-export interface EntityFactory<T extends StorableEntity<T>> {
-  create(entityPlainData: ReturnTypeToPOJOFunction<T>): T;
+export interface EntityFactory<T extends StorableEntity<ReturnType<T['toPOJO']>>> {
+  create(entityPlainData: ReturnType<T['toPOJO']>): T;
 }

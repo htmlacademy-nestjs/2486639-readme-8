@@ -2,4 +2,6 @@
   1. интерфейсы для публикаций - сделать отдельные или излишние поля...
 
 Заметки:
-  1. Проверить будет ли работать ReturnTypeToPOJOFunction
+  1. как же выводить подтипы ....
+    не сработало export type ReturnTypeToPOJOFunction<T extends StorableEntity<T>> = ReturnType<T['toPOJO']>;
+    а как T['id']
