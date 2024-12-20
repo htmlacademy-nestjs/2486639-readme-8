@@ -3,3 +3,4 @@
 
 Заметки:
   1. Проверить будет ли работать ReturnTypeToPOJOFunction
+  2. пока пусто project\libs\shared\types\src
