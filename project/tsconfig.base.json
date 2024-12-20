@@ -17,8 +17,7 @@
     "paths": {
       "@project/shared/core": ["libs/shared/core/src/index.ts"],
       "@project/shared/data-access": ["libs/shared/data-access/src/index.ts"],
-      "@project/shared/helpers": ["libs/shared/helpers/src/index.ts"],
-      "@project/shared/types": ["libs/shared/types/src/index.ts"]
+      "@project/shared/helpers": ["libs/shared/helpers/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
