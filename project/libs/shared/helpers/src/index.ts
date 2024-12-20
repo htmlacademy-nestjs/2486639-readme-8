@@ -1,1 +1,1 @@
-//re-export
+export * from './lib/common';
