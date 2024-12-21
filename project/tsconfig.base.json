@@ -19,6 +19,15 @@
         "libs/account/authentication/src/index.ts"
       ],
       "@project/account/blog-user": ["libs/account/blog-user/src/index.ts"],
+      "@project/blog/blog-band": ["libs/blog/blog-band/src/index.ts"],
+      "@project/blog/blog-post": ["libs/blog/blog-post/src/index.ts"],
+      "@project/blog/blog-post-comment": [
+        "libs/blog/blog-post-comment/src/index.ts"
+      ],
+      "@project/blog/blog-post-like": ["libs/blog/blog-post-like/src/index.ts"],
+      "@project/blog/blog-subscription": [
+        "libs/blog/blog-subscription/src/index.ts"
+      ],
       "@project/shared/core": ["libs/shared/core/src/index.ts"],
       "@project/shared/data-access": ["libs/shared/data-access/src/index.ts"],
       "@project/shared/helpers": ["libs/shared/helpers/src/index.ts"]
