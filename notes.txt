@@ -8,6 +8,7 @@
     public async login(@Body() dto: LoginUserDto)
     public async show(@Param('id') id: string)
   5. нужен ли logout?
+  6. Swagger, как задать описание примеров и схем
 
 Заметки:
   1. как же выводить подтипы ....
