@@ -1,0 +1,18 @@
+# Create a new post
+POST http://localhost:3000/api/post HTTP/1.1
+Content-Type: application/json
+
+{
+  "type": "video",
+  "tags": [],
+  "data": {
+    "123456"
+  }
+}
+
+###
+
+# Get post by ID
+GET http://localhost:3000/api/post/2f31b19b-97eb-4305-877a-0b9be7faca8f HTTP/1.1
+
+###
