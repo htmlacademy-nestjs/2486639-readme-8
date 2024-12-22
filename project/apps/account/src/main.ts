@@ -21,7 +21,6 @@ async function bootstrap() {
     .setTitle('Account API')
     .setDescription('The Account API description')
     .setVersion('1.0')
-    .addTag('account')
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, documentBuilder);
 

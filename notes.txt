@@ -3,7 +3,7 @@
   2. проверка ДТО будет потом?
        "login22": "Keks1asdasdasdasdasdasdasdasdasddsadasd11"
   3. "npx nx run account:serve" игнорировать правки в "*.http" добавил файл .nxignore с содержимым "["*.http"]"  - не сработало, а стало совсем не перезапускать при прапвках на *.ts
-  4. при регистрации, входе, получении данных... отдает хеш пароля passwordHash - убрать? позже будет применен UserRdo?
+  4. при регистрации, входе, получении данных... отдает хеш пароля passwordHash - убрать? позже будет применен UserRdo? не отработывает fillDto, если попробовать преобразовать, то ошибка
     public async create(@Body() dto: CreateUserDto)
     public async login(@Body() dto: LoginUserDto)
     public async show(@Param('id') id: string)
@@ -12,6 +12,7 @@
   7. /api/auth/register саму функциональнность добавления перенести в пользователя?
   8. /api/auth/:id перенести в пользователя /api/user/:id ?
   9. смена пароля?
+  10. после регитсрации возвращаю - type: UserRdo, как при getById... дге описано что возвратить... только id или весь объект?
 
 Заметки:
   1. как же выводить подтипы ....
