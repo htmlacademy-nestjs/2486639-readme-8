@@ -14,6 +14,8 @@ async function bootstrap() {
   const globalPrefix = 'api';
   const port = process.env.PORT || 3000;
 
+  app.setGlobalPrefix(globalPrefix);
+
   //Swagger
   const documentBuilder = new DocumentBuilder()
     .setTitle('Account API')
@@ -23,10 +25,9 @@ async function bootstrap() {
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, documentBuilder);
 
-  SwaggerModule.setup(globalPrefix, app, documentFactory);
+  SwaggerModule.setup('spec', app, documentFactory);
   //
 
-  app.setGlobalPrefix(globalPrefix);
   await app.listen(port);
   Logger.log(`🚀 Application is running on: http://localhost:${port}/${globalPrefix}`);
 }
