@@ -28,7 +28,7 @@ export class AuthenticationService {
       throw new ConflictException(AuthenticationUserMessage.Exists);
     }
 
-    const userEntity = await new BlogUserEntity(blogUser).setPassword(password)
+    const userEntity = await new BlogUserEntity(blogUser).setPassword(password);
 
     this.blogUserRepository.save(userEntity);
 
