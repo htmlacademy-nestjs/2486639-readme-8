@@ -13,9 +13,17 @@ export const AuthenticationApiProperty = {
       description: 'The user login',
       example: 'login'
     },
+    Password: {
+      description: 'The user password',
+      example: 'password'
+    },
     AvatarPath: {
       description: 'The user avatar path',
       example: '/img/avatar.jpg'
+    },
+    AccessToken: {
+      description: 'The user access JWT token',
+      example: 'asdasdsdfetyhetyhythgfnghnlkcsdkfajowfjlsdkmcv'
     }
   }
 } as const;
