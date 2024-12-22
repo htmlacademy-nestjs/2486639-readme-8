@@ -18,8 +18,8 @@ async function bootstrap() {
 
   //Swagger
   const documentBuilder = new DocumentBuilder()
-    .setTitle('Account API')
-    .setDescription('The Account API description')
+    .setTitle('Blog API')
+    .setDescription('The Blog API description')
     .setVersion('1.0')
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, documentBuilder);
