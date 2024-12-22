@@ -1,6 +1,6 @@
 import { HttpStatus } from "@nestjs/common";
 
-import { AuthenticationApiProperty } from "./authentication.constant.rdo";
+import { AuthenticationApiProperty } from "./authentication.constant.property";
 import { UserRdo } from "./rdo/user.rdo";
 import { LoggedUserRdo } from "./rdo/logged-user.rdo";
 
