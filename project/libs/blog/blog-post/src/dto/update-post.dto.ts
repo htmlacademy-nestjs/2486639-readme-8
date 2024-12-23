@@ -4,7 +4,8 @@ import { PostData, PostType } from "@project/shared/core";
 
 import { BlogPostApiProperty } from "../blog-post.constant.property";
 
-export class CreatePostDto {
+export class UpdatePostDto {
+  //@IsOptional()  //! ?
   @ApiProperty(BlogPostApiProperty.Post.Type)
   public type: PostType;
 

@@ -22,6 +22,8 @@
         { $ref: getSchemaPath(Class2) },
       ],
     потом не собирает схемы CLass1 и Class2
+  11. UpdatePostDto - @IsOptional() ??
+  12. уьрать лишнее звено BlogPostApiProperty.Post. -> BlogPostApiProperty и AuthenticationApiProperty.User -> BlogUserApiProperty
 
 
 Заметки:
