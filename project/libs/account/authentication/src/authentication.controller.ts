@@ -4,7 +4,7 @@ import { ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthenticationService } from './authentication.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
-import { AuthenticationApiParam, AuthenticationApiResponse, USER_ID_NAME } from './authentication.constant';
+import { UserIdApiParam, AuthenticationApiResponse } from './authentication.constant';
 
 @ApiTags('authentication')
 @Controller('auth')
@@ -33,9 +33,9 @@ export class AuthenticationController {
 
   @ApiResponse(AuthenticationApiResponse.UserFound)
   @ApiResponse(AuthenticationApiResponse.UserNotFound)
-  @ApiParam(AuthenticationApiParam.UserId)
-  @Get(`:${USER_ID_NAME}`)
-  public async show(@Param(USER_ID_NAME) userId: string) {
+  @ApiParam(UserIdApiParam)
+  @Get(`:${UserIdApiParam.name}`)
+  public async show(@Param(UserIdApiParam.name) userId: string) {
     const existUser = await this.authService.getUser(userId);
 
     return existUser.toPOJO();

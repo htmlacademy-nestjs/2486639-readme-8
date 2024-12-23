@@ -3,22 +3,22 @@ import { Expose } from 'class-transformer';
 
 import { PostData, PostType } from '@project/shared/core';
 
-import { BlogPostApiProperty } from '../blog-post.constant.property';
+import { PostApiProperty } from '../blog-post.constant.property';
 
 export class PostRdo {
-  @ApiProperty(BlogPostApiProperty.Post.Id)
+  @ApiProperty(PostApiProperty.Id)
   @Expose()
   public id: string;
 
-  @ApiProperty(BlogPostApiProperty.Post.Type)
+  @ApiProperty(PostApiProperty.Type)
   @Expose()
   public type: PostType;
 
-  @ApiProperty(BlogPostApiProperty.Post.Tags)
+  @ApiProperty(PostApiProperty.Tags)
   @Expose()
   public tags: string[];
 
-  @ApiProperty(BlogPostApiProperty.Post.Data)
+  @ApiProperty(PostApiProperty.Data)
   @Expose()
   public data: PostData;
 }

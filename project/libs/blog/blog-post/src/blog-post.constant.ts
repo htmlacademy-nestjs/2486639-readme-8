@@ -1,19 +1,15 @@
 import { HttpStatus } from "@nestjs/common";
 
-import { BlogPostApiProperty } from "./blog-post.constant.property";
+import { PostApiProperty } from "./blog-post.constant.property";
 import { PostRdo } from "./rdo/post.rdo";
 
 export const BlogPostMessage = {
   NotFound: 'Post not found'
 } as const;
 
-export const POST_ID_NAME = 'postId';
-
-export const BlogPostApiParam = {
-  PostId: {
-    name: POST_ID_NAME,
-    schema: BlogPostApiProperty.Post.Id
-  }
+export const PostIdApiParam = {
+  name: 'postId',
+  schema: PostApiProperty.Id
 } as const;
 
 export const BlogPostApiResponse = {

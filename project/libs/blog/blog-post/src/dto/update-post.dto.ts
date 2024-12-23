@@ -2,16 +2,16 @@ import { ApiProperty } from "@nestjs/swagger";
 
 import { PostData, PostType } from "@project/shared/core";
 
-import { BlogPostApiProperty } from "../blog-post.constant.property";
+import { PostApiProperty } from "../blog-post.constant.property";
 
 export class UpdatePostDto {
   //@IsOptional()  //! ?
-  @ApiProperty(BlogPostApiProperty.Post.Type)
+  @ApiProperty(PostApiProperty.Type)
   public type: PostType;
 
-  @ApiProperty(BlogPostApiProperty.Post.Tags)
+  @ApiProperty(PostApiProperty.Tags)
   public tags: string[];
 
-  @ApiProperty(BlogPostApiProperty.Post.Data)
+  @ApiProperty(PostApiProperty.Data)
   public data: PostData;
 }
