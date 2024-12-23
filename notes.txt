@@ -1,0 +1,31 @@
+Вопросы:
+  1. интерфейсы для публикаций - сделать отдельные или излишние поля...
+  2. проверка ДТО будет потом?
+       "login22": "Keks1asdasdasdasdasdasdasdasdasddsadasd11"
+  3. "npx nx run account:serve" игнорировать правки в "*.http" добавил файл .nxignore с содержимым "["*.http"]"  - не сработало,
+        а стало совсем не перезапускать при прапвках на *.ts
+  4. при регистрации, входе, получении данных... отдает хеш пароля passwordHash - убрать?
+        позже будет применен UserRdo?
+        не отработывает fillDto, если попробовать преобразовать, то ошибка....
+    public async create(@Body() dto: CreateUserDto)
+    public async login(@Body() dto: LoginUserDto)
+    public async show(@Param('id') id: string)
+  5. нужен ли logout?
+  6. /api/auth/register саму функциональнность добавления перенести в пользователя?
+  7. /api/auth/:id перенести в пользователя /api/user/:id ?
+  8. смена пароля?
+  9. после регитсрации возвращаю - type: UserRdo, как при getById... где описано что отдать... только id или весь объект?
+  10. Swagger Body type Class1|Class2 не получилось... может не весь класс а поле data выделить в ApiProperty?
+    https://docs.nestjs.com/openapi/types-and-parameters
+      oneOf: [
+        { $ref: getSchemaPath(Class1) },
+        { $ref: getSchemaPath(Class2) },
+      ],
+    потом не собирает схемы CLass1 и Class2
+  11. UpdatePostDto - @IsOptional() ??
+
+
+Заметки:
+  1. как же выводить подтипы ....
+    не сработало export type ReturnTypeToPOJOFunction<T extends StorableEntity<T>> = ReturnType<T['toPOJO']>;
+    а как T['id']

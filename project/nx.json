@@ -37,10 +37,10 @@
       },
       "exclude": [
         "apps/account-e2e/**/*",
-        "api-e2e/**/*",
-        "blog-e2e/**/*",
-        "notify-e2e/**/*",
-        "file-storage-e2e/**/*"
+        "apps/api-e2e/**/*",
+        "apps/blog-e2e/**/*",
+        "apps/notify-e2e/**/*",
+        "apps/file-storage-e2e/**/*"
       ]
     }
   ]

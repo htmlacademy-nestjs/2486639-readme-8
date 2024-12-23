@@ -1,0 +1,28 @@
+# Create a new user
+POST http://localhost:3000/api/auth/register HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "user@local.local",
+  "login": "Keks",
+  "login22": "Keks1asdasdasdasdasdasdasdasdasddsadasd11",
+  "password": "123456"
+}
+
+###
+
+# Get user by ID
+GET http://localhost:3000/api/auth/2f31b19b-97eb-4305-877a-0b9be7faca8f HTTP/1.1
+
+###
+
+# Login user by email and password
+POST http://localhost:3000/api/auth/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "user@local.local",
+  "password": "123456"
+}
+
+###
