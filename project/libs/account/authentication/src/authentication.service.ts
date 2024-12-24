@@ -19,7 +19,7 @@ export class AuthenticationService {
     // Извлекаем настройки из конфигурации
     console.log(mongoConfig.KEY);
     console.log(databaseConfig.host);
-    console.log(databaseConfig.user);
+    console.log(databaseConfig.username);
   }
 
   public async register(dto: CreateUserDto): Promise<BlogUserEntity> {

@@ -1,10 +1,7 @@
 import { registerAs } from '@nestjs/config';
 import Joi from 'joi';
 
-const DEFAULT_PORT = 3000;
-const ENVIRONMENTS = ['development', 'production', 'stage'] as const;
-
-type Environment = typeof ENVIRONMENTS[number];
+import { ConfigAlias, DEFAULT_PORT, Environment, ENVIRONMENTS } from './const';
 
 export interface ApplicationConfig {
   environment: string;
@@ -36,4 +33,4 @@ function getConfig(): ApplicationConfig {
   return config;
 }
 
-export const applicationConfig = registerAs('application', getConfig);
+export const applicationConfig = registerAs(ConfigAlias.Application, getConfig);

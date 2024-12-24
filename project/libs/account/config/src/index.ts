@@ -1,3 +1,4 @@
+export { ConfigAlias as AccountConfigAlias } from './configurations/const';
 export { AccountConfigModule } from './account-config.module';
 export { applicationConfig } from './configurations/app.config';
 export { mongoConfig } from './configurations/mongo.config';

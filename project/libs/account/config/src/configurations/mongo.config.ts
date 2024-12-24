@@ -2,8 +2,8 @@ import { ConfigType, registerAs } from '@nestjs/config';
 import { plainToClass } from 'class-transformer';
 
 import { MongoConfiguration } from './mongodb/mongo.env';
-
-const DEFAULT_MONGO_PORT = 27017;
+import { DEFAULT_MONGO_PORT } from './mongodb/mongo.const';
+import { ConfigAlias } from './const';
 
 export interface MongoConfig {
   host: string;
@@ -16,12 +16,12 @@ export interface MongoConfig {
 
 async function getDbConfig(): Promise<MongoConfiguration> {
   const config = plainToClass(MongoConfiguration, {
-    host: process.env.MONGO_HOST,
-    name: process.env.MONGO_DB,
-    port: process.env.MONGO_PORT ? parseInt(process.env.MONGO_PORT, 10) : DEFAULT_MONGO_PORT,
-    user: process.env.MONGO_USER,
+    username: process.env.MONGO_USER,
     password: process.env.MONGO_PASSWORD,
-    authBase: process.env.MONGO_AUTH_BASE
+    host: process.env.MONGO_HOST,
+    port: process.env.MONGO_PORT ? parseInt(process.env.MONGO_PORT, 10) : DEFAULT_MONGO_PORT,
+    authBase: process.env.MONGO_AUTH_BASE,
+    databaseName: process.env.MONGO_DB
   });
 
   await config.validate();
@@ -29,6 +29,6 @@ async function getDbConfig(): Promise<MongoConfiguration> {
   return config;
 }
 
-export const mongoConfig = registerAs('db', async (): Promise<ConfigType<typeof getDbConfig>> => {
+export const mongoConfig = registerAs(ConfigAlias.MongoDb, async (): Promise<ConfigType<typeof getDbConfig>> => {
   return getDbConfig();
 });
