@@ -6,14 +6,14 @@ import { mongoDbConfig } from './configurations/mongo-db.config';
 
 const ENV_ACCOUNT_FILE_PATH = 'apps/account/account.dev.env';
 
+const configModuleOptions = {
+  isGlobal: true,
+  cache: true,
+  load: [applicationConfig, mongoDbConfig],
+  envFilePath: ENV_ACCOUNT_FILE_PATH
+}
+
 @Module({
-  imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      cache: true,
-      load: [applicationConfig, mongoDbConfig],
-      envFilePath: ENV_ACCOUNT_FILE_PATH
-    })
-  ]
+  imports: [ConfigModule.forRoot(configModuleOptions)]
 })
 export class AccountConfigModule { }
