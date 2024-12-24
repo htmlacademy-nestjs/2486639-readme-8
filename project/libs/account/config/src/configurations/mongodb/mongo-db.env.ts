@@ -1,7 +1,7 @@
 import { IsNumber, IsOptional, IsString, Max, Min, validateOrReject } from 'class-validator';
 
-import { EnvValidationMessage } from './mongo.messages';
-import { MIN_PORT, MAX_PORT, DEFAULT_MONGODB_PORT } from './mongo.const';
+import { EnvValidationMessage } from './mongo-db.messages';
+import { MIN_PORT, MAX_PORT, DEFAULT_MONGODB_PORT } from './mongo-db.const';
 
 export class MongoConfiguration {
   @IsString({ message: EnvValidationMessage.DBUserRequired })
