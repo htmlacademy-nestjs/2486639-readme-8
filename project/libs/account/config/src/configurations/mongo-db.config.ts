@@ -1,7 +1,7 @@
 import { ConfigType, registerAs } from '@nestjs/config';
 import { plainToClass } from 'class-transformer';
 
-import { MongoConfiguration } from './mongodb/mongo-db.env';
+import { MongoDbConfiguration } from './mongodb/mongo-db.env';
 import { DEFAULT_MONGODB_PORT } from './mongodb/mongo-db.const';
 import { ConfigAlias } from './const';
 
@@ -14,8 +14,8 @@ export interface MongoDbConfig {
   authBase: string;
 }
 
-async function getMongoDbConfig(): Promise<MongoConfiguration> {
-  const config = plainToClass(MongoConfiguration, {
+async function getMongoDbConfig(): Promise<MongoDbConfiguration> {
+  const config = plainToClass(MongoDbConfiguration, {
     username: process.env.MONGO_USER,
     password: process.env.MONGO_PASSWORD,
     host: process.env.MONGO_HOST,

@@ -3,7 +3,7 @@ import { IsNumber, IsOptional, IsString, Max, Min, validateOrReject } from 'clas
 import { EnvValidationMessage } from './mongo-db.messages';
 import { MIN_PORT, MAX_PORT, DEFAULT_MONGODB_PORT } from './mongo-db.const';
 
-export class MongoConfiguration {
+export class MongoDbConfiguration {
   @IsString({ message: EnvValidationMessage.DBUserRequired })
   public username: string;
 
