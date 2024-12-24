@@ -28,12 +28,11 @@
     не сработало export type ReturnTypeToPOJOFunction<T extends StorableEntity<T>> = ReturnType<T['toPOJO']>;
     а как T['id']
   2. get-mongoose-options.ts - а как добратся
-     из
-       useFactory: async (config: ConfigService) => {
-     к
-       private readonly databaseConfig: ConfigType<typeof mongoDbConfig>
-     чтобы заменить
+    из
+      useFactory: async (config: ConfigService) => {
+    к
+      private readonly databaseConfig: ConfigType<typeof mongoDbConfig>
+    чтобы заменить
       config.get<string>(ConfigAlias.MongoDbUsername)
     на
       databaseConfig.username
-
