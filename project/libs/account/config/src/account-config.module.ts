@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
 import { applicationConfig } from './configurations/app.config';
-import { mongoConfig } from './configurations/mongo.config';
+import { mongoDbConfig } from './configurations/mongo-db.config';
 
 const ENV_ACCOUNT_FILE_PATH = 'apps/account/account.dev.env';
 
@@ -11,7 +11,7 @@ const ENV_ACCOUNT_FILE_PATH = 'apps/account/account.dev.env';
     ConfigModule.forRoot({
       isGlobal: true,
       cache: true,
-      load: [applicationConfig, mongoConfig],
+      load: [applicationConfig, mongoDbConfig],
       envFilePath: ENV_ACCOUNT_FILE_PATH
     })
   ]

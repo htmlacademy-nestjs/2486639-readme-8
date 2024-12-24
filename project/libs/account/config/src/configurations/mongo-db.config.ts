@@ -5,7 +5,7 @@ import { MongoConfiguration } from './mongodb/mongo.env';
 import { DEFAULT_MONGODB_PORT } from './mongodb/mongo.const';
 import { ConfigAlias } from './const';
 
-export interface MongoConfig {
+export interface MongoDbConfig {
   host: string;
   name: string;
   port: number;
@@ -14,7 +14,7 @@ export interface MongoConfig {
   authBase: string;
 }
 
-async function getDbConfig(): Promise<MongoConfiguration> {
+async function getMongoDbConfig(): Promise<MongoConfiguration> {
   const config = plainToClass(MongoConfiguration, {
     username: process.env.MONGO_USER,
     password: process.env.MONGO_PASSWORD,
@@ -29,6 +29,6 @@ async function getDbConfig(): Promise<MongoConfiguration> {
   return config;
 }
 
-export const mongoConfig = registerAs(ConfigAlias.MongoDb, async (): Promise<ConfigType<typeof getDbConfig>> => {
-  return getDbConfig();
+export const mongoDbConfig = registerAs(ConfigAlias.MongoDb, async (): Promise<ConfigType<typeof getMongoDbConfig>> => {
+  return getMongoDbConfig();
 });

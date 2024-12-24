@@ -2,7 +2,7 @@ import { ConflictException, Inject, Injectable, NotFoundException, UnauthorizedE
 import { ConfigType } from '@nestjs/config';
 
 import { BlogUserRepository, BlogUserEntity } from '@project/account/blog-user';
-import { mongoConfig } from '@project/account/config'
+import { mongoDbConfig } from '@project/account/config'
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { AuthenticationUserMessage } from './authentication.constant';
@@ -13,11 +13,11 @@ export class AuthenticationService {
   constructor(
     private readonly blogUserRepository: BlogUserRepository,
 
-    @Inject(mongoConfig.KEY)
-    private readonly databaseConfig: ConfigType<typeof mongoConfig>,
+    @Inject(mongoDbConfig.KEY)
+    private readonly databaseConfig: ConfigType<typeof mongoDbConfig>,
   ) {
     // Извлекаем настройки из конфигурации
-    console.log(mongoConfig.KEY);
+    console.log(mongoDbConfig.KEY);
     console.log(databaseConfig.host);
     console.log(databaseConfig.username);
   }
