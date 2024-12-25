@@ -34,3 +34,18 @@ notify
   1.16. Рассылка почтовых уведомлений на email о появлении новых публикаций.
 
 file-storage
+
+Типы постов:
+  title          // video, text
+  url            // video, url
+  previewText    // text
+  text           // text
+  quoteText      // quote
+  quoteAuthor    // quote
+  imagePath      // photo
+  urlDescription // url
+  
+  tags
+  publishDate,
+  isRepost,
+  state,
