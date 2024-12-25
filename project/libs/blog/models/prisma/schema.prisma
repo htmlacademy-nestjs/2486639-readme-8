@@ -30,7 +30,7 @@ model Post {
   type           String
   tags           Tag[]
   publishDate    DateTime  @default(now()) @map("publish_date")
-  isRepost       Boolean   @default(true) @map("is_repost")
+  isRepost       Boolean   @default(false) @map("is_repost")
   state          String
   title          String
   url            String

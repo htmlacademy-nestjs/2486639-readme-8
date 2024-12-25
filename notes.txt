@@ -25,7 +25,8 @@
     сейчас подключение из project/libs/blog/models/prisma/.env  ? или тут для работы prisma-cli и seed.ts ?
     POSTGRES_HOST и POSTGRES_PORT
     А может и сам prisma/.env слинковать с blog/blog.dev.env?
-  12. под windows не водит имя для миграции db:migrate
+  12. под windows не водит имя для миграции db:migrate ,  выполнил отдельно всю команду из нужного каталога
+  13. заполениnm данные в mongodb
 
 
 Заметки:
