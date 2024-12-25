@@ -21,6 +21,10 @@
       ],
     потом не собирает схемы CLass1 и Class2
   10. UpdatePostDto - @IsOptional() ??  А в Swagger * - обязательный ?
+  11. задействовать настройки подключения к postgres из project/apps/blog/blog.dev.env
+    сейчас подключение из project/libs/blog/models/prisma/.env  ? или тут для работы prisma-cli и seed.ts ?
+    POSTGRES_HOST и POSTGRES_PORT
+  12.
 
 
 Заметки:
