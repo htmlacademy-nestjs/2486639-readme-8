@@ -25,7 +25,7 @@
     сейчас подключение из project/libs/blog/models/prisma/.env  ? или тут для работы prisma-cli и seed.ts ?
     POSTGRES_HOST и POSTGRES_PORT
     А может и сам prisma/.env слинковать с blog/blog.dev.env?
-  12.
+  12. под windows не водит имя для миграции db:migrate
 
 
 Заметки:
@@ -41,3 +41,4 @@
       config.get<string>(ConfigAlias.MongoDbUsername)
     на
       databaseConfig.username
+  3. а можно делать какие то алиасы или константы в project.json например для "cwd": "libs/blog/models/prisma"
