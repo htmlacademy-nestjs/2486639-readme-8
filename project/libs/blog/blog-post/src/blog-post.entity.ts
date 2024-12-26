@@ -6,6 +6,9 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
   public tags: Tag[];
   public publishDate: Date;
   public repostedPost: BlogPostEntity;
+  //! title? еще поля?
+  //  public createdAt: Date;
+  // public updatedAt: Date;
   public state: PostState;
   public url: string;
   public previewText: string;
