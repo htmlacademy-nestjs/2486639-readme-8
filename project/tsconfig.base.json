@@ -30,6 +30,7 @@
       "@project/blog/blog-subscription": [
         "libs/blog/blog-subscription/src/index.ts"
       ],
+      "@project/blog/blog-tag": ["libs/blog/blog-tag/src/index.ts"],
       "@project/blog/models": ["libs/blog/models/src/index.ts"],
       "@project/shared/core": ["libs/shared/core/src/index.ts"],
       "@project/shared/data-access": ["libs/shared/data-access/src/index.ts"],
