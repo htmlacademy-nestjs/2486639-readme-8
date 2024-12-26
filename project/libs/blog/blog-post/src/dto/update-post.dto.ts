@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsOptional } from "class-validator";
 
-import { PostType } from "@project/shared/core";
+import { PostState, PostType, Tag } from "@project/shared/core";
 
 import { PostApiProperty } from "../blog-post.constant.property";
 
@@ -12,7 +12,17 @@ export class UpdatePostDto {
 
   @ApiProperty(PostApiProperty.Tags)
   @IsOptional()
-  public tags: string[];
+  public tags: Tag[];
+
+  public publishDate: Date;
+  public state: PostState;
+  public url: string;
+  public previewText: string;
+  public text: string;
+  public quoteText: string;
+  public quoteAuthor: string;
+  public imagePath: string;
+  public urlDescription: string;
 
   //! использовать новые свойства
   /*

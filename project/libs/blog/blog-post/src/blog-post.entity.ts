@@ -5,7 +5,7 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
   public type: PostType;
   public tags: Tag[];
   public publishDate: Date;
-  public isRepost: boolean;
+  public repostedPost?: BlogPostEntity;
   public state: PostState;
   public url: string;
   public previewText: string;
@@ -31,7 +31,7 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
     this.type = post.type;
     this.tags = [...post.tags];
     this.publishDate = post.publishDate;
-    this.isRepost = post.isRepost;
+    //! потом поправить this.repostedPost = post.repostedPost;
     this.state = post.state;
     this.url = post.url;
     this.previewText = post.previewText;
@@ -47,9 +47,9 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
     return {
       id: this.id,
       type: this.type,
-      tags: this.tags, //! потом поправить на tags.toPOJO
+      tags: this.tags, //! потом поправить tags.toPOJO()
       publishDate: this.publishDate,
-      isRepost: this.isRepost,
+      //! потом поправить repostedPost: this.repostedPost.toPOJO();
       state: this.state,
       url: this.url,
       previewText: this.previewText,
@@ -58,7 +58,7 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
       quoteAuthor: this.quoteAuthor,
       imagePath: this.imagePath,
       urlDescription: this.urlDescription,
-      //! потом поправить user: this.user на user.toPOJO
+      //! потом поправить user: this.user на user.toPOJO()
     }
   }
 }

@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 
-import { PostType } from '@project/shared/core';
+import { PostState, PostType, Tag, User } from '@project/shared/core';
 
 import { PostApiProperty } from '../blog-post.constant.property';
 
@@ -16,7 +16,19 @@ export class PostRdo {
 
   @ApiProperty(PostApiProperty.Tags)
   @Expose()
-  public tags: string[];
+  public tags: Tag[];
+
+  public publishDate: Date;
+  public repostedPost: PostRdo; //! как наполнить и в рекусию не уйти... или гдето есть финиш... глянуть по ТЗ навернео один уровень только нужен
+  public state: PostState;
+  public user: User;
+  public url: string;
+  public previewText: string;
+  public text: string;
+  public quoteText: string;
+  public quoteAuthor: string;
+  public imagePath: string;
+  public urlDescription: string;
 
   //! использовать новые свойства
   /*
