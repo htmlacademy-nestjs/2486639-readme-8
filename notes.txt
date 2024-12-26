@@ -20,6 +20,8 @@
         { $ref: getSchemaPath(Class2) },
       ],
     потом не собирает схемы CLass1 и Class2
+    !! для новых полей сделать красиваое описание для разных типов...
+    !! добавить дополнительную проверку на тип и обязательность полей
   10. UpdatePostDto - @IsOptional() ??  А в Swagger * - обязательный ?
   11. задействовать настройки подключения к postgres из project/apps/blog/blog.dev.env
     сейчас подключение из project/libs/blog/models/prisma/.env  ? или тут для работы prisma-cli и seed.ts ?
@@ -27,7 +29,6 @@
     А может и сам prisma/.env слинковать с blog/blog.dev.env?
   12. под windows не водит имя для миграции db:migrate ,  выполнил отдельно всю команду из нужного каталога
   13. заполенить данные в mongodb
-  14. удалить post-data.interface.ts, задействовать новые поля
 
 
 Заметки:

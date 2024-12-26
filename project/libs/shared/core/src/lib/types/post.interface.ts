@@ -7,15 +7,16 @@ export interface Post {
   id?: string;
   type: PostType;
   tags?: Tag[];
-  publishDate: Date;
-  isRepost: boolean;
-  state: PostState;
+  publishDate?: Date;
+  repostedPost?: Post;
+  state?: PostState;
   user?: User;
-  url: string;
-  previewText: string;
-  text: string;
-  quoteText: string;
-  quoteAuthor: string;
-  imagePath: string;
-  urlDescription: string;
+  title?: string;          // types: video, text
+  url?: string;            // types: video, url
+  previewText?: string;    // types: text
+  text?: string;           // types: text
+  quoteText?: string;      // types: quote
+  quoteAuthor?: string;    // types: quote
+  imagePath?: string;      // types: photo
+  urlDescription?: string; // types: url
 }

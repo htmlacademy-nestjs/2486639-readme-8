@@ -30,7 +30,8 @@ model Post {
   type           String
   tags           Tag[]
   publishDate    DateTime  @default(now()) @map("publish_date")
-  isRepost       Boolean   @default(false) @map("is_repost")
+  repostedPost   Post?     @relation("repostedPosts", fields: [repostedPostId], references: [id])
+  repostedPostId String?   @map("reposted_post_id")
   state          String
   title          String
   url            String
@@ -44,6 +45,7 @@ model Post {
   updatedAt      DateTime  @updatedAt @map("updated_at")
   userId         String    @map("user_id")
   comments       Comment[]
+  repostedPosts  Post[]    @relation("repostedPosts")
 
   @@index([title])
   @@map("posts")
