@@ -25,6 +25,7 @@
   10. UpdatePostDto - @IsOptional() ??  А в Swagger * - обязательный ?
   11. задействовать настройки подключения к postgres из project/apps/blog/blog.dev.env
     сейчас подключение из project/libs/blog/models/prisma/.env  ? или тут для работы prisma-cli и seed.ts ?
+    после выполенения generate DATABASE_URL из project/libs/blog/models/prisma/.env закидывается значением по умолчанию, можно переопределить...
     POSTGRES_HOST и POSTGRES_PORT
     А может и сам prisma/.env слинковать с blog/blog.dev.env?
   12. под windows не водит имя для миграции db:migrate ,  выполнил отдельно всю команду из нужного каталога
