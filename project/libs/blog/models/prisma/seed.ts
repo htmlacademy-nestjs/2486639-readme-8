@@ -1,5 +1,9 @@
 import { PrismaClient } from '@prisma/client';
 
+// это отдельный скрипт, он не может импортировать '@project/share/core'
+// eslint-disable-next-line
+import { PostState, PostType } from '../../../shared/core/src';
+
 const USER_IDS = ['658170cbb954e9f5b905ccf4', '6581762309c030b503e30512'];
 
 const TAGS = [
@@ -9,75 +13,81 @@ const TAGS = [
   { id: '48568f914-0595-4ffe-a1e2-b333b1eb3275', title: 'tag4' }
 ];
 
-/*
-9059dee5-7897-46d3-b8f6-e075a8b568c0
-eab06dc6-ba52-4169-a369-f2f825d44ebb
- */
 const POSTS = [
   {
     id: '129f97f2-9b77-499a-a740-156c4b881a44',
-    type: 'video',
+    type: PostType.Video,
     tags: [TAGS[0], TAGS[1]],
-    state
-    title
-    url
-    previewText
-    text
-    quoteText
-    quoteAuthor
-    imagePath
-    urlDescription
-    createdAt
-    updatedAt
-    userId
+    state: PostState.Published,
+    title: 'Post1',
+    url: '',
+    previewText: '',
+    text: '',
+    quoteText: '',
+    quoteAuthor: '',
+    imagePath: '',
+    urlDescription: '',
+    userId: USER_IDS[0]
   },
-  {}
+  {
+    id: '9059dee5-7897-46d3-b8f6-e075a8b568c0',
+    type: PostType.Video,
+    tags: [TAGS[0], TAGS[1]],
+    state: PostState.Published,
+    title: 'Post1',
+    url: '',
+    previewText: '',
+    text: '',
+    quoteText: '',
+    quoteAuthor: '',
+    imagePath: '',
+    urlDescription: '',
+    userId: USER_IDS[0]
+  },
+  {
+    id: 'eab06dc6-ba52-4169-a369-f2f825d44ebb',
+    type: PostType.Video,
+    tags: [TAGS[0], TAGS[1]],
+    state: PostState.Published,
+    title: 'Post1',
+    url: '',
+    previewText: '',
+    text: '',
+    quoteText: '',
+    quoteAuthor: '',
+    imagePath: '',
+    urlDescription: '',
+    userId: USER_IDS[0]
+  }
 ];
 
-/*
+const COMMENTS = [
+  {
+    id: '79668254-2673-4f8b-9bda-f3b726a466dd',
+    message: 'comment1',
+    postId: POSTS[0].id,
+    userId: USER_IDS[0]
+  },
+  {
+    id: 'f08feedf-59a8-48a5-9001-4db53173f06c',
+    message: 'comment2',
+    postId: POSTS[1].id,
+    userId: USER_IDS[0]
+  },
+  {
+    id: '660be995-82b7-4eed-be0d-dd317d730c8e',
+    message: 'comment3',
+    postId: POSTS[1].id,
+    userId: USER_IDS[1]
+  }
+];
 
-function getPosts() {
-  return [
-    {
-      id: FIRST_POST_UUID,
-      title: 'Худеющий',
-      userId: FIRST_USER_ID,
-      content: 'Недавно прочитал страшный роман «Худеющий».',
-      description: 'На мой взгляд, это один из самых страшных романов Стивена Кинга.',
-      categories: {
-        connect: [{ id: FIRST_CATEGORY_UUID }],
-      },
-    },
-    {
-      id: SECOND_POST_UUID,
-      title: 'Вы не знаете JavaScript',
-      userId: FIRST_USER_ID,
-      content: 'Полезная книга по JavaScript',
-      description: 'Секреты и тайные знания по JavaScript.',
-      categories: {
-        connect: [
-          { id: FIRST_CATEGORY_UUID },
-          { id: SECOND_CATEGORY_UUID },
-        ]
-      },
-      comments: [
-          {
-            message: 'Это действительно отличная книга!',
-            userId: FIRST_USER_ID,
-          },
-          {
-            message: 'Надо будет обязательно перечитать. Слишком много информации.',
-            userId: SECOND_USER_ID,
-          }
-      ]
-    }
-  ]
-}
-*/
+const SUBSCRIPTIONS = [{ id: '06024a6d-2fce-414f-8724-22b648c1293a', authorUserId: USER_IDS[0], userId: USER_IDS[1] }];
 
 async function seedDb(prismaClient: PrismaClient) {
   for (const tag of TAGS) {
     const { id, title } = tag
+
     await prismaClient.tag.upsert({
       where: { id },
       update: {},
@@ -85,24 +95,63 @@ async function seedDb(prismaClient: PrismaClient) {
     });
   }
 
-  /*
-  const mockPosts = getPosts();
-  for (const post of mockPosts) {
-    await prismaClient.post.create({
-      data: {
-        id: post.id,
-        title: post.title,
-        description: post.description,
-        content: post.description,
-        categories: post.categories,
-        userId: post.userId,
-        comments: post.comments ? {
-          create: post.comments
-        } : undefined
+  for (const post of POSTS) {
+    const {
+      id,
+      type,
+      tags,
+      state,
+      title,
+      url,
+      previewText,
+      text,
+      quoteText,
+      quoteAuthor,
+      imagePath,
+      urlDescription,
+      userId
+    } = post
+
+    await prismaClient.post.upsert({
+      where: { id },
+      update: {},
+      create: {
+        id,
+        type,
+        tags: { connect: [...tags] },
+        state,
+        title,
+        url,
+        previewText,
+        text,
+        quoteText,
+        quoteAuthor,
+        imagePath,
+        urlDescription,
+        userId
       }
-    })
+    });
   }
-  */
+
+  for (const comment of COMMENTS) {
+    const { id, message, postId, userId } = comment;
+
+    await prismaClient.comment.upsert({
+      where: { id },
+      update: {},
+      create: { id, message, postId, userId }
+    });
+  }
+
+  for (const subscription of SUBSCRIPTIONS) {
+    const { id, authorUserId, userId } = subscription
+
+    await prismaClient.subscription.upsert({
+      where: { id },
+      update: {},
+      create: { id, authorUserId, userId }
+    });
+  }
 
   console.info('🤘️ Database was filled');
 }
