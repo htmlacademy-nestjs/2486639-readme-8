@@ -1,5 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 
+import { BlogTagEntity, BlogTagRepository } from '@project/blog/blog-tag';
+
 import { BlogPostRepository } from './blog-post.repository';
 import { BlogPostEntity } from './blog-post.entity';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -9,6 +11,7 @@ import { BlogPostMessage } from './blog-post.constant';
 @Injectable()
 export class BlogPostService {
   constructor(
+    private readonly blogTagRepository: BlogTagRepository,
     private readonly blogPostRepository: BlogPostRepository
   ) { }
 
@@ -16,6 +19,12 @@ export class BlogPostService {
     const postEntity = new BlogPostEntity(dto);
 
     this.blogPostRepository.save(postEntity);
+
+    //! тест
+    const tag = new BlogTagEntity({ title: 'tag' });
+    await this.blogTagRepository.save(tag);
+    console.log(tag);
+    //
 
     return postEntity;
   }
