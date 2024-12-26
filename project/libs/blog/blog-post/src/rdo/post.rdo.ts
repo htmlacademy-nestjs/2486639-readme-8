@@ -20,6 +20,7 @@ export class PostRdo {
 
   public publishDate: Date;
   public repostedPost: PostRdo; //! как наполнить и в рекусию не уйти... или гдето есть финиш... глянуть по ТЗ навернео один уровень только нужен
+  public repostedPostUser: User; //! по ТЗ нужно отдать
   public state: PostState;
   public user: User;
   public url: string;
