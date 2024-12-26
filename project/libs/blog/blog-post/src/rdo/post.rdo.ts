@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 
-import { PostData, PostType } from '@project/shared/core';
+import { PostType } from '@project/shared/core';
 
 import { PostApiProperty } from '../blog-post.constant.property';
 
@@ -18,7 +18,10 @@ export class PostRdo {
   @Expose()
   public tags: string[];
 
+  //! использовать новые свойства
+  /*
   @ApiProperty(PostApiProperty.Data)
   @Expose()
   public data: PostData;
+  */
 }

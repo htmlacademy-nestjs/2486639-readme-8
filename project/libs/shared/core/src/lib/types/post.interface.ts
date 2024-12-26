@@ -6,9 +6,9 @@ import { User } from './user.interface';
 export interface Post {
   id?: string;
   type: PostType;
+  tags?: Tag[];
   publishDate: Date;
   isRepost: boolean;
-  tags?: Tag[];
   state: PostState;
   user?: User;
   url: string;

@@ -1,11 +1,20 @@
-import { Entity, PostType, PostData, Post, StorableEntity } from '@project/shared/core';
+import { Entity, PostType, PostState, Post, StorableEntity, Tag } from '@project/shared/core';
 import { BlogUserEntity } from '@project/account/blog-user';
 
 export class BlogPostEntity extends Entity implements StorableEntity<Post> {
   public type: PostType;
-  public tags: string[];
+  public tags: Tag[];
+  public publishDate: Date;
+  public isRepost: boolean;
+  public state: PostState;
+  public url: string;
+  public previewText: string;
+  public text: string;
+  public quoteText: string;
+  public quoteAuthor: string;
+  public imagePath: string;
+  public urlDescription: string;
   public user: BlogUserEntity;
-  public data: PostData;
 
   constructor(post?: Post) {
     super();
@@ -21,16 +30,35 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
     this.id = post.id ?? '';
     this.type = post.type;
     this.tags = [...post.tags];
-    this.data = { ...post.data };
+    this.publishDate = post.publishDate;
+    this.isRepost = post.isRepost;
+    this.state = post.state;
+    this.url = post.url;
+    this.previewText = post.previewText;
+    this.text = post.text;
+    this.quoteText = post.quoteText;
+    this.quoteAuthor = post.quoteAuthor;
+    this.imagePath = post.imagePath;
+    this.urlDescription = post.urlDescription;
+    //! потом поправить this.user = post.user;
   }
 
   public toPOJO(): Post {
     return {
       id: this.id,
       type: this.type,
-      tags: this.tags,
-      user: this.user,
-      data: this.data
+      tags: this.tags, //! потом поправить на tags.toPOJO
+      publishDate: this.publishDate,
+      isRepost: this.isRepost,
+      state: this.state,
+      url: this.url,
+      previewText: this.previewText,
+      text: this.text,
+      quoteText: this.quoteText,
+      quoteAuthor: this.quoteAuthor,
+      imagePath: this.imagePath,
+      urlDescription: this.urlDescription,
+      //! потом поправить user: this.user на user.toPOJO
     }
   }
 }
