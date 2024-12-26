@@ -19,4 +19,6 @@ export interface Post {
   quoteAuthor?: string;    // types: quote
   imagePath?: string;      // types: photo
   urlDescription?: string; // types: url
+  createdAt?: Date;
+  updatedAt?: Date;
 }

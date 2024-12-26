@@ -6,10 +6,8 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
   public tags: Tag[];
   public publishDate: Date;
   public repostedPost: BlogPostEntity;
-  //! title? еще поля?
-  //  public createdAt: Date;
-  // public updatedAt: Date;
   public state: PostState;
+  public title: string;
   public url: string;
   public previewText: string;
   public text: string;
@@ -18,6 +16,8 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
   public imagePath: string;
   public urlDescription: string;
   public user: BlogUserEntity;
+  public createdAt: Date;
+  public updatedAt: Date;
 
   constructor(post?: Post) {
     super();
@@ -30,20 +30,23 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
       return;
     }
 
-    this.id = post.id ?? '';
-    this.type = post.type;
-    this.tags = [...post.tags];
-    this.publishDate = post.publishDate;
-    //! потом поправить this.repostedPost = post.repostedPost;
-    this.state = post.state;
-    this.url = post.url;
-    this.previewText = post.previewText;
-    this.text = post.text;
-    this.quoteText = post.quoteText;
-    this.quoteAuthor = post.quoteAuthor;
-    this.imagePath = post.imagePath;
-    this.urlDescription = post.urlDescription;
-    //! потом поправить this.user = post.user;
+    this.id = post.id ?? undefined;
+    this.type = post.type ?? undefined;
+    this.tags = [...post.tags]; //!  ?? undefined
+    this.publishDate = post.publishDate ?? undefined;
+    //! потом поправить this.repostedPost = post.repostedPost ?? undefined;
+    this.state = post.state ?? undefined;
+    //! потом поправить this.user = post.user ?? undefined;
+    this.title = post.title ?? undefined;
+    this.url = post.url ?? undefined;
+    this.previewText = post.previewText ?? undefined;
+    this.text = post.text ?? undefined;
+    this.quoteText = post.quoteText ?? undefined;
+    this.quoteAuthor = post.quoteAuthor ?? undefined;
+    this.imagePath = post.imagePath ?? undefined;
+    this.urlDescription = post.urlDescription ?? undefined;
+    this.createdAt = post.createdAt ?? undefined;
+    this.updatedAt = post.updatedAt ?? undefined;
   }
 
   public toPOJO(): Post {
@@ -54,6 +57,7 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
       publishDate: this.publishDate,
       //! потом поправить repostedPost: this.repostedPost.toPOJO();
       state: this.state,
+      title: this.title,
       url: this.url,
       previewText: this.previewText,
       text: this.text,
@@ -61,7 +65,9 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
       quoteAuthor: this.quoteAuthor,
       imagePath: this.imagePath,
       urlDescription: this.urlDescription,
-      //! потом поправить user: this.user на user.toPOJO()
+      //! потом поправить user: this.user на user.toPOJO(),
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt
     }
   }
 }
