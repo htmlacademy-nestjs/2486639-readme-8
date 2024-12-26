@@ -23,6 +23,12 @@ export class BlogPostService {
     //! тест
     const tagEntity = await this.blogTagService.create('tag1111');
     console.log(tagEntity);
+
+    const tag1 = await this.blogTagService.getById('2067063f-8dc2-42bc-bb5f-84bce5caa9fd')
+    console.log(tag1);
+
+    const tag2 = await this.blogTagService.getByTitle('tag2')
+    console.log(tag2);
     //
 
     return postEntity;

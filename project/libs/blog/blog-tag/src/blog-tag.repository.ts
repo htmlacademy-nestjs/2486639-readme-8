@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { BasePostgresRepository } from '@project/shared/data-access';
 import { PrismaClientService } from '@project/blog/models';
@@ -24,23 +24,27 @@ export class BlogTagRepository extends BasePostgresRepository<BlogTagEntity, Tag
     entity.id = record.id;
   }
 
-  public async findByTitle(title: string): Promise<BlogTagEntity | null> {
-    //const document = this.entities.get(title);
+  public async findById(id: string): Promise<BlogTagEntity> {
+    const tag = await this.client.tag.findFirst({
+      where: { id }
+    });
 
-    return new BlogTagEntity(document);
+    if (!tag) {
+      throw new NotFoundException(`Tag with id ${id} not found.`);
+    }
+
+    return this.createEntityFromDocument(tag);
   }
 
-  /*
-    public async find(filter?: CategoryFilter): Promise<BlogCategoryEntity[]> {
-      const where = filter ?? categoryFilterToPrismaFilter(filter);
+  public async findByTitle(title: string): Promise<BlogTagEntity | null> {
+    const tag = await this.client.tag.findFirst({
+      where: { title }
+    });
 
-      const documents = await this.client.category.findMany({
-        where,
-        take: MAX_CATEGORY_LIMIT
-      });
-
-
-      return documents.map((document) => this.createEntityFromDocument(document));
+    if (!tag) {
+      throw new NotFoundException(`Tag with title "${title}" not found.`);
     }
-  */
+
+    return new BlogTagEntity(tag);
+  }
 }

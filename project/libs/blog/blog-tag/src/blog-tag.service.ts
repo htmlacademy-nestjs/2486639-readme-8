@@ -17,6 +17,12 @@ export class BlogTagService {
     return tagEntity;
   }
 
+  public async getById(id: string) {
+    const tag = await this.blogTagRepository.findById(id);
+
+    return tag;
+  }
+
   public async getByTitle(title: string) {
     const tag = await this.blogTagRepository.findByTitle(title);
 
