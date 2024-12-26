@@ -14,13 +14,8 @@ export class AuthenticationService {
     private readonly blogUserRepository: BlogUserRepository,
 
     @Inject(mongoDbConfig.KEY)
-    private readonly databaseConfig: ConfigType<typeof mongoDbConfig>,
-  ) {
-    // Извлекаем настройки из конфигурации
-    console.log(mongoDbConfig.KEY);
-    console.log(databaseConfig.host);
-    console.log(databaseConfig.username);
-  }
+    private readonly databaseConfig: ConfigType<typeof mongoDbConfig>
+  ) { }
 
   public async register(dto: CreateUserDto): Promise<BlogUserEntity> {
     const { email, login, password } = dto;
@@ -38,9 +33,10 @@ export class AuthenticationService {
       throw new ConflictException(AuthenticationUserMessage.Exists);
     }
 
-    const userEntity = await new BlogUserEntity(blogUser).setPassword(password);
+    const userEntity = new BlogUserEntity(blogUser);
 
-    this.blogUserRepository.save(userEntity);
+    await userEntity.setPassword(password);
+    await this.blogUserRepository.save(userEntity);
 
     return userEntity;
   }
@@ -53,7 +49,9 @@ export class AuthenticationService {
       throw new NotFoundException(AuthenticationUserMessage.NotFound);
     }
 
-    if (!await existUser.comparePassword(password)) {
+    const isCorrectPassword = await existUser.comparePassword(password);
+
+    if (!isCorrectPassword) {
       throw new UnauthorizedException(AuthenticationUserMessage.WrongPassword);
     }
 
