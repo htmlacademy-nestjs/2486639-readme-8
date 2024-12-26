@@ -10,4 +10,10 @@ export class BlogTagRepository extends BaseMemoryRepository<BlogTagEntity> {
   constructor(entityFactory: BlogTagFactory) {
     super(entityFactory);
   }
+
+  public async findByTitle(title: string): Promise<BlogTagEntity | null> {
+    const document = this.entities.get(title);
+
+    return new BlogTagEntity(document);
+  }
 }
