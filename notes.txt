@@ -34,6 +34,7 @@
   15. удалить BaseMemoryRepository если не будет использоватся?
   16. всем свойствам в Entity.populate нужно  "?? undefined;"
   17. возможно BlogTagModule и вовсе не нужен, сразу в BlogPostModule обрабатывать таги
+  18. сам добавил "entity.id = document.id; //! временно" в BaseMongoRepository
 
 
 Заметки:
