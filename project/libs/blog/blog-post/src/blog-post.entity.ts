@@ -32,7 +32,7 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
 
     this.id = post.id ?? undefined;
     this.type = post.type ?? undefined;
-    this.tags = [...post.tags]; //!  ?? undefined
+    this.tags = [] //! временно ошибка post.tags  [...post.tags]; //!  ?? undefined
     this.publishDate = post.publishDate ?? undefined;
     //! потом поправить this.repostedPost = post.repostedPost ?? undefined;
     this.state = post.state ?? undefined;

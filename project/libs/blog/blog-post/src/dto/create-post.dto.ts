@@ -11,8 +11,7 @@ export class CreatePostDto {
   @ApiProperty(PostApiProperty.Tags)
   public tags: Tag[];
 
-  public publishDate: Date;
-  public state: PostState;
+  public title: string;
   public url: string;
   public previewText: string;
   public text: string;

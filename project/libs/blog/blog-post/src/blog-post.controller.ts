@@ -5,6 +5,8 @@ import { PostIdApiParam, BlogPostApiResponse } from './blog-post.constant';
 import { BlogPostService } from './blog-post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { fillDto } from '@project/shared/helpers';
+import { PostRdo } from './rdo/post.rdo';
 
 @ApiTags('blog-post')
 @Controller('post')
@@ -19,7 +21,7 @@ export class BlogPostController {
   public async create(@Body() dto: CreatePostDto) {
     const newPost = await this.blogPostService.create(dto);
 
-    return newPost.toPOJO();
+    return fillDto(PostRdo, newPost.toPOJO());
   }
 
   @ApiResponse(BlogPostApiResponse.PostFound)
@@ -27,10 +29,10 @@ export class BlogPostController {
   @ApiParam(PostIdApiParam)
   @Get(`:${PostIdApiParam.name}`)
   public async show(@Param(PostIdApiParam.name) postId: string) {
-    console.log(postId);
+    console.log(postId); //! тест
     const existPost = await this.blogPostService.getById(postId);
 
-    return existPost.toPOJO();
+    return fillDto(PostRdo, existPost.toPOJO());
   }
 
   @ApiResponse(BlogPostApiResponse.PostUpdated)
@@ -42,7 +44,7 @@ export class BlogPostController {
   public async update(@Param(PostIdApiParam.name) postId: string, @Body() dto: UpdatePostDto) {
     const existPost = await this.blogPostService.updateById(postId, dto);
 
-    return existPost.toPOJO();
+    return fillDto(PostRdo, existPost.toPOJO());
   }
 
   @ApiResponse(BlogPostApiResponse.PostDeleted)

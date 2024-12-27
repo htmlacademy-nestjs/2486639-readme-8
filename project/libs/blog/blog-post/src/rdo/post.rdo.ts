@@ -18,17 +18,37 @@ export class PostRdo {
   @Expose()
   public tags: Tag[];
 
+  @Expose()
   public publishDate: Date;
+
   public repostedPost: PostRdo; //! как наполнить и в рекусию не уйти... или гдето есть финиш... глянуть по ТЗ навернео один уровень только нужен
   public repostedPostUser: User; //! по ТЗ нужно отдать
+
+  @Expose()
   public state: PostState;
+
+  @Expose()
   public user: User;
+
+  @Expose()
   public url: string;
+
+  @Expose()
   public previewText: string;
+
+  @Expose()
   public text: string;
+
+  @Expose()
   public quoteText: string;
+
+  @Expose()
   public quoteAuthor: string;
+
+  @Expose()
   public imagePath: string;
+
+  @Expose()
   public urlDescription: string;
 
   //! использовать новые свойства
