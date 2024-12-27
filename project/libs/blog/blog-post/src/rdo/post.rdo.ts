@@ -31,6 +31,9 @@ export class PostRdo {
   public user: User;
 
   @Expose()
+  public title: string;
+
+  @Expose()
   public url: string;
 
   @Expose()
