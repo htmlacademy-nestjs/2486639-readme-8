@@ -49,7 +49,7 @@ export class PostRdo {
   public imagePath: string;
 
   @Expose()
-  public urlDescription: string;
+  public linkDescription: string;
 
   //! использовать новые свойства
   /*

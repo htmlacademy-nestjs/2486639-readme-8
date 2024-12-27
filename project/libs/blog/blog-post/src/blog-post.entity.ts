@@ -14,7 +14,7 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
   public quoteText: string;
   public quoteAuthor: string;
   public imagePath: string;
-  public urlDescription: string;
+  public linkDescription: string;
   public user: BlogUserEntity;
   public createdAt: Date;
   public updatedAt: Date;
@@ -44,7 +44,7 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
     this.quoteText = post.quoteText ?? undefined;
     this.quoteAuthor = post.quoteAuthor ?? undefined;
     this.imagePath = post.imagePath ?? undefined;
-    this.urlDescription = post.urlDescription ?? undefined;
+    this.linkDescription = post.linkDescription ?? undefined;
     this.createdAt = post.createdAt ?? undefined;
     this.updatedAt = post.updatedAt ?? undefined;
   }
@@ -64,7 +64,7 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
       quoteText: this.quoteText,
       quoteAuthor: this.quoteAuthor,
       imagePath: this.imagePath,
-      urlDescription: this.urlDescription,
+      linkDescription: this.linkDescription,
       //! потом поправить user: this.user на user.toPOJO(),
       createdAt: this.createdAt,
       updatedAt: this.updatedAt

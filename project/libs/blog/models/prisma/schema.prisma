@@ -26,26 +26,26 @@ model Tag {
 }
 
 model Post {
-  id             String    @id @default(uuid())
-  type           String
-  tags           Tag[]
-  publishDate    DateTime  @default(now()) @map("publish_date")
-  repostedPost   Post?     @relation("repostedPosts", fields: [repostedPostId], references: [id])
-  repostedPostId String?   @map("reposted_post_id")
-  state          String
-  title          String?
-  url            String?
-  previewText    String?
-  text           String?
-  quoteText      String?
-  quoteAuthor    String?
-  imagePath      String?
-  urlDescription String?
-  createdAt      DateTime  @default(now()) @map("created_at")
-  updatedAt      DateTime  @updatedAt @map("updated_at")
-  userId         String    @map("user_id")
-  comments       Comment[]
-  repostedPosts  Post[]    @relation("repostedPosts")
+  id              String    @id @default(uuid())
+  type            String
+  tags            Tag[]
+  publishDate     DateTime  @default(now()) @map("publish_date")
+  repostedPost    Post?     @relation("repostedPosts", fields: [repostedPostId], references: [id])
+  repostedPostId  String?   @map("reposted_post_id")
+  state           String
+  title           String?
+  url             String?
+  previewText     String?
+  text            String?
+  quoteText       String?
+  quoteAuthor     String?
+  imagePath       String?
+  linkDescription String?
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+  userId          String    @map("user_id")
+  comments        Comment[]
+  repostedPosts   Post[]    @relation("repostedPosts")
 
   @@index([title])
   @@map("posts")

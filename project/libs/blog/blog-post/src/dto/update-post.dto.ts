@@ -22,7 +22,7 @@ export class UpdatePostDto {
   public quoteText: string;
   public quoteAuthor: string;
   public imagePath: string;
-  public urlDescription: string;
+  public linkDescription: string;
 
   //! использовать новые свойства
   /*
