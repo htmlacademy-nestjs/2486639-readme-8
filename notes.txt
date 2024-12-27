@@ -20,7 +20,21 @@
         { $ref: getSchemaPath(Class2) },
       ],
     потом не собирает схемы CLass1 и Class2
+    !! для новых полей сделать красиваое описание для разных типов...
+    !! добавить дополнительную проверку на тип и обязательность полей
   10. UpdatePostDto - @IsOptional() ??  А в Swagger * - обязательный ?
+  11. задействовать настройки подключения к postgres из project/apps/blog/blog.dev.env
+    сейчас подключение из project/libs/blog/models/prisma/.env  ? или тут для работы prisma-cli и seed.ts ?
+    после выполенения generate DATABASE_URL из project/libs/blog/models/prisma/.env закидывается значением по умолчанию, можно переопределить...
+    POSTGRES_HOST и POSTGRES_PORT
+    А может и сам prisma/.env слинковать с blog/blog.dev.env?
+  12. под windows не водит имя для миграции db:migrate ,  выполнил отдельно всю команду из нужного каталога
+  13. заполенить данные в mongodb
+  14. нужно свое dto для репоста   //! public repostedPost: PostId...;
+  15. удалить BaseMemoryRepository если не будет использоватся?
+  16. всем свойствам в Entity.populate нужно  "?? undefined;"
+  17. возможно BlogTagModule и вовсе не нужен, сразу в BlogPostModule обрабатывать таги
+  18. сам добавил "entity.id = document.id; //! временно" в BaseMongoRepository
 
 
 Заметки:
@@ -36,3 +50,4 @@
       config.get<string>(ConfigAlias.MongoDbUsername)
     на
       databaseConfig.username
+  3. а можно делать какие то алиасы или константы в project.json например для "cwd": "libs/blog/models/prisma"

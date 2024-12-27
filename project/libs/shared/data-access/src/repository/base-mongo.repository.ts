@@ -21,7 +21,10 @@ export abstract class BaseMongoRepository<
 
     const plainObject = document.toObject({ versionKey: false }) as ReturnType<T['toPOJO']>;
 
-    return this.entityFactory.create(plainObject);
+    const entity = this.entityFactory.create(plainObject);
+    entity.id = document.id; //! временно
+
+    return entity;
   }
 
   public async findById(id: T['id']): Promise<T> {

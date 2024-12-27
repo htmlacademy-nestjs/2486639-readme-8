@@ -21,7 +21,7 @@ export class BlogUserEntity extends Entity implements StorableEntity<AuthUser> {
       return;
     }
 
-    this.id = user.id ?? '';
+    this.id = user.id ?? undefined;
     this.email = user.email;
     this.login = user.login;
     this.avatrPath = user.avatrPath;
