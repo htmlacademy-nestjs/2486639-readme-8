@@ -33,14 +33,14 @@ model Post {
   repostedPost   Post?     @relation("repostedPosts", fields: [repostedPostId], references: [id])
   repostedPostId String?   @map("reposted_post_id")
   state          String
-  title          String
-  url            String
-  previewText    String
-  text           String
-  quoteText      String
-  quoteAuthor    String
-  imagePath      String
-  urlDescription String
+  title          String?
+  url            String?
+  previewText    String?
+  text           String?
+  quoteText      String?
+  quoteAuthor    String?
+  imagePath      String?
+  urlDescription String?
   createdAt      DateTime  @default(now()) @map("created_at")
   updatedAt      DateTime  @updatedAt @map("updated_at")
   userId         String    @map("user_id")
