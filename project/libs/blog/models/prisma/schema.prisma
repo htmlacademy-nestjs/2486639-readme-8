@@ -1,0 +1,75 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../../../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Tag {
+  id        String   @id @default(uuid())
+  title     String   @unique
+  posts     Post[]
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([title])
+  @@map("tags")
+}
+
+model Post {
+  id              String    @id @default(uuid())
+  type            String
+  tags            Tag[]
+  publishDate     DateTime  @default(now()) @map("publish_date")
+  repostedPost    Post?     @relation("repostedPosts", fields: [repostedPostId], references: [id])
+  repostedPostId  String?   @map("reposted_post_id")
+  state           String
+  title           String?
+  url             String?
+  previewText     String?
+  text            String?
+  quoteText       String?
+  quoteAuthor     String?
+  imagePath       String?
+  linkDescription String?
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+  userId          String    @map("user_id")
+  comments        Comment[]
+  repostedPosts   Post[]    @relation("repostedPosts")
+
+  @@index([title])
+  @@map("posts")
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  message   String
+  userId    String   @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  postId    String   @map("post_id")
+
+  @@index([postId])
+  @@map("comments")
+}
+
+model Subscription {
+  id           String   @id @default(uuid())
+  authorUserId String   @map("author_user_id")
+  userId       String   @map("user_id")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@map("subscriptions")
+}

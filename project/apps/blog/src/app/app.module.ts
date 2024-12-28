@@ -8,5 +8,3 @@ import { BlogPostModule } from '@project/blog/blog-post'
   providers: []
 })
 export class AppModule { }
-
-

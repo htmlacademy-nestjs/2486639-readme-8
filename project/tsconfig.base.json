@@ -20,6 +20,7 @@
         "libs/account/authentication/src/index.ts"
       ],
       "@project/account/blog-user": ["libs/account/blog-user/src/index.ts"],
+      "@project/account/config": ["libs/account/config/src/index.ts"],
       "@project/blog/blog-band": ["libs/blog/blog-band/src/index.ts"],
       "@project/blog/blog-post": ["libs/blog/blog-post/src/index.ts"],
       "@project/blog/blog-post-comment": [
@@ -29,6 +30,8 @@
       "@project/blog/blog-subscription": [
         "libs/blog/blog-subscription/src/index.ts"
       ],
+      "@project/blog/blog-tag": ["libs/blog/blog-tag/src/index.ts"],
+      "@project/blog/models": ["libs/blog/models/src/index.ts"],
       "@project/shared/core": ["libs/shared/core/src/index.ts"],
       "@project/shared/data-access": ["libs/shared/data-access/src/index.ts"],
       "@project/shared/helpers": ["libs/shared/helpers/src/index.ts"]

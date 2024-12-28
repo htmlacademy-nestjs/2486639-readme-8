@@ -1,6 +1,6 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty, } from "@nestjs/swagger";
 
-import { PostData, PostType } from "@project/shared/core";
+import { PostState, PostType, Tag } from "@project/shared/core";
 
 import { PostApiProperty } from "../blog-post.constant.property";
 
@@ -9,8 +9,39 @@ export class CreatePostDto {
   public type: PostType;
 
   @ApiProperty(PostApiProperty.Tags)
-  public tags: string[];
+  public tags: Tag[];
 
-  @ApiProperty(PostApiProperty.Data)
+  public title: string;
+  public url: string;
+  public previewText: string;
+  public text: string;
+  public quoteText: string;
+  public quoteAuthor: string;
+  public imagePath: string;
+  public linkDescription: string;
+
+  //! использовать новые свойства
+  /*
+  @ApiProperty({
+    oneOf: [
+      {
+        type: 'object',
+        properties: {
+          a1: {
+            type: 'string'
+          }
+        }
+      },
+      {
+        type: 'object',
+        properties: {
+          b1: {
+            type: 'string'
+          }
+        }
+      }
+    ],
+  })
   public data: PostData;
+  */
 }

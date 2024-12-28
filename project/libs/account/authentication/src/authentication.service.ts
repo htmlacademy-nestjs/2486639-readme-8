@@ -1,6 +1,8 @@
-import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { ConflictException, Inject, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { ConfigType } from '@nestjs/config';
 
 import { BlogUserRepository, BlogUserEntity } from '@project/account/blog-user';
+import { mongoDbConfig } from '@project/account/config'
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { AuthenticationUserMessage } from './authentication.constant';
@@ -9,7 +11,10 @@ import { LoginUserDto } from './dto/login-user.dto';
 @Injectable()
 export class AuthenticationService {
   constructor(
-    private readonly blogUserRepository: BlogUserRepository
+    private readonly blogUserRepository: BlogUserRepository,
+
+    @Inject(mongoDbConfig.KEY)
+    private readonly databaseConfig: ConfigType<typeof mongoDbConfig>
   ) { }
 
   public async register(dto: CreateUserDto): Promise<BlogUserEntity> {
@@ -28,9 +33,10 @@ export class AuthenticationService {
       throw new ConflictException(AuthenticationUserMessage.Exists);
     }
 
-    const userEntity = await new BlogUserEntity(blogUser).setPassword(password);
+    const userEntity = new BlogUserEntity(blogUser);
 
-    this.blogUserRepository.save(userEntity);
+    await userEntity.setPassword(password);
+    await this.blogUserRepository.save(userEntity);
 
     return userEntity;
   }
@@ -43,7 +49,9 @@ export class AuthenticationService {
       throw new NotFoundException(AuthenticationUserMessage.NotFound);
     }
 
-    if (!await existUser.comparePassword(password)) {
+    const isCorrectPassword = await existUser.comparePassword(password);
+
+    if (!isCorrectPassword) {
       throw new UnauthorizedException(AuthenticationUserMessage.WrongPassword);
     }
 

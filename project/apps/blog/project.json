@@ -9,18 +9,24 @@
       "executor": "nx:run-commands",
       "options": {
         "command": "webpack-cli build",
-        "args": ["node-env=production"]
+        "args": [
+          "node-env=production"
+        ]
       },
       "configurations": {
         "development": {
-          "args": ["node-env=development"]
+          "args": [
+            "node-env=development"
+          ]
         }
       }
     },
     "serve": {
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
-      "dependsOn": ["build"],
+      "dependsOn": [
+        "build"
+      ],
       "options": {
         "buildTarget": "blog:build",
         "runBuildTargetDependencies": false
@@ -32,6 +38,41 @@
         "production": {
           "buildTarget": "blog:build:production"
         }
+      }
+    },
+    "db:lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx prisma validate --schema ./schema.prisma",
+        "cwd": "libs/blog/models/prisma"
+      }
+    },
+    "db:migrate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx prisma migrate dev --schema ./schema.prisma --skip-generate --skip-seed",
+        "cwd": "libs/blog/models/prisma"
+      }
+    },
+    "db:reset": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx prisma migrate reset --schema ./schema.prisma --force --skip-generate --skip-seed",
+        "cwd": "libs/blog/models/prisma"
+      }
+    },
+    "db:generate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx prisma generate --schema ./schema.prisma",
+        "cwd": "libs/blog/models/prisma"
+      }
+    },
+    "db:seed": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx ts-node seed.ts",
+        "cwd": "libs/blog/models/prisma"
       }
     }
   }
