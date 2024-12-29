@@ -12,9 +12,9 @@ export class UserRdo {
   @Expose()
   public email: string;
 
-  @ApiProperty(UserApiProperty.Login)
+  @ApiProperty(UserApiProperty.Name)
   @Expose()
-  public login: string;
+  public name: string;
 
   @ApiProperty(UserApiProperty.AvatarPath)
   @Expose()

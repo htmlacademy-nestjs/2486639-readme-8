@@ -18,11 +18,11 @@ export class AuthenticationService {
   ) { }
 
   public async register(dto: CreateUserDto): Promise<BlogUserEntity> {
-    const { email, login, password } = dto;
+    const { email, name, password } = dto;
 
     const blogUser = {
       email,
-      login,
+      name,
       avatar: '',
       passwordHash: ''
     };

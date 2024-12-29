@@ -4,15 +4,15 @@ Content-Type: application/json
 
 {
   "email": "user@local.local",
-  "login": "Keks",
-  "login22": "Keks1asdasdasdasdasdasdasdasdasddsadasd11",
+  "name": "Keks",
+  "name1111": "Keks1asdasdasdasdasdasdasdasdasddsadasd11",
   "password": "123456"
 }
 
 ###
 
 # Get user by ID
-GET http://localhost:4000/api/auth/676e19eb3cd4c6a0b0cd8646 HTTP/1.1
+GET http://localhost:4000/api/auth/6770b0648ce6df57a766948e HTTP/1.1
 
 ###
 

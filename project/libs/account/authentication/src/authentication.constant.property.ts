@@ -8,9 +8,9 @@ export const UserApiProperty = {
     description: 'The uniq user email',
     example: 'user@local.ru'
   },
-  Login: {
-    description: 'The user login',
-    example: 'login'
+  Name: {
+    description: 'The user name',
+    example: 'Name'
   },
   Password: {
     description: 'The user password',

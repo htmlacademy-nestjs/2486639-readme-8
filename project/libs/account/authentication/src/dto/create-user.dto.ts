@@ -6,8 +6,8 @@ export class CreateUserDto {
   @ApiProperty(UserApiProperty.Email)
   public email: string;
 
-  @ApiProperty(UserApiProperty.Login)
-  public login: string;
+  @ApiProperty(UserApiProperty.Name)
+  public name: string;
 
   @ApiProperty(UserApiProperty.Password)
   public password: string;
