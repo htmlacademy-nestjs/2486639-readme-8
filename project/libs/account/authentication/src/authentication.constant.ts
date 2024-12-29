@@ -10,6 +10,31 @@ export const AuthenticationUserMessage = {
   WrongPassword: 'User password is wrong'
 } as const;
 
+export const UserValidation = {
+  name: {
+    minLength: 3,
+    maxLength: 50
+  },
+  password: {
+    minLength: 6,
+    maxLength: 12
+  }
+} as const;
+
+export const AuthenticationValidateMessage = {
+  name: {
+    minLength: { message: `Minimum name length must be ${UserValidation.name.minLength}` },
+    maxLength: { message: `Maximum name length must be ${UserValidation.name.maxLength}` }
+  },
+  email: {
+    invalidFormat: { message: 'The email must be a valid email address' }
+  },
+  password: {
+    minLength: { message: `Minimum password length must be ${UserValidation.password.minLength}` },
+    maxLength: { message: `Maximum password length must be ${UserValidation.password.maxLength}` }
+  }
+} as const;
+
 export const UserIdApiParam = {
   name: 'userId',
   schema: UserApiProperty.Id
