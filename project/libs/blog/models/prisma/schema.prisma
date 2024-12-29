@@ -15,11 +15,9 @@ datasource db {
 }
 
 model Tag {
-  id        String   @id @default(uuid())
-  title     String   @unique
-  posts     Post[]
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  id    String @id @default(uuid())
+  title String @unique
+  posts Post[]
 
   @@index([title])
   @@map("tags")
@@ -56,7 +54,6 @@ model Comment {
   message   String
   userId    String   @map("user_id")
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
   post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   postId    String   @map("post_id")
 
@@ -65,11 +62,9 @@ model Comment {
 }
 
 model Subscription {
-  id           String   @id @default(uuid())
-  authorUserId String   @map("author_user_id")
-  userId       String   @map("user_id")
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
+  id           String @id @default(uuid())
+  authorUserId String @map("author_user_id")
+  userId       String @map("user_id")
 
   @@map("subscriptions")
 }
