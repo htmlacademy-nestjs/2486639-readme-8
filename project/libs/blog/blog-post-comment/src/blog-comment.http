@@ -1,0 +1,18 @@
+# Create a new comment for postId
+POST http://localhost:3000/api/comments/129f97f2-9b77-499a-a740-156c4b881a44 HTTP/1.1
+Content-Type: application/json
+{
+  "message": "comment comment"
+}
+
+###
+
+# Get comments by postId
+GET http://localhost:3000/api/comments/129f97f2-9b77-499a-a740-156c4b881a44 HTTP/1.1
+
+###
+
+# Delete comment by postId
+DELETE http://localhost:3000/api/comments/129f97f2-9b77-499a-a740-156c4b881a44 HTTP/1.1
+
+###
