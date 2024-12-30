@@ -10,7 +10,7 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { PostRdo } from './rdo/post.rdo';
 
 @ApiTags('blog-post')
-@Controller('post')
+@Controller('posts')
 export class BlogPostController {
   constructor(
     private readonly blogPostService: BlogPostService

@@ -1,10 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 
-import { BlogTagService } from '@project/blog/blog-tag';
+import { BlogTagEntity, BlogTagService } from '@project/blog/blog-tag';
 import { PostState } from '@project/shared/core';
 
-import { BlogPostRepository } from './blog-post.repository';
 import { BlogPostEntity } from './blog-post.entity';
+import { BlogPostFactory } from './blog-post.factory';
+import { BlogPostRepository } from './blog-post.repository';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { BlogPostMessage } from './blog-post.constant';
@@ -17,10 +18,11 @@ export class BlogPostService {
   ) { }
 
   public async create(dto: CreatePostDto): Promise<BlogPostEntity> {
-    const postEntity = new BlogPostEntity(dto);
+    //const tags = await this.blogTagService.getByIds(dto.tags);
+    const tags: BlogTagEntity[] = [];//! временно
+    const newPost = BlogPostFactory.createFromCreatePostDto(dto, tags);
 
-    postEntity.state = PostState.Published; //! тут добавить данные по умолчанию
-    await this.blogPostRepository.save(postEntity);
+    await this.blogPostRepository.save(newPost);
 
     //! тест
     try {
@@ -38,7 +40,7 @@ export class BlogPostService {
     }
     //
 
-    return postEntity;
+    return newPost;
   }
 
   public async getById(id: string) {
@@ -58,12 +60,17 @@ export class BlogPostService {
       throw new NotFoundException(BlogPostMessage.NotFound);
     }
 
-    const postEntity = new BlogPostEntity(dto);
+    console.log(dto); //! тест
 
-    postEntity.id = id;
-    await this.blogPostRepository.update(postEntity);
+    //! временно
+    //const postEntity = new BlogPostEntity(dto);
 
-    return postEntity;
+    //postEntity.id = id;
+    //await this.blogPostRepository.update(postEntity);
+
+    //return postEntity;
+    //
+    return post;
   }
 
   public async deleteById(id: string) {

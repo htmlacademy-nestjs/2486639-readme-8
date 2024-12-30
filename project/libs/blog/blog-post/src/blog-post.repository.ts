@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { PrismaClientService } from '@project/blog/models';
 import { BasePostgresRepository } from '@project/shared/data-access';
-import { Post, PostState, PostType } from '@project/shared/core';
+import { Comment, Post, PostState, PostType, Tag } from '@project/shared/core';
 
 import { BlogPostEntity } from './blog-post.entity';
 import { BlogPostFactory } from './blog-post.factory';
@@ -26,8 +26,9 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
         //tags: { connect: [] },
         tags: undefined,
         //repostedPost: { connect: { id: '129f97f2-9b77-499a-a740-156c4b881a44' } } //! ошибка вставки
-        repostedPost: undefined
+        repostedPost: undefined,
         //
+        comments: undefined
       }
     });
 
@@ -46,7 +47,9 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     //! ошибка на время
     const type = post.type as PostType;
     const state = post.state as PostState;
+    const tags: Tag[] = [];
+    const comments: Comment[] = [];
 
-    return this.createEntityFromDocument({ ...post, type, state });
+    return this.createEntityFromDocument({ ...post, type, state, tags, comments });
   }
 }

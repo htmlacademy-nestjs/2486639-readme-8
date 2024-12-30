@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-import { PostType, Tag } from '@project/shared/core';
+import { PostType } from '@project/shared/core';
 
 import { PostApiProperty } from '../blog-post.constant.property';
 
@@ -9,7 +9,7 @@ export class CreatePostDto {
   public type: PostType;
 
   @ApiProperty(PostApiProperty.Tags)
-  public tags: Tag[];
+  public tags: string[];
 
   public title: string;
   public url: string;

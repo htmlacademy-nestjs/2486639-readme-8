@@ -9,7 +9,7 @@ import { CreatePostCommentDto } from './dto/create-post-comment.dto';
 import { PostCommentRdo } from './rdo/post-comment.rdo';
 
 @ApiTags('blog-post-comment')
-@Controller('comment')
+@Controller('post-comments')
 export class BlogPostCommentController {
   constructor(
     private readonly blogPostCommentService: BlogPostCommentService

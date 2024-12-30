@@ -49,6 +49,7 @@
           а что правильней использовать Service или Repository
         обработать try.... Foreign key constraint failed on the field: `comments_post_id_fkey (index)`
   25. если будем валидировать userId и postId, то добавить/убрать в/из описания ответов BadRequest
+  26. у всех контоллеров/controller не прописано возвращаемое занчение
 
 
 Заметки:
