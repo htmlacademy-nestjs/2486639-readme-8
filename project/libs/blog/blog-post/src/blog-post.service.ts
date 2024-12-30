@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { BlogTagEntity, BlogTagService } from '@project/blog/blog-tag';
-import { PostState } from '@project/shared/core';
 
 import { BlogPostEntity } from './blog-post.entity';
 import { BlogPostFactory } from './blog-post.factory';
