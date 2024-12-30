@@ -1,8 +1,8 @@
-import { HttpStatus } from "@nestjs/common";
+import { HttpStatus } from '@nestjs/common';
 
-import { UserApiProperty } from "./authentication.constant.property";
-import { UserRdo } from "./rdo/user.rdo";
-import { LoggedUserRdo } from "./rdo/logged-user.rdo";
+import { UserApiProperty } from './authentication.constant.property';
+import { UserRdo } from './rdo/user.rdo';
+import { LoggedUserRdo } from './rdo/logged-user.rdo';
 
 export const AuthenticationUserMessage = {
   Exists: 'User with this email already exists',

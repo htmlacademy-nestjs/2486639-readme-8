@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 import { BlogTagEntity } from './blog-tag.entity';
 import { BlogTagRepository } from './blog-tag.repository';

@@ -1,9 +1,9 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsOptional } from "class-validator";
+import { ApiProperty } from '@nestjs/swagger';
+import { IsOptional } from 'class-validator';
 
-import { PostState, PostType, Tag } from "@project/shared/core";
+import { PostState, PostType, Tag } from '@project/shared/core';
 
-import { PostApiProperty } from "../blog-post.constant.property";
+import { PostApiProperty } from '../blog-post.constant.property';
 
 export class UpdatePostDto {
   @ApiProperty(PostApiProperty.Type)

@@ -1,4 +1,4 @@
-import { PostType } from "@project/shared/core";
+import { PostType } from '@project/shared/core';
 
 export const PostApiProperty = {
   Id: {

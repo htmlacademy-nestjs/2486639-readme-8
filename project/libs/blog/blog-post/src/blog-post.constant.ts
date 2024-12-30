@@ -1,7 +1,7 @@
-import { HttpStatus } from "@nestjs/common";
+import { HttpStatus } from '@nestjs/common';
 
-import { PostApiProperty } from "./blog-post.constant.property";
-import { PostRdo } from "./rdo/post.rdo";
+import { PostApiProperty } from './blog-post.constant.property';
+import { PostRdo } from './rdo/post.rdo';
 
 export const BlogPostMessage = {
   NotFound: 'Post not found'

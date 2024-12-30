@@ -1,8 +1,8 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsEmail, IsString, MaxLength, MinLength } from "class-validator";
+import { ApiProperty } from '@nestjs/swagger';
+import { IsEmail, IsString, MaxLength, MinLength } from 'class-validator';
 
-import { UserApiProperty } from "../authentication.constant.property";
-import { AuthenticationValidateMessage, UserValidation } from "../authentication.constant";
+import { UserApiProperty } from '../authentication.constant.property';
+import { AuthenticationValidateMessage, UserValidation } from '../authentication.constant';
 
 export class LoginUserDto {
   @ApiProperty(UserApiProperty.Email)

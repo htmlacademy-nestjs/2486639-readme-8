@@ -1,6 +1,6 @@
-//import { ApiProperty } from "@nestjs/swagger";
+//import { ApiProperty } from '@nestjs/swagger';
 
-//import { PostCommentApiProperty } from "../blog-post-comment.constant.property";
+//import { PostCommentApiProperty } from '../blog-post-comment.constant.property';
 
 export class CreatePostCommentDto {
   //@ApiProperty(PostApiProperty.Type)

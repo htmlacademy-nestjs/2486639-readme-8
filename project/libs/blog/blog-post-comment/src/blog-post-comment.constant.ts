@@ -1,7 +1,7 @@
-import { HttpStatus } from "@nestjs/common";
+import { HttpStatus } from '@nestjs/common';
 
-import { PostApiProperty } from "./blog-post.constant.property";
-import { PostRdo } from "./rdo/post.rdo";
+import { PostApiProperty } from './blog-post-comment.constant.property';
+//import { PostCommentRdo } from './rdo/post-comment.rdo';
 
 export const BlogPostMessage = {
   NotFound: 'Post not found'
@@ -22,12 +22,12 @@ export const BlogPostApiResponse = {
     description: 'Post is not yours.'
   },
   PostCreated: {
-    type: PostRdo,
+    //type: PostRdo,
     status: HttpStatus.CREATED,
     description: 'The new post has been successfully created.'
   },
   PostUpdated: {
-    type: PostRdo,
+    //type: PostRdo,
     status: HttpStatus.OK,
     description: 'The post has been successfully updated.'
   },
@@ -36,7 +36,7 @@ export const BlogPostApiResponse = {
     description: 'The post has been successfully deleted.'
   },
   PostFound: {
-    type: PostRdo,
+    //type: PostRdo,
     status: HttpStatus.OK,
     description: 'Post found'
   },

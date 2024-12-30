@@ -1,8 +1,8 @@
-import { ApiProperty, } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
-import { PostState, PostType, Tag } from "@project/shared/core";
+import { PostType, Tag } from '@project/shared/core';
 
-import { PostApiProperty } from "../blog-post.constant.property";
+import { PostApiProperty } from '../blog-post.constant.property';
 
 export class CreatePostDto {
   @ApiProperty(PostApiProperty.Type)
