@@ -1,25 +1,18 @@
-//import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 
-//import { PostApiProperty } from '../blog-post.constant.property';
+import { PostCommentApiProperty } from '../blog-post-comment.constant.property';
 
 export class PostCommentRdo {
-  //@ApiProperty(PostApiProperty.Id)
-  @Expose()
-  public id: string;
-
-  //@ApiProperty(PostApiProperty.Type)
+  @ApiProperty(PostCommentApiProperty.Message)
   @Expose()
   public message: string;
 
-  //@ApiProperty(PostApiProperty.Tags)
-  //! нужно ли
-  @Expose()
-  public postId: string;
-
+  @ApiProperty(PostCommentApiProperty.UserId)
   @Expose()
   public userId: string;
 
+  @ApiProperty(PostCommentApiProperty.CreatedAt)
   @Expose()
-  public date: Date;
+  public createdAt: Date;
 }

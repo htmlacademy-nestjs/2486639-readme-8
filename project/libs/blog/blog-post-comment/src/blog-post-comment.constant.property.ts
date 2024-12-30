@@ -1,21 +1,19 @@
-import { PostType } from '@project/shared/core';
-
-export const PostApiProperty = {
-  Id: {
+//! копия из другой либы, может нужно либа с описанием?
+export const PostCommentApiProperty = {
+  PostId: {
     description: 'The uniq post ID',
     example: '2f31b19b-97eb-4305-877a-0b9be7faca8f'
   },
-  Type: {
-    description: 'The post type',
-    enum: PostType,
-    example: PostType.Video
+  Message: {
+    description: 'Comment message',
+    example: 'Comment message, comment message'
   },
-  Tags: {
-    description: 'The post tags',
-    example: ["tag1, rag2"]
+  UserId: {
+    description: 'UserId',
+    example: '658170cbb954e9f5b905ccf4'
   },
-  Data: {
-    description: 'The post data',
-    example: "123213123123"
+  CreatedAt: {
+    description: 'Comment date',
+    example: '2024-12-27T08:29:40.245Z'
   }
 } as const;

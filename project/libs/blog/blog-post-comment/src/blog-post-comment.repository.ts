@@ -6,6 +6,7 @@ import { Comment } from '@project/shared/core';
 
 import { BlogPostCommentEntity } from './blog-post-comment.entity';
 import { BlogPostCommentFactory } from './blog-post-comment.factory';
+import { BlogPostCommentMessage } from './blog-post-comment.constant';
 
 @Injectable()
 export class BlogPostCommentRepository extends BasePostgresRepository<BlogPostCommentEntity, Comment> {
@@ -25,11 +26,17 @@ export class BlogPostCommentRepository extends BasePostgresRepository<BlogPostCo
   }
 
   public async save(entity: BlogPostCommentEntity): Promise<void> {
-    const record = await this.client.comment.create({
-      data: { ...entity.toPOJO() }
-    });
+    try {
+      const record = await this.client.comment.create({
+        data: { ...entity.toPOJO() }
+      });
 
-    entity.id = record.id;
+      entity.id = record.id;
+    } catch (error) {
+      console.log(error); //! тест
+
+      throw new NotFoundException(`${BlogPostCommentMessage.PostNotFound} ${entity.postId}`);
+    }
   }
 
   public async delete(postId: string, userId: string): Promise<void> {

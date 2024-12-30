@@ -1,9 +1,9 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
-import { /*ApiParam, ApiResponse,*/ ApiTags } from '@nestjs/swagger';
+import { ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { fillDto } from '@project/shared/helpers';
 
-//import { PostCommentIdApiParam, BlogPostCommentApiResponse } from './blog-post-comment.constant';
+import { POST_ID_PARAM, BlogPostCommentApiResponse, PostIdApiParam } from './blog-post-comment.constant';
 import { BlogPostCommentService } from './blog-post-comment.service';
 import { CreatePostCommentDto } from './dto/create-post-comment.dto';
 import { PostCommentRdo } from './rdo/post-comment.rdo';
@@ -15,11 +15,14 @@ export class BlogPostCommentController {
     private readonly blogPostCommentService: BlogPostCommentService
   ) { }
 
-  //@ApiResponse(BlogPostApiResponse.PostCreated)
-  //@ApiResponse(BlogPostApiResponse.Unauthorized)
-  @Post(':postId')
-  public async create(@Param(/*//!! */'postId') postId: string, @Body() dto: CreatePostCommentDto) {
-    const userId = '12321321321'; //! определить пользователя
+  @ApiResponse(BlogPostCommentApiResponse.PostCommentCreated)
+  @ApiResponse(BlogPostCommentApiResponse.Unauthorized)
+  @ApiResponse(BlogPostCommentApiResponse.BadRequest)
+  @ApiResponse(BlogPostCommentApiResponse.PostNotFound)
+  @ApiParam(PostIdApiParam)
+  @Post(POST_ID_PARAM)
+  public async create(@Param(PostIdApiParam.name) postId: string, @Body() dto: CreatePostCommentDto) {
+    const userId = '12321321321'; //! временно, необходимо определить пользователя
     const newComment = await this.blogPostCommentService.create(dto, postId, userId);
 
     return fillDto(PostCommentRdo, newComment.toPOJO());
