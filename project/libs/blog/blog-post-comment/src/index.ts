@@ -1,1 +1,1 @@
-export { BlogPostModule } from './blog-post.module';
+export { BlogPostCommentModule } from './blog-post-comment.module';
