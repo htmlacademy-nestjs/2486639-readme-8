@@ -42,7 +42,10 @@ model Post {
   createdAt       DateTime  @default(now()) @map("created_at")
   updatedAt       DateTime  @updatedAt @map("updated_at")
   userId          String    @map("user_id")
+  likesCount      Int       @default(0) @map("likes_count")
+  commentsCount   Int       @default(0) @map("comments_count")
   comments        Comment[]
+  likes           Like[]
   repostedPosts   Post[]    @relation("repostedPosts")
 
   @@index([title])
@@ -59,6 +62,16 @@ model Comment {
 
   @@index([postId])
   @@map("comments")
+}
+
+model Like {
+  id     String @id @default(uuid())
+  userId String @map("user_id")
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  postId String @map("post_id")
+
+  @@index([postId])
+  @@map("likes")
 }
 
 model Subscription {
