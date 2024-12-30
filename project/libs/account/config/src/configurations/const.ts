@@ -13,5 +13,8 @@ export enum ConfigAlias {
   MongoDbHost = `${MongoDb}.host`,
   MongoDbPort = `${MongoDb}.port`,
   MongoDbAuthBase = `${MongoDb}.authBase`,
-  MongoDbDatabaseName = `${MongoDb}.databaseName`
+  MongoDbDatabaseName = `${MongoDb}.databaseName`,
+  Jwt = 'jwt',
+  JwtAccessTokenSecret = `${Jwt}.accessTokenSecret`,
+  JwtAccessTokenExpiresIn = `${Jwt}.accessTokenExpiresIn`
 }
