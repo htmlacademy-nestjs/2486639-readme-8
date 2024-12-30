@@ -1,3 +1,4 @@
+import { Comment } from './comment.interface';
 import { PostState } from './post-state.enum';
 import { PostType } from './post-type.enum';
 import { Tag } from './tag.interface';
@@ -21,4 +22,7 @@ export interface Post {
   linkDescription?: string; // types: link
   createdAt?: Date;
   updatedAt?: Date;
+  likesCount?: number;
+  commentsCount?: number;
+  comments: Comment[];
 }
