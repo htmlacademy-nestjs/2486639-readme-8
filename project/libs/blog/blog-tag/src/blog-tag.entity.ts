@@ -18,16 +18,12 @@ export class BlogTagEntity extends Entity implements StorableEntity<Tag> {
 
     this.id = tag.id ?? undefined;
     this.title = tag.title;
-    this.createdAt = tag.createdAt ?? undefined;
-    this.updatedAt = tag.updatedAt ?? undefined;
   }
 
   public toPOJO(): Tag {
     return {
       id: this.id,
-      title: this.title,
-      createdAt: this.createdAt,
-      updatedAt: this.updatedAt
+      title: this.title
     }
   }
 }

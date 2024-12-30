@@ -17,8 +17,8 @@ export class BlogPostCommentController {
 
   //@ApiResponse(BlogPostApiResponse.PostCreated)
   //@ApiResponse(BlogPostApiResponse.Unauthorized)
-  @Post()
-  public async create(@Param(/*//!! */) postId: string, @Body() dto: CreatePostCommentDto) {
+  @Post(':postId')
+  public async create(@Param(/*//!! */'postId') postId: string, @Body() dto: CreatePostCommentDto) {
     const userId = '12321321321'; //! определить пользователя
     const newComment = await this.blogPostCommentService.create(dto, postId, userId);
 
@@ -29,8 +29,8 @@ export class BlogPostCommentController {
   //@ApiResponse(BlogPostApiResponse.PostNotFound)
   //@ApiParam(PostIdApiParam)
   //@Get(`:${PostIdApiParam.name}`)
-  @Get('postId')
-  public async index(@Param(/*PostIdApiParam.name*/) postId: string) {
+  @Get(':postId')
+  public async index(@Param(/*PostIdApiParam.name*/'postId') postId: string) {
     console.log(postId); //! тест
     const comments = await this.blogPostCommentService.findByPostId(postId);
 
