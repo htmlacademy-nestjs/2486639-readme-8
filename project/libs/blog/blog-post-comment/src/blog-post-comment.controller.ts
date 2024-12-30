@@ -28,27 +28,26 @@ export class BlogPostCommentController {
     return fillDto(PostCommentRdo, newComment.toPOJO());
   }
 
-  //@ApiResponse(BlogPostApiResponse.PostFound)
-  //@ApiResponse(BlogPostApiResponse.PostNotFound)
-  //@ApiParam(PostIdApiParam)
-  //@Get(`:${PostIdApiParam.name}`)
-  @Get(':postId')
-  public async index(@Param(/*PostIdApiParam.name*/'postId') postId: string) {
+  @ApiResponse(BlogPostCommentApiResponse.PostCommentsFound)
+  @ApiResponse(BlogPostCommentApiResponse.BadRequest)
+  @ApiResponse(BlogPostCommentApiResponse.PostNotFound)
+  @ApiParam(PostIdApiParam)
+  @Get(POST_ID_PARAM)
+  public async index(@Param(PostIdApiParam.name) postId: string) {
     console.log(postId); //! тест
     const comments = await this.blogPostCommentService.findByPostId(postId);
 
     return fillDto(PostCommentRdo, comments.map((comment) => comment.toPOJO()));
   }
 
-  //  @ApiResponse(BlogPostApiResponse.PostDeleted)
-  //  @ApiResponse(BlogPostApiResponse.Unauthorized)
-  //  @ApiResponse(BlogPostApiResponse.PostNotFound)
-  //  @ApiResponse(BlogPostApiResponse.NotAllow)
-  //  @ApiParam(PostIdApiParam)
-  //  @Delete(`:${PostIdApiParam.name}`)
-  @Delete(':postId')
-  public async delete(@Param(/*PostIdApiParam.name*/) postId: string) {
-    const userId = '123132131' //! временно
+  @ApiResponse(BlogPostCommentApiResponse.PostCommentDeleted)
+  @ApiResponse(BlogPostCommentApiResponse.Unauthorized)
+  @ApiResponse(BlogPostCommentApiResponse.BadRequest)
+  @ApiResponse(BlogPostCommentApiResponse.PostNotFound)
+  @ApiParam(PostIdApiParam)
+  @Delete(POST_ID_PARAM)
+  public async delete(@Param(PostIdApiParam.name) postId: string) {
+    const userId = '12321321321' //! временно
 
     await this.blogPostCommentService.delete(postId, userId);
   }

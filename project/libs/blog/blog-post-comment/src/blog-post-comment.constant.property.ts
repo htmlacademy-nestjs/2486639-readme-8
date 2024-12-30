@@ -1,4 +1,3 @@
-//! копия из другой либы, может нужно либа с описанием?
 export const PostCommentApiProperty = {
   PostId: {
     description: 'The uniq post ID',
@@ -9,7 +8,7 @@ export const PostCommentApiProperty = {
     example: 'Comment message, comment message'
   },
   UserId: {
-    description: 'UserId',
+    description: 'The uniq user ID',
     example: '658170cbb954e9f5b905ccf4'
   },
   CreatedAt: {

@@ -18,6 +18,14 @@ export class BlogPostCommentRepository extends BasePostgresRepository<BlogPostCo
   }
 
   public async findByPostId(postId: string): Promise<BlogPostCommentEntity[]> {
+    //! временно? возможно будет отдельный валидатор или искать через соответвующий service или repository
+    const post = await this.client.post.findFirst({ where: { id: postId } });
+
+    if (!post) {
+      throw new NotFoundException(`${BlogPostCommentMessage.PostNotFound} ${postId}`);
+    }
+    //
+
     const records = await this.client.comment.findMany({
       where: { postId }
     });
@@ -45,7 +53,7 @@ export class BlogPostCommentRepository extends BasePostgresRepository<BlogPostCo
     });
 
     if (!comment) {
-      throw new NotFoundException(`Comment for postId ${postId} and userId ${userId} not found.`);
+      throw new NotFoundException(`Comment for postId "${postId}" and userId "${userId}" not found.`);
     }
 
     await this.client.comment.delete({ where: { id: comment.id } })

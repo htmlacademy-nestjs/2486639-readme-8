@@ -18,7 +18,7 @@ export const PostCommentValidateMessage = {
 } as const;
 
 export const BlogPostCommentMessage = {
-  PostNotFound: 'Post not found'
+  PostNotFound: 'Post not found.'
 } as const;
 
 export const PostIdApiParam = {
@@ -41,6 +41,12 @@ export const BlogPostCommentApiResponse = {
     type: PostCommentRdo,
     status: HttpStatus.CREATED,
     description: 'The new comment has been successfully created.'
+  },
+  PostCommentsFound: {
+    type: PostCommentRdo,
+    isArray: true,
+    status: HttpStatus.OK,
+    description: 'Post comments found.'
   },
   PostCommentDeleted: {
     status: HttpStatus.OK,
