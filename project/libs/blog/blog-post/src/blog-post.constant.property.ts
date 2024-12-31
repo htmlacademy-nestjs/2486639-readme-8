@@ -21,7 +21,7 @@ export const PostApiProperty = {
   },
   Tags: {
     description: 'The post tags',
-    example: ["tag1, rag2"]
+    example: ["tag1, tag2"]
   },
   Title: {
     description: 'The post title for types: video and text',

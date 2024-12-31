@@ -3,18 +3,14 @@ import { HttpStatus } from '@nestjs/common';
 import { PostCommentRdo } from './rdo/post-comment.rdo';
 import { PostCommentApiProperty } from './blog-post-comment.constant.property';
 
-export const PostCommentValidation = {
-  message: {
-    minLength: 10,
-    maxLength: 300
-  }
+export const PostCommentMessageValidation = {
+  MinLength: 10,
+  MaxLength: 300
 } as const;
 
-export const PostCommentValidateMessage = {
-  message: {
-    minLength: { message: `Minimum message length must be ${PostCommentValidation.message.minLength}` },
-    maxLength: { message: `Maximum message length must be ${PostCommentValidation.message.maxLength}` }
-  }
+export const PostCommentMessageValidateMessage = {
+  MinLength: { message: `Minimum message length must be ${PostCommentMessageValidation.MinLength}` },
+  MaxLength: { message: `Maximum message length must be ${PostCommentMessageValidation.MaxLength}` }
 } as const;
 
 export const BlogPostCommentMessage = {
