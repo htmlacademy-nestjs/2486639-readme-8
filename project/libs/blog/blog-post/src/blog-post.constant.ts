@@ -21,6 +21,10 @@ export const BlogPostApiResponse = {
     status: HttpStatus.FORBIDDEN,
     description: 'Post is not yours.'
   },
+  BadRequest: {
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Bad request.'
+  },
   PostCreated: {
     type: PostRdo,
     status: HttpStatus.CREATED,

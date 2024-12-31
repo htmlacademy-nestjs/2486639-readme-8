@@ -1,33 +1,71 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional } from 'class-validator';
+import { IsArray, IsDateString, IsEnum, IsOptional, IsString } from 'class-validator';
 
-import { PostState, PostType, Tag } from '@project/shared/core';
+import { PostState, PostType } from '@project/shared/core';
 
 import { PostApiProperty } from '../blog-post.constant.property';
 
 export class UpdatePostDto {
   @ApiProperty(PostApiProperty.Type)
   @IsOptional()
-  public type: PostType;
+  @IsString()
+  @IsEnum(PostType)
+  public type?: PostType;
+
+  @ApiProperty(PostApiProperty.State)
+  @IsOptional()
+  @IsString()
+  @IsEnum(PostState)
+  public state?: PostState;
+
+  @ApiProperty(PostApiProperty.publishDate)
+  @IsOptional()
+  @IsDateString()
+  public publishDate?: Date;
 
   @ApiProperty(PostApiProperty.Tags)
   @IsOptional()
-  public tags: Tag[];
+  @IsArray()
+  @IsString({ each: true })
+  public tags?: string[];
 
-  public publishDate: Date;
-  public state: PostState;
-  public url: string;
-  public previewText: string;
-  public text: string;
-  public quoteText: string;
-  public quoteAuthor: string;
-  public imagePath: string;
-  public linkDescription: string;
-
-  //! использовать новые свойства
-  /*
-  @ApiProperty(PostApiProperty.Data)
+  @ApiProperty(PostApiProperty.Title)
   @IsOptional()
-  public data: PostData;
-  */
+  @IsString()
+  public title?: string;
+
+  @ApiProperty(PostApiProperty.Url)
+  @IsOptional()
+  @IsString()
+  public url?: string;
+
+  @ApiProperty(PostApiProperty.PreviewText)
+  @IsOptional()
+  @IsString()
+  public previewText?: string;
+
+  @ApiProperty(PostApiProperty.Text)
+  @IsOptional()
+  @IsString()
+  public text?: string;
+
+  @ApiProperty(PostApiProperty.QuoteText)
+  @IsOptional()
+  @IsString()
+  public quoteText?: string;
+
+  @ApiProperty(PostApiProperty.QuoteAuthor)
+  @IsOptional()
+  @IsString()
+  public quoteAuthor?: string;
+
+  @ApiProperty(PostApiProperty.ImagePath)
+  @IsOptional()
+  @IsString()
+  public imagePath?: string;
+
+  @ApiProperty(PostApiProperty.LinkDescription)
+  @IsOptional()
+  @IsString()
+  public linkDescription?: string;
 }

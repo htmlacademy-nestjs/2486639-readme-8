@@ -18,6 +18,7 @@ export class BlogPostController {
 
   @ApiResponse(BlogPostApiResponse.PostCreated)
   @ApiResponse(BlogPostApiResponse.Unauthorized)
+  @ApiResponse(BlogPostApiResponse.BadRequest)
   @Post()
   public async create(@Body() dto: CreatePostDto) {
     const newPost = await this.blogPostService.create(dto);

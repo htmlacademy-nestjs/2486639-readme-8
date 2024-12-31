@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 
-import { PostState, PostType, Tag, User } from '@project/shared/core';
+import { PostState, PostType, User } from '@project/shared/core';
 
 import { PostApiProperty } from '../blog-post.constant.property';
 
@@ -16,7 +16,11 @@ export class PostRdo {
 
   @ApiProperty(PostApiProperty.Tags)
   @Expose()
-  public tags: Tag[];
+  public tags: string[];
+
+  @ApiProperty(PostApiProperty.State)
+  @Expose()
+  public state: PostState;
 
   @Expose()
   public publishDate: Date;
@@ -24,9 +28,45 @@ export class PostRdo {
   public repostedPost: PostRdo; //! как наполнить и в рекусию не уйти... или гдето есть финиш... глянуть по ТЗ навернео один уровень только нужен
   public repostedPostUser: User; //! по ТЗ нужно отдать
 
-  @Expose()
-  public state: PostState;
+  /*
 
+    @ApiProperty(PostApiProperty.Tags)
+    @IsArray()
+    @IsString({ each: true })
+    public tags: string[];
+
+    @ApiProperty(PostApiProperty.Title)
+    @IsString()
+    public title: string;
+
+    @ApiProperty(PostApiProperty.Url)
+    @IsString()
+    public url: string;
+
+    @ApiProperty(PostApiProperty.PreviewText)
+    @IsString()
+    public previewText: string;
+
+    @ApiProperty(PostApiProperty.Text)
+    @IsString()
+    public text: string;
+
+    @ApiProperty(PostApiProperty.QuoteText)
+    @IsString()
+    public quoteText: string;
+
+    @ApiProperty(PostApiProperty.QuoteAuthor)
+    @IsString()
+    public quoteAuthor: string;
+
+    @ApiProperty(PostApiProperty.ImagePath)
+    @IsString()
+    public imagePath: string;
+
+    @ApiProperty(PostApiProperty.LinkDescription)
+    @IsString()
+    public linkDescription: string;
+     */
   @Expose()
   public user: User;
 

@@ -2,8 +2,6 @@ import { Entity, StorableEntity, Tag } from '@project/shared/core';
 
 export class BlogTagEntity extends Entity implements StorableEntity<Tag> {
   public title: string;
-  public createdAt: Date;
-  public updatedAt: Date;
 
   constructor(tag?: Tag) {
     super();

@@ -5,14 +5,8 @@
   4. /api/auth/:id перенести в пользователя /api/user/:id ?
   5. смена пароля?
   6. после регитсрации возвращаю - type: UserRdo, как при getById... где описано что отдать... только id или весь объект?
-  7. Swagger Body type Class1|Class2 не получилось... может не весь класс а поле data выделить в ApiProperty?
-    https://docs.nestjs.com/openapi/types-and-parameters
-      oneOf: [
-        { $ref: getSchemaPath(Class1) },
-        { $ref: getSchemaPath(Class2) },
-      ],
-    потом не собирает схемы CLass1 и Class2
-    !! для новых полей сделать красиваое описание для разных типов...
+  7. Swagger Body type
+    можно добавить в описание произвольный тект, для какого типа поста какие нужны поля
     !! добавить дополнительную проверку на тип и обязательность полей
   8. UpdatePostDto - @IsOptional() ??  А в Swagger * - обязательный ?
   9. задействовать настройки подключения к postgres из project/apps/blog/blog.dev.env
@@ -50,6 +44,7 @@
         обработать try.... Foreign key constraint failed on the field: `comments_post_id_fkey (index)`
   25. если будем валидировать userId и postId, то добавить/убрать в/из описания ответов BadRequest
   26. у всех контоллеров/controller не прописано возвращаемое занчение
+  27. для поста с типом фото, как загружать картинку, после добавления или сразу?
 
 
 Заметки:
