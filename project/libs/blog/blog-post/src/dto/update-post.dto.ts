@@ -18,7 +18,7 @@ export class UpdatePostDto {
   @IsEnum(PostState)
   public state?: PostState;
 
-  @ApiProperty(PostApiProperty.publishDate)
+  @ApiProperty(PostApiProperty.PublishDate)
   @IsOptional()
   @IsDateString()
   public publishDate?: Date;

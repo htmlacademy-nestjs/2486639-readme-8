@@ -15,7 +15,7 @@ export const PostApiProperty = {
     enum: PostState,
     example: PostState.Published
   },
-  publishDate: {
+  PublishDate: {
     description: 'The post publish date',
     example: "2024-07-09T11:24:14.495Z"
   },

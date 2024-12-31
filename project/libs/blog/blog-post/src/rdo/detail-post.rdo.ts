@@ -1,11 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 
-import { PostType } from '@project/shared/core';
+import { PostState, PostType } from '@project/shared/core';
 
 import { PostApiProperty } from '../blog-post.constant.property';
 
-export class PostRdo {
+export class DetailPostRdo {
   @ApiProperty(PostApiProperty.Id)
   @Expose()
   public id: string;
@@ -17,6 +17,10 @@ export class PostRdo {
   @ApiProperty(PostApiProperty.Tags)
   @Expose()
   public tags: string[];
+
+  @ApiProperty(PostApiProperty.State)
+  @Expose()
+  public state: PostState;
 
   @ApiProperty(PostApiProperty.PublishDate)
   @Expose()
@@ -53,6 +57,15 @@ export class PostRdo {
   @ApiProperty(PostApiProperty.LinkDescription)
   @Expose()
   public linkDescription: string;
+
+  @Expose()
+  public isRepost: boolean;
+
+  @Expose()
+  public repostedPostId: string;
+
+  @Expose()
+  public repostedPostUserId: string;
 
   @Expose()
   public userId: string;
