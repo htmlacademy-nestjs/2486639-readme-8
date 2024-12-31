@@ -4,11 +4,12 @@ import { IsArray, IsEnum, IsString } from 'class-validator';
 import { PostType } from '@project/shared/core';
 
 import { PostApiProperty } from '../blog-post.constant.property';
+import { PostValidateMessage } from '../blog-post.constant';
 
 export class CreatePostDto {
   @ApiProperty(PostApiProperty.Type)
   @IsString()
-  @IsEnum(PostType)
+  @IsEnum(PostType, PostValidateMessage.Type)
   public type: PostType;
 
   @ApiProperty(PostApiProperty.Tags)

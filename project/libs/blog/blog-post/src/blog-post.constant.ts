@@ -1,7 +1,27 @@
 import { HttpStatus } from '@nestjs/common';
 
+import { PostType } from '@project/shared/core';
+
 import { PostApiProperty } from './blog-post.constant.property';
 import { PostRdo } from './rdo/post.rdo';
+
+
+export const PostValidation = {
+  message: {
+    minLength: 10,
+    maxLength: 300
+  }
+} as const;
+
+export const PostValidateMessage = {
+  Type: {
+    message: `Type must by one of ${Object.values(PostType).join(', ')}`
+  },
+  message: {
+    minLength: { message: `Minimum message length must be ${PostValidation.message.minLength}` },
+    maxLength: { message: `Maximum message length must be ${PostValidation.message.maxLength}` }
+  }
+} as const;
 
 export const BlogPostMessage = {
   NotFound: 'Post not found'

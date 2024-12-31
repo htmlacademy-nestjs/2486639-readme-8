@@ -32,11 +32,14 @@
           status: HttpStatus.UNAUTHORIZED,
           status: HttpStatus.BAD_REQUEST,
           NotFound: 'Post not found'
-  23. для запросов в посте, довить статус
-      BadRequest: {
-      status: HttpStatus.BAD_REQUEST,
-      description: 'Bad request.'
-    },
+  23. нужно ли для ошибок BAD_REQUEST и UNAUTHORIZED описать тело ответа? а как?
+    {
+       "message": [
+          "Type must by one of video, text, quote, photo, link"
+       ],
+         "error": "Bad Request",
+        "statusCode": 400
+      }
   24. проверка существования поста по id
         будет еще навешана проверка - валидатор?
         перед вставкой вызвать поиск? через BlogPostService или BlogPostRepository
@@ -47,6 +50,8 @@
   27. для поста с типом фото, как загружать картинку, после добавления или сразу?
   28. черновики других пользоватетлей доступны при запросе детальной информаций о посте?
         в DetailPostRdo оставил State
+  29. проверка количества тегов при создании и редактировании постов, может ли клиент оптправить 10 тегов, где 3 одинаковых?
+        пока сделал проверку на 8 штук при отправке запроса
 
 
 Заметки:
