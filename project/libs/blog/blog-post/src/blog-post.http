@@ -4,10 +4,7 @@ Content-Type: application/json
 
 {
   "type": "video",
-  "tags": [],
-  "data": {
-    "a": "123456"
-  }
+  "tags": ["taG1","tag2"]
 }
 
 ###

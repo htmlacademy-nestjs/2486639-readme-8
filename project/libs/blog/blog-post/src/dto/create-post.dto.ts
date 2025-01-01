@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsEnum, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
+import { ArrayMaxSize, IsArray, IsEnum, IsOptional, IsString, IsUrl, Matches, MaxLength, MinLength } from 'class-validator';
 
 import { PostType } from '@project/shared/core';
 
@@ -13,49 +13,64 @@ export class CreatePostDto {
   public type: PostType;
 
   @ApiProperty(PostApiProperty.Tags)
+  @IsOptional()
   @IsArray()
+  @ArrayMaxSize(PostValidation.Tags.MaxCount)
   @IsString({ each: true })
-  public tags: string[];
+  @Matches(PostValidation.Tags.RegExp, { each: true })
+  @MinLength(PostValidation.Tags.MinLength, PostValidateMessage.Tags.MinLength)
+  @MaxLength(PostValidation.Tags.MaxLength, PostValidateMessage.Tags.MaxLength)
+  public tags?: string[];
 
   @ApiProperty(PostApiProperty.Title)
   @IsOptional()
   @IsString()
   @MinLength(PostValidation.Title.MinLength, PostValidateMessage.Title.MinLength)
   @MaxLength(PostValidation.Title.MaxLength, PostValidateMessage.Title.MaxLength)
-  public title: string;
+  public title?: string;
 
   @ApiProperty(PostApiProperty.Url)
   @IsOptional()
   @IsString()
-  public url: string;
+  @IsUrl({ 'require_tld': false }, PostValidateMessage.Url) //! проверить
+  public url?: string;
 
   @ApiProperty(PostApiProperty.PreviewText)
   @IsOptional()
   @IsString()
-  public previewText: string;
+  @MinLength(PostValidation.PreviewText.MinLength, PostValidateMessage.PreviewText.MinLength)
+  @MaxLength(PostValidation.PreviewText.MaxLength, PostValidateMessage.PreviewText.MaxLength)
+  public previewText?: string;
 
   @ApiProperty(PostApiProperty.Text)
   @IsOptional()
   @IsString()
-  public text: string;
+  @MinLength(PostValidation.Text.MinLength, PostValidateMessage.Text.MinLength)
+  @MaxLength(PostValidation.Text.MaxLength, PostValidateMessage.Text.MaxLength)
+  public text?: string;
 
   @ApiProperty(PostApiProperty.QuoteText)
   @IsOptional()
   @IsString()
-  public quoteText: string;
+  @MinLength(PostValidation.QuoteText.MinLength, PostValidateMessage.QuoteText.MinLength)
+  @MaxLength(PostValidation.QuoteText.MaxLength, PostValidateMessage.QuoteText.MaxLength)
+  public quoteText?: string;
 
   @ApiProperty(PostApiProperty.QuoteAuthor)
   @IsOptional()
   @IsString()
-  public quoteAuthor: string;
+  @MinLength(PostValidation.QuoteAuthor.MinLength, PostValidateMessage.QuoteAuthor.MinLength)
+  @MaxLength(PostValidation.QuoteAuthor.MaxLength, PostValidateMessage.QuoteAuthor.MaxLength)
+  public quoteAuthor?: string;
 
-  @ApiProperty(PostApiProperty.ImagePath)
+  @ApiProperty(PostApiProperty.ImagePath) //! Максимальный размер фотографии: 1 мегабайт. Допускаются форматы: jpg, png.
   @IsOptional()
   @IsString()
-  public imagePath: string;
+  public imagePath?: string;
 
   @ApiProperty(PostApiProperty.LinkDescription)
   @IsOptional()
   @IsString()
-  public linkDescription: string;
+  @MaxLength(PostValidation.LinkDescription.MaxLength, PostValidateMessage.LinkDescription.MaxLength)
+  public linkDescription?: string;
 }
