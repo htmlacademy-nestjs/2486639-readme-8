@@ -52,6 +52,9 @@
         в DetailPostRdo оставил State
   29. проверка количества тегов при создании и редактировании постов, может ли клиент оптправить 10 тегов, где 3 одинаковых?
         пока сделал проверку на 8 штук при отправке запроса
+  30. проверка .env
+        [Account JWTConfig Validation Error]: "accessTokenSecret" is required  / accessTokenSecret: Joi.string().required(),
+        сделавть чтоб писал "не указан JWT_ACCESS_TOKEN_SECRET!"
 
 
 Заметки:

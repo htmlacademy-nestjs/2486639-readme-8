@@ -6,12 +6,12 @@ import { AuthenticationValidateMessage, UserValidation } from '../authentication
 
 export class LoginUserDto {
   @ApiProperty(UserApiProperty.Email)
-  @IsEmail({}, AuthenticationValidateMessage.email.invalidFormat)
+  @IsEmail({}, AuthenticationValidateMessage.Email.InvalidFormat)
   public email: string;
 
   @ApiProperty(UserApiProperty.Password)
   @IsString()
-  @MinLength(UserValidation.password.minLength, AuthenticationValidateMessage.password.minLength)
-  @MaxLength(UserValidation.password.maxLength, AuthenticationValidateMessage.password.maxLength)
+  @MinLength(UserValidation.Password.MinLength, AuthenticationValidateMessage.Password.MinLength)
+  @MaxLength(UserValidation.Password.MaxLength, AuthenticationValidateMessage.Password.MaxLength)
   public password: string;
 }

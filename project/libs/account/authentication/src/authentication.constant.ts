@@ -11,27 +11,27 @@ export const AuthenticationUserMessage = {
 } as const;
 
 export const UserValidation = {
-  name: {
-    minLength: 3,
-    maxLength: 50
+  Name: {
+    MinLength: 3,
+    MaxLength: 50
   },
-  password: {
-    minLength: 6,
-    maxLength: 12
+  Password: {
+    MinLength: 6,
+    MaxLength: 12
   }
 } as const;
 
 export const AuthenticationValidateMessage = {
-  name: {
-    minLength: { message: `Minimum name length must be ${UserValidation.name.minLength}` },
-    maxLength: { message: `Maximum name length must be ${UserValidation.name.maxLength}` }
+  Name: {
+    MinLength: { message: `Minimum name length must be ${UserValidation.Name.MinLength}` },
+    MaxLength: { message: `Maximum name length must be ${UserValidation.Name.MaxLength}` }
   },
-  email: {
-    invalidFormat: { message: 'The email must be a valid email address' }
+  Email: {
+    InvalidFormat: { message: 'The email must be a valid email address' }
   },
-  password: {
-    minLength: { message: `Minimum password length must be ${UserValidation.password.minLength}` },
-    maxLength: { message: `Maximum password length must be ${UserValidation.password.maxLength}` }
+  Password: {
+    MinLength: { message: `Minimum password length must be ${UserValidation.Password.MinLength}` },
+    MaxLength: { message: `Maximum password length must be ${UserValidation.Password.MaxLength}` }
   }
 } as const;
 
