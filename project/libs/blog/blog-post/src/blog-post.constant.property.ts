@@ -21,7 +21,7 @@ export const PostApiProperty = {
   },
   Tags: {
     description: 'The post tags',
-    example: ["tag1, tag2"]
+    example: ["tag1", "tag2"]
   },
   Title: {
     description: 'The post title for types: video and text',
@@ -33,11 +33,11 @@ export const PostApiProperty = {
   },
   PreviewText: {
     description: 'The post preview text for type: text',
-    example: "preview text preview text"
+    example: "preview text preview text preview text preview text"
   },
   Text: {
     description: 'The post text for type: text',
-    example: "text text text text text text text"
+    example: "text text text text text text text text text text text text text text text text text text text text text"
   },
   QuoteText: {
     description: 'The post quote text for type: quote',
