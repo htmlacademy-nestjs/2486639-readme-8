@@ -16,10 +16,10 @@ export class BlogPostService {
     private readonly blogPostRepository: BlogPostRepository
   ) { }
 
-  public async create(dto: CreatePostDto): Promise<BlogPostEntity> {
+  public async create(dto: CreatePostDto, userId: string): Promise<BlogPostEntity> {
     //const tags = await this.blogTagService.getByIds(dto.tags);
     const tags: BlogTagEntity[] = [];//! временно
-    const newPost = BlogPostFactory.createFromCreatePostDto(dto, tags);
+    const newPost = BlogPostFactory.createFromCreatePostDto(dto, tags, userId);
 
     await this.blogPostRepository.save(newPost);
 

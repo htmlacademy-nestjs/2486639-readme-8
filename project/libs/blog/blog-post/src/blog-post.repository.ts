@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { PrismaClientService } from '@project/blog/models';
 import { BasePostgresRepository } from '@project/shared/data-access';
-import { Comment, Post, PostState, PostType, Tag } from '@project/shared/core';
+import { Post, PostState, PostType, Tag } from '@project/shared/core';
 
 import { BlogPostEntity } from './blog-post.entity';
 import { BlogPostFactory } from './blog-post.factory';
@@ -17,18 +17,17 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
   }
 
   public async save(entity: BlogPostEntity): Promise<void> {
+    console.log(entity.toPOJO()); //! тест !!!!
+
     const record = await this.client.post.create({
       data: {
         ...entity.toPOJO(),
-        //! тест на время? все эти поля передать параметрами?
-        userId: '11112222',
-        state: PostState.Published,
-        //tags: { connect: [] },
         tags: undefined,
+        //tags: { connect: [] },
+        //tags: undefined,
+        //repostedPost:undefined, //! тест на время? все эти поля передать параметрами?
         //repostedPost: { connect: { id: '129f97f2-9b77-499a-a740-156c4b881a44' } } //! ошибка вставки
-        repostedPost: undefined,
-        //
-        comments: undefined
+        //repostedPost: undefined,
       }
     });
 
@@ -48,8 +47,7 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     const type = post.type as PostType;
     const state = post.state as PostState;
     const tags: Tag[] = [];
-    const comments: Comment[] = [];
 
-    return this.createEntityFromDocument({ ...post, type, state, tags, comments });
+    return this.createEntityFromDocument({ ...post, type, state, tags });
   }
 }

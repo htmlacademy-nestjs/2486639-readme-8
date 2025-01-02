@@ -21,7 +21,8 @@ export class BlogPostController {
   @ApiResponse(BlogPostApiResponse.BadRequest)
   @Post()
   public async create(@Body() dto: CreatePostDto) {
-    const newPost = await this.blogPostService.create(dto);
+    const userId = '11223344';
+    const newPost = await this.blogPostService.create(dto, userId);
 
     return fillDto(PostRdo, newPost.toPOJO());
   }

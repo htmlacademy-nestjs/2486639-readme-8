@@ -5,6 +5,8 @@ import { PostState, PostType } from '@project/shared/core';
 import { PostApiProperty } from './blog-post.constant.property';
 import { PostRdo } from './rdo/post.rdo';
 
+export const DEFAULT_NEW_POST_STATE = PostState.Published;
+
 export const PostValidation = {
   Tags: {
     MaxCount: 8,

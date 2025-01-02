@@ -1,13 +1,12 @@
 import { Entity, PostType, PostState, Post, StorableEntity } from '@project/shared/core';
 import { BlogTagEntity, BlogTagFactory } from '@project/blog/blog-tag';
-import { BlogPostCommentEntity, BlogPostCommentFactory } from '@project/blog/blog-post-comment';
-import { BlogUserEntity } from '@project/account/blog-user';
 
 export class BlogPostEntity extends Entity implements StorableEntity<Post> {
   public type: PostType;
   public tags: BlogTagEntity[];
   public publishDate: Date;
-  public repostedPost: BlogPostEntity;
+  //public repostedPost: BlogPostEntity; //! позже переделать  Ref<UserEntity>  ?
+  public repostedPostId: string;
   public state: PostState;
   public title: string;
   public url: string;
@@ -17,12 +16,11 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
   public quoteAuthor: string;
   public imagePath: string;
   public linkDescription: string;
-  public user: BlogUserEntity;
+  public userId: string;
   public createdAt: Date;
   public updatedAt: Date;
   public likesCount: number;
   public commentsCount: number;
-  public comments: BlogPostCommentEntity[];
 
   constructor(post?: Post) {
     super();
@@ -36,12 +34,13 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
     }
 
     this.id = post.id ?? undefined;
-    this.type = post.type ?? undefined;
+    this.type = post.type;
     this.tags = [];
     this.publishDate = post.publishDate ?? undefined;
     //! потом поправить this.repostedPost = post.repostedPost ?? undefined;
+    this.repostedPostId = post.repostedPostId ?? undefined;
     this.state = post.state ?? undefined;
-    //! потом поправить this.user = post.user ?? undefined;
+    this.userId = post.userId ?? undefined;
     this.title = post.title ?? undefined;
     this.url = post.url ?? undefined;
     this.previewText = post.previewText ?? undefined;
@@ -54,7 +53,6 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
     this.updatedAt = post.updatedAt ?? undefined;
     this.likesCount = post.likesCount ?? undefined;
     this.commentsCount = post.commentsCount ?? undefined;
-    this.comments = [];
 
     const blogTagFactory = new BlogTagFactory();
 
@@ -62,14 +60,6 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
       const blogTagEntity = blogTagFactory.create(tag);
 
       this.tags.push(blogTagEntity);
-    }
-
-    const blogPostCommentFactory = new BlogPostCommentFactory();
-
-    for (const comment of post.comments) {
-      const blogPostCommentEntity = blogPostCommentFactory.create(comment);
-
-      this.comments.push(blogPostCommentEntity);
     }
   }
 
@@ -80,6 +70,7 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
       tags: this.tags.map((tagEntity) => tagEntity.toPOJO()),
       publishDate: this.publishDate,
       //! потом поправить repostedPost: this.repostedPost.toPOJO();
+      repostedPostId: this.repostedPostId,
       state: this.state,
       title: this.title,
       url: this.url,
@@ -89,12 +80,11 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
       quoteAuthor: this.quoteAuthor,
       imagePath: this.imagePath,
       linkDescription: this.linkDescription,
-      //! потом поправить user: this.user на user.toPOJO(),
+      userId: this.userId,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
       likesCount: this.likesCount,
-      commentsCount: this.commentsCount,
-      comments: this.comments.map((commentEntity) => commentEntity.toPOJO())
+      commentsCount: this.commentsCount
     }
   }
 }

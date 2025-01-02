@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 
-import { EntityFactory, Post, PostState } from '@project/shared/core';
+import { EntityFactory, Post } from '@project/shared/core';
 import { BlogTagEntity } from '@project/blog/blog-tag';
 
 import { BlogPostEntity } from './blog-post.entity';
 import { CreatePostDto } from './dto/create-post.dto';
+import { DEFAULT_NEW_POST_STATE } from './blog-post.constant';
 
 @Injectable()
 export class BlogPostFactory implements EntityFactory<BlogPostEntity> {
@@ -12,12 +13,21 @@ export class BlogPostFactory implements EntityFactory<BlogPostEntity> {
     return new BlogPostEntity(entityPlainData);
   }
 
-  public static createFromCreatePostDto(dto: CreatePostDto, tags: BlogTagEntity[]): BlogPostEntity {
+  public static createFromCreatePostDto(dto: CreatePostDto, tags: BlogTagEntity[], userId: string): BlogPostEntity {
     const entity = new BlogPostEntity();
 
-    entity.state = PostState.Published;
+    entity.type = dto.type;
+    entity.state = DEFAULT_NEW_POST_STATE;
     entity.tags = tags;
-    entity.comments = [];
+    entity.title = dto.title;
+    entity.url = dto.url;
+    entity.previewText = dto.previewText;
+    entity.text = dto.text;
+    entity.quoteText = dto.quoteText;
+    entity.quoteAuthor = dto.quoteAuthor;
+    entity.imagePath = dto.imagePath;
+    entity.linkDescription = dto.linkDescription;
+    entity.userId = userId;
 
     return entity;
   }
