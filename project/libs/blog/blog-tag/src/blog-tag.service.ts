@@ -9,23 +9,25 @@ export class BlogTagService {
     private readonly blogTagRepository: BlogTagRepository,
   ) { }
 
-  public async create(title: string): Promise<BlogTagEntity> {
-    const tagEntity = new BlogTagEntity({ title });
+  public async getByTitles(tagTitles: string[]): Promise<BlogTagEntity[]> {
+    const lowerCaseTagTitles = tagTitles.map((item) => item.toLocaleLowerCase());
+    const existTagEntities = await this.blogTagRepository.findByTitles(lowerCaseTagTitles);
 
-    await this.blogTagRepository.save(tagEntity);
+    if (lowerCaseTagTitles.length === existTagEntities.length) {
+      return existTagEntities;
+    }
 
-    return tagEntity;
-  }
+    for (const lowerCaseTagTitle of lowerCaseTagTitles) {
+      if (!existTagEntities.find((tagEntity) => (tagEntity.title === lowerCaseTagTitle))) {
+        const tagEntity = new BlogTagEntity({ title: lowerCaseTagTitle });
 
-  public async getById(id: string) {
-    const tag = await this.blogTagRepository.findById(id);
+        await this.blogTagRepository.save(tagEntity);
+        console.log(tagEntity);
 
-    return tag;
-  }
+        existTagEntities.push(tagEntity);
+      }
+    }
 
-  public async getByTitle(title: string) {
-    const tag = await this.blogTagRepository.findByTitle(title);
-
-    return tag;
+    return existTagEntities;
   }
 }

@@ -4,13 +4,13 @@ Content-Type: application/json
 
 {
   "type": "video",
-  "tags": ["taG1","tag2"]
+  "tags": ["taG1","tag2","tttt2"]
 }
 
 ###
 
 # Get post by ID
-GET http://localhost:3000/api/posts/129f97f2-9b77-499a-a740-156c4b881a44 HTTP/1.1
+GET http://localhost:3000/api/posts/35692e8b-7c97-4689-8439-01953725eece HTTP/1.1
 
 ###
 

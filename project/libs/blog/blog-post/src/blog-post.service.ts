@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 
-import { BlogTagEntity, BlogTagService } from '@project/blog/blog-tag';
+import { BlogTagService } from '@project/blog/blog-tag';
 
 import { BlogPostEntity } from './blog-post.entity';
 import { BlogPostFactory } from './blog-post.factory';
@@ -17,27 +17,10 @@ export class BlogPostService {
   ) { }
 
   public async create(dto: CreatePostDto, userId: string): Promise<BlogPostEntity> {
-    //const tags = await this.blogTagService.getByIds(dto.tags);
-    const tags: BlogTagEntity[] = [];//! временно
+    const tags = await this.blogTagService.getByTitles(dto.tags);
     const newPost = BlogPostFactory.createFromCreatePostDto(dto, tags, userId);
 
     await this.blogPostRepository.save(newPost);
-
-    //! тест
-    try {
-      const tagEntity = await this.blogTagService.create('tag1111');
-      console.log(tagEntity);
-
-      const tag1 = await this.blogTagService.getById('2067063f-8dc2-42bc-bb5f-84bce5caa9fd')
-      console.log(tag1);
-
-      const tag2 = await this.blogTagService.getByTitle('tag2')
-      console.log(tag2);
-
-    } catch (error) {
-      console.log('tag test error', error);
-    }
-    //
 
     return newPost;
   }
