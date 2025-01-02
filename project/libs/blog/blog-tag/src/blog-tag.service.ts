@@ -11,19 +11,18 @@ export class BlogTagService {
 
   public async getByTitles(tagTitles: string[]): Promise<BlogTagEntity[]> {
     const lowerCaseTagTitles = tagTitles.map((item) => item.toLocaleLowerCase());
+    const distinctTagTitles = Array.from(new Set(lowerCaseTagTitles));
     const existTagEntities = await this.blogTagRepository.findByTitles(lowerCaseTagTitles);
 
-    if (lowerCaseTagTitles.length === existTagEntities.length) {
+    if (distinctTagTitles.length === existTagEntities.length) {
       return existTagEntities;
     }
 
-    for (const lowerCaseTagTitle of lowerCaseTagTitles) {
-      if (!existTagEntities.find((tagEntity) => (tagEntity.title === lowerCaseTagTitle))) {
-        const tagEntity = new BlogTagEntity({ title: lowerCaseTagTitle });
+    for (const tagTitle of distinctTagTitles) {
+      if (!existTagEntities.find((tagEntity) => (tagEntity.title === tagTitle))) {
+        const tagEntity = new BlogTagEntity({ title: tagTitle });
 
         await this.blogTagRepository.save(tagEntity);
-        console.log(tagEntity);
-
         existTagEntities.push(tagEntity);
       }
     }

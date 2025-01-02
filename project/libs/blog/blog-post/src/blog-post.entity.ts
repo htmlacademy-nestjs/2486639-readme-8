@@ -67,7 +67,7 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
     return {
       id: this.id,
       type: this.type,
-      tags: this.tags.map((tagEntity) => tagEntity.toPOJO()),
+      tags: this.tags.map((tagEntity) => tagEntity.toPOJO()), //! смысл? при сохранении нужны id
       publishDate: this.publishDate,
       //! потом поправить repostedPost: this.repostedPost.toPOJO();
       repostedPostId: this.repostedPostId,

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Expose } from 'class-transformer';
+import { Expose, Transform } from 'class-transformer';
 
 import { PostType } from '@project/shared/core';
 
@@ -16,6 +16,7 @@ export class PostRdo {
 
   @ApiProperty(PostApiProperty.Tags)
   @Expose()
+  @Transform(({ value }) => value.map((item: { title: string; }) => item.title))
   public tags: string[];
 
   @ApiProperty(PostApiProperty.PublishDate)

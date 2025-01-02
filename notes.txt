@@ -55,6 +55,10 @@
         [Account JWTConfig Validation Error]: "accessTokenSecret" is required  / accessTokenSecret: Joi.string().required(),
         сделавть чтоб писал "не указан JWT_ACCESS_TOKEN_SECRET!"
   31. entity.id = undefined; //! пустая строка из базового класса и id не гененируется
+        А в тегах вы зывается конструктор с объектом и populate записавает в _id undefined
+  32. при получении поста для тегов отдавать только заголовки?
+        добавил в rdo:
+          @Transform(({ value }) => value.map((item: { title: string; }) => item.title))
 
 
 Заметки:

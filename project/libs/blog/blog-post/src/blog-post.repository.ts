@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { PrismaClientService } from '@project/blog/models';
 import { BasePostgresRepository } from '@project/shared/data-access';
-import { Post, PostState, PostType, Tag } from '@project/shared/core';
+import { Post, PostState, PostType } from '@project/shared/core';
 
 import { BlogPostEntity } from './blog-post.entity';
 import { BlogPostFactory } from './blog-post.factory';
@@ -17,15 +17,16 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
   }
 
   public async save(entity: BlogPostEntity): Promise<void> {
+    const pojoEntity = entity.toPOJO();
     const record = await this.client.post.create({
       data: {
-        ...entity.toPOJO(),
-        tags: undefined,
-        //tags: { connect: [] },
-        //tags: undefined,
-        //repostedPost:undefined, //! тест на время? все эти поля передать параметрами?
+        ...pojoEntity,
+        tags: {
+          connect: pojoEntity.tags.map(({ id }) => ({ id }))
+        }
+        //repostedPost:undefined //! тест на время? все эти поля передать параметрами?
         //repostedPost: { connect: { id: '129f97f2-9b77-499a-a740-156c4b881a44' } } //! ошибка вставки
-        //repostedPost: undefined,
+        //repostedPost: undefined
       }
     });
 
@@ -34,7 +35,8 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
 
   public async findById(id: string): Promise<BlogPostEntity> {
     const post = await this.client.post.findFirst({
-      where: { id }
+      where: { id },
+      include: { tags: true }
     });
 
     if (!post) {
@@ -44,8 +46,7 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     //! ошибка на время
     const type = post.type as PostType;
     const state = post.state as PostState;
-    const tags: Tag[] = [];
 
-    return this.createEntityFromDocument({ ...post, type, state, tags });
+    return this.createEntityFromDocument({ ...post, type, state });
   }
 }
