@@ -54,6 +54,7 @@
   30. проверка .env
         [Account JWTConfig Validation Error]: "accessTokenSecret" is required  / accessTokenSecret: Joi.string().required(),
         сделавть чтоб писал "не указан JWT_ACCESS_TOKEN_SECRET!"
+  31. entity.id = undefined; //! пустая строка из базового класса и id не гененируется
 
 
 Заметки:
