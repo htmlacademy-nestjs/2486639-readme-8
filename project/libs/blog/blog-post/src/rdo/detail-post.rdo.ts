@@ -59,21 +59,22 @@ export class DetailPostRdo {
   @Expose()
   public linkDescription: string;
 
-  //! ApiProperty
+  @ApiProperty(PostApiProperty.IsRepost)
   @Expose()
   @Transform(({ obj }) => (!!obj.repostedPost?.id))
   public isRepost: boolean;
 
-  //! ApiProperty
+  @ApiProperty(PostApiProperty.RepostedPostId)
   @Expose()
   @Transform(({ obj }) => (obj.repostedPost?.id))
   public repostedPostId: string;
 
-  //! ApiProperty
+  @ApiProperty(PostApiProperty.RepostedPostUserId)
   @Expose()
   @Transform(({ obj }) => (obj.repostedPost?.userId))
   public repostedPostUserId: string;
 
+  @ApiProperty(PostApiProperty.UserId)
   @Expose()
   public userId: string;
 }

@@ -54,5 +54,21 @@ export const PostApiProperty = {
   LinkDescription: {
     description: 'The post link description for type: link',
     example: "link description"
+  },
+  IsRepost: {
+    description: 'The post is repost attribute',
+    example: "false"
+  },
+  RepostedPostId: {
+    description: 'The reposted post id',
+    example: "2f31b19b-97eb-4305-877a-0b9be7faca8f"
+  },
+  RepostedPostUserId: {
+    description: 'The reposted post user id',
+    example: "658170cbb954e9f5b905ccf4"
+  },
+  UserId: {
+    description: 'The post user id',
+    example: "658170cbb954e9f5b905ccf4"
   }
 } as const;

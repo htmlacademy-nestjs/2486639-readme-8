@@ -2,7 +2,7 @@
 export const UserApiProperty = {
   Id: {
     description: 'The uniq user ID',
-    example: '2f31b19b-97eb-4305-877a-0b9be7faca8f'
+    example: '658170cbb954e9f5b905ccf4'
   },
   Email: {
     description: 'The uniq user email',
