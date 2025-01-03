@@ -24,9 +24,8 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
         tags: {
           connect: pojoEntity.tags.map(({ id }) => ({ id }))
         },
-        //repostedPost:undefined //! тест на время? все эти поля передать параметрами?
-        repostedPost: { connect: { id: pojoEntity.repostedPost.id } } //! ошибка вставки
-        //repostedPost: undefined
+        //repostedPost: { connect: { id: pojoEntity.repostedPost.id } } //! ошибка вставки
+        repostedPost: undefined
       }
     });
 
