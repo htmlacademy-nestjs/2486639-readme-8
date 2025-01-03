@@ -10,6 +10,10 @@ export class BlogTagService {
   ) { }
 
   public async getByTitles(tagTitles: string[]): Promise<BlogTagEntity[]> {
+    if (!tagTitles || !tagTitles.length) {
+      return [];
+    }
+
     const lowerCaseTagTitles = tagTitles.map((item) => item.toLocaleLowerCase());
     const distinctTagTitles = Array.from(new Set(lowerCaseTagTitles));
     const existTagEntities = await this.blogTagRepository.findByTitles(lowerCaseTagTitles);
