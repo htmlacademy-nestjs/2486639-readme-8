@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put } from '@nestjs/common';
 import { ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { fillDto } from '@project/shared/helpers';
@@ -43,9 +43,10 @@ export class BlogPostController {
   @ApiResponse(BlogPostApiResponse.PostNotFound)
   @ApiResponse(BlogPostApiResponse.NotAllow)
   @ApiParam(PostIdApiParam)
-  @Put(`:${PostIdApiParam.name}`)
+  @Patch(`:${PostIdApiParam.name}`)
   public async update(@Param(PostIdApiParam.name) postId: string, @Body() dto: UpdatePostDto) {
-    const existPost = await this.blogPostService.updateById(postId, dto);
+    const userId = '11223344';
+    const existPost = await this.blogPostService.updateById(postId, dto, userId);
 
     return fillDto(PostRdo, existPost.toPOJO());
   }

@@ -26,10 +26,34 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
         },
         //repostedPost: { connect: { id: pojoEntity.repostedPost.id } } //! ошибка вставки
         repostedPost: undefined
-      }
+      },
+      include: { repostedPost: true }
     });
 
     entity.id = record.id;
+  }
+
+  public async update(entity: BlogPostEntity): Promise<void> {
+    const pojoEntity = entity.toPOJO();
+
+    await this.client.post.update({
+      where: { id: entity.id },
+      data: {
+        ...pojoEntity,
+        //! нужно принудительно занулить все что затрется, нужно глянуть что в текущем null или undefined
+        text: null,
+        previewText: null,
+        //
+        tags: {
+          set: pojoEntity.tags.map(({ id }) => ({ id })) //! connect?
+        },
+        repostedPost: undefined //!
+      },
+      include: {
+        tags: true,
+        repostedPost: true
+      }
+    });
   }
 
   public async findById(id: string): Promise<BlogPostEntity> {
