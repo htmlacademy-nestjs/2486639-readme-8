@@ -7,24 +7,19 @@ import { PostApiProperty } from '../blog-post.constant.property';
 import { PostValidateMessage, PostValidation } from '../blog-post.constant';
 
 export class UpdatePostDto {
-  @ApiProperty(PostApiProperty.Type)
+  @ApiProperty({
+    ...PostApiProperty.Type,
+    required: false
+  })
   @IsOptional()
   @IsString()
   @IsEnum(PostType, PostValidateMessage.Type)
   public type?: PostType;
 
-  @ApiProperty(PostApiProperty.State)
-  @IsOptional()
-  @IsString()
-  @IsEnum(PostState, PostValidateMessage.State)
-  public state?: PostState;
-
-  @ApiProperty(PostApiProperty.PublishDate)
-  @IsOptional()
-  @IsDateString() //! проверить нужен ли дополнительный формат - 2024-07-09T11:24:14.495Z
-  public publishDate?: Date;
-
-  @ApiProperty(PostApiProperty.Tags)
+  @ApiProperty({
+    ...PostApiProperty.Tags,
+    required: false
+  })
   @IsOptional()
   @IsArray()
   @ArrayMaxSize(PostValidation.Tags.MaxCount)
@@ -33,6 +28,23 @@ export class UpdatePostDto {
   @MinLength(PostValidation.Tags.MinLength, PostValidateMessage.Tags.MinLength)
   @MaxLength(PostValidation.Tags.MaxLength, PostValidateMessage.Tags.MaxLength)
   public tags?: string[];
+
+  @ApiProperty({
+    ...PostApiProperty.State,
+    required: false
+  })
+  @IsOptional()
+  @IsString()
+  @IsEnum(PostState, PostValidateMessage.State)
+  public state?: PostState;
+
+  @ApiProperty({
+    ...PostApiProperty.PublishDate,
+    required: false
+  })
+  @IsOptional()
+  @IsDateString() //! проверить нужен ли дополнительный формат - 2024-07-09T11:24:14.495Z
+  public publishDate?: Date;
 
   @ApiProperty(PostApiProperty.Title)
   @IsOptional()

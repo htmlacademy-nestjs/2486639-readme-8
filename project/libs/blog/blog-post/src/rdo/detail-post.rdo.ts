@@ -19,7 +19,10 @@ export class DetailPostRdo {
   @Transform(({ value }) => value.map((item: { title: string; }) => item.title))
   public tags: string[];
 
-  @ApiProperty(PostApiProperty.State)
+  @ApiProperty({
+    ...PostApiProperty.State,
+    required: true
+  })
   @Expose()
   public state: PostState;
 

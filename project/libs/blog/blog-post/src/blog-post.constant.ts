@@ -4,6 +4,7 @@ import { PostState, PostType } from '@project/shared/core';
 
 import { PostApiProperty } from './blog-post.constant.property';
 import { PostRdo } from './rdo/post.rdo';
+import { DetailPostRdo } from './rdo/detail-post.rdo';
 
 export const DEFAULT_NEW_POST_STATE = PostState.Published;
 
@@ -103,6 +104,14 @@ export const PostFieldsByType = {
   [PostType.Photo]: [PostField.ImagePath]
 } as const;
 
+export const blogPostApiBodyDescription = Object.keys(PostFieldsByType).map(
+  (key: string) => (
+    `For type "${key}" required ${PostFieldsByType[key].map(
+      (item: string) => (`"${item}"`)
+    ).join(', ')}`
+  )
+).join('.\n');
+
 export const BlogPostMessage = {
   NotFound: 'Post not found'
 } as const;
@@ -126,12 +135,12 @@ export const BlogPostApiResponse = {
     description: 'Bad request.'
   },
   PostCreated: {
-    type: PostRdo,
+    type: DetailPostRdo,
     status: HttpStatus.CREATED,
     description: 'The new post has been successfully created.'
   },
   PostUpdated: {
-    type: PostRdo,
+    type: DetailPostRdo,
     status: HttpStatus.OK,
     description: 'The post has been successfully updated.'
   },
@@ -140,9 +149,14 @@ export const BlogPostApiResponse = {
     description: 'The post has been successfully deleted.'
   },
   PostFound: {
-    type: PostRdo,
+    type: DetailPostRdo,
     status: HttpStatus.OK,
     description: 'Post found'
+  },
+  PostsFound: {
+    type: PostRdo, //! наверное будет тип с пагинацией
+    status: HttpStatus.OK,
+    description: 'Posts found'
   },
   PostNotFound: {
     status: HttpStatus.NOT_FOUND,

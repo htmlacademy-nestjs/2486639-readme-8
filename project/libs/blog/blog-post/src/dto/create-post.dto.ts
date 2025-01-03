@@ -12,7 +12,10 @@ export class CreatePostDto {
   @IsEnum(PostType, PostValidateMessage.Type)
   public type: PostType;
 
-  @ApiProperty(PostApiProperty.Tags)
+  @ApiProperty({
+    ...PostApiProperty.Tags,
+    required: false
+  })
   @IsOptional()
   @IsArray()
   @ArrayMaxSize(PostValidation.Tags.MaxCount)

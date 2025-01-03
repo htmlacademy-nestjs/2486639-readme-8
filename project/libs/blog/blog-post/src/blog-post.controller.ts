@@ -1,9 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Put } from '@nestjs/common';
-import { ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { fillDto } from '@project/shared/helpers';
 
-import { PostIdApiParam, BlogPostApiResponse } from './blog-post.constant';
+import { PostIdApiParam, BlogPostApiResponse, blogPostApiBodyDescription } from './blog-post.constant';
 import { BlogPostService } from './blog-post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
@@ -20,12 +20,13 @@ export class BlogPostController {
   @ApiResponse(BlogPostApiResponse.PostCreated)
   @ApiResponse(BlogPostApiResponse.Unauthorized)
   @ApiResponse(BlogPostApiResponse.BadRequest)
+  @ApiBody({ description: blogPostApiBodyDescription, type: CreatePostDto })
   @Post()
   public async create(@Body() dto: CreatePostDto) {
     const userId = '11223344';
     const newPost = await this.blogPostService.createPost(dto, userId);
 
-    return fillDto(PostRdo, newPost.toPOJO());
+    return fillDto(DetailPostRdo, newPost.toPOJO());
   }
 
   @ApiResponse(BlogPostApiResponse.PostFound)
@@ -48,7 +49,7 @@ export class BlogPostController {
     const userId = '11223344';
     const existPost = await this.blogPostService.updatePost(postId, dto, userId);
 
-    return fillDto(PostRdo, existPost.toPOJO());
+    return fillDto(DetailPostRdo, existPost.toPOJO());
   }
 
   @ApiResponse(BlogPostApiResponse.PostDeleted)

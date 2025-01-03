@@ -26,11 +26,12 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
         },
         //repostedPost: { connect: { id: pojoEntity.repostedPost.id } } //! ошибка вставки
         repostedPost: undefined
-      },
-      include: { repostedPost: true }
+      }
+      //! , include: { repostedPost: true } //! возможно нужно при репосте
     });
 
     entity.id = record.id;
+    entity.publishDate = record.publishDate; //! возможно нужны еще данные...
   }
 
   public async update(entity: BlogPostEntity): Promise<void> {
