@@ -84,6 +84,25 @@ export const PostValidateMessage = {
   }
 } as const;
 
+enum PostField {
+  Title = 'title',
+  Url = 'url',
+  PreviewText = 'previewText',
+  Text = 'text',
+  QuoteText = 'quoteText',
+  QuoteAuthor = 'quoteAuthor',
+  ImagePath = 'imagePath',
+  LinkDescription = 'linkDescription'
+};
+
+export const PostFieldByTypes = [
+  { [PostType.Video]: [PostField.Title, PostField.Url] },
+  { [PostType.Text]: [PostField.Title, PostField.PreviewText, PostField.Text] },
+  { [PostType.Link]: [PostField.Url, PostField.LinkDescription] },
+  { [PostType.Quote]: [PostField.QuoteText, PostField.QuoteAuthor] },
+  { [PostType.Photo]: [PostField.ImagePath] }
+];
+
 export const BlogPostMessage = {
   NotFound: 'Post not found'
 } as const;
