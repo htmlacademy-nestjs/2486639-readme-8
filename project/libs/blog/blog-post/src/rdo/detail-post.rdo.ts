@@ -60,29 +60,18 @@ export class DetailPostRdo {
   public linkDescription: string;
 
   //! ApiProperty
-  //@Expose({ name: 'repostedPostId', until: 2 })
   @Expose()
-  @Transform(({ value, key, obj, type, options }) => {
-    //((key === 'repostedPostId') && !!obj.repostedPostId)
-    console.log('value', value);
-    console.log('key', key);
-    console.log('obj', obj);
-    console.log('type', type);
-    console.log('options', options);
-
-    return !!obj.repostedPostId;
-  })
+  @Transform(({ obj }) => (!!obj.repostedPost?.id))
   public isRepost: boolean;
 
   //! ApiProperty
-  //@Expose({ name: 'repostedPostId', until: 2 })
   @Expose()
+  @Transform(({ obj }) => (obj.repostedPost?.id))
   public repostedPostId: string;
 
   //! ApiProperty
-  //@Expose({ name: 'repostedPostId' })
   @Expose()
-  //@Transform(({ value }) => ((!value) ? '' : value.userId))
+  @Transform(({ obj }) => (obj.repostedPost?.userId))
   public repostedPostUserId: string;
 
   @Expose()

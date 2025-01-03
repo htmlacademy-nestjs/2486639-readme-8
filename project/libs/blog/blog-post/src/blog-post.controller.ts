@@ -34,8 +34,6 @@ export class BlogPostController {
   @Get(`:${PostIdApiParam.name}`)
   public async show(@Param(PostIdApiParam.name) postId: string) {
     const existPost = await this.blogPostService.getById(postId);
-    console.log('existPost', existPost); //! тест
-    console.log('existPost.toPOJO()', existPost.toPOJO()); //! тест
 
     return fillDto(DetailPostRdo, existPost.toPOJO());
   }

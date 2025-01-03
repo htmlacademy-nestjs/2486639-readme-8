@@ -7,8 +7,7 @@ export interface Post {
   type: PostType;
   tags: Tag[];
   publishDate?: Date;
-  //repostedPost?: Post; //! позже определить....
-  repostedPostId?: string;
+  repostedPost?: Post;
   state: PostState;
   title?: string;           // types: video, text
   url?: string;             // types: video, link

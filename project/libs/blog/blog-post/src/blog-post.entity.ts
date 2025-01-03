@@ -5,8 +5,7 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
   public type: PostType;
   public tags: BlogTagEntity[];
   public publishDate: Date;
-  public repostedPost: BlogPostEntity; //! позже переделать  Ref<UserEntity>?
-  public repostedPostId: string;
+  public repostedPost: BlogPostEntity;
   public state: PostState;
   public title: string;
   public url: string;
@@ -37,8 +36,7 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
     this.type = post.type;
     this.tags = [];
     this.publishDate = post.publishDate ?? undefined;
-    //! потом поправить this.repostedPost = post.repostedPost ?? undefined;
-    this.repostedPostId = post.repostedPostId ?? undefined;
+    this.repostedPost = undefined;
     this.state = post.state ?? undefined;
     this.userId = post.userId ?? undefined;
     this.title = post.title ?? undefined;
@@ -61,6 +59,10 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
 
       this.tags.push(blogTagEntity);
     }
+
+    if (post.repostedPost) {
+      this.repostedPost = new BlogPostEntity(post.repostedPost);
+    }
   }
 
   public toPOJO(): Post {
@@ -69,8 +71,7 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
       type: this.type,
       tags: this.tags.map((tagEntity) => tagEntity.toPOJO()), //! смысл? при сохранении нужны id
       publishDate: this.publishDate,
-      //repostedPost: this.repostedPost.toPOJO(),
-      repostedPostId: this.repostedPostId,
+      repostedPost: this.repostedPost?.toPOJO(),
       state: this.state,
       title: this.title,
       url: this.url,

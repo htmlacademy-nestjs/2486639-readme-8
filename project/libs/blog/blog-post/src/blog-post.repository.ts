@@ -23,9 +23,9 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
         ...pojoEntity,
         tags: {
           connect: pojoEntity.tags.map(({ id }) => ({ id }))
-        }
+        },
         //repostedPost:undefined //! тест на время? все эти поля передать параметрами?
-        //repostedPost: { connect: { id: '129f97f2-9b77-499a-a740-156c4b881a44' } } //! ошибка вставки
+        repostedPost: { connect: { id: pojoEntity.repostedPost.id } } //! ошибка вставки
         //repostedPost: undefined
       }
     });
@@ -42,16 +42,24 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
       }
     });
 
-    console.log('post', post); //! тест
-
     if (!post) {
       throw new NotFoundException(`Post with id ${id} not found.`);
     }
 
-    //! ошибка на время
-    const type = post.type as PostType;
-    const state = post.state as PostState;
+    const repostedPost: Post = (!post.repostedPost)
+      ? undefined
+      : {
+        ...post.repostedPost,
+        type: post.repostedPost.type as PostType,
+        state: post.repostedPost.state as PostState,
+        tags: []
+      };
 
-    return this.createEntityFromDocument({ ...post, type, state });
+    return this.createEntityFromDocument({
+      ...post,
+      type: post.type as PostType,
+      state: post.state as PostState,
+      repostedPost
+    });
   }
 }
