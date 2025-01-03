@@ -16,16 +16,18 @@ export class BlogPostController {
     private readonly blogPostService: BlogPostService
   ) { }
 
-  @ApiResponse(BlogPostApiResponse.PostCreated)
-  @ApiResponse(BlogPostApiResponse.Unauthorized)
-  @ApiResponse(BlogPostApiResponse.BadRequest)
-  @ApiBody({ description: blogPostApiBodyDescription, type: CreatePostDto })
-  @Post()
-  public async create(@Body() dto: CreatePostDto) {
-    const userId = '11223344';
-    const newPost = await this.blogPostService.createPost(dto, userId);
 
-    return fillDto(DetailPostRdo, newPost.toPOJO());
+  /*
+  @ApiResponse(BlogPostApiResponse.PostFound)
+  @ApiResponse(BlogPostApiResponse.PostNotFound)
+  @ApiParam(PostIdApiParam)
+  */
+  @Get('/')
+  public async index(/*@Param(PostIdApiParam.name) postId: string*/) {
+    //const existPost = await this.blogPostService.getPost(postId);
+
+    //return fillDto(DetailPostRdo, existPost.toPOJO());
+    return 'ok';
   }
 
   @ApiResponse(BlogPostApiResponse.PostFound)
@@ -36,6 +38,18 @@ export class BlogPostController {
     const existPost = await this.blogPostService.getPost(postId);
 
     return fillDto(DetailPostRdo, existPost.toPOJO());
+  }
+
+  @ApiResponse(BlogPostApiResponse.PostCreated)
+  @ApiResponse(BlogPostApiResponse.Unauthorized)
+  @ApiResponse(BlogPostApiResponse.BadRequest)
+  @ApiBody({ description: blogPostApiBodyDescription, type: CreatePostDto })
+  @Post()
+  public async create(@Body() dto: CreatePostDto) {
+    const userId = '11223344';
+    const newPost = await this.blogPostService.createPost(dto, userId);
+
+    return fillDto(DetailPostRdo, newPost.toPOJO());
   }
 
   @ApiResponse(BlogPostApiResponse.PostUpdated)

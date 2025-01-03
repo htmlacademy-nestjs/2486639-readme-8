@@ -1,3 +1,21 @@
+# Get posts
+GET http://localhost:3000/api/posts HTTP/1.1
+###
+
+# Get posts query
+GET http://localhost:3000/api/posts?limit=2&sortDirection=desc&tags[]=tag1,tag2 HTTP/1.1
+###
+
+# Get post by ID
+GET http://localhost:3000/api/posts/129f97f2-9b77-499a-a740-156c4b881a44 HTTP/1.1
+
+###
+
+# Get post by ID
+GET http://localhost:3000/api/posts/d4652681-e8e8-4109-aa92-9b368d86dece HTTP/1.1
+
+###
+
 # Create a new post
 POST http://localhost:3000/api/posts HTTP/1.1
 Content-Type: application/json
@@ -9,16 +27,6 @@ Content-Type: application/json
   "url": "http://localhost.ru/sadasd",
   "text": "asdasdsaasdasdsaasdasdsaasdasdsaasdasdsaasdasdsaasdasdsaasdasdsaasdasdsaasdasdsaasdasdsaasdasdsaasdasdsa"
 }
-
-###
-
-# Get post by ID
-GET http://localhost:3000/api/posts/129f97f2-9b77-499a-a740-156c4b881a44 HTTP/1.1
-
-###
-
-# Get post by ID
-GET http://localhost:3000/api/posts/d4652681-e8e8-4109-aa92-9b368d86dece HTTP/1.1
 
 ###
 
