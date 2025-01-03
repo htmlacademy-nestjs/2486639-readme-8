@@ -4,7 +4,10 @@ Content-Type: application/json
 
 {
   "type": "video",
-  "tags": ["taG1", "tag2", "tttt2", "tttt2", "tttt1", "tttt1"]
+  "tags": ["taG1", "tag2", "tttt2", "tttt2", "tttt1", "tttt1"],
+  "title": "asdasdsaasdasdsaasdasdsaasd",
+  "url": "http://localhost.ru/sadasd",
+  "text": "asdasdsaasdasdsaasdasdsaasdasdsaasdasdsaasdasdsaasdasdsaasdasdsaasdasdsaasdasdsaasdasdsaasdasdsaasdasdsa"
 }
 
 ###

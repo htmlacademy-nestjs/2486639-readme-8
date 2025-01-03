@@ -84,7 +84,7 @@ export const PostValidateMessage = {
   }
 } as const;
 
-enum PostField {
+export enum PostField {
   Title = 'title',
   Url = 'url',
   PreviewText = 'previewText',
@@ -95,13 +95,13 @@ enum PostField {
   LinkDescription = 'linkDescription'
 };
 
-export const PostFieldByTypes = [
-  { [PostType.Video]: [PostField.Title, PostField.Url] },
-  { [PostType.Text]: [PostField.Title, PostField.PreviewText, PostField.Text] },
-  { [PostType.Link]: [PostField.Url, PostField.LinkDescription] },
-  { [PostType.Quote]: [PostField.QuoteText, PostField.QuoteAuthor] },
-  { [PostType.Photo]: [PostField.ImagePath] }
-];
+export const PostFieldsByType = {
+  [PostType.Video]: [PostField.Title, PostField.Url],
+  [PostType.Text]: [PostField.Title, PostField.PreviewText, PostField.Text],
+  [PostType.Link]: [PostField.Url, PostField.LinkDescription],
+  [PostType.Quote]: [PostField.QuoteText, PostField.QuoteAuthor],
+  [PostType.Photo]: [PostField.ImagePath]
+} as const;
 
 export const BlogPostMessage = {
   NotFound: 'Post not found'

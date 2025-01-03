@@ -67,7 +67,7 @@
   1. как же выводить подтипы ....
     не сработало export type ReturnTypeToPOJOFunction<T extends StorableEntity<T>> = ReturnType<T['toPOJO']>;
     а как T['id']
-  2. get-mongoose-options.ts - а как добратся
+  2. get-mongoose-options.ts - а как добраться
     из
       useFactory: async (config: ConfigService) => {
     к

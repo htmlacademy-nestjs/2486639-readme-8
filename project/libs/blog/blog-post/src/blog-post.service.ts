@@ -1,14 +1,14 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 
 import { BlogTagService } from '@project/blog/blog-tag';
+import { PostType } from '@project/shared/core';
 
 import { BlogPostEntity } from './blog-post.entity';
 import { BlogPostFactory } from './blog-post.factory';
 import { BlogPostRepository } from './blog-post.repository';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { BlogPostMessage } from './blog-post.constant';
-import { PostType } from '@project/shared/core';
+import { BlogPostMessage, PostField, PostFieldsByType } from './blog-post.constant';
 
 @Injectable()
 export class BlogPostService {
@@ -17,25 +17,63 @@ export class BlogPostService {
     private readonly blogPostRepository: BlogPostRepository
   ) { }
 
-  private checkPostData(dto: CreatePostDto | UpdatePostDto): void {
+  private validatePostData(dto: CreatePostDto | UpdatePostDto): void {
+    const { type } = dto;
     const messages: string[] = [];
-    const fields = [{ 'title': { types: [PostType.Video, PostType.Link] } }]
+    const keys = Object.values(PostField);
 
-    if (dto.type === PostType.Video) {
-      if (!dto.title) {
-        messages.push(`For post type "${dto.type}" need title`);
+    if (!type) {
+      keys.forEach((key) => {
+        if (dto[key]) {
+          messages.push(key);
+        }
+
+        if (messages.length) {
+          messages.unshift('For empty post type not need:');
+        }
+      })
+    } else {
+      const fields = PostFieldsByType[type];
+      const needMessages: string[] = [];
+      const notNeedMessages: string[] = [];
+
+      keys.forEach((key) => {
+        //const shouldBeKey = fields.includes(key); //! Argument of type 'PostField' is not assignable to parameter of type 'never'
+        const shouldBeKey = [...fields].includes(key);
+        const existDtoKey = !!dto[key];
+
+        if (shouldBeKey && !existDtoKey) {
+          needMessages.push(key);
+        }
+
+        if (!shouldBeKey && existDtoKey) {
+          notNeedMessages.push(key);
+        }
+      })
+
+      if (needMessages.length || notNeedMessages.length) {
+        messages.push(`For post type "${type}"`);
+
+        if (needMessages.length) {
+          messages.push(`need: ${needMessages.join(', ')}`);
+        }
+
+        if (notNeedMessages.length) {
+          if (needMessages.length) {
+            messages.push('and');
+          }
+          messages.push(`not need: ${notNeedMessages.join(', ')}`);
+        }
       }
-      if (!dto.url) {
-        messages.push(`For post type "${dto.type}" need url`);
-      }
-      if (messages.length) {
-        throw new BadRequestException(messages.join(', '));
-      }
+    }
+
+    if (messages.length) {
+      throw new BadRequestException(messages.join(' '));
     }
   }
 
   public async create(dto: CreatePostDto, userId: string): Promise<BlogPostEntity> {
-    this.checkPostData(dto);
+    this.validatePostData(dto);
 
     const tags = await this.blogTagService.getByTitles(dto.tags);
     const newPost = BlogPostFactory.createFromCreatePostDto(dto, tags, userId);
