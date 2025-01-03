@@ -20,7 +20,7 @@ export class AuthenticationService {
     private readonly jwtService: JwtService
   ) { }
 
-  public async register(dto: CreateUserDto): Promise<BlogUserEntity> {
+  public async registerUser(dto: CreateUserDto): Promise<BlogUserEntity> {
     const { email, name, password } = dto;
 
     const blogUser = {

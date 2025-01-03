@@ -71,7 +71,7 @@ export class BlogPostService {
     }
   }
 
-  public async create(dto: CreatePostDto, userId: string): Promise<BlogPostEntity> {
+  public async createPost(dto: CreatePostDto, userId: string): Promise<BlogPostEntity> {
     this.validatePostData(dto);
 
     const tags = await this.blogTagService.getByTitles(dto.tags);
@@ -82,7 +82,7 @@ export class BlogPostService {
     return newPost;
   }
 
-  public async getById(id: string) {
+  public async getPost(id: string) {
     const post = await this.blogPostRepository.findById(id);
 
     if (!post) {
@@ -92,7 +92,7 @@ export class BlogPostService {
     return post;
   }
 
-  public async updateById(id: string, dto: UpdatePostDto, userId: string) {
+  public async updatePost(id: string, dto: UpdatePostDto, userId: string) {
     this.validatePostData(dto);
 
     const existPostEntity = await this.blogPostRepository.findById(id);
@@ -111,7 +111,7 @@ export class BlogPostService {
     return postEntity;
   }
 
-  public async deleteById(id: string) {
+  public async deletePost(id: string) {
     const post = await this.blogPostRepository.findById(id);
 
     if (!post) {

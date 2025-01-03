@@ -23,7 +23,7 @@ export class AuthenticationController {
   @ApiResponse(AuthenticationApiResponse.UserExist)
   @Post('register')
   public async create(@Body() dto: CreateUserDto) {
-    const newUser = await this.authService.register(dto);
+    const newUser = await this.authService.registerUser(dto);
 
     return fillDto(UserRdo, newUser.toPOJO());
   }

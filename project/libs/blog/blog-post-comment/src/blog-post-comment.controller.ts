@@ -23,7 +23,7 @@ export class BlogPostCommentController {
   @Post(POST_ID_PARAM)
   public async create(@Param(PostIdApiParam.name) postId: string, @Body() dto: CreatePostCommentDto) {
     const userId = '12321321321'; //! временно, необходимо определить пользователя
-    const newComment = await this.blogPostCommentService.create(dto, postId, userId);
+    const newComment = await this.blogPostCommentService.createComment(dto, postId, userId);
 
     return fillDto(PostCommentRdo, newComment.toPOJO());
   }
@@ -34,7 +34,7 @@ export class BlogPostCommentController {
   @ApiParam(PostIdApiParam)
   @Get(POST_ID_PARAM)
   public async index(@Param(PostIdApiParam.name) postId: string) {
-    const comments = await this.blogPostCommentService.findByPostId(postId);
+    const comments = await this.blogPostCommentService.getComments(postId);
 
     return fillDto(PostCommentRdo, comments.map((comment) => comment.toPOJO()));
   }
@@ -48,6 +48,6 @@ export class BlogPostCommentController {
   public async delete(@Param(PostIdApiParam.name) postId: string) {
     const userId = '12321321321' //! временно
 
-    await this.blogPostCommentService.delete(postId, userId);
+    await this.blogPostCommentService.deleteComment(postId, userId);
   }
 }

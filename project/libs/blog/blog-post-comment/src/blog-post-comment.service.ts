@@ -10,13 +10,13 @@ export class BlogPostCommentService {
     private readonly blogPostCommentRepository: BlogPostCommentRepository
   ) { }
 
-  public async findByPostId(postId: string): Promise<BlogPostCommentEntity[]> {
+  public async getComments(postId: string): Promise<BlogPostCommentEntity[]> {
     const commentEntities = await this.blogPostCommentRepository.findByPostId(postId);
 
     return commentEntities;
   }
 
-  public async create(dto: CreatePostCommentDto, postId: string, userId: string): Promise<BlogPostCommentEntity> {
+  public async createComment(dto: CreatePostCommentDto, postId: string, userId: string): Promise<BlogPostCommentEntity> {
     const { message } = dto;
     const commentEntity = new BlogPostCommentEntity({ message, postId, userId });
 
@@ -25,7 +25,7 @@ export class BlogPostCommentService {
     return commentEntity;
   }
 
-  public async delete(postId: string, userId: string) {
+  public async deleteComment(postId: string, userId: string) {
     await this.blogPostCommentRepository.delete(postId, userId);
   }
 }

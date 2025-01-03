@@ -23,7 +23,7 @@ export class BlogPostController {
   @Post()
   public async create(@Body() dto: CreatePostDto) {
     const userId = '11223344';
-    const newPost = await this.blogPostService.create(dto, userId);
+    const newPost = await this.blogPostService.createPost(dto, userId);
 
     return fillDto(PostRdo, newPost.toPOJO());
   }
@@ -33,7 +33,7 @@ export class BlogPostController {
   @ApiParam(PostIdApiParam)
   @Get(`:${PostIdApiParam.name}`)
   public async show(@Param(PostIdApiParam.name) postId: string) {
-    const existPost = await this.blogPostService.getById(postId);
+    const existPost = await this.blogPostService.getPost(postId);
 
     return fillDto(DetailPostRdo, existPost.toPOJO());
   }
@@ -46,7 +46,7 @@ export class BlogPostController {
   @Patch(`:${PostIdApiParam.name}`)
   public async update(@Param(PostIdApiParam.name) postId: string, @Body() dto: UpdatePostDto) {
     const userId = '11223344';
-    const existPost = await this.blogPostService.updateById(postId, dto, userId);
+    const existPost = await this.blogPostService.updatePost(postId, dto, userId);
 
     return fillDto(PostRdo, existPost.toPOJO());
   }
@@ -58,6 +58,6 @@ export class BlogPostController {
   @ApiParam(PostIdApiParam)
   @Delete(`:${PostIdApiParam.name}`)
   public async delete(@Param(PostIdApiParam.name) postId: string) {
-    await this.blogPostService.deleteById(postId);
+    await this.blogPostService.deletePost(postId);
   }
 }
