@@ -16,7 +16,6 @@ export class BlogPostController {
     private readonly blogPostService: BlogPostService
   ) { }
 
-
   /*
   @ApiResponse(BlogPostApiResponse.PostFound)
   @ApiResponse(BlogPostApiResponse.PostNotFound)

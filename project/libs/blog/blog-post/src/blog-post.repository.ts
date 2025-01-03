@@ -35,10 +35,14 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
   }
 
   public async update(entity: BlogPostEntity): Promise<void> {
+    const { id } = entity;
+    const existPostEntity = await this.findById(id);
+    //! фактически бы дополнить изменениями existPostEntity, а его проапдейтить и вернуть
+
     const pojoEntity = entity.toPOJO();
 
     await this.client.post.update({
-      where: { id: entity.id },
+      where: { id },
       data: {
         ...pojoEntity,
         //! нужно принудительно занулить все что затрется, нужно глянуть что в текущем null или undefined
@@ -85,5 +89,11 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
       state: post.state as PostState,
       repostedPost
     });
+  }
+
+  public async deleteById(id: string): Promise<void> {
+    await this.findById(id); //! проверка на существование
+
+    await this.client.post.delete({ where: { id } })
   }
 }

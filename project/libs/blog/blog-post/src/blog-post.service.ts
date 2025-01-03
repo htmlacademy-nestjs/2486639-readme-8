@@ -95,15 +95,8 @@ export class BlogPostService {
   public async updatePost(id: string, dto: UpdatePostDto, userId: string) {
     this.validatePostData(dto);
 
-    const existPostEntity = await this.blogPostRepository.findById(id);
-
-    if (!existPostEntity) {
-      throw new NotFoundException(BlogPostMessage.NotFound);
-    }
-
     const tags = await this.blogTagService.getByTitles(dto.tags);
     const postEntity = BlogPostFactory.createFromUpdatePostDto(dto, tags, userId);
-    //! фактически бы дополнить изменениями existPostEntity, а его проапдейтить и вернуть
 
     postEntity.id = id;
     await this.blogPostRepository.update(postEntity);
@@ -112,12 +105,6 @@ export class BlogPostService {
   }
 
   public async deletePost(id: string) {
-    const post = await this.blogPostRepository.findById(id);
-
-    if (!post) {
-      throw new NotFoundException(BlogPostMessage.NotFound);
-    }
-
     await this.blogPostRepository.deleteById(id);
   }
 }

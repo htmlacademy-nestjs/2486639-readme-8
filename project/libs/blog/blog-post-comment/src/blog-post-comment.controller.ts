@@ -15,6 +15,17 @@ export class BlogPostCommentController {
     private readonly blogPostCommentService: BlogPostCommentService
   ) { }
 
+  @ApiResponse(BlogPostCommentApiResponse.PostCommentsFound)
+  @ApiResponse(BlogPostCommentApiResponse.BadRequest)
+  @ApiResponse(BlogPostCommentApiResponse.PostNotFound)
+  @ApiParam(PostIdApiParam)
+  @Get(POST_ID_PARAM)
+  public async index(@Param(PostIdApiParam.name) postId: string) {
+    const comments = await this.blogPostCommentService.getComments(postId);
+
+    return fillDto(PostCommentRdo, comments.map((comment) => comment.toPOJO()));
+  }
+
   @ApiResponse(BlogPostCommentApiResponse.PostCommentCreated)
   @ApiResponse(BlogPostCommentApiResponse.Unauthorized)
   @ApiResponse(BlogPostCommentApiResponse.BadRequest)
@@ -26,17 +37,6 @@ export class BlogPostCommentController {
     const newComment = await this.blogPostCommentService.createComment(dto, postId, userId);
 
     return fillDto(PostCommentRdo, newComment.toPOJO());
-  }
-
-  @ApiResponse(BlogPostCommentApiResponse.PostCommentsFound)
-  @ApiResponse(BlogPostCommentApiResponse.BadRequest)
-  @ApiResponse(BlogPostCommentApiResponse.PostNotFound)
-  @ApiParam(PostIdApiParam)
-  @Get(POST_ID_PARAM)
-  public async index(@Param(PostIdApiParam.name) postId: string) {
-    const comments = await this.blogPostCommentService.getComments(postId);
-
-    return fillDto(PostCommentRdo, comments.map((comment) => comment.toPOJO()));
   }
 
   @ApiResponse(BlogPostCommentApiResponse.PostCommentDeleted)

@@ -41,8 +41,7 @@
         добавил в rdo:
           @Transform(({ value }) => value.map((item: { title: string; }) => item.title))
   27. доделать обновление поста
-  28. доделать удаление поста
-  29. как в query передавать несколько тегов и еще на русском
+  28. как в query передавать несколько тегов и еще на русском
         posts?limit=2&sortDirection=desc&tags[]=tag1,tag2
 
 
