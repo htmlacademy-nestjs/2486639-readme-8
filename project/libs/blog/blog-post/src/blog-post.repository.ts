@@ -36,8 +36,13 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
   public async findById(id: string): Promise<BlogPostEntity> {
     const post = await this.client.post.findFirst({
       where: { id },
-      include: { tags: true }
+      include: {
+        tags: true,
+        repostedPost: true
+      }
     });
+
+    console.log('post', post); //! тест
 
     if (!post) {
       throw new NotFoundException(`Post with id ${id} not found.`);

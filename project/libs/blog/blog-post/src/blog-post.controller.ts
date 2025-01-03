@@ -8,6 +8,7 @@ import { BlogPostService } from './blog-post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PostRdo } from './rdo/post.rdo';
+import { DetailPostRdo } from './rdo/detail-post.rdo';
 
 @ApiTags('blog-post')
 @Controller('posts')
@@ -32,10 +33,11 @@ export class BlogPostController {
   @ApiParam(PostIdApiParam)
   @Get(`:${PostIdApiParam.name}`)
   public async show(@Param(PostIdApiParam.name) postId: string) {
-    console.log(postId); //! тест
     const existPost = await this.blogPostService.getById(postId);
+    console.log('existPost', existPost); //! тест
+    console.log('existPost.toPOJO()', existPost.toPOJO()); //! тест
 
-    return fillDto(PostRdo, existPost.toPOJO());
+    return fillDto(DetailPostRdo, existPost.toPOJO());
   }
 
   @ApiResponse(BlogPostApiResponse.PostUpdated)

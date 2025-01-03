@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Expose } from 'class-transformer';
+import { Expose, Transform } from 'class-transformer';
 
 import { PostState, PostType } from '@project/shared/core';
 
@@ -16,6 +16,7 @@ export class DetailPostRdo {
 
   @ApiProperty(PostApiProperty.Tags)
   @Expose()
+  @Transform(({ value }) => value.map((item: { title: string; }) => item.title))
   public tags: string[];
 
   @ApiProperty(PostApiProperty.State)
@@ -58,13 +59,30 @@ export class DetailPostRdo {
   @Expose()
   public linkDescription: string;
 
+  //! ApiProperty
+  //@Expose({ name: 'repostedPostId', until: 2 })
   @Expose()
+  @Transform(({ value, key, obj, type, options }) => {
+    //((key === 'repostedPostId') && !!obj.repostedPostId)
+    console.log('value', value);
+    console.log('key', key);
+    console.log('obj', obj);
+    console.log('type', type);
+    console.log('options', options);
+
+    return !!obj.repostedPostId;
+  })
   public isRepost: boolean;
 
+  //! ApiProperty
+  //@Expose({ name: 'repostedPostId', until: 2 })
   @Expose()
   public repostedPostId: string;
 
+  //! ApiProperty
+  //@Expose({ name: 'repostedPostId' })
   @Expose()
+  //@Transform(({ value }) => ((!value) ? '' : value.userId))
   public repostedPostUserId: string;
 
   @Expose()

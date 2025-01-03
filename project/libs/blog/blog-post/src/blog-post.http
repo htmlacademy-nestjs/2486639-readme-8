@@ -13,7 +13,12 @@ Content-Type: application/json
 ###
 
 # Get post by ID
-GET http://localhost:3000/api/posts/b17e9b34-6715-4cb7-bd7e-a53fc4888552 HTTP/1.1
+GET http://localhost:3000/api/posts/eab06dc6-ba52-4169-a369-f2f825d44ebb HTTP/1.1
+
+###
+
+# Get post by ID
+GET http://localhost:3000/api/posts/d4652681-e8e8-4109-aa92-9b368d86dece HTTP/1.1
 
 ###
 

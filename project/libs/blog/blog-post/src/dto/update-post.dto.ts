@@ -44,7 +44,8 @@ export class UpdatePostDto {
   @ApiProperty(PostApiProperty.Url)
   @IsOptional()
   @IsString()
-  @IsUrl({ 'require_tld': false }, PostValidateMessage.Url) //! проверить
+  //@IsUrl({ 'require_tld': false }, PostValidateMessage.Url) //! пропускает любые строки
+  @IsUrl({}, PostValidateMessage.Url) //! не пропускает localhost
   public url?: string;
 
   @ApiProperty(PostApiProperty.PreviewText)
