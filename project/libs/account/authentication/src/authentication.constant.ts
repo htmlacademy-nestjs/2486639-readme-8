@@ -50,6 +50,10 @@ export const AuthenticationApiResponse = {
     status: HttpStatus.CONFLICT,
     description: AuthenticationUserMessage.Exists
   },
+  NotAllow: {
+    status: HttpStatus.FORBIDDEN,
+    description: 'Require logout.'
+  },
   LoggedSuccess: {
     type: LoggedUserRdo,
     status: HttpStatus.OK,

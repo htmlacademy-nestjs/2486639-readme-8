@@ -7,7 +7,6 @@ import { PostIdApiParam, BlogPostApiResponse, blogPostApiBodyDescription } from 
 import { BlogPostService } from './blog-post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { PostRdo } from './rdo/post.rdo';
 import { DetailPostRdo } from './rdo/detail-post.rdo';
 
 @ApiTags('blog-post')

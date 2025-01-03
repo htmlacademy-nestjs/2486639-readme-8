@@ -19,10 +19,13 @@ export class AuthenticationController {
     private readonly authService: AuthenticationService
   ) { }
 
+  //!@UseGuards(JwtAuthGuard)
   @ApiResponse(AuthenticationApiResponse.UserCreated)
   @ApiResponse(AuthenticationApiResponse.UserExist)
+  @ApiResponse(AuthenticationApiResponse.NotAllow)
   @Post('register')
   public async create(@Body() dto: CreateUserDto) {
+    //! проверить, что разлогиннен  @UseGuards(JwtAuthGuard) ? как достать sub
     const newUser = await this.authService.registerUser(dto);
 
     return fillDto(UserRdo, newUser.toPOJO());

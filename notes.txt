@@ -20,41 +20,26 @@
   16. пагинация для комментариев
   17. пагинация для постов
   18. для списка комментариев и нового комментария к посту нужно ли выводить детальную информацию о пользователе, пока оставил userId? а postId нужен?
-  19. есть копирвоание либ... "export const PostApiProperty = {"
-        может сделать общие либы с описанием?
-        еще
-          status: HttpStatus.UNAUTHORIZED,
-          status: HttpStatus.BAD_REQUEST,
-          NotFound: 'Post not found'
-  20. нужно ли для ошибок BAD_REQUEST и UNAUTHORIZED описать тело ответа? а как?
-    {
-       "message": [
-          "Type must by one of video, text, quote, photo, link"
-       ],
-         "error": "Bad Request",
-        "statusCode": 400
-      }
-  21. проверка существования поста по id, в комментариях и постах
+  19. проверка существования поста по id, в комментариях и постах
         будет еще навешана проверка - валидатор?
         перед вставкой вызвать поиск? через BlogPostService или BlogPostRepository
           а что правильней использовать Service или Repository
         обработать try.... Foreign key constraint failed on the field: `comments_post_id_fkey (index)`
-  22. если будем валидировать userId и postId, то добавить/убрать в/из описания ответов BadRequest
-          MongoIdValidationPipe, а для GUID?
+  20. будем валидировать postId? как для userId MongoIdValidationPipe, а для GUID?
           в комментариях и постах
-  23. у всех контоллеров/controller не прописано возвращаемое занчение
-  24. для поста с типом фото, как загружать картинку, после добавления или сразу?
-  25. черновики других пользоватетлей доступны при запросе детальной информаций о посте?
-        в DetailPostRdo оставил State
-  26. проверка .env
+  21. у всех контоллеров/controller не прописано возвращаемое занчение? так и оставить?
+  22. для поста с типом фото, как загружать картинку, после добавления или сразу?
+        нужно позже убрать из проверок imagePath
+  23. черновики других пользоватетлей доступны при запросе детальной информаций о посте?
+        если пост сначала был опубликован и другой пользователь уже смотрел, а потом в черновики под автором и обновить страницу у пользователя
+  24. проверка .env
         [Account JWTConfig Validation Error]: "accessTokenSecret" is required  / accessTokenSecret: Joi.string().required(),
         сделавть чтоб писал "не указан JWT_ACCESS_TOKEN_SECRET!"
-  27. entity.id = undefined; //! пустая строка из базового класса и id не гененируется
-        А в тегах вы зывается конструктор с объектом и populate записавает в _id undefined
-  28. при получении поста для тегов отдавать только заголовки?
+  25. entity.id = undefined; //! пустая строка из базового класса и id не гененируется
+        А в тегах вызывается конструктор с минимальным объектом и при вызове populate записывает в _id undefined
+  26. при получении поста для тегов отдавать только заголовки?
         добавил в rdo:
           @Transform(({ value }) => value.map((item: { title: string; }) => item.title))
-  29. пост с типом фото, как сразу грузить файл в dto при создании илии обновлении, нужно позже убрать из проверок imagePath
 
 
 Заметки:
@@ -79,4 +64,7 @@
       - проверить неиспользуемые импорты
   5. Title: { description: 'The post title for types: video and text',
     все ограничения перечислены в PostFieldsByType
-
+  6. есть одинаковые сообщения в разных бибилиотеках, возможно стоит сделать общие сообщения и описание, например "export const PostApiProperty = {"
+      status: HttpStatus.UNAUTHORIZED,
+      status: HttpStatus.BAD_REQUEST,
+      NotFound: 'Post not found'
