@@ -34,7 +34,6 @@ export class BlogPostCommentController {
   @ApiParam(PostIdApiParam)
   @Get(POST_ID_PARAM)
   public async index(@Param(PostIdApiParam.name) postId: string) {
-    console.log(postId); //! тест
     const comments = await this.blogPostCommentService.findByPostId(postId);
 
     return fillDto(PostCommentRdo, comments.map((comment) => comment.toPOJO()));

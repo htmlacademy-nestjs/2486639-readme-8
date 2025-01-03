@@ -41,7 +41,7 @@ export class BlogPostCommentRepository extends BasePostgresRepository<BlogPostCo
 
       entity.id = record.id;
     } catch (error) {
-      console.log(error); //! тест
+      console.log(error); //! тест - правильнее обработать исключение, но и заранее проверить, что пост есть тоже хорошо...
 
       throw new NotFoundException(`${BlogPostCommentMessage.PostNotFound} ${entity.postId}`);
     }
