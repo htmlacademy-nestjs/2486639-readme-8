@@ -14,7 +14,9 @@ export const PostCommentMessageValidateMessage = {
 } as const;
 
 export const BlogPostCommentMessage = {
-  PostNotFound: 'Post not found.'
+  PostNotFound: 'Post not found.',
+  CommentNotFound: 'Comment not found.',
+  CommentExist: 'You already commented the post.'
 } as const;
 
 export const PostIdApiParam = {
@@ -51,5 +53,13 @@ export const BlogPostCommentApiResponse = {
   PostNotFound: {
     status: HttpStatus.NOT_FOUND,
     description: BlogPostCommentMessage.PostNotFound
+  },
+  CommentNotFound: {
+    status: HttpStatus.NOT_FOUND,
+    description: BlogPostCommentMessage.CommentNotFound
+  },
+  CommentOnPostExist: {
+    status: HttpStatus.CONFLICT,
+    description: BlogPostCommentMessage.CommentExist
   }
 } as const;

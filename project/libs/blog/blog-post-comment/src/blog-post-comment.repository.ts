@@ -1,8 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 
 import { PrismaClientService } from '@project/blog/models';
 import { BasePostgresRepository } from '@project/shared/data-access';
 import { Comment } from '@project/shared/core';
+import { getMetaError } from '@project/shared/helpers';
 
 import { BlogPostCommentEntity } from './blog-post-comment.entity';
 import { BlogPostCommentFactory } from './blog-post-comment.factory';
@@ -18,14 +19,6 @@ export class BlogPostCommentRepository extends BasePostgresRepository<BlogPostCo
   }
 
   public async findByPostId(postId: string): Promise<BlogPostCommentEntity[]> {
-    //! временно? возможно будет отдельный валидатор или искать через соответвующий service или repository
-    const post = await this.client.post.findFirst({ where: { id: postId } });
-
-    if (!post) {
-      throw new NotFoundException(`${BlogPostCommentMessage.PostNotFound} ${postId}`);
-    }
-    //
-
     const records = await this.client.comment.findMany({
       where: { postId }
     });
@@ -41,9 +34,27 @@ export class BlogPostCommentRepository extends BasePostgresRepository<BlogPostCo
 
       entity.id = record.id;
     } catch (error) {
-      console.log(error); //! тест - правильнее обработать исключение, но и заранее проверить, что пост есть тоже хорошо...
+      console.log(JSON.stringify(error));
+      console.log(error.message);
+      //! как правильно обработать? где взять описание ключей, индексов и т.д.
+      const { code, message, fieldName } = getMetaError(error);
 
-      throw new NotFoundException(`${BlogPostCommentMessage.PostNotFound} ${entity.postId}`);
+      //! при ошибке, что нет поста { modelName: 'Comment', field_name: 'comments_post_id_fkey (index)' }
+      if (fieldName === 'comments_post_id_fkey (index)') {
+        throw new NotFoundException(`${BlogPostCommentMessage.PostNotFound} postId: ${entity.postId}`);
+      }
+
+      //! при ошибке, что пользователь уже комментировал этот пост
+      //Unique constraint failed on the (not available)
+      //code: 'P2002',
+      //meta: { modelName: 'Comment', target: null }
+      if ((code === 'P2002') && (message.indexOf('Unique constraint failed on the (not available)'))) {
+        throw new ConflictException(`${BlogPostCommentMessage.CommentExist} postId: ${entity.postId}`);
+      }
+
+      Logger.log(`Error in BlogPostCommentRepository.save postId: ${entity.postId}, userId: ${entity.userId}`);
+      Logger.log(error);
+      throw new BadRequestException('Bad request');
     }
   }
 
@@ -53,7 +64,8 @@ export class BlogPostCommentRepository extends BasePostgresRepository<BlogPostCo
     });
 
     if (!comment) {
-      throw new NotFoundException(`Comment for postId "${postId}" and userId "${userId}" not found.`);
+      throw new NotFoundException(`Your comment for post not found. postId: ${postId}`);
+      //! а еще возможно, что автор только что удалил пост
     }
 
     await this.client.comment.delete({ where: { id: comment.id } })

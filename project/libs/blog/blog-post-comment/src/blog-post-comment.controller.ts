@@ -21,6 +21,8 @@ export class BlogPostCommentController {
   @ApiParam(PostIdApiParam)
   @Get(POST_ID_PARAM)
   public async index(@Param(PostIdApiParam.name) postId: string) {
+    //! нужно провалидировать корректроность postId на guid
+    //! нужно проверить существование поста из параметров, пока временная проверка в репозитарии
     const comments = await this.blogPostCommentService.getComments(postId);
 
     return fillDto(PostCommentRdo, comments.map((comment) => comment.toPOJO()));
@@ -30,9 +32,13 @@ export class BlogPostCommentController {
   @ApiResponse(BlogPostCommentApiResponse.Unauthorized)
   @ApiResponse(BlogPostCommentApiResponse.BadRequest)
   @ApiResponse(BlogPostCommentApiResponse.PostNotFound)
+  @ApiResponse(BlogPostCommentApiResponse.CommentOnPostExist)
   @ApiParam(PostIdApiParam)
   @Post(POST_ID_PARAM)
   public async create(@Param(PostIdApiParam.name) postId: string, @Body() dto: CreatePostCommentDto) {
+    //! нужно провалидировать корректроность postId на guid
+    //! нужно проверить существование поста из параметров
+    //! нужно проверить авторизацию
     const userId = '12321321321'; //! временно, необходимо определить пользователя
     const newComment = await this.blogPostCommentService.createComment(dto, postId, userId);
 
@@ -41,11 +47,14 @@ export class BlogPostCommentController {
 
   @ApiResponse(BlogPostCommentApiResponse.PostCommentDeleted)
   @ApiResponse(BlogPostCommentApiResponse.Unauthorized)
-  @ApiResponse(BlogPostCommentApiResponse.BadRequest)
   @ApiResponse(BlogPostCommentApiResponse.PostNotFound)
+  @ApiResponse(BlogPostCommentApiResponse.CommentNotFound)
   @ApiParam(PostIdApiParam)
   @Delete(POST_ID_PARAM)
   public async delete(@Param(PostIdApiParam.name) postId: string) {
+    //! нужно провалидировать корректроность postId на guid
+    //! нужно проверить существование поста из параметров
+    //! нужно проверить авторизацию
     const userId = '12321321321' //! временно
 
     await this.blogPostCommentService.deleteComment(postId, userId);
