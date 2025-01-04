@@ -48,7 +48,10 @@ model Post {
   likes           Like[]
   repostedPosts   Post[]    @relation("repostedPosts")
 
-  @@index([title])
+  @@index([type])
+  @@index([publishDate])
+  @@index([state])
+  @@index([userId])
   @@map("posts")
 }
 
@@ -80,5 +83,6 @@ model Subscription {
   authorUserId String @map("author_user_id")
   userId       String @map("user_id")
 
+  @@index([userId])
   @@map("subscriptions")
 }
