@@ -18,14 +18,16 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
 
   public async save(entity: BlogPostEntity): Promise<void> {
     const pojoEntity = entity.toPOJO();
+    //! при редактировании есть похожие строки
+    const tags = { connect: pojoEntity.tags.map(({ id }) => ({ id })) };
+    const repostedPost = (pojoEntity.repostedPost)
+      ? { connect: { id: pojoEntity.repostedPost.id } }
+      : undefined;
     const record = await this.client.post.create({
       data: {
         ...pojoEntity,
-        tags: {
-          connect: pojoEntity.tags.map(({ id }) => ({ id }))
-        },
-        //repostedPost: { connect: { id: pojoEntity.repostedPost.id } } //! ошибка вставки
-        repostedPost: undefined
+        tags,
+        repostedPost
       }
       //! , include: { repostedPost: true } //! возможно нужно при репосте
     });
@@ -38,10 +40,8 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
 
   public async update(entity: BlogPostEntity): Promise<void> {
     const { id } = entity;
-    const existPostEntity = await this.findById(id);
-    //! фактически бы дополнить изменениями existPostEntity, а его проапдейтить и вернуть
-
     const pojoEntity = entity.toPOJO();
+    const tags = { set: pojoEntity.tags.map(({ id }) => ({ id })) }//! connect?
 
     await this.client.post.update({
       where: { id },
@@ -51,14 +51,12 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
         text: null,
         previewText: null,
         //
-        tags: {
-          set: pojoEntity.tags.map(({ id }) => ({ id })) //! connect?
-        },
+        tags,
         repostedPost: undefined //!
       },
       include: {
-        tags: true,
-        repostedPost: true
+        tags: true, //! проверить без этого, данные уже есть
+        repostedPost: true //!
       }
     });
   }
@@ -76,6 +74,7 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
       throw new NotFoundException(`Post with id ${id} not found.`);
     }
 
+    //! вынести в функцию
     const repostedPost: Post = (!post.repostedPost)
       ? undefined
       : {

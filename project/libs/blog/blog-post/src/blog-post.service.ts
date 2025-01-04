@@ -71,6 +71,16 @@ export class BlogPostService {
     }
   }
 
+  public async getPost(id: string) {
+    const post = await this.blogPostRepository.findById(id);
+
+    if (!post) {
+      throw new NotFoundException(BlogPostMessage.NotFound);
+    }
+
+    return post;
+  }
+
   public async createPost(dto: CreatePostDto, userId: string): Promise<BlogPostEntity> {
     this.validatePostData(dto);
 
@@ -82,21 +92,14 @@ export class BlogPostService {
     return newPost;
   }
 
-  public async getPost(id: string) {
-    const post = await this.blogPostRepository.findById(id);
-
-    if (!post) {
-      throw new NotFoundException(BlogPostMessage.NotFound);
-    }
-
-    return post;
-  }
-
   public async updatePost(id: string, dto: UpdatePostDto, userId: string) {
     this.validatePostData(dto);
 
     const tags = await this.blogTagService.getByTitles(dto.tags);
     const postEntity = BlogPostFactory.createFromUpdatePostDto(dto, tags, userId);
+
+    const existPostEntity = await this.blogPostRepository.findById(id);
+    //! фактически бы дополнить изменениями existPostEntity, а его проапдейтить и вернуть
 
     postEntity.id = id;
     await this.blogPostRepository.update(postEntity);
