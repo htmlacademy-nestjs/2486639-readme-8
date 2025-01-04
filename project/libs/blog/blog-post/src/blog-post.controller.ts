@@ -34,6 +34,8 @@ export class BlogPostController {
   @ApiParam(PostIdApiParam)
   @Get(`:${PostIdApiParam.name}`)
   public async show(@Param(PostIdApiParam.name) postId: string) {
+    //! нужно провалидировать корректроность postId на guid
+    //! нужно проверить существование поста из параметров
     const existPost = await this.blogPostService.getPost(postId);
 
     return fillDto(DetailPostRdo, existPost.toPOJO());
@@ -45,6 +47,9 @@ export class BlogPostController {
   @ApiBody({ description: blogPostApiBodyDescription, type: CreatePostDto })
   @Post()
   public async create(@Body() dto: CreatePostDto) {
+    //! нужно провалидировать корректроность postId на guid
+    //! нужно проверить существование поста из параметров
+    //! нужно проверить авторизацию
     const userId = '11223344';
     const newPost = await this.blogPostService.createPost(dto, userId);
 
@@ -58,6 +63,10 @@ export class BlogPostController {
   @ApiParam(PostIdApiParam)
   @Patch(`:${PostIdApiParam.name}`)
   public async update(@Param(PostIdApiParam.name) postId: string, @Body() dto: UpdatePostDto) {
+    //! нужно провалидировать корректроность postId на guid
+    //! нужно проверить существование поста из параметров
+    //! нужно проверить авторизацию
+    //! нужно проверить, что пользователь это автор этого поста
     const userId = '11223344';
     const existPost = await this.blogPostService.updatePost(postId, dto, userId);
 
@@ -71,6 +80,10 @@ export class BlogPostController {
   @ApiParam(PostIdApiParam)
   @Delete(`:${PostIdApiParam.name}`)
   public async delete(@Param(PostIdApiParam.name) postId: string) {
+    //! нужно провалидировать корректроность postId на guid
+    //! нужно проверить существование поста из параметров
+    //! нужно проверить авторизацию
+    //! нужно проверить, что пользователь это автор этого поста
     await this.blogPostService.deletePost(postId);
   }
 }
