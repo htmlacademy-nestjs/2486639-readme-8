@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { PrismaClientService } from '@project/blog/models';
 import { BasePostgresRepository } from '@project/shared/data-access';
-import { Post, PostState, PostType } from '@project/shared/core';
+import { Post, PostState, PostType, Tag } from '@project/shared/core';
 
 import { BlogPostEntity } from './blog-post.entity';
 import { BlogPostFactory } from './blog-post.factory';
@@ -14,6 +14,10 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     readonly client: PrismaClientService,
   ) {
     super(entityFactory, client);
+  }
+
+  private getTagIds(tags: Tag[]): { id: string }[] {
+    return tags.map(({ id }) => ({ id }));
   }
 
   public async findById(id: string): Promise<BlogPostEntity> {
@@ -53,8 +57,7 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
 
   public async save(entity: BlogPostEntity): Promise<void> {
     const pojoEntity = entity.toPOJO();
-    //! при редактировании есть похожие строки
-    const tags = { connect: pojoEntity.tags.map(({ id }) => ({ id })) };
+    const tags = { connect: this.getTagIds(pojoEntity.tags) };
     const repostedPost = (pojoEntity.repostedPost)
       ? { connect: { id: pojoEntity.repostedPost.id } }
       : undefined;
@@ -76,22 +79,14 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
   public async update(entity: BlogPostEntity): Promise<void> {
     const { id } = entity;
     const pojoEntity = entity.toPOJO();
-    const tags = { set: pojoEntity.tags.map(({ id }) => ({ id })) }//! connect?
+    const tags = { set: this.getTagIds(pojoEntity.tags) }
 
     await this.client.post.update({
       where: { id },
       data: {
         ...pojoEntity,
-        //! нужно принудительно занулить все что затрется, нужно глянуть что в текущем null или undefined
-        text: null,
-        previewText: null,
-        //
         tags,
-        repostedPost: undefined //!
-      },
-      include: {
-        tags: true, //! проверить без этого, данные уже есть
-        repostedPost: true //!
+        repostedPost: undefined // при обновлении не меняем данные о репосте
       }
     });
   }

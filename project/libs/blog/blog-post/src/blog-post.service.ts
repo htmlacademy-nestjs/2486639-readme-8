@@ -96,7 +96,10 @@ export class BlogPostService {
 
     const existPostEntity = await this.blogPostRepository.findById(id);
     //! фактически бы дополнить изменениями existPostEntity, а его проапдейтить и вернуть
-
+    //! нужно принудительно занулить все что затрется, нужно глянуть что в текущем null или undefined
+    //text: null,
+    //previewText: null,
+    //
     postEntity.id = id;
     await this.blogPostRepository.update(postEntity);
 
