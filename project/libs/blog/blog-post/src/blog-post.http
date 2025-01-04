@@ -7,12 +7,12 @@ GET http://localhost:3000/api/posts?limit=2&sortDirection=desc&tags[]=tag1,tag2 
 ###
 
 # Get post by ID
-GET http://localhost:3000/api/posts/129f97f2-9b77-499a-a740-156c4b881a44 HTTP/1.1
+GET http://localhost:3000/api/posts/eab06dc6-ba52-4169-a369-f2f825d44ebb HTTP/1.1
 
 ###
 
 # Get post by ID
-GET http://localhost:3000/api/posts/d4652681-e8e8-4109-aa92-9b368d86dece HTTP/1.1
+GET http://localhost:3000/api/posts/9059dee5-7897-46d3-b8f6-e075a8b568c0 HTTP/1.1
 
 ###
 
@@ -31,7 +31,7 @@ Content-Type: application/json
 ###
 
 # Update post by ID
-PATCH http://localhost:3000/api/posts/129f97f2-9b77-499a-a740-156c4b881a44 HTTP/1.1
+PATCH http://localhost:3000/api/posts/9059dee5-7897-46d3-b8f6-e075a8b568c0 HTTP/1.1
 Content-Type: application/json
 
 {
@@ -39,6 +39,18 @@ Content-Type: application/json
   "tags": ["taG111", "tag2", "tttt2", "tttt2", "tttt1", "tttt1"],
   "title": "asdasdsaasdasdsaasdasdsaasd",
   "url": "http://localhost.ru/sadasd"
+}
+
+###
+
+PATCH http://localhost:3000/api/posts/9059dee5-7897-46d3-b8f6-e075a8b568c0 HTTP/1.1
+Content-Type: application/json
+
+{
+  "type": "quote",
+  "tags": ["taG111", "tag2", "tttt2", "tttt2", "tttt1", "tttt1"],
+  "quoteText": "quote text quote text quote text",
+  "quoteAuthor": "quote author"
 }
 
 ###

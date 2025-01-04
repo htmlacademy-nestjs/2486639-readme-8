@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
 
 import { BlogTagService } from '@project/blog/blog-tag';
 
@@ -7,7 +7,7 @@ import { BlogPostFactory } from './blog-post.factory';
 import { BlogPostRepository } from './blog-post.repository';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { PostField, PostFieldsByType } from './blog-post.constant';
+import { BlogPostMessage, PostField, PostFieldsByType } from './blog-post.constant';
 
 @Injectable()
 export class BlogPostService {
@@ -71,6 +71,12 @@ export class BlogPostService {
     }
   }
 
+  private allowModifyPost(postUserId: string, userId: string) {
+    if (postUserId !== userId) {
+      throw new ForbiddenException(BlogPostMessage.NotAllow);
+    }
+  }
+
   public async getPost(id: string) {
     const post = await this.blogPostRepository.findById(id);
 
@@ -91,22 +97,55 @@ export class BlogPostService {
   public async updatePost(id: string, dto: UpdatePostDto, userId: string) {
     this.validatePostData(dto);
 
-    const tags = await this.blogTagService.getByTitles(dto.tags);
-    const postEntity = BlogPostFactory.createFromUpdatePostDto(dto, tags, userId);
+    const existsPost = await this.blogPostRepository.findById(id);
 
-    const existPostEntity = await this.blogPostRepository.findById(id);
-    //! фактически бы дополнить изменениями existPostEntity, а его проапдейтить и вернуть
-    //! нужно принудительно занулить все что затрется, нужно глянуть что в текущем null или undefined
-    //text: null,
-    //previewText: null,
-    //
-    postEntity.id = id;
-    await this.blogPostRepository.update(postEntity);
+    this.allowModifyPost(existsPost.userId, userId);
 
-    return postEntity;
+    let isSameTags = true;
+    let hasChanges = false;
+
+    // обнуляем поля, чтобы был null в БД
+    Object.values(PostField).forEach((key) => {
+      existsPost[key] = null;
+    });
+
+    for (const [key, value] of Object.entries(dto)) {
+      if (key === 'tags') {
+        if (value) {
+          const currentTagIds = existsPost.tags.map((tag) => tag.id);
+
+          isSameTags = (currentTagIds.length === value.length) && (currentTagIds.some((tagId) => value.includes(tagId)));
+
+          if (!isSameTags) {
+            existsPost.tags = await this.blogTagService.getByTitles(dto.tags);
+          }
+        }
+      } else {
+        if (value !== undefined && existsPost[key] !== value) {
+          existsPost[key] = value;
+          hasChanges = true;
+        }
+      }
+    }
+
+    if (!isSameTags || hasChanges) {
+      await this.blogPostRepository.update(existsPost);
+    }
+
+    // поля с null в undefined, чтобы их небыло в rdo
+    Object.values(PostField).forEach((key) => {
+      if (existsPost[key] === null) {
+        existsPost[key] = undefined;
+      }
+    });
+
+    return existsPost;
   }
 
-  public async deletePost(id: string) {
+  public async deletePost(id: string, userId: string) {
+    const existsPost = await this.blogPostRepository.findById(id);
+
+    this.allowModifyPost(existsPost.userId, userId);
     await this.blogPostRepository.deleteById(id);
   }
 }

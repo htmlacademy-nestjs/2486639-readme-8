@@ -64,13 +64,13 @@ export class BlogPostController {
   @Patch(`:${PostIdApiParam.name}`)
   public async update(@Param(PostIdApiParam.name) postId: string, @Body() dto: UpdatePostDto) {
     //! нужно провалидировать корректроность postId на guid
-    //! нужно проверить существование поста из параметров
+    //! нужно проверить существование поста из параметров - в сервисе есть запрос на получение поста
     //! нужно проверить авторизацию
-    //! нужно проверить, что пользователь это автор этого поста
+    //! нужно проверить, что пользователь это автор этого поста - сделал в сервисе
     const userId = '11223344';
-    const existPost = await this.blogPostService.updatePost(postId, dto, userId);
+    const updatedPost = await this.blogPostService.updatePost(postId, dto, userId);
 
-    return fillDto(DetailPostRdo, existPost.toPOJO());
+    return fillDto(DetailPostRdo, updatedPost.toPOJO());
   }
 
   @ApiResponse(BlogPostApiResponse.PostDeleted)
@@ -81,9 +81,11 @@ export class BlogPostController {
   @Delete(`:${PostIdApiParam.name}`)
   public async delete(@Param(PostIdApiParam.name) postId: string) {
     //! нужно провалидировать корректроность postId на guid
-    //! нужно проверить существование поста из параметров
+    //! нужно проверить существование поста из параметров- в сервисе есть запрос на получение поста, для получения автора
     //! нужно проверить авторизацию
-    //! нужно проверить, что пользователь это автор этого поста
-    await this.blogPostService.deletePost(postId);
+    //! нужно проверить, что пользователь это автор этого поста - сделал в сервисе
+    const userId = '11223344';
+
+    await this.blogPostService.deletePost(postId, userId);
   }
 }

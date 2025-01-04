@@ -92,8 +92,6 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
   }
 
   public async deleteById(id: string): Promise<void> {
-    await this.findById(id); //! проверка на существование
-
     await this.client.post.delete({ where: { id } })
   }
 }

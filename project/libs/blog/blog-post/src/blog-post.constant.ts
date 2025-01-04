@@ -113,7 +113,8 @@ export const blogPostApiBodyDescription = Object.keys(PostFieldsByType).map(
 ).join('.\n');
 
 export const BlogPostMessage = {
-  NotFound: 'Post not found'
+  NotFound: 'Post not found.',
+  NotAllow: 'Post is not yours.'
 } as const;
 
 export const PostIdApiParam = {
@@ -128,7 +129,7 @@ export const BlogPostApiResponse = {
   },
   NotAllow: {
     status: HttpStatus.FORBIDDEN,
-    description: 'Post is not yours.'
+    description: BlogPostMessage.NotAllow
   },
   BadRequest: {
     status: HttpStatus.BAD_REQUEST,
@@ -151,12 +152,12 @@ export const BlogPostApiResponse = {
   PostFound: {
     type: DetailPostRdo,
     status: HttpStatus.OK,
-    description: 'Post found'
+    description: 'Post found.'
   },
   PostsFound: {
     type: PostRdo, //! наверное будет тип с пагинацией
     status: HttpStatus.OK,
-    description: 'Posts found'
+    description: 'Posts found.'
   },
   PostNotFound: {
     status: HttpStatus.NOT_FOUND,
