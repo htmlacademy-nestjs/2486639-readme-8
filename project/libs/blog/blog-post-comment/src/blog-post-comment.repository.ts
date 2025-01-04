@@ -34,8 +34,6 @@ export class BlogPostCommentRepository extends BasePostgresRepository<BlogPostCo
 
       entity.id = record.id;
     } catch (error) {
-      console.log(JSON.stringify(error));
-      console.log(error.message);
       //! как правильно обработать? где взять описание ключей, индексов и т.д.
       const { code, message, fieldName } = getMetaError(error);
 

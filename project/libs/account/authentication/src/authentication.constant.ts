@@ -66,7 +66,7 @@ export const AuthenticationApiResponse = {
   UserFound: {
     type: UserRdo,
     status: HttpStatus.OK,
-    description: 'User found'
+    description: 'User found.'
   },
   UserNotFound: {
     status: HttpStatus.NOT_FOUND,
