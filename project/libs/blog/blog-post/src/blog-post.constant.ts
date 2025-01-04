@@ -1,12 +1,18 @@
 import { HttpStatus } from '@nestjs/common';
 
-import { PostState, PostType } from '@project/shared/core';
+import { PostState, PostType, SortType } from '@project/shared/core';
 
 import { PostApiProperty } from './blog-post.constant.property';
 import { PostRdo } from './rdo/post.rdo';
 import { DetailPostRdo } from './rdo/detail-post.rdo';
 
-export const DEFAULT_NEW_POST_STATE = PostState.Published;
+export const Default = {
+  NEW_POST_STATE: PostState.Published,
+  FINDING_STATE: PostState.Published,
+  POST_COUNT: 25,
+  PAGE_COUNT: 1,
+  SORT_TYPE: SortType.Date
+} as const;
 
 export const PostValidation = {
   Tags: {

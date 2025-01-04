@@ -3,7 +3,7 @@ GET http://localhost:3000/api/posts HTTP/1.1
 ###
 
 # Get posts query
-GET http://localhost:3000/api/posts?limit=2&sortDirection=desc&tags[]=tag1,tag2 HTTP/1.1
+GET http://localhost:3000/api/posts?tag=aa HTTP/1.1
 ###
 
 # Get post by ID

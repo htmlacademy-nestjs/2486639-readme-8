@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { fillDto } from '@project/shared/helpers';
@@ -8,6 +8,7 @@ import { BlogPostService } from './blog-post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { DetailPostRdo } from './rdo/detail-post.rdo';
+import { BlogPostQuery } from './blog-post.query';
 
 @ApiTags('blog-post')
 @Controller('posts')
@@ -20,9 +21,13 @@ export class BlogPostController {
   @ApiResponse(BlogPostApiResponse.PostFound)
   @ApiResponse(BlogPostApiResponse.PostNotFound)
   @ApiParam(PostIdApiParam)
+  //! нужно описание запроса
   */
   @Get('/')
-  public async index(/*@Param(PostIdApiParam.name) postId: string*/) {
+  public async index(@Query() query: BlogPostQuery) {
+    console.log(query);
+
+    // только опубликованные - state: Default.FINDING_STATE
     //const existPost = await this.blogPostService.getPost(postId);
 
     //return fillDto(DetailPostRdo, existPost.toPOJO());
