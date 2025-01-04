@@ -55,6 +55,15 @@ export class PostRdo {
   @Expose()
   public linkDescription: string;
 
+  @ApiProperty(PostApiProperty.UserId)
   @Expose()
   public userId: string;
+
+  @ApiProperty(PostApiProperty.LikesCount)
+  @Expose()
+  public likesCount: number;
+
+  @ApiProperty(PostApiProperty.CommentsCount)
+  @Expose()
+  public commentsCount: number;
 }

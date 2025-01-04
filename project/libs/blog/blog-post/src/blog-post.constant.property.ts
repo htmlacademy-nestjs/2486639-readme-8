@@ -80,5 +80,13 @@ export const PostApiProperty = {
   UserId: {
     description: 'The post user id',
     example: "658170cbb954e9f5b905ccf4"
+  },
+  LikesCount: {
+    description: 'The post likes count',
+    example: "5"
+  },
+  CommentsCount: {
+    description: 'The post comments count',
+    example: "5"
   }
 } as const;
