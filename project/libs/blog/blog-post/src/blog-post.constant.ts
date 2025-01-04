@@ -145,7 +145,7 @@ export const BlogPostApiResponse = {
     description: 'The post has been successfully updated.'
   },
   PostDeleted: {
-    status: HttpStatus.OK,
+    status: HttpStatus.NO_CONTENT,
     description: 'The post has been successfully deleted.'
   },
   PostFound: {

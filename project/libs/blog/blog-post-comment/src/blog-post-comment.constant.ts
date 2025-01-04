@@ -45,7 +45,7 @@ export const BlogPostCommentApiResponse = {
     description: 'Post comments found.'
   },
   PostCommentDeleted: {
-    status: HttpStatus.OK,
+    status: HttpStatus.NO_CONTENT,
     description: 'The comment has been successfully deleted.'
   },
   PostNotFound: {
