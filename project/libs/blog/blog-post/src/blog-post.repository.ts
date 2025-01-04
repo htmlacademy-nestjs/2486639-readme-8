@@ -16,6 +16,41 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     super(entityFactory, client);
   }
 
+  public async findById(id: string): Promise<BlogPostEntity> {
+    const record = await this.client.post.findFirst(
+      {
+        where: { id },
+        include: {
+          tags: true,
+          repostedPost: true
+        }
+      }
+    );
+
+    if (!record) {
+      throw new NotFoundException(`Post with id ${id} not found.`);
+    }
+
+    //! вынести в функцию
+    const repostedPost: Post = (record.repostedPost)
+      ? {
+        ...record.repostedPost,
+        type: record.repostedPost.type as PostType,
+        state: record.repostedPost.state as PostState,
+        tags: []
+      }
+      : undefined;
+
+    const post: Post = {
+      ...record,
+      type: record.type as PostType,
+      state: record.state as PostState,
+      repostedPost
+    };
+
+    return this.createEntityFromDocument(post);
+  }
+
   public async save(entity: BlogPostEntity): Promise<void> {
     const pojoEntity = entity.toPOJO();
     //! при редактировании есть похожие строки
@@ -58,37 +93,6 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
         tags: true, //! проверить без этого, данные уже есть
         repostedPost: true //!
       }
-    });
-  }
-
-  public async findById(id: string): Promise<BlogPostEntity> {
-    const post = await this.client.post.findFirst({
-      where: { id },
-      include: {
-        tags: true,
-        repostedPost: true
-      }
-    });
-
-    if (!post) {
-      throw new NotFoundException(`Post with id ${id} not found.`);
-    }
-
-    //! вынести в функцию
-    const repostedPost: Post = (!post.repostedPost)
-      ? undefined
-      : {
-        ...post.repostedPost,
-        type: post.repostedPost.type as PostType,
-        state: post.repostedPost.state as PostState,
-        tags: []
-      };
-
-    return this.createEntityFromDocument({
-      ...post,
-      type: post.type as PostType,
-      state: post.state as PostState,
-      repostedPost
     });
   }
 

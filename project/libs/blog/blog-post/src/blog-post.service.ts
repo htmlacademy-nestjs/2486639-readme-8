@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 
 import { BlogTagService } from '@project/blog/blog-tag';
 
@@ -7,7 +7,7 @@ import { BlogPostFactory } from './blog-post.factory';
 import { BlogPostRepository } from './blog-post.repository';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { BlogPostMessage, PostField, PostFieldsByType } from './blog-post.constant';
+import { PostField, PostFieldsByType } from './blog-post.constant';
 
 @Injectable()
 export class BlogPostService {
@@ -73,10 +73,6 @@ export class BlogPostService {
 
   public async getPost(id: string) {
     const post = await this.blogPostRepository.findById(id);
-
-    if (!post) {
-      throw new NotFoundException(BlogPostMessage.NotFound);
-    }
 
     return post;
   }
