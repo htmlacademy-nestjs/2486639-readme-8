@@ -1,9 +1,9 @@
 import { Transform } from 'class-transformer';
-import { IsBoolean, IsEnum, IsIn, IsInt, IsOptional, IsString, Matches, MaxLength, MinLength } from 'class-validator';
+import { IsBoolean, IsEnum, IsInt, IsOptional, IsString, Matches, MaxLength, MinLength } from 'class-validator';
 
 import { PostType, SortType } from '@project/shared/core';
 
-import { Default, PostValidateMessage, PostValidation } from './blog-post.constant';
+import { Default, PostValidation } from './blog-post.constant';
 
 export class BlogPostQuery {
   //! добавить сообщение и проверку на MongoId
