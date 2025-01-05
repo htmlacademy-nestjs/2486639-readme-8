@@ -23,6 +23,7 @@ export const PostApiProperty = {
     description: 'The post tags',
     example: ["tag1", "tag2"]
   },
+  // для формирования "for types:..." можно применить PostFieldsByType, но данные поля по типам, а тут нужно типы по полям
   Title: {
     description: 'The post title for types: video and text',
     required: false,
@@ -63,6 +64,7 @@ export const PostApiProperty = {
     required: false,
     example: "link description"
   },
+  //
   IsRepost: {
     description: 'The post is repost attribute',
     example: "true"

@@ -24,16 +24,18 @@ export class BlogPostQuery {
   @IsOptional()
   public type?: PostType;
 
+  // без "showDraft: boolean" в Swagger показывает объект
+  // eslint-disable-next-line @typescript-eslint/no-inferrable-types
   @ApiProperty(PostQueryApiProperty.ShowDraft)
   @Transform(({ obj }) => (obj.showDraft === 'true'))
   @IsOptional()
-  public showDraft = false;
+  public showDraft: boolean = false;
 
   @ApiProperty(PostQueryApiProperty.Tag)
   @IsString()
-  @Matches(PostValidation.Tags.RegExp)
-  @MinLength(PostValidation.Tags.MinLength)
-  @MaxLength(PostValidation.Tags.MaxLength)
+  @Matches(PostValidation.Tags.TagRegExp)
+  @MinLength(PostValidation.Tags.TagMinLength)
+  @MaxLength(PostValidation.Tags.TagMaxLength)
   @IsOptional()
   public tag?: string;
 

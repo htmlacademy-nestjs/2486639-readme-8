@@ -18,9 +18,9 @@ export const Default = {
 export const PostValidation = {
   Tags: {
     MaxCount: 8,
-    MinLength: 3,
-    MaxLength: 10,
-    RegExp: /^[a-zA-Zа-юА-Ю]{1}[a-zA-Zа-юА-Ю0-9-]{2,10}$/
+    TagMinLength: 3,
+    TagMaxLength: 10,
+    TagRegExp: /^[a-zA-Zа-юА-Ю]{1}[a-zA-Zа-юА-Ю0-9-]{2,10}$/
   },
   Title: {
     MinLength: 20,
@@ -45,51 +45,6 @@ export const PostValidation = {
   LinkDescription: {
     MaxLength: 300
   },
-} as const;
-
-export const PostValidateMessage = {
-  Type: {
-    message: `Type must by one of ${Object.values(PostType).join(', ')}`
-  },
-  State: {
-    message: `State must by one of ${Object.values(PostState).join(', ')}`
-  },
-  Tags: {
-    MinLength: {
-      message: `Minimum tag length must be ${PostValidation.Tags.MinLength}`,
-      each: true
-    },
-    MaxLength: {
-      message: `Maximum tag length must be ${PostValidation.Tags.MaxLength}`,
-      each: true
-    }
-  },
-  Url: {
-    message: 'URL must by valid url'
-  },
-  Title: {
-    MinLength: { message: `Minimum title length must be ${PostValidation.Title.MinLength}` },
-    MaxLength: { message: `Maximum title length must be ${PostValidation.Title.MaxLength}` }
-  },
-  PreviewText: {
-    MinLength: { message: `Minimum preview text length must be ${PostValidation.PreviewText.MinLength}` },
-    MaxLength: { message: `Maximum preview text length must be ${PostValidation.PreviewText.MaxLength}` }
-  },
-  Text: {
-    MinLength: { message: `Minimum text length must be ${PostValidation.Text.MinLength}` },
-    MaxLength: { message: `Maximum text length must be ${PostValidation.Text.MaxLength}` }
-  },
-  QuoteText: {
-    MinLength: { message: `Minimum quote text length must be ${PostValidation.QuoteText.MinLength}` },
-    MaxLength: { message: `Maximum quote text length must be ${PostValidation.QuoteText.MaxLength}` }
-  },
-  QuoteAuthor: {
-    MinLength: { message: `Minimum quote author length must be ${PostValidation.QuoteAuthor.MinLength}` },
-    MaxLength: { message: `Maximum quote author length must be ${PostValidation.QuoteAuthor.MaxLength}` }
-  },
-  LinkDescription: {
-    MaxLength: { message: `Maximum link description length must be ${PostValidation.LinkDescription.MaxLength}` }
-  }
 } as const;
 
 export enum PostField {

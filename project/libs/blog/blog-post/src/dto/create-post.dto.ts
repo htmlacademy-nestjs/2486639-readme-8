@@ -4,12 +4,12 @@ import { ArrayMaxSize, IsArray, IsEnum, IsOptional, IsString, IsUrl, Matches, Ma
 import { PostType } from '@project/shared/core';
 
 import { PostApiProperty } from '../blog-post.constant.property';
-import { PostValidateMessage, PostValidation } from '../blog-post.constant';
+import { PostValidation } from '../blog-post.constant';
 
 export class CreatePostDto {
   @ApiProperty(PostApiProperty.Type)
   @IsString()
-  @IsEnum(PostType, PostValidateMessage.Type)
+  @IsEnum(PostType)
   public type: PostType;
 
   @ApiProperty({
@@ -20,51 +20,51 @@ export class CreatePostDto {
   @IsArray()
   @ArrayMaxSize(PostValidation.Tags.MaxCount)
   @IsString({ each: true })
-  @Matches(PostValidation.Tags.RegExp, { each: true })
-  @MinLength(PostValidation.Tags.MinLength, PostValidateMessage.Tags.MinLength)
-  @MaxLength(PostValidation.Tags.MaxLength, PostValidateMessage.Tags.MaxLength)
+  @Matches(PostValidation.Tags.TagRegExp, { each: true })
+  @MinLength(PostValidation.Tags.TagMinLength, { each: true })
+  @MaxLength(PostValidation.Tags.TagMaxLength, { each: true })
   public tags?: string[];
 
   @ApiProperty(PostApiProperty.Title)
   @IsOptional()
   @IsString()
-  @MinLength(PostValidation.Title.MinLength, PostValidateMessage.Title.MinLength)
-  @MaxLength(PostValidation.Title.MaxLength, PostValidateMessage.Title.MaxLength)
+  @MinLength(PostValidation.Title.MinLength)
+  @MaxLength(PostValidation.Title.MaxLength)
   public title?: string;
 
   @ApiProperty(PostApiProperty.Url)
   @IsOptional()
   @IsString()
-  //@IsUrl({ 'require_tld': false }, PostValidateMessage.Url) //! пропускает любые строки
-  @IsUrl({}, PostValidateMessage.Url) //! не пропускает localhost
+  //@IsUrl({ 'require_tld': false }) //! пропускает любые строки
+  @IsUrl() //! не пропускает localhost
   public url?: string;
 
   @ApiProperty(PostApiProperty.PreviewText)
   @IsOptional()
   @IsString()
-  @MinLength(PostValidation.PreviewText.MinLength, PostValidateMessage.PreviewText.MinLength)
-  @MaxLength(PostValidation.PreviewText.MaxLength, PostValidateMessage.PreviewText.MaxLength)
+  @MinLength(PostValidation.PreviewText.MinLength)
+  @MaxLength(PostValidation.PreviewText.MaxLength)
   public previewText?: string;
 
   @ApiProperty(PostApiProperty.Text)
   @IsOptional()
   @IsString()
-  @MinLength(PostValidation.Text.MinLength, PostValidateMessage.Text.MinLength)
-  @MaxLength(PostValidation.Text.MaxLength, PostValidateMessage.Text.MaxLength)
+  @MinLength(PostValidation.Text.MinLength)
+  @MaxLength(PostValidation.Text.MaxLength)
   public text?: string;
 
   @ApiProperty(PostApiProperty.QuoteText)
   @IsOptional()
   @IsString()
-  @MinLength(PostValidation.QuoteText.MinLength, PostValidateMessage.QuoteText.MinLength)
-  @MaxLength(PostValidation.QuoteText.MaxLength, PostValidateMessage.QuoteText.MaxLength)
+  @MinLength(PostValidation.QuoteText.MinLength)
+  @MaxLength(PostValidation.QuoteText.MaxLength)
   public quoteText?: string;
 
   @ApiProperty(PostApiProperty.QuoteAuthor)
   @IsOptional()
   @IsString()
-  @MinLength(PostValidation.QuoteAuthor.MinLength, PostValidateMessage.QuoteAuthor.MinLength)
-  @MaxLength(PostValidation.QuoteAuthor.MaxLength, PostValidateMessage.QuoteAuthor.MaxLength)
+  @MinLength(PostValidation.QuoteAuthor.MinLength)
+  @MaxLength(PostValidation.QuoteAuthor.MaxLength)
   public quoteAuthor?: string;
 
   @ApiProperty(PostApiProperty.ImagePath) //! Максимальный размер фотографии: 1 мегабайт. Допускаются форматы: jpg, png.
@@ -75,6 +75,6 @@ export class CreatePostDto {
   @ApiProperty(PostApiProperty.LinkDescription)
   @IsOptional()
   @IsString()
-  @MaxLength(PostValidation.LinkDescription.MaxLength, PostValidateMessage.LinkDescription.MaxLength)
+  @MaxLength(PostValidation.LinkDescription.MaxLength)
   public linkDescription?: string;
 }
