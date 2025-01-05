@@ -17,7 +17,7 @@ export const PostApiProperty = {
   },
   PublishDate: {
     description: 'The post publish date',
-    example: "2024-07-09T11:24:14.495Z"
+    example: "2024-07-09"
   },
   Tags: {
     description: 'The post tags',

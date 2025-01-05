@@ -1,9 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Transform } from 'class-transformer';
+import dayjs from 'dayjs';
 
 import { PostState, PostType } from '@project/shared/core';
 
 import { PostApiProperty } from '../blog-post.constant.property';
+import { ONLY_DATE_FORMAT } from '../blog-post.constant';
 
 export class DetailPostRdo {
   @ApiProperty(PostApiProperty.Id)
@@ -27,8 +29,9 @@ export class DetailPostRdo {
   public state: PostState;
 
   @ApiProperty(PostApiProperty.PublishDate)
+  @Transform(({ value }) => dayjs(value).format(ONLY_DATE_FORMAT))
   @Expose()
-  public publishDate: Date;
+  public publishDate: string;
 
   @ApiProperty(PostApiProperty.Title)
   @Expose()

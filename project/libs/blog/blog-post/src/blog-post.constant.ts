@@ -6,6 +6,8 @@ import { PostWithPaginationRdo } from './rdo/post-with-pagination.rdo';
 import { DetailPostRdo } from './rdo/detail-post.rdo';
 import { PostApiProperty } from './blog-post.constant.property';
 
+export const ONLY_DATE_FORMAT = 'YYYY-MM-DD';
+
 export const Default = {
   NEW_POST_STATE: PostState.Published,
   FINDING_STATE: PostState.Published,

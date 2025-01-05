@@ -1,10 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ArrayMaxSize, IsArray, IsDateString, IsEnum, IsOptional, IsString, IsUrl, Matches, MaxLength, MinLength } from 'class-validator';
+import { Transform } from 'class-transformer';
+import dayjs from 'dayjs';
 
 import { PostState, PostType } from '@project/shared/core';
 
 import { PostApiProperty } from '../blog-post.constant.property';
-import { PostValidateMessage, PostValidation } from '../blog-post.constant';
+import { ONLY_DATE_FORMAT, PostValidateMessage, PostValidation } from '../blog-post.constant';
 
 export class UpdatePostDto {
   @ApiProperty({
@@ -43,8 +45,9 @@ export class UpdatePostDto {
     required: false
   })
   @IsOptional()
-  @IsDateString() //! проверить нужен ли дополнительный формат - 2024-07-09T11:24:14.495Z
-  public publishDate?: Date;
+  @IsDateString({ strict: true })
+  @Transform(({ value }) => dayjs(value).format(ONLY_DATE_FORMAT))
+  public publishDate?: string; //! проверить сохнаниение в базу
 
   @ApiProperty(PostApiProperty.Title)
   @IsOptional()
