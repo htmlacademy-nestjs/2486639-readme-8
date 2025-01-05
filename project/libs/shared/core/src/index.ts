@@ -1,5 +1,6 @@
 export { Entity } from './lib/base/entity';
 
+export { PageQueryApiProperty } from './lib/constants/page-query-api-property';
 export { PaginationApiProperty } from './lib/constants/pagination-api-property';
 
 export { EntityFactory } from './lib/interfaces/entity-factory.interface';

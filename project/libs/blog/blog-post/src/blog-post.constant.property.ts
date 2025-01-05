@@ -109,10 +109,5 @@ export const PostQueryApiProperty = {
     description: 'The post tag',
     example: "tag1",
     required: false
-  },
-  Page: {
-    description: 'The page',
-    example: 1,
-    required: false
   }
 } as const;
