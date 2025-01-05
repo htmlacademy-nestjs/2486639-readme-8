@@ -11,6 +11,7 @@ export { Comment } from './lib/types/comment.interface';
 export { PostState } from './lib/types/post-state.enum';
 export { PostType } from './lib/types/post-type.enum';
 export { Post } from './lib/types/post.interface';
+export { SortDirection } from './lib/types/sort-direction.enum';
 export { SortType } from './lib/types/sort-type.enum';
 export { Tag } from './lib/types/tag.interface';
 export { Subscription } from './lib/types/subscription.interface';

@@ -3,7 +3,7 @@ import { Prisma } from '@prisma/client';
 
 import { PrismaClientService } from '@project/blog/models';
 import { BasePostgresRepository } from '@project/shared/data-access';
-import { PaginationResult, Post, PostState, PostType, Tag } from '@project/shared/core';
+import { PaginationResult, Post, PostState, PostType, SortDirection, SortType, Tag } from '@project/shared/core';
 
 import { BlogPostEntity } from './blog-post.entity';
 import { BlogPostFactory } from './blog-post.factory';
@@ -17,6 +17,10 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     readonly client: PrismaClientService,
   ) {
     super(entityFactory, client);
+  }
+
+  private getTypeAndState({ type, state }): { type: PostType, state: PostState } {
+    return { type: type as PostType, state: state as PostState };
   }
 
   private getTagIds(tags: Tag[]): { id: string }[] {
@@ -46,20 +50,17 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
       throw new NotFoundException(`Post with id ${id} not found.`);
     }
 
-    //! вынести в функцию
     const repostedPost: Post = (record.repostedPost)
       ? {
         ...record.repostedPost,
-        type: record.repostedPost.type as PostType,
-        state: record.repostedPost.state as PostState,
+        ...this.getTypeAndState(record.repostedPost),
         tags: []
       }
       : undefined;
 
     const post: Post = {
       ...record,
-      type: record.type as PostType,
-      state: record.state as PostState,
+      ...this.getTypeAndState(record),
       repostedPost
     };
 
@@ -115,29 +116,36 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     const where: Prisma.PostWhereInput = {};
     const orderBy: Prisma.PostOrderByWithRelationInput = {};
 
-    /*
-    query
-      public userId?: string;
-      public sortType: SortType = Default.SORT_TYPE;
-      public type?: PostType;
-      public isDraft?: boolean;
-      public tag?: string;
-     */
-    /*
-    if (query?.categories) {
-      where.categories = {
-        some: {
-          id: {
-            in: query.categories
-          }
-        }
-      }
+    if (query.userId) {
+      where.userId = query.userId;
     }
 
-    if (query?.sortDirection) {
-      orderBy.createdAt = query.sortDirection;
+    if (query.type) {
+      where.type = query.type;
+    }
+
+    if (!query.showDraft) {
+      where.state = Default.NEW_POST_STATE;
+    }
+
+    /*
+    //! доделать
+    if (query.tag) {
+      where.tags = query.type;
     }
     */
+
+    switch (query.sortType) {
+      case SortType.Date:
+        orderBy.publishDate = SortDirection.Desc;
+        break;
+      case SortType.Comments:
+        orderBy.commentsCount = SortDirection.Desc;
+        break;
+      case SortType.Likes:
+        orderBy.likesCount = SortDirection.Desc;
+        break;
+    }
 
     const [records, postCount] = await Promise.all(
       [
@@ -145,15 +153,19 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
         this.getPostCount(where)
       ]
     );
+    const entities = records.map(
+      (record) => {
+        const post: Post = {
+          ...record,
+          ...this.getTypeAndState(record)
+        };
+
+        return this.createEntityFromDocument(post);
+      }
+    );
 
     return {
-      entities: records.map(
-        (record) => {
-          //! есть похожий код, при преобразовании созданного поста, подумать как объеденить, но тивы Primsa сложные...
-          const post: Post = { ...record, type: record.type as PostType, state: record.state as PostState };
-
-          return this.createEntityFromDocument(post);
-        }),
+      entities,
       currentPage,
       totalPages: this.calculatePostsPage(postCount, take),
       itemsPerPage: take,

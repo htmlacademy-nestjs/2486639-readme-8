@@ -6,6 +6,9 @@ GET http://localhost:3000/api/posts HTTP/1.1
 GET http://localhost:3000/api/posts?userId=658170cbb954e9f5b905ccf4&sortType=date&type=video&showDraft=true&tag=tag1&page=1 HTTP/1.1
 ###
 
+GET http://localhost:3000/api/posts?sortType=likes&showDraft=true&tag=tag1&page=1 HTTP/1.1
+###
+
 # Get post by ID
 GET http://localhost:3000/api/posts/eab06dc6-ba52-4169-a369-f2f825d44ebb HTTP/1.1
 
