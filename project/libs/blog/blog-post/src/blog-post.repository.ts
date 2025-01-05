@@ -91,12 +91,14 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     const { id } = entity;
     const pojoEntity = entity.toPOJO();
     const tags = { set: this.getTagIds(pojoEntity.tags) }
+    const publishDate = new Date(pojoEntity.publishDate);
 
     await this.client.post.update({
       where: { id },
       data: {
         ...pojoEntity,
         tags,
+        publishDate,
         repostedPost: undefined // при обновлении не меняем данные о репосте
       }
     });
@@ -145,7 +147,13 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     );
 
     return {
-      entities: [],//records.map((record) => this.createEntityFromDocument(record)),
+      entities: records.map(
+        (record) => {
+          //! есть похожий код, при преобразовании созданного поста, подумать как объеденить, но тивы Primsa сложные...
+          const post: Post = { ...record, type: record.type as PostType, state: record.state as PostState };
+
+          return this.createEntityFromDocument(post);
+        }),
       currentPage,
       totalPages: this.calculatePostsPage(postCount, take),
       itemsPerPage: take,

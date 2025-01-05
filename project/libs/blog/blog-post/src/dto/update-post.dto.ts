@@ -47,7 +47,7 @@ export class UpdatePostDto {
   @IsOptional()
   @IsDateString({ strict: true })
   @Transform(({ value }) => dayjs(value).format(ONLY_DATE_FORMAT))
-  public publishDate?: string; //! проверить сохнаниение в базу
+  public publishDate?: string;
 
   @ApiProperty(PostApiProperty.Title)
   @IsOptional()

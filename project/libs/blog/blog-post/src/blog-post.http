@@ -51,7 +51,7 @@ Content-Type: application/json
   "tags": ["taG111", "tag2", "tttt2", "tttt2", "tttt1", "tttt1"],
   "quoteText": "quote text quote text quote text",
   "quoteAuthor": "quote author",
-  "publishDate":"2025-02-31"
+  "publishDate": "2025-02-31"
 }
 
 ###
