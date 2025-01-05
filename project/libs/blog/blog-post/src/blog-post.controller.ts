@@ -22,6 +22,8 @@ export class BlogPostController {
   @ApiResponse(BlogPostApiResponse.BadRequest)
   @Get('/')
   public async index(@Query() query: BlogPostQuery) {
+    query.showDraft = ((query.showDraft) && (query.userId) && (query.userId === '11223344'));//! пользователя можно определить, если требуются черновики
+
     const postsWithPagination = await this.blogPostService.getAllPosts(query);
     const result = {
       ...postsWithPagination,

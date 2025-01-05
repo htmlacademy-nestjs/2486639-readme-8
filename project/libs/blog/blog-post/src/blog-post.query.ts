@@ -24,10 +24,10 @@ export class BlogPostQuery {
   @IsOptional()
   public type?: PostType;
 
-  @ApiProperty(PostQueryApiProperty.IsDraft)
-  @Transform(({ obj }) => (obj.isDraft === 'true'))
-  //@Type(() => Boolean)
-  public isDraft?: boolean;
+  @ApiProperty(PostQueryApiProperty.ShowDraft)
+  @Transform(({ obj }) => (obj.showDraft === 'true'))
+  @IsOptional()
+  public showDraft = false;
 
   @ApiProperty(PostQueryApiProperty.Tag)
   @IsString()

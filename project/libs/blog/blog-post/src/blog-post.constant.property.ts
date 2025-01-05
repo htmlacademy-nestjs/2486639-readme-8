@@ -98,7 +98,7 @@ export const PostQueryApiProperty = {
     example: SortType.Date,
     required: false
   },
-  IsDraft: {
+  ShowDraft: {
     description: 'The post state is draft',
     example: true,
     required: false
