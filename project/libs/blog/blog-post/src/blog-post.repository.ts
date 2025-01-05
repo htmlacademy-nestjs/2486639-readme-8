@@ -79,13 +79,13 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
         tags,
         repostedPost
       }
-      //! , include: { repostedPost: true } //! возможно нужно при репосте
+      //, include: { repostedPost: true } //! возможно нужно при репосте
     });
 
     entity.id = record.id;
     entity.publishDate = record.publishDate;
     entity.likesCount = record.likesCount;
-    entity.commentsCount = record.commentsCount;//! возможно нужны еще данные...
+    entity.commentsCount = record.commentsCount; //! возможно нужны еще данные...
   }
 
   public async update(entity: BlogPostEntity): Promise<void> {
@@ -124,16 +124,20 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
       where.type = query.type;
     }
 
-    if (!query.showDraft) {
-      where.state = Default.NEW_POST_STATE;
+    if (query.showDraft) {
+      where.state = PostState.Draft;
+    } else {
+      where.state = PostState.Published;
     }
 
-    /*
-    //! доделать
     if (query.tag) {
-      where.tags = query.type;
+      const title = query.tag.toLocaleLowerCase();
+      const { id: tagId } = await this.client.tag.findFirst({ where: { title } });
+
+      where.tags = {
+        some: { id: tagId }
+      };
     }
-    */
 
     switch (query.sortType) {
       case SortType.Date:

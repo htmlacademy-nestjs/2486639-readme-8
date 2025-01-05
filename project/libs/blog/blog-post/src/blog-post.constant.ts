@@ -10,7 +10,6 @@ export const ONLY_DATE_FORMAT = 'YYYY-MM-DD';
 
 export const Default = {
   NEW_POST_STATE: PostState.Published,
-  FINDING_STATE: PostState.Published,
   POST_COUNT: 25,
   CURRENT_PAGE: 1,
   SORT_TYPE: SortType.Date
