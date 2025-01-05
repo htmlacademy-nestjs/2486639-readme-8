@@ -1,5 +1,6 @@
 import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
 
+import { PaginationResult } from '@project/shared/core';
 import { BlogTagService } from '@project/blog/blog-tag';
 
 import { BlogPostEntity } from './blog-post.entity';
@@ -7,6 +8,7 @@ import { BlogPostFactory } from './blog-post.factory';
 import { BlogPostRepository } from './blog-post.repository';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { BlogPostQuery } from './blog-post.query';
 import { BlogPostMessage, PostField, PostFieldsByType } from './blog-post.constant';
 
 @Injectable()
@@ -75,6 +77,10 @@ export class BlogPostService {
     if (postUserId !== userId) {
       throw new ForbiddenException(BlogPostMessage.NotAllow);
     }
+  }
+
+  public async getAllPosts(query: BlogPostQuery): Promise<PaginationResult<BlogPostEntity>> {
+    return await this.blogPostRepository.find(query);
   }
 
   public async getPost(id: string) {

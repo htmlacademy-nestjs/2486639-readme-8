@@ -3,12 +3,13 @@ import { ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { fillDto } from '@project/shared/helpers';
 
-import { PostIdApiParam, BlogPostApiResponse, blogPostApiBodyDescription } from './blog-post.constant';
 import { BlogPostService } from './blog-post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { DetailPostRdo } from './rdo/detail-post.rdo';
+import { PostWithPaginationRdo } from './rdo/post-with-pagination.rdo';
 import { BlogPostQuery } from './blog-post.query';
+import { PostIdApiParam, BlogPostApiResponse, blogPostApiBodyDescription } from './blog-post.constant';
 
 @ApiTags('blog-post')
 @Controller('posts')
@@ -21,14 +22,13 @@ export class BlogPostController {
   @ApiResponse(BlogPostApiResponse.BadRequest)
   @Get('/')
   public async index(@Query() query: BlogPostQuery) {
-    //query.isDraft = (query.isDraft? 'true')?
-    console.log(query);
+    const postsWithPagination = await this.blogPostService.getAllPosts(query);
+    const result = {
+      ...postsWithPagination,
+      entities: postsWithPagination.entities.map((post) => post.toPOJO())
+    }
 
-    // только опубликованные - state: Default.FINDING_STATE
-    //const existPost = await this.blogPostService.getPost(postId);
-
-    //return fillDto(DetailPostRdo, existPost.toPOJO());
-    return query;
+    return fillDto(PostWithPaginationRdo, result);
   }
 
   @ApiResponse(BlogPostApiResponse.PostFound)
