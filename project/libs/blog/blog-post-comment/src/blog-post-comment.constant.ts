@@ -3,7 +3,10 @@ import { HttpStatus } from '@nestjs/common';
 import { PostCommentRdo } from './rdo/post-comment.rdo';
 import { PostCommentApiProperty } from './blog-post-comment.constant.property';
 
-export const DEFAULT_CURRENT_PAGE = 1;
+export const Default = {
+  CURRENT_PAGE: 1,
+  COMMENT_COUNT: 50
+} as const;
 
 export const PostCommentMessageValidation = {
   MinLength: 10,

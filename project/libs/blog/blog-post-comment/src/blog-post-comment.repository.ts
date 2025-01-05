@@ -2,12 +2,14 @@ import { BadRequestException, ConflictException, Injectable, Logger, NotFoundExc
 
 import { PrismaClientService } from '@project/blog/models';
 import { BasePostgresRepository } from '@project/shared/data-access';
-import { Comment } from '@project/shared/core';
+import { Comment, PaginationResult } from '@project/shared/core';
 import { getMetaError } from '@project/shared/helpers';
 
 import { BlogPostCommentEntity } from './blog-post-comment.entity';
 import { BlogPostCommentFactory } from './blog-post-comment.factory';
-import { BlogPostCommentMessage } from './blog-post-comment.constant';
+import { BlogPostCommentQuery } from './blog-post-comment.query';
+import { BlogPostCommentMessage, Default } from './blog-post-comment.constant';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class BlogPostCommentRepository extends BasePostgresRepository<BlogPostCommentEntity, Comment> {
@@ -18,12 +20,39 @@ export class BlogPostCommentRepository extends BasePostgresRepository<BlogPostCo
     super(entityFactory, client);
   }
 
-  public async findByPostId(postId: string): Promise<BlogPostCommentEntity[]> {
-    const records = await this.client.comment.findMany({
-      where: { postId }
-    });
+  private async getCommentCount(where: Prisma.CommentWhereInput): Promise<number> {
+    return this.client.comment.count({ where });
+  }
 
-    return records.map((record) => this.createEntityFromDocument(record));
+  private calculateCommentsPage(totalCount: number, limit: number): number {
+    return Math.ceil(totalCount / limit);
+  }
+
+  public async findByPostId(postId: string, query: BlogPostCommentQuery): Promise<PaginationResult<BlogPostCommentEntity>> {
+    const currentPage = query.page;
+    const take = Default.COMMENT_COUNT;
+    const skip = (currentPage - 1) * take;
+    const where: Prisma.CommentWhereInput = {};
+
+    where.postId = postId;
+
+    const [records, commentCount] = await Promise.all(
+      [
+        this.client.comment.findMany({ where, skip, take }),
+        this.getCommentCount(where)
+      ]
+    );
+    const entities = records.map(
+      (record) => this.createEntityFromDocument(record)
+    );
+
+    return {
+      entities,
+      currentPage,
+      totalPages: this.calculateCommentsPage(commentCount, take),
+      itemsPerPage: take,
+      totalItems: commentCount
+    }
   }
 
   public async save(entity: BlogPostCommentEntity): Promise<void> {

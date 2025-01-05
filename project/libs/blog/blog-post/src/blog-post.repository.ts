@@ -111,8 +111,8 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
 
   public async find(query: BlogPostQuery): Promise<PaginationResult<BlogPostEntity>> {
     const currentPage = query.page;
-    const skip = (currentPage - 1) * Default.POST_COUNT;
     const take = Default.POST_COUNT;
+    const skip = (currentPage - 1) * take;
     const where: Prisma.PostWhereInput = {};
     const orderBy: Prisma.PostOrderByWithRelationInput = {};
 

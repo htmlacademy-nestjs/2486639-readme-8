@@ -4,12 +4,12 @@ import { IsInt, IsOptional } from 'class-validator';
 
 import { PageQueryApiProperty } from '@project/shared/core';
 
-import { DEFAULT_CURRENT_PAGE } from './blog-post-comment.constant';
+import { Default } from './blog-post-comment.constant';
 
 export class BlogPostCommentQuery {
   @ApiProperty(PageQueryApiProperty)
   @IsInt()
-  @Transform(({ value }) => +value || DEFAULT_CURRENT_PAGE)
+  @Transform(({ value }) => +value || Default.CURRENT_PAGE)
   @IsOptional()
-  public page: number = DEFAULT_CURRENT_PAGE;
+  public page: number = Default.CURRENT_PAGE;
 }

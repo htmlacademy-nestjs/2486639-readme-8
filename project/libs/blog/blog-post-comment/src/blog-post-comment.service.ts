@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
 
-import { BlogPostCommentRepository } from './blog-post-comment.repository';
+import { PaginationResult } from '@project/shared/core';
+
 import { BlogPostCommentEntity } from './blog-post-comment.entity';
+import { BlogPostCommentRepository } from './blog-post-comment.repository';
+import { BlogPostCommentQuery } from './blog-post-comment.query';
 import { CreatePostCommentDto } from './dto/create-post-comment.dto';
 
 @Injectable()
@@ -10,8 +13,8 @@ export class BlogPostCommentService {
     private readonly blogPostCommentRepository: BlogPostCommentRepository
   ) { }
 
-  public async getComments(postId: string): Promise<BlogPostCommentEntity[]> {
-    const commentEntities = await this.blogPostCommentRepository.findByPostId(postId);
+  public async getComments(postId: string, query: BlogPostCommentQuery): Promise<PaginationResult<BlogPostCommentEntity>> {
+    const commentEntities = await this.blogPostCommentRepository.findByPostId(postId, query);
 
     return commentEntities;
   }

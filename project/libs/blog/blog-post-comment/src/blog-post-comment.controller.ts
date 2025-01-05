@@ -1,12 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Query } from '@nestjs/common';
 import { ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { fillDto } from '@project/shared/helpers';
 
 import { POST_ID_PARAM, BlogPostCommentApiResponse, PostIdApiParam } from './blog-post-comment.constant';
 import { BlogPostCommentService } from './blog-post-comment.service';
+import { BlogPostCommentQuery } from './blog-post-comment.query';
 import { CreatePostCommentDto } from './dto/create-post-comment.dto';
 import { PostCommentRdo } from './rdo/post-comment.rdo';
+import { PostCommentWithPaginationRdo } from './rdo/post-comment-with-pagination.rdo';
 
 @ApiTags('blog-post-comment')
 @Controller('post-comments')
@@ -20,12 +22,16 @@ export class BlogPostCommentController {
   @ApiResponse(BlogPostCommentApiResponse.PostNotFound)
   @ApiParam(PostIdApiParam)
   @Get(POST_ID_PARAM)
-  public async index(@Param(PostIdApiParam.name) postId: string) {
+  public async index(@Param(PostIdApiParam.name) postId: string, @Query() query: BlogPostCommentQuery) {
     //! нужно провалидировать корректроность postId на guid
     //! нужно проверить существование поста из параметров, пока временная проверка в репозитарии
-    const comments = await this.blogPostCommentService.getComments(postId);
+    const postCommentsWithPagination = await this.blogPostCommentService.getComments(postId, query);
+    const result = {
+      ...postCommentsWithPagination,
+      entities: postCommentsWithPagination.entities.map((comment) => comment.toPOJO())
+    }
 
-    return fillDto(PostCommentRdo, comments.map((comment) => comment.toPOJO()));
+    return fillDto(PostCommentWithPaginationRdo, result);
   }
 
   @ApiResponse(BlogPostCommentApiResponse.PostCommentCreated)
