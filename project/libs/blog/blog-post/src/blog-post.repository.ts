@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 
 import { PrismaClientService } from '@project/blog/models';
 import { BasePostgresRepository } from '@project/shared/data-access';
@@ -7,6 +8,7 @@ import { PaginationResult, Post, PostState, PostType, Tag } from '@project/share
 import { BlogPostEntity } from './blog-post.entity';
 import { BlogPostFactory } from './blog-post.factory';
 import { BlogPostQuery } from './blog-post.query';
+import { Default } from './blog-post.constant';
 
 @Injectable()
 export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, Post> {
@@ -19,6 +21,14 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
 
   private getTagIds(tags: Tag[]): { id: string }[] {
     return tags.map(({ id }) => ({ id }));
+  }
+
+  private async getPostCount(where: Prisma.PostWhereInput): Promise<number> {
+    return this.client.post.count({ where });
+  }
+
+  private calculatePostsPage(totalCount: number, limit: number): number {
+    return Math.ceil(totalCount / limit);
   }
 
   public async findById(id: string): Promise<BlogPostEntity> {
@@ -96,13 +106,22 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     await this.client.post.delete({ where: { id } })
   }
 
-  public async find(query?: BlogPostQuery): Promise<PaginationResult<BlogPostEntity>> {
-    /*
-    const skip = query?.page && query?.limit ? (query.page - 1) * query.limit : undefined;
-    const take = query?.limit;
+  public async find(query: BlogPostQuery): Promise<PaginationResult<BlogPostEntity>> {
+    const currentPage = query.page;
+    const skip = (currentPage - 1) * Default.POST_COUNT;
+    const take = Default.POST_COUNT;
     const where: Prisma.PostWhereInput = {};
     const orderBy: Prisma.PostOrderByWithRelationInput = {};
 
+    /*
+    query
+      public userId?: string;
+      public sortType: SortType = Default.SORT_TYPE;
+      public type?: PostType;
+      public isDraft?: boolean;
+      public tag?: string;
+     */
+    /*
     if (query?.categories) {
       where.categories = {
         some: {
@@ -116,33 +135,21 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     if (query?.sortDirection) {
       orderBy.createdAt = query.sortDirection;
     }
+    */
 
-    const [records, postCount] = await Promise.all([
-      this.client.post.findMany({
-        where, orderBy, skip, take,
-        include: {
-          categories: true,
-          comments: true,
-        },
-      }),
-      this.getPostCount(where),
-    ]);
+    const [records, postCount] = await Promise.all(
+      [
+        this.client.post.findMany({ where, orderBy, skip, take, include: { tags: true } }),
+        this.getPostCount(where)
+      ]
+    );
 
-        return {
-      entities: records.map((record) => this.createEntityFromDocument(record)),
-      currentPage: query?.page,
+    return {
+      entities: [],//records.map((record) => this.createEntityFromDocument(record)),
+      currentPage,
       totalPages: this.calculatePostsPage(postCount, take),
       itemsPerPage: take,
       totalItems: postCount
     }
-*/
-    return {
-      entities: [],
-      currentPage: query.page,
-      totalPages: 1,
-      itemsPerPage: 1,
-      totalItems: 1
-    }
   }
-
 }

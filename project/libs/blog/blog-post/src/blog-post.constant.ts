@@ -10,7 +10,7 @@ export const Default = {
   NEW_POST_STATE: PostState.Published,
   FINDING_STATE: PostState.Published,
   POST_COUNT: 25,
-  PAGE_COUNT: 1,
+  CURRENT_PAGE: 1,
   SORT_TYPE: SortType.Date
 } as const;
 

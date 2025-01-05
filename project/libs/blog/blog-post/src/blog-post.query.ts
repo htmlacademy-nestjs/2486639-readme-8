@@ -39,7 +39,7 @@ export class BlogPostQuery {
 
   @ApiProperty(PostQueryApiProperty.Page)
   @IsInt()
-  @Transform(({ value }) => +value || Default.PAGE_COUNT)
+  @Transform(({ value }) => +value || Default.CURRENT_PAGE)
   @IsOptional()
-  public page: number = Default.PAGE_COUNT;
+  public page: number = Default.CURRENT_PAGE;
 }
