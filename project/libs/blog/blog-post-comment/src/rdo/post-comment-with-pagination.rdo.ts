@@ -3,14 +3,14 @@ import { Expose, Type } from 'class-transformer';
 
 import { PaginationApiProperty } from '@project/shared/core';
 
-import { PostRdo } from './post.rdo';
-import { EntityApiProperty } from '../blog-post-entity.constant.property';
+import { PostCommentRdo } from './post-comment.rdo';
+import { EntityApiProperty } from '../blog-post-comment-entity.constant.property';
 
-export class PostWithPaginationRdo {
+export class PostCommentWithPaginationRdo {
   @ApiProperty(EntityApiProperty.Entities)
-  @Type(() => PostRdo)
+  @Type(() => PostCommentRdo)
   @Expose()
-  public entities: PostRdo[];
+  public entities: PostCommentRdo[];
 
   @ApiProperty(PaginationApiProperty.TotalPages)
   @Expose()
@@ -28,3 +28,4 @@ export class PostWithPaginationRdo {
   @Expose()
   public itemsPerPage: number;
 }
+

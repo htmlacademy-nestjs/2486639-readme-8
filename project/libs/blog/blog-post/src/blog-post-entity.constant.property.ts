@@ -23,21 +23,5 @@ export const EntityApiProperty = {
       likesCount: PostApiProperty.LikesCount.example,
       commentsCount: PostApiProperty.CommentsCount.example
     }]
-  },
-  TotalPages: {
-    description: 'Total pages',
-    example: "5"
-  },
-  TotalItems: {
-    description: 'Total items',
-    example: "50"
-  },
-  CurrentPage: {
-    description: 'Current page',
-    example: "1"
-  },
-  ItemsPerPage: {
-    description: 'Items per page',
-    example: "10"
   }
 } as const;
