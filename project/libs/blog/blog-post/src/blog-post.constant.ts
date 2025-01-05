@@ -2,9 +2,9 @@ import { HttpStatus } from '@nestjs/common';
 
 import { PostState, PostType, SortType } from '@project/shared/core';
 
-import { PostApiProperty } from './blog-post.constant.property';
-import { PostRdo } from './rdo/post.rdo';
+import { PostWithPaginationRdo } from './rdo/post-with-pagination.rdo';
 import { DetailPostRdo } from './rdo/detail-post.rdo';
+import { PostApiProperty } from './blog-post.constant.property';
 
 export const Default = {
   NEW_POST_STATE: PostState.Published,
@@ -161,7 +161,7 @@ export const BlogPostApiResponse = {
     description: 'Post found.'
   },
   PostsFound: {
-    type: PostRdo, //! наверное будет тип с пагинацией
+    type: PostWithPaginationRdo, //! наверное будет тип с пагинацией
     status: HttpStatus.OK,
     description: 'Posts found.'
   },

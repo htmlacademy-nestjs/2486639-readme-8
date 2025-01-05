@@ -17,21 +17,18 @@ export class BlogPostController {
     private readonly blogPostService: BlogPostService
   ) { }
 
-  /*
-  @ApiResponse(BlogPostApiResponse.PostFound)
-  @ApiResponse(BlogPostApiResponse.PostNotFound)
-  @ApiParam(PostIdApiParam)
-  //! нужно описание запроса
-  */
+  @ApiResponse(BlogPostApiResponse.PostsFound)
+  @ApiResponse(BlogPostApiResponse.BadRequest)
   @Get('/')
   public async index(@Query() query: BlogPostQuery) {
+    //query.isDraft = (query.isDraft? 'true')?
     console.log(query);
 
     // только опубликованные - state: Default.FINDING_STATE
     //const existPost = await this.blogPostService.getPost(postId);
 
     //return fillDto(DetailPostRdo, existPost.toPOJO());
-    return 'ok';
+    return query;
   }
 
   @ApiResponse(BlogPostApiResponse.PostFound)

@@ -1,33 +1,35 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { IsBoolean, IsEnum, IsInt, IsOptional, IsString, Matches, MaxLength, MinLength } from 'class-validator';
+import { IsEnum, IsInt, IsOptional, IsString, Matches, MaxLength, MinLength } from 'class-validator';
 
 import { PostType, SortType } from '@project/shared/core';
 
 import { Default, PostValidation } from './blog-post.constant';
+import { PostApiProperty, PostQueryApiProperty } from './blog-post.constant.property';
 
 export class BlogPostQuery {
-  //! добавить сообщение и проверку на MongoId
+  //! добавить проверку на MongoId
+  @ApiProperty({ ...PostApiProperty.UserId, required: false })
   @IsString()
   @IsOptional()
   public userId?: string;
 
-  //! добавить сообщение
+  @ApiProperty(PostQueryApiProperty.SortType)
   @IsEnum(SortType)
   @IsOptional()
   public sortType: SortType = Default.SORT_TYPE;
 
-  //! добавить сообщение
+  @ApiProperty({ ...PostApiProperty.Type, required: false })
   @IsEnum(PostType)
   @IsOptional()
   public type?: PostType;
 
-  //! добавить сообщение
-  //!  не пускает ?isDraft=true -> "isDraft must be a boolean value"
-  @IsBoolean()
-  @IsOptional()
+  @ApiProperty(PostQueryApiProperty.IsDraft)
+  @Transform(({ obj }) => (obj.isDraft === 'true'))
+  //@Type(() => Boolean)
   public isDraft?: boolean;
 
-  //! добавить сообщение
+  @ApiProperty(PostQueryApiProperty.Tag)
   @IsString()
   @Matches(PostValidation.Tags.RegExp)
   @MinLength(PostValidation.Tags.MinLength)
@@ -35,7 +37,7 @@ export class BlogPostQuery {
   @IsOptional()
   public tag?: string;
 
-  //! добавить сообщение
+  @ApiProperty(PostQueryApiProperty.Page)
   @IsInt()
   @Transform(({ value }) => +value || Default.PAGE_COUNT)
   @IsOptional()

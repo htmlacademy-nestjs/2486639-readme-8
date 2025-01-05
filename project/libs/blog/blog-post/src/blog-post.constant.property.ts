@@ -1,4 +1,4 @@
-import { PostState, PostType } from '@project/shared/core';
+import { PostState, PostType, SortType } from '@project/shared/core';
 
 export const PostApiProperty = {
   Id: {
@@ -88,5 +88,29 @@ export const PostApiProperty = {
   CommentsCount: {
     description: 'The post comments count',
     example: "5"
+  }
+} as const;
+
+export const PostQueryApiProperty = {
+  SortType: {
+    description: 'The sorting type',
+    enum: SortType,
+    example: SortType.Date,
+    required: false
+  },
+  IsDraft: {
+    description: 'The post state is draft',
+    example: true,
+    required: false
+  },
+  Tag: {
+    description: 'The post tag',
+    example: "tag1",
+    required: false
+  },
+  Page: {
+    description: 'The page',
+    example: 1,
+    required: false
   }
 } as const;
