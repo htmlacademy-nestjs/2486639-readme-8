@@ -11,11 +11,18 @@ import { BlogTagFactory } from './blog-tag.factory';
 export class BlogTagRepository extends BasePostgresRepository<BlogTagEntity, Tag> {
   constructor(
     entityFactory: BlogTagFactory,
-    readonly client: PrismaClientService,
+    readonly client: PrismaClientService
   ) {
     super(entityFactory, client);
   }
 
+  public async findByTitle(title: string): Promise<BlogTagEntity | null> {
+    const tag = await this.client.tag.findFirst({
+      where: { title }
+    });
+
+    return new BlogTagEntity(tag);
+  }
 
   public async findByTitles(titles: string[]): Promise<BlogTagEntity[] | null> {
     const tags = await this.client.tag.findMany({

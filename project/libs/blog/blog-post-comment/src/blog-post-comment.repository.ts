@@ -15,7 +15,7 @@ import { Prisma } from '@prisma/client';
 export class BlogPostCommentRepository extends BasePostgresRepository<BlogPostCommentEntity, Comment> {
   constructor(
     entityFactory: BlogPostCommentFactory,
-    readonly client: PrismaClientService,
+    readonly client: PrismaClientService
   ) {
     super(entityFactory, client);
   }

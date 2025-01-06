@@ -5,6 +5,8 @@ import { PrismaClientService } from '@project/blog/models';
 import { BasePostgresRepository } from '@project/shared/data-access';
 import { PaginationResult, Post, PostState, PostType, SortDirection, SortType, Tag } from '@project/shared/core';
 
+import { BlogTagService } from '@project/blog/blog-tag';
+
 import { BlogPostEntity } from './blog-post.entity';
 import { BlogPostFactory } from './blog-post.factory';
 import { BlogPostQuery } from './blog-post.query';
@@ -15,6 +17,7 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
   constructor(
     entityFactory: BlogPostFactory,
     readonly client: PrismaClientService,
+    private readonly blogTagService: BlogTagService
   ) {
     super(entityFactory, client);
   }
@@ -131,8 +134,7 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     }
 
     if (query.tag) {
-      const title = query.tag.toLocaleLowerCase();
-      const { id: tagId } = await this.client.tag.findFirst({ where: { title } });
+      const { id: tagId } = await this.blogTagService.getByTitle(query.tag);
 
       where.tags = {
         some: { id: tagId }

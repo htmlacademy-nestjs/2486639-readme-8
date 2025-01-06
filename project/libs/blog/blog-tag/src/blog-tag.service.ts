@@ -9,6 +9,10 @@ export class BlogTagService {
     private readonly blogTagRepository: BlogTagRepository,
   ) { }
 
+  public async getByTitle(tagTitle: string): Promise<BlogTagEntity | null> {
+    return await this.blogTagRepository.findByTitle(tagTitle.toLocaleLowerCase());
+  }
+
   public async getByTitles(tagTitles: string[]): Promise<BlogTagEntity[]> {
     if (!tagTitles || !tagTitles.length) {
       return [];
