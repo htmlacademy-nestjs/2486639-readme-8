@@ -15,11 +15,9 @@ datasource db {
 }
 
 model Tag {
-  id        String   @id @default(uuid())
-  title     String   @unique
-  posts     Post[]
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  id    String @id @default(uuid())
+  title String @unique
+  posts Post[]
 
   @@index([title])
   @@map("tags")
@@ -44,10 +42,16 @@ model Post {
   createdAt       DateTime  @default(now()) @map("created_at")
   updatedAt       DateTime  @updatedAt @map("updated_at")
   userId          String    @map("user_id")
+  likesCount      Int       @default(0) @map("likes_count")
+  commentsCount   Int       @default(0) @map("comments_count")
   comments        Comment[]
+  likes           Like[]
   repostedPosts   Post[]    @relation("repostedPosts")
 
-  @@index([title])
+  @@index([type])
+  @@index([publishDate])
+  @@index([state])
+  @@index([userId])
   @@map("posts")
 }
 
@@ -56,20 +60,29 @@ model Comment {
   message   String
   userId    String   @map("user_id")
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
   post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   postId    String   @map("post_id")
 
+  @@unique([postId, userId], name: "unique_postId_and_userId")
   @@index([postId])
   @@map("comments")
 }
 
-model Subscription {
-  id           String   @id @default(uuid())
-  authorUserId String   @map("author_user_id")
-  userId       String   @map("user_id")
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
+model Like {
+  id     String @id @default(uuid())
+  userId String @map("user_id")
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  postId String @map("post_id")
 
+  @@index([postId])
+  @@map("likes")
+}
+
+model Subscription {
+  id           String @id @default(uuid())
+  authorUserId String @map("author_user_id")
+  userId       String @map("user_id")
+
+  @@index([userId])
   @@map("subscriptions")
 }

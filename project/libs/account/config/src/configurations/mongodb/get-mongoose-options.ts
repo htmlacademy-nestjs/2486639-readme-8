@@ -2,6 +2,7 @@ import { MongooseModuleAsyncOptions } from '@nestjs/mongoose';
 import { ConfigService } from '@nestjs/config';
 
 import { getMongoConnectionString } from '@project/shared/helpers';
+
 import { ConfigAlias } from '../const';
 
 export function getMongooseOptions(): MongooseModuleAsyncOptions {

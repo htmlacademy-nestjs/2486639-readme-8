@@ -2,6 +2,7 @@ import { Document, Model } from 'mongoose';
 import { NotFoundException } from '@nestjs/common';
 
 import { Entity, StorableEntity, EntityFactory } from '@project/shared/core';
+
 import { Repository } from './repository.interface';
 
 export abstract class BaseMongoRepository<

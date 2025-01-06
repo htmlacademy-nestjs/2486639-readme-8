@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 import { BlogTagEntity } from './blog-tag.entity';
 import { BlogTagRepository } from './blog-tag.repository';
@@ -9,23 +9,32 @@ export class BlogTagService {
     private readonly blogTagRepository: BlogTagRepository,
   ) { }
 
-  public async create(title: string): Promise<BlogTagEntity> {
-    const tagEntity = new BlogTagEntity({ title });
-
-    await this.blogTagRepository.save(tagEntity);
-
-    return tagEntity;
+  public async getByTitle(tagTitle: string): Promise<BlogTagEntity | null> {
+    return await this.blogTagRepository.findByTitle(tagTitle.toLocaleLowerCase());
   }
 
-  public async getById(id: string) {
-    const tag = await this.blogTagRepository.findById(id);
+  public async getByTitles(tagTitles: string[]): Promise<BlogTagEntity[]> {
+    if (!tagTitles || !tagTitles.length) {
+      return [];
+    }
 
-    return tag;
-  }
+    const lowerCaseTagTitles = tagTitles.map((item) => item.toLocaleLowerCase());
+    const distinctTagTitles = Array.from(new Set(lowerCaseTagTitles));
+    const existTagEntities = await this.blogTagRepository.findByTitles(lowerCaseTagTitles);
 
-  public async getByTitle(title: string) {
-    const tag = await this.blogTagRepository.findByTitle(title);
+    if (distinctTagTitles.length === existTagEntities.length) {
+      return existTagEntities;
+    }
 
-    return tag;
+    for (const tagTitle of distinctTagTitles) {
+      if (!existTagEntities.find((tagEntity) => (tagEntity.title === tagTitle))) {
+        const tagEntity = new BlogTagEntity({ title: tagTitle });
+
+        await this.blogTagRepository.save(tagEntity);
+        existTagEntities.push(tagEntity);
+      }
+    }
+
+    return existTagEntities;
   }
 }

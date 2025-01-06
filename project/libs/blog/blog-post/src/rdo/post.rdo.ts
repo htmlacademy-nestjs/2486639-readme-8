@@ -1,9 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Expose } from 'class-transformer';
+import { Expose, Transform } from 'class-transformer';
+import dayjs from 'dayjs';
 
-import { PostState, PostType, Tag, User } from '@project/shared/core';
+import { PostType } from '@project/shared/core';
 
 import { PostApiProperty } from '../blog-post.constant.property';
+import { ONLY_DATE_FORMAT } from '../blog-post.constant';
 
 export class PostRdo {
   @ApiProperty(PostApiProperty.Id)
@@ -16,48 +18,55 @@ export class PostRdo {
 
   @ApiProperty(PostApiProperty.Tags)
   @Expose()
-  public tags: Tag[];
+  @Transform(({ value }) => value.map((item: { title: string; }) => item.title))
+  public tags: string[];
 
+  @ApiProperty(PostApiProperty.PublishDate)
+  @Transform(({ value }) => dayjs(value).format(ONLY_DATE_FORMAT))
   @Expose()
-  public publishDate: Date;
+  public publishDate: string;
 
-  public repostedPost: PostRdo; //! как наполнить и в рекусию не уйти... или гдето есть финиш... глянуть по ТЗ навернео один уровень только нужен
-  public repostedPostUser: User; //! по ТЗ нужно отдать
-
-  @Expose()
-  public state: PostState;
-
-  @Expose()
-  public user: User;
-
+  @ApiProperty(PostApiProperty.Title)
   @Expose()
   public title: string;
 
+  @ApiProperty(PostApiProperty.Url)
   @Expose()
   public url: string;
 
+  @ApiProperty(PostApiProperty.PreviewText)
   @Expose()
   public previewText: string;
 
+  @ApiProperty(PostApiProperty.Text)
   @Expose()
   public text: string;
 
+  @ApiProperty(PostApiProperty.QuoteText)
   @Expose()
   public quoteText: string;
 
+  @ApiProperty(PostApiProperty.QuoteAuthor)
   @Expose()
   public quoteAuthor: string;
 
+  @ApiProperty(PostApiProperty.ImagePath)
   @Expose()
   public imagePath: string;
 
+  @ApiProperty(PostApiProperty.LinkDescription)
   @Expose()
   public linkDescription: string;
 
-  //! использовать новые свойства
-  /*
-  @ApiProperty(PostApiProperty.Data)
+  @ApiProperty(PostApiProperty.UserId)
   @Expose()
-  public data: PostData;
-  */
+  public userId: string;
+
+  @ApiProperty(PostApiProperty.LikesCount)
+  @Expose()
+  public likesCount: number;
+
+  @ApiProperty(PostApiProperty.CommentsCount)
+  @Expose()
+  public commentsCount: number;
 }

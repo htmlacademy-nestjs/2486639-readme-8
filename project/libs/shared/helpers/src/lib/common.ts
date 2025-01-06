@@ -26,3 +26,21 @@ export function fillDto<T, V>(
 export function getMongoConnectionString({ username, password, host, port, databaseName, authDatabase }): string {
   return `mongodb://${username}:${password}@${host}:${port}/${databaseName}?authSource=${authDatabase}`;
 }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function getMetaError(error: any): { message: string, code: string, modelName: string, fieldName: string, target: string } {
+  //! временно? пока для обработки ошибок
+  const message = error.message ?? '';
+  const code = error.code ?? '';
+  const modelName = error.meta?.modelName ?? '';
+  const fieldName = error.meta?.field_name ?? '';
+  const target = error.meta?.target ?? '';
+
+  return {
+    message,
+    code,
+    modelName,
+    fieldName,
+    target
+  };
+}

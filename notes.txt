@@ -1,47 +1,73 @@
 Вопросы:
-  1. интерфейсы для публикаций - сделать отдельные или излишние поля...
-  2. проверка ДТО будет потом?
-       "login22": "Keks1asdasdasdasdasdasdasdasdasddsadasd11"
-  3. при регистрации, входе, получении данных... отдает хеш пароля passwordHash - убрать?
-        позже будет применен UserRdo?
-        не отработывает fillDto, если попробовать преобразовать, то ошибка....
-    public async create(@Body() dto: CreateUserDto)
-    public async login(@Body() dto: LoginUserDto)
-    public async show(@Param('id') id: string)
-  4. нужен ли logout?
-  5. /api/auth/register саму функциональнность добавления перенести в пользователя?
-  6. /api/auth/:id перенести в пользователя /api/user/:id ?
-  7. смена пароля?
-  8. после регитсрации возвращаю - type: UserRdo, как при getById... где описано что отдать... только id или весь объект?
-  9. Swagger Body type Class1|Class2 не получилось... может не весь класс а поле data выделить в ApiProperty?
-    https://docs.nestjs.com/openapi/types-and-parameters
-      oneOf: [
-        { $ref: getSchemaPath(Class1) },
-        { $ref: getSchemaPath(Class2) },
-      ],
-    потом не собирает схемы CLass1 и Class2
-    !! для новых полей сделать красиваое описание для разных типов...
-    !! добавить дополнительную проверку на тип и обязательность полей
-  10. UpdatePostDto - @IsOptional() ??  А в Swagger * - обязательный ?
-  11. задействовать настройки подключения к postgres из project/apps/blog/blog.dev.env
+  2. нужен logout!
+  3. /api/auth/register саму функциональнность добавления перенести в пользователя?
+  4. /api/auth/:id перенести в пользователя /api/users/:id ?
+  5. нужна смена пароля! /api/auth/change-password
+  6. после регитсрации возвращаю - type: UserRdo, как при getById... где описано что отдать... только id или весь объект?
+  7. задействовать настройки подключения к postgres из project/apps/blog/blog.dev.env
     сейчас подключение из project/libs/blog/models/prisma/.env  ? или тут для работы prisma-cli и seed.ts ?
     после выполенения generate DATABASE_URL из project/libs/blog/models/prisma/.env закидывается значением по умолчанию, можно переопределить...
     POSTGRES_HOST и POSTGRES_PORT
     А может и сам prisma/.env слинковать с blog/blog.dev.env?
-  12. под windows не водит имя для миграции db:migrate ,  выполнил отдельно всю команду из нужного каталога
-  13. заполенить данные в mongodb
-  14. нужно свое dto для репоста   //! public repostedPost: PostId...;
-  15. удалить BaseMemoryRepository если не будет использоватся?
-  16. всем свойствам в Entity.populate нужно  "?? undefined;"
-  17. возможно BlogTagModule и вовсе не нужен, сразу в BlogPostModule обрабатывать таги
-  18. сам добавил "entity.id = document.id; //! временно" в BaseMongoRepository
+  8. под windows не водит имя для миграции db:migrate, выполнил отдельно всю команду из нужного каталога
+  9. заполенить данные в mongodb
+  10. удалить BaseMemoryRepository если не будет использоватся?
+  11. всем свойствам в Entity.populate нужно  "?? undefined;"
+  12. возможно BlogTagModule, BlogTagService и BlogTagRepository вовсе не нужены, сразу в BlogPostReposipory обрабатывать теги
+  13. сам добавил "entity.id = document.id; //! временно" в BaseMongoRepository, для created.user.rdo
+  14. для Пользователя дополнительный запрос
+        о количестве подписок на него и количестве его комментариев...
+          возможно сделать поля в пользователе или считать, т.к. запрос отдельный
+        возможно получение всех лайков пользователя/только своих
+        возможно получение всех подписок пользователя/только своих
+  15. для списка комментариев и нового комментария к посту нужно ли выводить детальную информацию о пользователе, пока оставил userId? а postId нужен?
+  16. проверка существования поста по id, в комментариях и постах
+        будет еще навешана проверка - валидатор?
+        перед вставкой вызвать поиск? через BlogPostService или BlogPostRepository
+          а что правильней использовать Service или Repository
+        обработать try.... Foreign key constraint failed on the field: `comments_post_id_fkey (index)`
+  17. будем валидировать postId? как для userId MongoIdValidationPipe, а для GUID?
+          в комментариях и постах
+          и наличии самого объекта как прошлом курсе - exist...
+  18. у всех контоллеров/controller не прописано возвращаемое занчение? так и оставить?
+  19. для поста с типом фото, как загружать картинку, после добавления или сразу?
+        нужно позже убрать из проверок imagePath
+  20. черновики других пользоватетлей доступны при запросе детальной информаций о посте?
+        если пост сначала был опубликован и другой пользователь уже смотрел, а потом в черновики под автором и обновить страницу у пользователя
+  21. проверка .env
+        [Account JWTConfig Validation Error]: "accessTokenSecret" is required  / accessTokenSecret: Joi.string().required(),
+        сделавть чтоб писал "не указан JWT_ACCESS_TOKEN_SECRET!"
+  22. entity.id = undefined; //! пустая строка из базового класса и id не гененируется
+        А в тегах вызывается конструктор с минимальным объектом и при вызове populate записывает в _id undefined
+  23. при получении поста в теги отдавать только заголовки?
+        добавил в rdo:
+          @Transform(({ value }) => value.map((item: { title: string; }) => item.title))
+  24. как определить ошибку вставки по из-за уникальности
+        @@unique([postId, userId], name: "unique_postId_and_userId")
+        в коде только '....Unique constraint failed on the (not available)....'
+        с заданным зазванием, name: "unique_postId_and_userId" тоже не дополняет ошибку "target: null"
+  25. сделать репост поста
+        уникальность repostedPost != null и userId - Репост одной публикации можно сделать один раз.
+        а редактировать репост нельзя? он же репост
+  26. свои посты выбираются по своему пользователю? "?userId=...."
+  27. лайки
+        проверить/добавить уникальность 1 лайк на 1 пост от 1го пользователя
+        при добавлении лайка увеличить количество лайков поста, при удалении уменьшить
+        возможно отобразить лайк у авторизированного пользователя, при получении списка постов и детализацию поста,
+          а для не авторизированных заполнять false
+  28. подписки
+        проверить/добавить уникальность 1 подписка на 1 пост от 1го пользователя
+        возможно отобразить подписку у авторизированного пользователя, при получении списка постов и детализацию поста,
+          а для не авторизированных заполнять false
+  29. при добавлении комментария увеличить количество комментариев поста, при удалении уменьшить
+  30. в ТЗ не указана сортировка комментариев, видимо как добавлены, посомтреть как возвращает БД и если что добавить orderBy.createdAt = desc
 
 
 Заметки:
   1. как же выводить подтипы ....
     не сработало export type ReturnTypeToPOJOFunction<T extends StorableEntity<T>> = ReturnType<T['toPOJO']>;
     а как T['id']
-  2. get-mongoose-options.ts - а как добратся
+  2. get-mongoose-options.ts - а как добраться
     из
       useFactory: async (config: ConfigService) => {
     к
@@ -51,3 +77,21 @@
     на
       databaseConfig.username
   3. а можно делать какие то алиасы или константы в project.json например для "cwd": "libs/blog/models/prisma"
+  4. проверить в модулях
+      - заменить " на '?
+      - поискать <from ">
+      - поискать <from '@> и переносом строки разделить и сгруппировать
+      - еще <, }>
+      - проверить неиспользуемые импорты
+  5. Title: { description: 'The post title for types: video and text',
+    все ограничения перечислены в PostFieldsByType
+  6. есть одинаковые сообщения в разных бибилиотеках, возможно стоит сделать общие сообщения и описание, например "export const PostApiProperty = {"
+      status: HttpStatus.UNAUTHORIZED,
+      status: HttpStatus.BAD_REQUEST,
+      NotFound: 'Post not found'
+  7. в маркапах детальной информации поста есть:
+       количество просмотров
+       количество репостов, и видимо предусмотрен маршрут показать все репосты
+  8. теги в маркапах начинаются с #
+  9. как сделать базовый класс PageQuery и от него заменить BlogPostCommentQuery и на его основе сделать BlogPostQuery
+

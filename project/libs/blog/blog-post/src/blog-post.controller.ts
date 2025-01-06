@@ -1,27 +1,36 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
-import { ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { PostIdApiParam, BlogPostApiResponse } from './blog-post.constant';
+import { fillDto } from '@project/shared/helpers';
+
 import { BlogPostService } from './blog-post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { fillDto } from '@project/shared/helpers';
-import { PostRdo } from './rdo/post.rdo';
+import { DetailPostRdo } from './rdo/detail-post.rdo';
+import { PostWithPaginationRdo } from './rdo/post-with-pagination.rdo';
+import { BlogPostQuery } from './blog-post.query';
+import { PostIdApiParam, BlogPostApiResponse, blogPostApiBodyDescription } from './blog-post.constant';
 
 @ApiTags('blog-post')
-@Controller('post')
+@Controller('posts')
 export class BlogPostController {
   constructor(
     private readonly blogPostService: BlogPostService
   ) { }
 
-  @ApiResponse(BlogPostApiResponse.PostCreated)
-  @ApiResponse(BlogPostApiResponse.Unauthorized)
-  @Post()
-  public async create(@Body() dto: CreatePostDto) {
-    const newPost = await this.blogPostService.create(dto);
+  @ApiResponse(BlogPostApiResponse.PostsFound)
+  @ApiResponse(BlogPostApiResponse.BadRequest)
+  @Get('/')
+  public async index(@Query() query: BlogPostQuery) {
+    query.showDraft = ((query.showDraft) && (query.userId) && (query.userId === '11223344'));//! пользователя можно определить, если требуются черновики
 
-    return fillDto(PostRdo, newPost.toPOJO());
+    const postsWithPagination = await this.blogPostService.getAllPosts(query);
+    const result = {
+      ...postsWithPagination,
+      entities: postsWithPagination.entities.map((post) => post.toPOJO())
+    }
+
+    return fillDto(PostWithPaginationRdo, result);
   }
 
   @ApiResponse(BlogPostApiResponse.PostFound)
@@ -29,10 +38,26 @@ export class BlogPostController {
   @ApiParam(PostIdApiParam)
   @Get(`:${PostIdApiParam.name}`)
   public async show(@Param(PostIdApiParam.name) postId: string) {
-    console.log(postId); //! тест
-    const existPost = await this.blogPostService.getById(postId);
+    //! нужно провалидировать корректроность postId на guid
+    //! нужно проверить существование поста из параметров
+    const existPost = await this.blogPostService.getPost(postId);
 
-    return fillDto(PostRdo, existPost.toPOJO());
+    return fillDto(DetailPostRdo, existPost.toPOJO());
+  }
+
+  @ApiResponse(BlogPostApiResponse.PostCreated)
+  @ApiResponse(BlogPostApiResponse.Unauthorized)
+  @ApiResponse(BlogPostApiResponse.BadRequest)
+  @ApiBody({ description: blogPostApiBodyDescription, type: CreatePostDto })
+  @Post()
+  public async create(@Body() dto: CreatePostDto) {
+    //! нужно провалидировать корректроность postId на guid
+    //! нужно проверить существование поста из параметров
+    //! нужно проверить авторизацию
+    const userId = '11223344';
+    const newPost = await this.blogPostService.createPost(dto, userId);
+
+    return fillDto(DetailPostRdo, newPost.toPOJO());
   }
 
   @ApiResponse(BlogPostApiResponse.PostUpdated)
@@ -40,11 +65,16 @@ export class BlogPostController {
   @ApiResponse(BlogPostApiResponse.PostNotFound)
   @ApiResponse(BlogPostApiResponse.NotAllow)
   @ApiParam(PostIdApiParam)
-  @Put(`:${PostIdApiParam.name}`)
+  @Patch(`:${PostIdApiParam.name}`)
   public async update(@Param(PostIdApiParam.name) postId: string, @Body() dto: UpdatePostDto) {
-    const existPost = await this.blogPostService.updateById(postId, dto);
+    //! нужно провалидировать корректроность postId на guid
+    //! нужно проверить существование поста из параметров - в сервисе есть запрос на получение поста
+    //! нужно проверить авторизацию
+    //! нужно проверить, что пользователь это автор этого поста - сделал в сервисе
+    const userId = '11223344';
+    const updatedPost = await this.blogPostService.updatePost(postId, dto, userId);
 
-    return fillDto(PostRdo, existPost.toPOJO());
+    return fillDto(DetailPostRdo, updatedPost.toPOJO());
   }
 
   @ApiResponse(BlogPostApiResponse.PostDeleted)
@@ -54,6 +84,12 @@ export class BlogPostController {
   @ApiParam(PostIdApiParam)
   @Delete(`:${PostIdApiParam.name}`)
   public async delete(@Param(PostIdApiParam.name) postId: string) {
-    await this.blogPostService.deleteById(postId);
+    //! нужно провалидировать корректроность postId на guid
+    //! нужно проверить существование поста из параметров- в сервисе есть запрос на получение поста, для получения автора
+    //! нужно проверить авторизацию
+    //! нужно проверить, что пользователь это автор этого поста - сделал в сервисе
+    const userId = '11223344';
+
+    await this.blogPostService.deletePost(postId, userId);
   }
 }
