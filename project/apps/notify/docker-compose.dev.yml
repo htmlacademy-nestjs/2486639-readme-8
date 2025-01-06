@@ -2,19 +2,20 @@ version: '3.9'
 services:
   readme.notify.fakesmtp:
     image: gessnerfl/fake-smtp-server:2.2.0
-    container_name: "readme.notify.fakesmtp"
-    hostname: "readme.notify.fakesmtp"
+    container_name: readme.notify.fakesmtp
+    hostname: readme.notify.fakesmtp
+    
     ports:
-      - "8025:8025"
-      - "1085:8080"
+      - 8025:8025
+      - 1085:8080
 
   readme.notify.rabbitmq:
     image: rabbitmq:3.11-management
     container_name: readme.notify.rabbitmq
 
     ports:
-      - '1088:15672'
-      - '5672:5672'
+      - 1088:15672
+      - ${RABBIT_PORT}:5672
 
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
@@ -27,25 +28,25 @@ services:
       retries: 5
 
   readme.notify.mongodb:
-      image: mongo:4.4
-      container_name: readme.notify.mongodb
+    image: mongo:4.4
+    container_name: readme.notify.mongodb
 
-      environment:
-        MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
-        MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
-        MONGO_INITDB_DATABASE: ${MONGO_DB}
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_DB}
 
-      ports:
-        - ${MONGO_PORT}:27017
+    ports:
+      - ${MONGO_PORT}:27017
 
-      volumes:
-        - readme.notify.mongodb:/data/db
+    volumes:
+      - readme.notify.mongodb:/data/db
 
-      healthcheck:
-        test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/readme-notify --quiet
-        interval: 10s
-        timeout: 10s
-        retries: 5
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/${MONGO_DB} --quiet
+      interval: 10s
+      timeout: 10s
+      retries: 5
 
   readme.notify.mongodb.ui:
     image: mongo-express:1.0-20
