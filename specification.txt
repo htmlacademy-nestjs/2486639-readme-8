@@ -1,3 +1,12 @@
+docker: cd ~/readme/project
+  docker compose --file ./apps/account/docker-compose.dev.yml --project-name "readme-account" --env-file ./apps/account/account.dev.env up -d
+  docker compose --file ./apps/blog/docker-compose.dev.yml --project-name "readme-blog" --env-file ./apps/blog/blog.dev.env up -d
+
+микросервисы:
+
+
+---------------------------
+
 api точка входа+
 
 account
