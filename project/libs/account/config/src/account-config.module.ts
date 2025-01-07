@@ -5,7 +5,7 @@ import { applicationConfig } from './configurations/app.config';
 import { mongoDbConfig } from './configurations/mongo-db.config';
 import { jwtConfig } from './configurations/jwt.config';
 
-const ENV_ACCOUNT_FILE_PATH = 'apps/account/.env';
+const ENV_FILE_PATH = 'apps/account/.env';
 
 const configModuleOptions = {
   isGlobal: true,
@@ -15,7 +15,7 @@ const configModuleOptions = {
     mongoDbConfig,
     jwtConfig
   ],
-  envFilePath: ENV_ACCOUNT_FILE_PATH
+  envFilePath: ENV_FILE_PATH
 }
 
 @Module({

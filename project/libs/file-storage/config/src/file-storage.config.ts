@@ -1,11 +1,7 @@
 import { registerAs } from '@nestjs/config';
 import Joi from 'joi';
 
-const DEFAULT_PORT = 3000;
-const DEFAULT_MONGO_PORT = 27017;
-const ENVIRONMENTS = ['development', 'production', 'stage'] as const;
-
-type Environment = typeof ENVIRONMENTS[number];
+import { DEFAULT_MONGO_PORT, DEFAULT_PORT, Environment, ENVIRONMENTS } from '@project/shared/core';
 
 export interface FileStorageConfig {
   environment: string;
@@ -63,4 +59,4 @@ function getConfig(): FileStorageConfig {
   return config;
 }
 
-export default registerAs('application', getConfig);
+export const fileStorageConfig = registerAs('application', getConfig);

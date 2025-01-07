@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
-import fileVaultConfig from './file-storage.config';
+import { fileStorageConfig } from './file-storage.config';
 
 const ENV_FILE_PATH = 'apps/file-storage/.env';
 
@@ -10,10 +10,10 @@ const ENV_FILE_PATH = 'apps/file-storage/.env';
     ConfigModule.forRoot({
       isGlobal: true,
       cache: true,
-      load: [fileVaultConfig],
+      load: [fileStorageConfig],
       envFilePath: ENV_FILE_PATH
     })
   ]
 })
 
-export class FileVaultConfigModule { }
+export class FileStorageConfigModule { }
