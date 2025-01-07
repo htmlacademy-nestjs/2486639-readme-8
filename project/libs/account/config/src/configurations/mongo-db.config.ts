@@ -1,9 +1,9 @@
 import { ConfigType, registerAs } from '@nestjs/config';
 import { plainToClass } from 'class-transformer';
 
+import { ConfigAlias, DEFAULT_MONGODB_PORT } from '@project/shared/core';
+
 import { MongoDbConfiguration } from './mongodb/mongo-db.env';
-import { DEFAULT_MONGODB_PORT } from './mongodb/mongo-db.const';
-import { ConfigAlias } from './const';
 
 export interface MongoDbConfig {
   host: string;

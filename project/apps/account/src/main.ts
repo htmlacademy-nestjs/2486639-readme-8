@@ -8,7 +8,7 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 
-import { AccountConfigAlias } from '@project/account/config';
+import { ConfigAlias } from '@project/shared/core';
 
 import { AppModule } from './app/app.module';
 
@@ -17,7 +17,7 @@ async function bootstrap() {
   const globalPrefix = 'api';
 
   const configService = app.get(ConfigService);
-  const port = configService.get(AccountConfigAlias.ApplicationPort);
+  const port = configService.get(ConfigAlias.ApplicationPort);
 
   app.setGlobalPrefix(globalPrefix);
 

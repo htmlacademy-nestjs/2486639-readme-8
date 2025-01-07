@@ -1,7 +1,7 @@
 import { registerAs } from '@nestjs/config';
 import Joi from 'joi';
 
-import { DEFAULT_MONGO_PORT, DEFAULT_PORT, Environment, ENVIRONMENTS } from '@project/shared/core';
+import { ConfigAlias, DEFAULT_MONGODB_PORT, DEFAULT_PORT, Environment, ENVIRONMENTS } from '@project/shared/core';
 
 export interface FileStorageConfig {
   environment: string;
@@ -41,12 +41,12 @@ function validateConfig(config: FileStorageConfig): void {
 
 function getConfig(): FileStorageConfig {
   const config: FileStorageConfig = {
-    environment: process.env.NODE_ENV as Environment,
-    port: parseInt(process.env.PORT || `${DEFAULT_PORT}`, 10),
+    environment: process.env[ConfigAlias.NodeEnv] as Environment,
+    port: parseInt(process.env[ConfigAlias.ApplicationPortEnv] || `${DEFAULT_PORT}`, 10),
     uploadDirectory: process.env.UPLOAD_DIRECTORY_PATH,
     db: {
       host: process.env.MONGO_HOST,
-      port: parseInt(process.env.MONGO_PORT ?? DEFAULT_MONGO_PORT.toString(), 10),
+      port: parseInt(process.env.MONGO_PORT ?? DEFAULT_MONGODB_PORT.toString(), 10),
       name: process.env.MONGO_DB,
       user: process.env.MONGO_USER,
       password: process.env.MONGO_PASSWORD,

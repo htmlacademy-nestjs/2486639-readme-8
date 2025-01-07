@@ -1,7 +1,7 @@
 import { registerAs } from '@nestjs/config';
 import Joi from 'joi';
 
-import { ConfigAlias } from './const';
+import { ConfigAlias } from '@project/shared/core';
 
 export interface JWTConfig {
   accessTokenSecret: string;

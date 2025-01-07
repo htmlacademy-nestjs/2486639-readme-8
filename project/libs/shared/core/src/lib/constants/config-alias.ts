@@ -1,6 +1,8 @@
 export enum ConfigAlias {
+  NodeEnv = 'NODE_ENV',
   Application = 'application',
   ApplicationPort = `${Application}.port`,
+  ApplicationPortEnv = 'PORT',
   MongoDb = 'mongoDb',
   MongoDbUsername = `${MongoDb}.username`,
   MongoDbPassword = `${MongoDb}.password`,

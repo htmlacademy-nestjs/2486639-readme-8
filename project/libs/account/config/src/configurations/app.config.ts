@@ -1,9 +1,7 @@
 import { registerAs } from '@nestjs/config';
 import Joi from 'joi';
 
-import { DEFAULT_PORT, Environment, ENVIRONMENTS } from '@project/shared/core';
-
-import { ConfigAlias } from './const';
+import { ConfigAlias, DEFAULT_PORT, Environment, ENVIRONMENTS } from '@project/shared/core';
 
 export interface ApplicationConfig {
   environment: string;
@@ -26,8 +24,8 @@ function validateConfig(config: ApplicationConfig): void {
 
 function getConfig(): ApplicationConfig {
   const config: ApplicationConfig = {
-    environment: process.env.NODE_ENV as Environment,
-    port: parseInt(process.env.PORT || `${DEFAULT_PORT}`, 10)
+    environment: process.env[ConfigAlias.NodeEnv] as Environment,
+    port: parseInt(process.env[ConfigAlias.ApplicationPortEnv] || `${DEFAULT_PORT}`, 10)
   };
 
   validateConfig(config);
