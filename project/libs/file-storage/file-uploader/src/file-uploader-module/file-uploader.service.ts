@@ -1,5 +1,5 @@
 import 'multer';
-import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { ensureDir } from 'fs-extra';
 import { extension } from 'mime-types';
@@ -65,6 +65,10 @@ export class FileUploaderService {
   }
 
   public async saveFile(file: Express.Multer.File): Promise<FileUploaderEntity> {
+    if (!file) {
+      throw new BadRequestException('File not sending.');
+    }
+
     const storedFile = await this.writeFile(file);
     const fileEntity = new FileUploaderFactory().create({
       originalName: file.originalname,
