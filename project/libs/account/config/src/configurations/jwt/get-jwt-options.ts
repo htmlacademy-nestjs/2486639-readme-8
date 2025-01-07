@@ -5,9 +5,9 @@ import { ConfigAlias } from '@project/shared/core';
 
 export async function getJwtOptions(configService: ConfigService): Promise<JwtModuleOptions> {
   return {
-    secret: configService.get<string>(ConfigAlias.JwtAccessTokenSecret),
+    secret: configService.get<string>(ConfigAlias.AppJwtAccessTokenSecret),
     signOptions: {
-      expiresIn: configService.get<string>(ConfigAlias.JwtAccessTokenExpiresIn),
+      expiresIn: configService.get<string>(ConfigAlias.AppJwtAccessTokenExpiresIn),
       algorithm: 'HS256'
     }
   }

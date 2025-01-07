@@ -15,9 +15,8 @@ import { AppModule } from './app/app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const globalPrefix = 'api';
-
   const configService = app.get(ConfigService);
-  const port = configService.get(ConfigAlias.ApplicationPort);
+  const port = configService.get<number>(ConfigAlias.AppPort);
 
   app.setGlobalPrefix(globalPrefix);
 

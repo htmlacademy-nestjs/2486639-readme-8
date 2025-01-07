@@ -32,4 +32,4 @@ function getConfig(): JWTConfig {
   return config;
 }
 
-export const jwtConfig = registerAs(ConfigAlias.Jwt, getConfig);
+export const jwtConfig = registerAs(ConfigAlias.AppJwt, getConfig);

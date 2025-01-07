@@ -2,6 +2,7 @@ import { registerAs } from '@nestjs/config';
 import Joi from 'joi';
 
 import { ConfigAlias, DEFAULT_MONGODB_PORT, DEFAULT_PORT, Environment, ENVIRONMENTS } from '@project/shared/core';
+import { getPort } from '@project/shared/helpers';
 
 export interface FileStorageConfig {
   environment: string;
@@ -42,11 +43,11 @@ function validateConfig(config: FileStorageConfig): void {
 function getConfig(): FileStorageConfig {
   const config: FileStorageConfig = {
     environment: process.env[ConfigAlias.NodeEnv] as Environment,
-    port: parseInt(process.env[ConfigAlias.ApplicationPortEnv] || `${DEFAULT_PORT}`, 10),
+    port: getPort(ConfigAlias.PortEnv, DEFAULT_PORT),
     uploadDirectory: process.env.UPLOAD_DIRECTORY_PATH,
     mongoDb: {
       host: process.env[ConfigAlias.MongoDbHostEnv],
-      port: parseInt(process.env[ConfigAlias.MongoDbPortEnv] ?? `${DEFAULT_MONGODB_PORT}`, 10),
+      port: getPort(ConfigAlias.MongoDbPortEnv, DEFAULT_MONGODB_PORT),
       user: process.env[ConfigAlias.MongoDbUserEnv],
       password: process.env[ConfigAlias.MongoDbPasswordEnv],
       database: process.env[ConfigAlias.MongoDbDatabaseEnv],

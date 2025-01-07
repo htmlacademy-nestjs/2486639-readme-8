@@ -13,7 +13,7 @@ export class JwtAccessStrategy extends PassportStrategy(Strategy) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: configService.get<string>(ConfigAlias.JwtAccessTokenSecret)
+      secretOrKey: configService.get<string>(ConfigAlias.AppJwtAccessTokenSecret)
     });
   }
 
