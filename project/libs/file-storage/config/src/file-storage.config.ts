@@ -7,7 +7,8 @@ import { getPort } from '@project/shared/helpers';
 export interface FileStorageConfig {
   environment: string;
   port: number;
-  uploadDirectory: string;
+  uploadDirectoryPath: string;
+  serveRoot: string;
   mongoDb: {
     host: string;
     port: number;
@@ -21,7 +22,8 @@ export interface FileStorageConfig {
 const validationSchema = Joi.object({
   environment: Joi.string().valid(...ENVIRONMENTS).required(),
   port: Joi.number().port().default(DEFAULT_PORT),
-  uploadDirectory: Joi.string().required(),
+  uploadDirectoryPath: Joi.string().required(),
+  serveRoot: Joi.string().required(),
   mongoDb: Joi.object({
     host: Joi.string().valid().hostname(),
     port: Joi.number().port(),
@@ -44,7 +46,8 @@ function getConfig(): FileStorageConfig {
   const config: FileStorageConfig = {
     environment: process.env[ConfigAlias.NodeEnv] as Environment,
     port: getPort(ConfigAlias.PortEnv, DEFAULT_PORT),
-    uploadDirectory: process.env.UPLOAD_DIRECTORY_PATH,
+    uploadDirectoryPath: process.env.UPLOAD_DIRECTORY_PATH,
+    serveRoot: process.env.SERVE_ROOT,
     mongoDb: {
       host: process.env[ConfigAlias.MongoDbHostEnv],
       port: getPort(ConfigAlias.MongoDbPortEnv, DEFAULT_MONGODB_PORT),

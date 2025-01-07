@@ -65,6 +65,8 @@
   29. при добавлении комментария увеличить количество комментариев поста, при удалении уменьшить
   30. в ТЗ не указана сортировка комментариев, видимо как добавлены, посомтреть как возвращает БД и если что добавить orderBy.createdAt = desc
   31. моя лента
+  32. куда делся первый "@Inject(*.KEY)"?
+  33. что такое FileSchema.virtual('id').get( ?  может сделать как BlogUserModel?
 
 
 Заметки:
@@ -80,6 +82,10 @@
       config.get<string>(ConfigAlias.MongoDbUsername)
     на
       databaseConfig.username
+    ------
+    config: ConfigType<typeof fileStorageConfig>
+      можно по имени this.config.uploadDirectory
+      а можно так сделать в сервисе при инициализации монгоДБ?
   3. а можно делать какие то алиасы или константы в project.json например для "cwd": "libs/blog/models/prisma"
   4. проверить в модулях
       - заменить " на '?

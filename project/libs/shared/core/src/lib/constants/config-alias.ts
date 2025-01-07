@@ -12,9 +12,15 @@ export enum ConfigAlias {
   DatabaseEnv = 'DATABASE',
   AuthBase = 'authBase',
   AuthBaseEnv = 'AUTHBASE',
+  UploadDirectoryPath = 'uploadDirectoryPath',
+  UploadDirectoryEnv = 'UPLOAD_DIRECTORY_PATH',
+  ServeRoot = 'serveRoot',
+  ServeRootEnv = 'SERVE_ROOT',
 
   Application = 'application',
   AppPort = `${Application}.${Port}`,
+  AppUploadDirectoryPath = `${Application}.${UploadDirectoryPath}`,
+  AppServeRoot = `${Application}.${ServeRoot}`,
 
   MongoDbEnv = 'MONGODB',
   MongoDbHostEnv = `${MongoDbEnv}_${HostEnv}`,
