@@ -34,9 +34,12 @@
         нужно позже убрать из проверок imagePath
   20. черновики других пользоватетлей доступны при запросе детальной информаций о посте?
         если пост сначала был опубликован и другой пользователь уже смотрел, а потом в черновики под автором и обновить страницу у пользователя
-  21. проверка .env
-        [Account JWTConfig Validation Error]: "accessTokenSecret" is required  / accessTokenSecret: Joi.string().required(),
+  21. .env
+        нормальная проверка на файл .env
+          [Account JWTConfig Validation Error]: "accessTokenSecret" is required  / accessTokenSecret: Joi.string().required(),
         сделавть чтоб писал "не указан JWT_ACCESS_TOKEN_SECRET!"
+          для всех параметров
+        вынести/обеденить конфигурации в один модуль
   22. entity.id = undefined; //! пустая строка из базового класса и id не гененируется
         А в тегах вызывается конструктор с минимальным объектом и при вызове populate записывает в _id undefined
   23. при получении поста в теги отдавать только заголовки?

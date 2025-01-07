@@ -9,12 +9,12 @@ export function getMongooseOptions(): MongooseModuleAsyncOptions {
     useFactory: async (config: ConfigService) => {
       return {
         uri: getMongoConnectionString({
-          username: config.get<string>(ConfigAlias.MongoDbUsername),
+          user: config.get<string>(ConfigAlias.MongoDbUser),
           password: config.get<string>(ConfigAlias.MongoDbPassword),
           host: config.get<string>(ConfigAlias.MongoDbHost),
           port: config.get<string>(ConfigAlias.MongoDbPort),
           authDatabase: config.get<string>(ConfigAlias.MongoDbAuthBase),
-          databaseName: config.get<string>(ConfigAlias.MongoDbDatabaseName),
+          database: config.get<string>(ConfigAlias.MongoDbDatabase),
         })
       }
     },

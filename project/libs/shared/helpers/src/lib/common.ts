@@ -23,8 +23,8 @@ export function fillDto<T, V>(
   });
 }
 
-export function getMongoConnectionString({ username, password, host, port, databaseName, authDatabase }): string {
-  return `mongodb://${username}:${password}@${host}:${port}/${databaseName}?authSource=${authDatabase}`;
+export function getMongoConnectionString({ user, password, host, port, database, authDatabase }): string {
+  return `mongodb://${user}:${password}@${host}:${port}/${database}?authSource=${authDatabase}`;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
