@@ -32,6 +32,13 @@ export enum ConfigAlias {
   MongoDbAuthBase = `${MongoDb}.${AuthBase}`,
   MongoDbAuthBaseEnv = `${MongoDbEnv}_${AuthBaseEnv}`,
 
+  ApplicationMongoDbHost = `${Application}.${MongoDb}.${Host}`,
+  ApplicationMongoDbPort = `${Application}.${MongoDb}.${Port}`,
+  ApplicationMongoDbUser = `${Application}.${MongoDb}.${User}`,
+  ApplicationMongoDbPassword = `${Application}.${MongoDb}.${Password}`,
+  ApplicationMongoDbDatabase = `${Application}.${MongoDb}.${Database}`,
+  ApplicationMongoDbAuthBase = `${Application}.${MongoDb}.${AuthBase}`,
+
   Postgres = 'postgres',
   PostgresEnv = 'POSTGRES',
   PostgresHost = `${Postgres}.${Host}`,
