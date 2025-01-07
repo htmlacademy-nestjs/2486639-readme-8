@@ -4,11 +4,11 @@
   4. /api/auth/:id перенести в пользователя /api/users/:id ?
   5. нужна смена пароля! /api/auth/change-password
   6. после регитсрации возвращаю - type: UserRdo, как при getById... где описано что отдать... только id или весь объект?
-  7. задействовать настройки подключения к postgres из project/apps/blog/blog.dev.env
+  7. задействовать настройки подключения к postgres из project/apps/blog/.env
     сейчас подключение из project/libs/blog/models/prisma/.env  ? или тут для работы prisma-cli и seed.ts ?
     после выполенения generate DATABASE_URL из project/libs/blog/models/prisma/.env закидывается значением по умолчанию, можно переопределить...
     POSTGRES_HOST и POSTGRES_PORT
-    А может и сам prisma/.env слинковать с blog/blog.dev.env?
+    А может и сам prisma/.env слинковать с blog/.env?
   8. под windows не водит имя для миграции db:migrate, выполнил отдельно всю команду из нужного каталога
   9. заполенить данные в mongodb
   10. удалить BaseMemoryRepository если не будет использоватся?
@@ -62,7 +62,6 @@
   29. при добавлении комментария увеличить количество комментариев поста, при удалении уменьшить
   30. в ТЗ не указана сортировка комментариев, видимо как добавлены, посомтреть как возвращает БД и если что добавить orderBy.createdAt = desc
   31. моя лента
-  32. файлы *.dev.env -> заменить на .env
 
 
 Заметки:

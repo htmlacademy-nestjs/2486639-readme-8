@@ -5,7 +5,7 @@ import { applicationConfig } from './configurations/app.config';
 import { mongoDbConfig } from './configurations/mongo-db.config';
 import { jwtConfig } from './configurations/jwt.config';
 
-const ENV_ACCOUNT_FILE_PATH = 'apps/account/account.dev.env';
+const ENV_ACCOUNT_FILE_PATH = 'apps/account/.env';
 
 const configModuleOptions = {
   isGlobal: true,

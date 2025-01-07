@@ -3,7 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 
 import fileVaultConfig from './file-storage.config';
 
-const ENV_FILE_PATH = 'apps/file-storage/file-storage.dev.env';
+const ENV_FILE_PATH = 'apps/file-storage/.env';
 
 @Module({
   imports: [
