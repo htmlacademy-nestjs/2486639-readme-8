@@ -38,8 +38,10 @@ export class FileModel extends Document implements File {
 export const FileSchema = SchemaFactory.createForClass(FileModel);
 
 //! проверить, может сделать как в BlogUserModel ?
+/*
 FileSchema.virtual('id').get(
   function () {
     return this._id.toString();
   }
 );
+*/

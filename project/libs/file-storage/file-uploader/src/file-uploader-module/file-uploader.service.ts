@@ -27,7 +27,7 @@ export class FileUploaderService {
   ) { }
 
   private getUploadDirectoryPath(): string {
-    return this.config.uploadDirectory;
+    return this.config.uploadDirectoryPath;
   }
 
   private getDestinationFilePath(filename: string): string {
@@ -67,14 +67,12 @@ export class FileUploaderService {
   public async saveFile(file: Express.Multer.File): Promise<FileUploaderEntity> {
     const storedFile = await this.writeFile(file);
     const fileEntity = new FileUploaderFactory().create({
-      hashName: storedFile.fileName,
-      mimetype: file.mimetype,
       originalName: file.originalname,
-      path: storedFile.path,
-      size: file.size,
+      hashName: storedFile.fileName,
       subDirectory: storedFile.subDirectory,
-      createdAt: undefined,
-      updatedAt: undefined
+      path: storedFile.path,
+      mimetype: file.mimetype,
+      size: file.size
     });
 
     await this.fileUploaderRepository.save(fileEntity);

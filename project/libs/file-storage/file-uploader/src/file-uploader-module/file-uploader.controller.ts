@@ -12,7 +12,7 @@ import { FileUploaderService } from './file-uploader.service';
 @Controller('files')
 export class FileUploaderController {
   constructor(
-    private readonly fileUploaderService: FileUploaderService,
+    private readonly fileUploaderService: FileUploaderService
   ) { }
 
   @Post('/upload')

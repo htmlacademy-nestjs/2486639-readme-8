@@ -6,6 +6,6 @@ export interface File {
   path: string;
   mimetype: string;
   size: number;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }

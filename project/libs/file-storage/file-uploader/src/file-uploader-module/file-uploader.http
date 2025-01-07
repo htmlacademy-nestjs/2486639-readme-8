@@ -5,13 +5,18 @@ Content-Type: multipart/form-data; boundary=boundary
 --boundary
 Content-Disposition: form-data; name="file"; filename="file-uploader.http"
 
-< ./file-uploader.http
+< ./file-uploader.factory.ts
+//< ./file-uploader.http
+//  "message": "Unexpected field",
+//  "error": "Bad Request",
+//  "statusCode": 400
+//! ?
 
 --boundary--
 
 ###
 
 # Get file by ID
-GET http://localhost:4200/api/files/662927b0ffe4e19093c1963b HTTP/1.1
+GET http://localhost:4200/api/files/677d4806b345345e4489056d HTTP/1.1
 
 ###
