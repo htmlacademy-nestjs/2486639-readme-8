@@ -9,7 +9,7 @@ import { fillDto } from '@project/shared/helpers';
 
 import { UploadedFileRdo } from './rdo/uploaded-file.rdo';
 import { FileUploaderService } from './file-uploader.service';
-import { FileIdApiParam, FileUploaderApiResponse, FileUploaderFileApiBody } from './file-uploader.constant';
+import { FILE_KEY, FileIdApiParam, FileUploaderApiResponse, FileUploaderFileApiBody } from './file-uploader.constant';
 
 @ApiTags('file-upload')
 @Controller('files')
@@ -23,7 +23,7 @@ export class FileUploaderController {
   @ApiConsumes('multipart/form-data')
   @ApiBody(FileUploaderFileApiBody)
   @Post('/upload')
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FileInterceptor(FILE_KEY))
   public async uploadFile(@UploadedFile() file: Express.Multer.File) {
     const fileEntity = await this.fileUploaderService.saveFile(file);
 
@@ -34,8 +34,8 @@ export class FileUploaderController {
   @ApiResponse(FileUploaderApiResponse.FileNotFound)
   @ApiResponse(FileUploaderApiResponse.BadRequest)
   @ApiParam(FileIdApiParam)
-  @Get(':fileId')
-  public async show(@Param('fileId', MongoIdValidationPipe) fileId: string) {
+  @Get(`:${FileIdApiParam.name}`)
+  public async show(@Param(FileIdApiParam.name, MongoIdValidationPipe) fileId: string) {
     const existFile = await this.fileUploaderService.getFile(fileId);
 
     return fillDto(UploadedFileRdo, existFile);
