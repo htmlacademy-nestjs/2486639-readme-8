@@ -6,6 +6,7 @@ import { JwtService } from '@nestjs/jwt';
 
 import { Token, TokenPayload, User } from '@project/shared/core';
 import { BlogUserRepository, BlogUserEntity } from '@project/account/blog-user';
+import { NotifyService } from '@project/account/notify';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { AuthenticationUserMessage } from './authentication.constant';
@@ -17,7 +18,8 @@ export class AuthenticationService {
 
   constructor(
     private readonly blogUserRepository: BlogUserRepository,
-    private readonly jwtService: JwtService
+    private readonly jwtService: JwtService,
+    private readonly notifyService: NotifyService
   ) { }
 
   public async registerUser(dto: CreateUserDto): Promise<BlogUserEntity> {
@@ -40,6 +42,8 @@ export class AuthenticationService {
 
     await userEntity.setPassword(password);
     await this.blogUserRepository.save(userEntity);
+
+    await this.notifyService.registerSubscriber({ email, name });
 
     return userEntity;
   }

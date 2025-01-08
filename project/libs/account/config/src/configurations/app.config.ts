@@ -1,7 +1,8 @@
 import { registerAs } from '@nestjs/config';
 import Joi from 'joi';
 
-import { ConfigAlias, DEFAULT_PORT, Environment, ENVIRONMENTS } from './const';
+import { ConfigAlias, DEFAULT_PORT, Environment, ENVIRONMENTS } from '@project/shared/core';
+import { getPort } from '@project/shared/helpers';
 
 export interface ApplicationConfig {
   environment: string;
@@ -18,14 +19,14 @@ function validateConfig(config: ApplicationConfig): void {
   const { error } = validationSchema.validate(config, { abortEarly: true });
 
   if (error) {
-    throw new Error(`[Application Config Validation Error]: ${error.message}`);
+    throw new Error(`[Account Config Validation Error]: ${error.message}`);
   }
 }
 
 function getConfig(): ApplicationConfig {
   const config: ApplicationConfig = {
-    environment: process.env.NODE_ENV as Environment,
-    port: parseInt(process.env.PORT || `${DEFAULT_PORT}`, 10)
+    environment: process.env[ConfigAlias.NodeEnv] as Environment,
+    port: getPort(ConfigAlias.PortEnv, DEFAULT_PORT)
   };
 
   validateConfig(config);

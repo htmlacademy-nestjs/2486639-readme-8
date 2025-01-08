@@ -4,11 +4,11 @@
   4. /api/auth/:id перенести в пользователя /api/users/:id ?
   5. нужна смена пароля! /api/auth/change-password
   6. после регитсрации возвращаю - type: UserRdo, как при getById... где описано что отдать... только id или весь объект?
-  7. задействовать настройки подключения к postgres из project/apps/blog/blog.dev.env
+  7. задействовать настройки подключения к postgres из project/apps/blog/.env
     сейчас подключение из project/libs/blog/models/prisma/.env  ? или тут для работы prisma-cli и seed.ts ?
     после выполенения generate DATABASE_URL из project/libs/blog/models/prisma/.env закидывается значением по умолчанию, можно переопределить...
     POSTGRES_HOST и POSTGRES_PORT
-    А может и сам prisma/.env слинковать с blog/blog.dev.env?
+    А может и сам prisma/.env слинковать с blog/.env?
   8. под windows не водит имя для миграции db:migrate, выполнил отдельно всю команду из нужного каталога
   9. заполенить данные в mongodb
   10. удалить BaseMemoryRepository если не будет использоватся?
@@ -34,9 +34,12 @@
         нужно позже убрать из проверок imagePath
   20. черновики других пользоватетлей доступны при запросе детальной информаций о посте?
         если пост сначала был опубликован и другой пользователь уже смотрел, а потом в черновики под автором и обновить страницу у пользователя
-  21. проверка .env
-        [Account JWTConfig Validation Error]: "accessTokenSecret" is required  / accessTokenSecret: Joi.string().required(),
+  21. .env
+        нормальная проверка на файл .env
+          [Account JWTConfig Validation Error]: "accessTokenSecret" is required  / accessTokenSecret: Joi.string().required(),
         сделавть чтоб писал "не указан JWT_ACCESS_TOKEN_SECRET!"
+          для всех параметров
+        вынести/обеденить конфигурации в один модуль
   22. entity.id = undefined; //! пустая строка из базового класса и id не гененируется
         А в тегах вызывается конструктор с минимальным объектом и при вызове populate записывает в _id undefined
   23. при получении поста в теги отдавать только заголовки?
@@ -61,6 +64,20 @@
           а для не авторизированных заполнять false
   29. при добавлении комментария увеличить количество комментариев поста, при удалении уменьшить
   30. в ТЗ не указана сортировка комментариев, видимо как добавлены, посомтреть как возвращает БД и если что добавить orderBy.createdAt = desc
+  31. моя лента
+  32. куда делся первый "@Inject(*.KEY)"?
+  33. что такое FileSchema.virtul('id').get( ?  может сделать как BlogUserModel?
+        отключил это пока, отрабатывает - entity.id = document.id;
+        и при сохраннении даты пустые
+  34. а как забрать через config module?
+        @RabbitSubscribe({
+          exchange: process.env[ConfigAlias.AppRabbitExchange], //! 'readme.notify', а как забрать через config module?
+          routingKey: RabbitRouting.AddSubscriber,
+          queue: process.env[ConfigAlias.AppRabbitQueue] //! 'readme.notify.income', а как забрать через config module?
+        })
+  35. двойной импорт модулей и в основном модуле и в подмодулях, а можно только в одном?
+        BlogUserModule
+        MailModule
 
 
 Заметки:
@@ -76,11 +93,16 @@
       config.get<string>(ConfigAlias.MongoDbUsername)
     на
       databaseConfig.username
+    ------
+    config: ConfigType<typeof fileStorageConfig>
+      можно по имени this.config.uploadDirectory
+      а можно так сделать в сервисе при инициализации монгоДБ?
   3. а можно делать какие то алиасы или константы в project.json например для "cwd": "libs/blog/models/prisma"
   4. проверить в модулях
       - заменить " на '?
       - поискать <from ">
       - поискать <from '@> и переносом строки разделить и сгруппировать
+      - поискать <from ".../dist/....>
       - еще <, }>
       - проверить неиспользуемые импорты
   5. Title: { description: 'The post title for types: video and text',
@@ -94,4 +116,7 @@
        количество репостов, и видимо предусмотрен маршрут показать все репосты
   8. теги в маркапах начинаются с #
   9. как сделать базовый класс PageQuery и от него заменить BlogPostCommentQuery и на его основе сделать BlogPostQuery
+  10. попробовать сделать дженерик для фабрики
+  11. попробовать вынести конфиг для монгоДБ
+  12. как в swagger добавить описание статического маршрута http://localhost:4200/static/1.txt
 

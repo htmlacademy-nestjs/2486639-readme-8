@@ -1,7 +1,7 @@
 import { registerAs } from '@nestjs/config';
 import Joi from 'joi';
 
-import { ConfigAlias } from './const';
+import { ConfigAlias } from '@project/shared/core';
 
 export interface JWTConfig {
   accessTokenSecret: string;
@@ -23,8 +23,8 @@ function validateConfig(config: JWTConfig): void {
 
 function getConfig(): JWTConfig {
   const config: JWTConfig = {
-    accessTokenSecret: process.env.JWT_ACCESS_TOKEN_SECRET,
-    accessTokenExpiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRES_IN,
+    accessTokenSecret: process.env[ConfigAlias.JwtAccessTokenSecretEnv],
+    accessTokenExpiresIn: process.env[ConfigAlias.JwtAccessTokenExpiresInEnv],
   };
 
   validateConfig(config);
@@ -32,4 +32,4 @@ function getConfig(): JWTConfig {
   return config;
 }
 
-export const jwtConfig = registerAs(ConfigAlias.Jwt, getConfig);
+export const jwtConfig = registerAs(ConfigAlias.AppJwt, getConfig);

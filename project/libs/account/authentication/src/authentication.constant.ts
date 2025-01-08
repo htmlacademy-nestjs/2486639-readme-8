@@ -21,20 +21,6 @@ export const UserValidation = {
   }
 } as const;
 
-export const AuthenticationValidateMessage = {
-  Name: {
-    MinLength: { message: `Minimum name length must be ${UserValidation.Name.MinLength}` },
-    MaxLength: { message: `Maximum name length must be ${UserValidation.Name.MaxLength}` }
-  },
-  Email: {
-    InvalidFormat: { message: 'The email must be a valid email address' }
-  },
-  Password: {
-    MinLength: { message: `Minimum password length must be ${UserValidation.Password.MinLength}` },
-    MaxLength: { message: `Maximum password length must be ${UserValidation.Password.MaxLength}` }
-  }
-} as const;
-
 export const UserIdApiParam = {
   name: 'userId',
   schema: UserApiProperty.Id

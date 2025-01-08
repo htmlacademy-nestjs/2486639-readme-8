@@ -1,15 +1,10 @@
 import { IsNumber, IsOptional, IsString, Max, Min, validateOrReject } from 'class-validator';
 
+import { DEFAULT_MONGODB_PORT, MAX_PORT, MIN_PORT } from '@project/shared/core';
+
 import { EnvValidationMessage } from './mongo-db.messages';
-import { MIN_PORT, MAX_PORT, DEFAULT_MONGODB_PORT } from './mongo-db.const';
 
 export class MongoDbConfiguration {
-  @IsString({ message: EnvValidationMessage.DBUserRequired })
-  public username: string;
-
-  @IsString({ message: EnvValidationMessage.DBPasswordRequired })
-  public password: string;
-
   @IsString({ message: EnvValidationMessage.DBHostRequired })
   public host: string;
 
@@ -19,11 +14,17 @@ export class MongoDbConfiguration {
   @IsOptional()
   public port: number = DEFAULT_MONGODB_PORT;
 
-  @IsString({ message: EnvValidationMessage.DBBaseAuthRequired })
-  public authBase: string;
+  @IsString({ message: EnvValidationMessage.DBUserRequired })
+  public user: string;
+
+  @IsString({ message: EnvValidationMessage.DBPasswordRequired })
+  public password: string;
 
   @IsString({ message: EnvValidationMessage.DBNameRequired })
-  public databaseName: string;
+  public database: string;
+
+  @IsString({ message: EnvValidationMessage.DBBaseAuthRequired })
+  public authBase: string;
 
   public async validate(): Promise<void> {
     await validateOrReject(this);

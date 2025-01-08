@@ -1,6 +1,7 @@
 import { AuthGuard } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
-import { AccountConfigAlias } from '@project/account/config';
+
+const AUTH_GUART_TYPE = 'jwt';
 
 @Injectable()
-export class JwtAuthGuard extends AuthGuard(AccountConfigAlias.Jwt) { }
+export class JwtAuthGuard extends AuthGuard(AUTH_GUART_TYPE) { }

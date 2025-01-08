@@ -1,0 +1,27 @@
+# Upload some file
+POST http://localhost:4200/api/files/upload HTTP/1.1
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="file"; filename="file-uploader.http"
+
+< ./file-uploader.factory.ts
+//< ./file-uploader.http
+//  "message": "Unexpected field",
+//  "error": "Bad Request",
+//  "statusCode": 400
+//! ?
+
+--boundary--
+
+###
+
+# Get file by ID
+GET http://localhost:4200/api/files/677d4806b345345e4489056d HTTP/1.1
+
+###
+
+# Get stativ file
+GET http://localhost:4200/static/1.txt HTTP/1.1
+
+###
