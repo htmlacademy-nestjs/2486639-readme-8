@@ -14,7 +14,7 @@ export function getMongooseOptions(): MongooseModuleAsyncOptions {
           host: config.get<string>(ConfigAlias.AppMongoDbHost),
           port: config.get<string>(ConfigAlias.AppMongoDbPort),
           database: config.get<string>(ConfigAlias.AppMongoDbDatabase),
-          authDatabase: config.get<string>(ConfigAlias.AppMongoDbAuthBase)
+          authBase: config.get<string>(ConfigAlias.AppMongoDbAuthBase)
         })
       }
     },
