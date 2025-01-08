@@ -27,8 +27,12 @@ export function fillDto<T, V>(
   });
 }
 
-export function getMongoConnectionString({ user, password, host, port, database, authBase }): string {
+export function getMongoConnectionString({ host, port, user, password, database, authBase }): string {
   return `mongodb://${user}:${password}@${host}:${port}/${database}?authSource=${authBase}`;
+}
+
+export function getRabbitMQConnectionString({ host, port, user, password }): string {
+  return `amqp://${user}:${password}@${host}:${port}`;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

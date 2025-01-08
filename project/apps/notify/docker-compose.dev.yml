@@ -18,8 +18,8 @@ services:
       - ${RABBIT_PORT}:5672
 
     environment:
-      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
-      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+      RABBITMQ_DEFAULT_USER: ${RABBIT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBIT_PASS}
 
     healthcheck:
       test: rabbitmq-diagnostics -q ping

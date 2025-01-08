@@ -80,7 +80,7 @@ export enum ConfigAlias {
   AppMailSmtpPort = `${AppMailSmtp}.${Port}`,
   AppMailSmtpUser = `${AppMailSmtp}.${User}`,
   AppMailSmtpPassword = `${AppMailSmtp}.${Password}`,
-  AppMailSmtpExchange = `${AppMailSmtp}.from`,
+  AppMailSmtpFrom = `${AppMailSmtp}.from`,
 
   JwtEnv = 'JWT',
   JwtAccessTokenSecretEnv = `${JwtEnv}_ACCESS_TOKEN_SECRET`,
