@@ -21,6 +21,7 @@ export { PostType } from './lib/types/post-type.enum';
 export { Post } from './lib/types/post.interface';
 export { SortDirection } from './lib/types/sort-direction.enum';
 export { SortType } from './lib/types/sort-type.enum';
+export { Subscriber } from './lib/types/subscriber.interface';
 export { Tag } from './lib/types/tag.interface';
 export { Subscription } from './lib/types/subscription.interface';
 export { User } from './lib/types/user.interface';
