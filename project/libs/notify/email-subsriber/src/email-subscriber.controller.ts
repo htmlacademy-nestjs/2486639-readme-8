@@ -1,7 +1,7 @@
 import { Controller } from '@nestjs/common';
 import { RabbitSubscribe } from '@golevelup/nestjs-rabbitmq';
 
-import { RabbitRouting } from '@project/shared/core';
+import { ConfigAlias, RabbitRouting } from '@project/shared/core';
 import { MailService } from '@project/notify/mail';
 
 import { EmailSubscriberService } from './email-subscriber.service';
@@ -15,9 +15,9 @@ export class EmailSubscriberController {
   ) { }
 
   @RabbitSubscribe({
-    exchange: 'readme.notify.income', //!
-    routingKey: RabbitRouting.AddSubscriber,
-    queue: 'readme.notify.income' //!
+    exchange: process.env[ConfigAlias.AppRabbitExchange], //! 'readme.notify', а как забрать через config module?
+    queue: process.env[ConfigAlias.AppRabbitQueue], //! 'readme.notify.income', а как забрать через config module?
+    routingKey: RabbitRouting.AddSubscriber
   })
   public async create(subscriber: CreateSubscriberDto) {
     this.subscriberService.addSubscriber(subscriber);

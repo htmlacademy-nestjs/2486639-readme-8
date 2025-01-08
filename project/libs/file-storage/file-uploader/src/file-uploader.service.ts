@@ -20,14 +20,15 @@ export class FileUploaderService {
   private readonly logger = new Logger(FileUploaderService.name);
   private readonly DATE_FORMAT = 'YYYY MM';
 
+  @Inject(fileStorageConfig.KEY)
+  private readonly fileStorageConfig: ConfigType<typeof fileStorageConfig>;
+
   constructor(
-    @Inject(fileStorageConfig.KEY)
-    private readonly config: ConfigType<typeof fileStorageConfig>,
     private readonly fileUploaderRepository: FileUploaderRepository
   ) { }
 
   private getUploadDirectoryPath(): string {
-    return this.config.uploadDirectoryPath;
+    return this.fileStorageConfig.uploadDirectoryPath;
   }
 
   private getDestinationFilePath(filename: string): string {

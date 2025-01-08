@@ -9,10 +9,10 @@ import { DEFAULT_ADD_SUBCRIBER_TEMPLATE, EMAIL_ADD_SUBSCRIBER_SUBJECT } from './
 
 @Injectable()
 export class MailService {
-  constructor(private readonly mailerService: MailerService) { }
-
   @Inject(notifyConfig.KEY)
   private readonly notifyConfig: ConfigType<typeof notifyConfig>
+
+  constructor(private readonly mailerService: MailerService) { }
 
   public async sendNotifyNewSubscriber(subscriber: Subscriber, template: string = DEFAULT_ADD_SUBCRIBER_TEMPLATE) {
     await this.mailerService.sendMail({

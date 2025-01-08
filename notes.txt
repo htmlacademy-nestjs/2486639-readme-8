@@ -70,6 +70,12 @@
   33. что такое FileSchema.virtul('id').get( ?  может сделать как BlogUserModel?
         отключил это пока, отрабатывает - entity.id = document.id;
         и при сохраннении даты пустые
+  34. а как забрать через config module?
+        @RabbitSubscribe({
+          exchange: process.env[ConfigAlias.AppRabbitExchange], //! 'readme.notify', а как забрать через config module?
+          routingKey: RabbitRouting.AddSubscriber,
+          queue: process.env[ConfigAlias.AppRabbitQueue] //! 'readme.notify.income', а как забрать через config module?
+        })
 
 
 Заметки:

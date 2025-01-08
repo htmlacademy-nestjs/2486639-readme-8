@@ -9,7 +9,7 @@ export function getRabbitMQOptions() {
     useFactory: async (config: ConfigService) => ({
       exchanges: [
         {
-          name: config.get<string>(ConfigAlias.AppRabbitQueue),
+          name: config.get<string>(ConfigAlias.AppRabbitExchange),
           type: 'direct'
         }
       ],
