@@ -1,7 +1,7 @@
 import { ClassTransformOptions, plainToInstance } from 'class-transformer';
 
 export function getPort(evnName: string, defaultPort: number): number {
-  return parseInt(process.env[evnName] || `$defaultPort}`, 10)
+  return parseInt(process.env[evnName] || `${defaultPort}`, 10)
 }
 
 export function fillDto<T, V>(

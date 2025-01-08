@@ -40,7 +40,7 @@ const validationSchema = Joi.object({
   port: Joi.number().port().default(DEFAULT_PORT),
   mongoDb: Joi.object({
     host: Joi.string().valid().hostname(),
-    port: Joi.number().port(),
+    port: Joi.number().port().default(DEFAULT_MONGODB_PORT),
     user: Joi.string().required(),
     password: Joi.string().required(),
     database: Joi.string().required(),
