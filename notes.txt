@@ -75,6 +75,9 @@
           routingKey: RabbitRouting.AddSubscriber,
           queue: process.env[ConfigAlias.AppRabbitQueue] //! 'readme.notify.income', а как забрать через config module?
         })
+  35. двойной импорт модулей и в основном модуле и в подмодулях, а можно только в одном?
+        BlogUserModule
+        MailModule
 
 
 Заметки:

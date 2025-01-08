@@ -24,6 +24,6 @@ export class MailService {
         name: subscriber.name,
         email: subscriber.email
       }
-    })
+    });
   }
 }

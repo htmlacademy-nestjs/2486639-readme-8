@@ -17,10 +17,12 @@ export class NotifyService {
   ) { }
 
   public async registerSubscriber(dto: CreateSubscriberDto) {
-    return this.rabbitClient.publish<CreateSubscriberDto>(
+    const result = await this.rabbitClient.publish<CreateSubscriberDto>(
       this.rabbiOptions.exchange,
       RabbitRouting.AddSubscriber,
       { ...dto }
     );
+
+    return result;
   }
 }
