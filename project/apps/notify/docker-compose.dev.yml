@@ -6,7 +6,7 @@ services:
     hostname: readme.notify.fakesmtp
 
     ports:
-      - 8025:8025
+      -  ${MAIL_SMTP_PORT}:8025
       - 1085:8080
 
   readme.notify.rabbitmq:
