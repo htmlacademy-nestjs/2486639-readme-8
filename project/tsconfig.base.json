@@ -42,6 +42,7 @@
       "@project/notify/email-subsriber": [
         "libs/notify/email-subsriber/src/index.ts"
       ],
+      "@project/notify/mail": ["libs/notify/mail/src/index.ts"],
       "@project/shared/core": ["libs/shared/core/src/index.ts"],
       "@project/shared/data-access": ["libs/shared/data-access/src/index.ts"],
       "@project/shared/helpers": ["libs/shared/helpers/src/index.ts"],
