@@ -20,7 +20,7 @@ export class FileUploaderEntity extends Entity implements StorableEntity<File> {
       return;
     }
 
-    this.id = file.id ?? '';
+    this.id = file.id ?? undefined;
     this.originalName = file.originalName;
     this.hashName = file.hashName;
     this.subDirectory = file.subDirectory;
