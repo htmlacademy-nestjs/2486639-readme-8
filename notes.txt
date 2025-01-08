@@ -15,6 +15,7 @@
   11. всем свойствам в Entity.populate нужно  "?? undefined;"
   12. возможно BlogTagModule, BlogTagService и BlogTagRepository вовсе не нужены, сразу в BlogPostReposipory обрабатывать теги
   13. сам добавил "entity.id = document.id; //! временно" в BaseMongoRepository, для created.user.rdo
+        this.id = subscriber.id ?? '';  пеменять '' на undefined ?
   14. для Пользователя дополнительный запрос
         о количестве подписок на него и количестве его комментариев...
           возможно сделать поля в пользователе или считать, т.к. запрос отдельный

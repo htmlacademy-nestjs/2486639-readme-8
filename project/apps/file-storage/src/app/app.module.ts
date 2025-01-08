@@ -8,7 +8,8 @@ import { FileUploaderModule } from '@project/file-storage/file-uploader';
   imports: [
     FileUploaderModule,
     FileStorageConfigModule,
-    MongooseModule.forRootAsync(getMongooseOptions())
+    MongooseModule.forRootAsync(
+      getMongooseOptions())
   ],
   controllers: [],
   providers: []

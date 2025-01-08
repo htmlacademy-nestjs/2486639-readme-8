@@ -19,6 +19,7 @@ export * from './lib/types/environment.type';
 export { PostState } from './lib/types/post-state.enum';
 export { PostType } from './lib/types/post-type.enum';
 export { Post } from './lib/types/post.interface';
+export { RabbitRouting } from './lib/types/rabbit-routing.enum';
 export { SortDirection } from './lib/types/sort-direction.enum';
 export { SortType } from './lib/types/sort-type.enum';
 export { Subscriber } from './lib/types/subscriber.interface';

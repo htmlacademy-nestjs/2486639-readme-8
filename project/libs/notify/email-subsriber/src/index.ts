@@ -1,1 +1,1 @@
-export * from './lib/notify-email-subsriber';
+export { EmailSubscriberModule } from './email-subscriber.module';
