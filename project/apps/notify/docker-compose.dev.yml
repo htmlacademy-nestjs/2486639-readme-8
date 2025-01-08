@@ -19,7 +19,7 @@ services:
 
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBIT_USER}
-      RABBITMQ_DEFAULT_PASS: ${RABBIT_PASS}
+      RABBITMQ_DEFAULT_PASS: ${RABBIT_PASSWORD}
 
     healthcheck:
       test: rabbitmq-diagnostics -q ping
