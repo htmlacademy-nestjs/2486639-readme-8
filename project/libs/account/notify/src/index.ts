@@ -1,1 +1,2 @@
-export * from './lib/account-notify';
+export { NotifyModule } from './notify.module';
+export { NotifyService } from './notify.service';
