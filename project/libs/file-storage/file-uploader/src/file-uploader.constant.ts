@@ -35,10 +35,10 @@ export const FileUploaderApiResponse = {
   },
   FileNotFound: {
     status: HttpStatus.NOT_FOUND,
-    //description: AuthenticationUserMessage.NotFound
+    description: 'File not found.'
   },
   BadRequest: {
     status: HttpStatus.BAD_REQUEST,
-    //description: AuthenticationUserMessage.NotFound
+    description: 'Bad request.'
   }
 } as const;

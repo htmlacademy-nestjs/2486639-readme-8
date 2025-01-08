@@ -1,19 +1,18 @@
-// дополнительный файл с константами, т.к. были ошибки при сборке webpack, ругался AuthenticationApiProperty.User....  User not found
 export const FileApiProperty = {
   Id: {
-    description: 'The uniq user ID',
+    description: 'The uniq file ID',
     example: '658170cbb954e9f5b905ccf4'
   },
   OriginalName: {
-    description: 'The uniq user email',
-    example: 'user@local.ru'
+    description: 'The original filename',
+    example: 'filename.txt'
   },
   HashName: {
-    description: 'The user name',
-    example: 'Name'
+    description: 'The hash filename',
+    example: '658170cbb954e9f5b905ccf4.txt'
   },
   SubDirectory: {
-    description: 'The user password',
+    description: 'The file sub directory',
     example: 'password'
   },
   Mimetype: {
@@ -21,7 +20,7 @@ export const FileApiProperty = {
     example: 'plain/text'
   },
   Size: {
-    description: 'The user access JWT token',
+    description: 'The file size',
     example: '500'
   }
 } as const;
