@@ -1,4 +1,5 @@
-import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { format } from 'node:util';
 
 import { PaginationResult } from '@project/shared/core';
 import { BlogTagService } from '@project/blog/blog-tag';
@@ -76,6 +77,14 @@ export class BlogPostService {
   private allowModifyPost(postUserId: string, userId: string) {
     if (postUserId !== userId) {
       throw new ForbiddenException(BlogPostMessage.NotAllow);
+    }
+  }
+
+  public async existsPost(id: string): Promise<void> {
+    const exists = await this.blogPostRepository.exists(id);
+
+    if (!exists) {
+      throw new NotFoundException(format(BlogPostMessage.NotFoundPostId, id));
     }
   }
 

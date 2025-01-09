@@ -76,6 +76,7 @@ export const blogPostApiBodyDescription = Object.keys(PostFieldsByType).map(
 
 export const BlogPostMessage = {
   NotFound: 'Post not found.',
+  NotFoundPostId: 'Post with id %s not found.',
   NotAllow: 'Post is not yours.'
 } as const;
 
