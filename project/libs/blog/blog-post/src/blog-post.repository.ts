@@ -44,8 +44,6 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
       select: { id: true },
       where: { id }
     });
-    //! проверить
-    console.log(record);
 
     return record !== null;
   }

@@ -27,15 +27,13 @@ export class BlogPostCommentRepository extends BasePostgresRepository<BlogPostCo
     return Math.ceil(totalCount / limit);
   }
 
-  public async exsistComment(postId: string, userId: string): Promise<boolean> {
+  public async findId(postId: string, userId: string): Promise<string> {
     const record = await this.client.comment.findFirst({
       select: { id: true },
       where: { postId, userId }
     });
-    //! проверить
-    console.log(record);
 
-    return record !== null;
+    return record?.id;
   }
 
   public async findByPostId(postId: string, query: BlogPostCommentQuery): Promise<PaginationResult<BlogPostCommentEntity>> {
@@ -73,7 +71,7 @@ export class BlogPostCommentRepository extends BasePostgresRepository<BlogPostCo
     entity.id = record.id;
   }
 
-  public async delete(postId: string, userId: string): Promise<void> {
-    await this.client.comment.deleteMany({ where: { postId, userId } })
+  public async deleteById(id: string): Promise<void> {
+    await this.client.comment.delete({ where: { id } })
   }
 }

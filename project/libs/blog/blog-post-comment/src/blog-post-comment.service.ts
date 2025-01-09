@@ -27,9 +27,9 @@ export class BlogPostCommentService {
   public async createComment(dto: CreatePostCommentDto, postId: string, userId: string): Promise<BlogPostCommentEntity> {
     await this.blogPostSevice.existsPost(postId);
 
-    const exsitsComment = await this.blogPostCommentRepository.exsistComment(postId, userId);
+    const foundCommentId = await this.blogPostCommentRepository.findId(postId, userId);
 
-    if (exsitsComment) {
+    if (foundCommentId) {
       throw new ConflictException(BlogPostCommentMessage.CommentExist);
     }
 
@@ -45,13 +45,13 @@ export class BlogPostCommentService {
   public async deleteComment(postId: string, userId: string) {
     await this.blogPostSevice.existsPost(postId);
 
-    const exsitsComment = await this.blogPostCommentRepository.exsistComment(postId, userId);
+    const foundCommentId = await this.blogPostCommentRepository.findId(postId, userId);
 
-    if (!exsitsComment) {
+    if (!foundCommentId) {
       throw new NotFoundException(BlogPostCommentMessage.CommentNotFound);
     }
 
-    await this.blogPostCommentRepository.delete(postId, userId);
+    await this.blogPostCommentRepository.deleteById(foundCommentId);
     await this.blogPostSevice.decrementCommentsCount(postId);
   }
 }
