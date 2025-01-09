@@ -1,7 +1,8 @@
 Вопросы:
   1. Реализовать маршруты:
     1.1. account
-      1.1.1. нужен logout!
+      1.1.1. нужен logout! - DELETE -     //ничего не выполняем, т.к. токен нужно забыть на клиентской стороне - noContent
+              и скорре всего на api нужно обнулить refresh token
       1.1.2. нужна смена пароля! /api/auth/change-password
       1.1.3. для Пользователя дополнительный запрос или через api-gate
         о количестве подписок на него и количестве его комментариев...
@@ -56,12 +57,13 @@
   5. всем свойствам в Entity.populate нужно  "?? undefined;"
   6. сам добавил "entity.id = document.id; //! временно" в BaseMongoRepository, для created.user.rdo - будет в коммитах про API-Gate
   7. .env
+        project\apps\...\.env - nx или node добавляет в process.env при запуске!
+        envFilePath: ENV_FILE_PATH - загружает ConfigModule в process.env!
+          но нет ошибки при отсутвии файла! как добавить?
         а можно заставить Joi вывести сразу все ошибки валидации, сейчас на первой ошибке прекращает валидацию...
         вынести/обеденить конфигурации в один модуль
         account-config сделать в один как  у всех
-        Для blog сделать конфиг
-          project\apps\...\.env - nx или node добавляет в process.env при запуске?
-          envFilePath: ENV_FILE_PATH - загружает ConfigModule?
+        для blog сделать конфиг
   8. entity.id = undefined; //! пустая строка из базового класса и id не гененируется
         А в тегах вызывается конструктор с минимальным объектом и при вызове populate записывает в _id undefined
   9. куда делся первый "@Inject(*.KEY)"?
@@ -77,6 +79,7 @@
   12. двойной импорт модулей и в основном модуле и в подмодулях, а можно только в одном?
         BlogUserModule
         MailModule
+        NotifyModule
   13. Entity и Service, dto, rdo, Ropositary, Factory
         переделать:
           const blogTagFactory = new BlogTagFactory();

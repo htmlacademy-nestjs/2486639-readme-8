@@ -30,7 +30,6 @@ async function getMongoDbConfig(): Promise<MongoDbConfiguration> {
 
   try {
     await config.validate();
-
   } catch (error) {
     // не было ошибки с полной валидацией, просто undefined
     if (!error.length) {
