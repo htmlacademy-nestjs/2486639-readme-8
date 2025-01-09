@@ -20,17 +20,17 @@ export interface FileStorageConfig {
 }
 
 const validationSchema = Joi.object({
-  environment: Joi.string().valid(...ENVIRONMENTS).required(),
+  environment: Joi.string().valid(...ENVIRONMENTS).required().label(ConfigAlias.NodeEnv),
   port: Joi.number().port().default(DEFAULT_PORT),
-  uploadDirectoryPath: Joi.string().required(),
-  serveRoot: Joi.string().required(),
+  uploadDirectoryPath: Joi.string().required().label(ConfigAlias.UploadDirectoryEnv),
+  serveRoot: Joi.string().required().label(ConfigAlias.ServeRootEnv),
   mongoDb: Joi.object({
-    host: Joi.string().valid().hostname(),
+    host: Joi.string().valid().hostname().required().label(ConfigAlias.MongoDbHostEnv),
     port: Joi.number().port(),
-    user: Joi.string().required(),
-    password: Joi.string().required(),
-    database: Joi.string().required(),
-    authBase: Joi.string().required()
+    user: Joi.string().required().label(ConfigAlias.MongoDbUserEnv),
+    password: Joi.string().required().label(ConfigAlias.MongoDbPasswordEnv),
+    database: Joi.string().required().label(ConfigAlias.MongoDbDatabaseEnv),
+    authBase: Joi.string().required().label(ConfigAlias.MongoDbAuthBaseEnv)
   })
 });
 
@@ -46,8 +46,8 @@ function getConfig(): FileStorageConfig {
   const config: FileStorageConfig = {
     environment: process.env[ConfigAlias.NodeEnv] as Environment,
     port: getPort(ConfigAlias.PortEnv, DEFAULT_PORT),
-    uploadDirectoryPath: process.env.UPLOAD_DIRECTORY_PATH,
-    serveRoot: process.env.SERVE_ROOT,
+    uploadDirectoryPath: process.env[ConfigAlias.UploadDirectoryEnv],
+    serveRoot: process.env[ConfigAlias.ServeRootEnv],
     mongoDb: {
       host: process.env[ConfigAlias.MongoDbHostEnv],
       port: getPort(ConfigAlias.MongoDbPortEnv, DEFAULT_MONGODB_PORT),

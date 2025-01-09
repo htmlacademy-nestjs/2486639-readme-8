@@ -36,30 +36,30 @@ export interface NotifyConfig {
 }
 
 const validationSchema = Joi.object({
-  environment: Joi.string().valid(...ENVIRONMENTS).required(),
+  environment: Joi.string().valid(...ENVIRONMENTS).required().label(ConfigAlias.NodeEnv),
   port: Joi.number().port().default(DEFAULT_PORT),
   mongoDb: Joi.object({
-    host: Joi.string().valid().hostname(),
+    host: Joi.string().valid().hostname().required().label(ConfigAlias.MongoDbHostEnv),
     port: Joi.number().port().default(DEFAULT_MONGODB_PORT),
-    user: Joi.string().required(),
-    password: Joi.string().required(),
-    database: Joi.string().required(),
-    authBase: Joi.string().required()
+    user: Joi.string().required().label(ConfigAlias.MongoDbPortEnv),
+    password: Joi.string().required().label(ConfigAlias.MongoDbPasswordEnv),
+    database: Joi.string().required().label(ConfigAlias.MongoDbDatabaseEnv),
+    authBase: Joi.string().required().label(ConfigAlias.MongoDbAuthBaseEnv)
   }),
   rabbit: Joi.object({
-    host: Joi.string().valid().hostname().required(),
+    host: Joi.string().valid().hostname().required().label(ConfigAlias.RabbitHostEnv),
     port: Joi.number().port().default(DEFAULT_RABBIT_PORT),
-    user: Joi.string().required(),
-    password: Joi.string().required(),
-    exchange: Joi.string().required(),
-    queue: Joi.string().required()
+    user: Joi.string().required().label(ConfigAlias.RabbitUserEnv),
+    password: Joi.string().required().label(ConfigAlias.RabbitPasswordEnv),
+    exchange: Joi.string().required().label(ConfigAlias.RabbitExchangeEnv),
+    queue: Joi.string().required().label(ConfigAlias.RabbitQueueEnv)
   }),
   mailSmtp: Joi.object({
-    host: Joi.string().valid().hostname().required(),
+    host: Joi.string().valid().hostname().required().label(ConfigAlias.MailSmtpHostEnv),
     port: Joi.number().port().default(DEFAULT_SMTP_PORT),
-    user: Joi.string().required(),
-    password: Joi.string().required(),
-    from: Joi.string().required()
+    user: Joi.string().required().label(ConfigAlias.MailSmtpUserEnv),
+    password: Joi.string().required().label(ConfigAlias.MailSmtpPasswordEnv),
+    from: Joi.string().required().label(ConfigAlias.MailSmtpFromEnv)
   })
 });
 

@@ -60,13 +60,9 @@
   6. всем свойствам в Entity.populate нужно  "?? undefined;"
   7. сам добавил "entity.id = document.id; //! временно" в BaseMongoRepository, для created.user.rdo - будет в коммитах про API-Gate
   8. .env
-        нормальная проверка на файл .env
-          [Account JWTConfig Validation Error]: "accessTokenSecret" is required  / accessTokenSecret: Joi.string().required(),
-          !!!!  .required().message('1222222222222222222222222')
-          !ошибка - Error: Cannot apply rules to empty ruleset or the last rule added does not support rule properties
-        сделавть чтоб писал "не указан JWT_ACCESS_TOKEN_SECRET!"
-          для всех параметров
+        а можно заставить Joi вывести сразу все ошибки валидации, сейчас на первой ошибке прекращает валидацию...
         вынести/обеденить конфигурации в один модуль
+        account-config сделать в один как  у всех
   9. entity.id = undefined; //! пустая строка из базового класса и id не гененируется
         А в тегах вызывается конструктор с минимальным объектом и при вызове populate записывает в _id undefined
   10. куда делся первый "@Inject(*.KEY)"?

@@ -9,8 +9,8 @@ export interface JWTConfig {
 }
 
 const validationSchema = Joi.object({
-  accessTokenSecret: Joi.string().required(),
-  accessTokenExpiresIn: Joi.string().required(),
+  accessTokenSecret: Joi.string().required().label(ConfigAlias.JwtAccessTokenSecretEnv),
+  accessTokenExpiresIn: Joi.string().required().label(ConfigAlias.JwtAccessTokenExpiresInEnv)
 });
 
 function validateConfig(config: JWTConfig): void {

@@ -14,12 +14,12 @@ export interface RabbitConfig {
 }
 
 const validationSchema = Joi.object({
-  host: Joi.string().valid().hostname().required(),
+  host: Joi.string().valid().hostname().required().label(ConfigAlias.RabbitHostEnv),
   port: Joi.number().port().default(DEFAULT_RABBIT_PORT),
-  user: Joi.string().required(),
-  password: Joi.string().required(),
-  exchange: Joi.string().required(),
-  queue: Joi.string().required()
+  user: Joi.string().required().label(ConfigAlias.RabbitUserEnv),
+  password: Joi.string().required().label(ConfigAlias.RabbitPasswordEnv),
+  exchange: Joi.string().required().label(ConfigAlias.RabbitExchangeEnv),
+  queue: Joi.string().required().label(ConfigAlias.RabbitQueueEnv)
 });
 
 function validateConfig(config: RabbitConfig): void {

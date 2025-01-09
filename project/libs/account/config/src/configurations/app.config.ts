@@ -11,7 +11,7 @@ export interface ApplicationConfig {
 
 const validationSchema =
   Joi.object({
-    environment: Joi.string().valid(...ENVIRONMENTS).required(),
+    environment: Joi.string().valid(...ENVIRONMENTS).required().label(ConfigAlias.NodeEnv),
     port: Joi.number().port().default(DEFAULT_PORT),
   });
 

@@ -5,6 +5,7 @@ import { ConfigAlias, DEFAULT_MONGODB_PORT } from '@project/shared/core';
 import { getPort } from '@project/shared/helpers';
 
 import { MongoDbConfiguration } from './mongodb/mongo-db.env';
+import { ValidationError } from 'class-validator';
 
 export interface MongoDbConfig {
   host: string;
@@ -25,7 +26,21 @@ async function getMongoDbConfig(): Promise<MongoDbConfiguration> {
     authBase: process.env[ConfigAlias.MongoDbAuthBaseEnv]
   });
 
-  await config.validate();
+  console.log(config);
+
+  try {
+    await config.validate();
+
+  } catch (error) {
+    // не было ошибки с полной валидацией, просто undefined
+    if (!error.length) {
+      throw new Error(error);
+    }
+
+    const validateErrors = error.map((item: ValidationError) => (item.constraints.isString));
+
+    throw new Error(validateErrors.join(', '));
+  }
 
   return config;
 }
