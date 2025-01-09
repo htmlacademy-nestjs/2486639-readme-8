@@ -40,9 +40,14 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
   }
 
   public async exists(id: string): Promise<boolean> {
-    const record = await this.client.post.findFirst({ select: { id: true }, where: { id } });
+    const record = await this.client.post.findFirst({
+      select: { id: true },
+      where: { id }
+    });
+    //! проверить
+    console.log(record);
 
-    return record != null;
+    return record !== null;
   }
 
   public async findById(id: string): Promise<BlogPostEntity> {

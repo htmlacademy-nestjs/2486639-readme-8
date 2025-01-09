@@ -27,6 +27,17 @@ export class BlogPostCommentRepository extends BasePostgresRepository<BlogPostCo
     return Math.ceil(totalCount / limit);
   }
 
+  public async exsistComment(postId: string, userId: string): Promise<boolean> {
+    const record = await this.client.comment.findFirst({
+      select: { id: true },
+      where: { postId, userId }
+    });
+    //! проверить
+    console.log(record);
+
+    return record !== null;
+  }
+
   public async findByPostId(postId: string, query: BlogPostCommentQuery): Promise<PaginationResult<BlogPostCommentEntity>> {
     const currentPage = query.page;
     const take = Default.COMMENT_COUNT;
@@ -55,7 +66,6 @@ export class BlogPostCommentRepository extends BasePostgresRepository<BlogPostCo
   }
 
   public async save(entity: BlogPostCommentEntity): Promise<void> {
-    //! добавить проверку что есть коммент
     const record = await this.client.comment.create({
       data: { ...entity.toPOJO() }
     });
@@ -64,16 +74,6 @@ export class BlogPostCommentRepository extends BasePostgresRepository<BlogPostCo
   }
 
   public async delete(postId: string, userId: string): Promise<void> {
-    const comment = await this.client.comment.findFirst({
-      where: { postId, userId }
-    });
-
-    //! добавить проверку что есть коммент
-    if (!comment) {
-      throw new NotFoundException(`Your comment for post not found. postId: ${postId}`);
-      //! а еще возможно, что автор только что удалил пост
-    }
-
-    await this.client.comment.delete({ where: { id: comment.id } })
+    await this.client.comment.deleteMany({ where: { postId, userId } })
   }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 
 import { PaginationResult } from '@project/shared/core';
 import { BlogPostService } from '@project/blog/blog-post';
@@ -7,6 +7,7 @@ import { BlogPostCommentEntity } from './blog-post-comment.entity';
 import { BlogPostCommentRepository } from './blog-post-comment.repository';
 import { BlogPostCommentQuery } from './blog-post-comment.query';
 import { CreatePostCommentDto } from './dto/create-post-comment.dto';
+import { BlogPostCommentMessage } from './blog-post-comment.constant';
 
 @Injectable()
 export class BlogPostCommentService {
@@ -26,6 +27,12 @@ export class BlogPostCommentService {
   public async createComment(dto: CreatePostCommentDto, postId: string, userId: string): Promise<BlogPostCommentEntity> {
     await this.blogPostSevice.existsPost(postId);
 
+    const exsitsComment = await this.blogPostCommentRepository.exsistComment(postId, userId);
+
+    if (exsitsComment) {
+      throw new ConflictException(BlogPostCommentMessage.CommentExist);
+    }
+
     const { message } = dto;
     const commentEntity = new BlogPostCommentEntity({ message, postId, userId });
 
@@ -37,6 +44,13 @@ export class BlogPostCommentService {
 
   public async deleteComment(postId: string, userId: string) {
     await this.blogPostSevice.existsPost(postId);
+
+    const exsitsComment = await this.blogPostCommentRepository.exsistComment(postId, userId);
+
+    if (!exsitsComment) {
+      throw new NotFoundException(BlogPostCommentMessage.CommentNotFound);
+    }
+
     await this.blogPostCommentRepository.delete(postId, userId);
     await this.blogPostSevice.decrementCommentsCount(postId);
   }
