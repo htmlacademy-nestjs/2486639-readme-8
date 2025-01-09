@@ -50,36 +50,34 @@
             если пост изменили и статус - черновик, коментировать можно, что то в ТЗ написано?
       1.2.12. моя лента
       1.2.13. в ТЗ не указана сортировка комментариев, видимо как добавлены, посомтреть как возвращает БД и если что добавить orderBy.createdAt = desc
-  2. задействовать настройки подключения к postgres из project/apps/blog/.env
-    сейчас подключение из project/libs/blog/models/prisma/.env  ? или тут для работы prisma-cli и seed.ts ?
-    после выполенения generate DATABASE_URL из project/libs/blog/models/prisma/.env закидывается значением по умолчанию, можно переопределить...
-    POSTGRES_HOST и POSTGRES_PORT
-    А может и сам prisma/.env слинковать с blog/.env?
-  3. под windows не водит имя для миграции db:migrate, выполнил отдельно всю команду из нужного каталога
-  4. заполнить данные в mongodb, и в разных сервисах
-  5. удалить BaseMemoryRepository если не будет использоватся?
-  6. всем свойствам в Entity.populate нужно  "?? undefined;"
-  7. сам добавил "entity.id = document.id; //! временно" в BaseMongoRepository, для created.user.rdo - будет в коммитах про API-Gate
-  8. .env
+  2. под windows не водит имя для миграции db:migrate, выполнил отдельно всю команду из нужного каталога
+  3. заполнить данные в mongodb, и в разных сервисах
+  4. удалить BaseMemoryRepository если не будет использоватся?
+  5. всем свойствам в Entity.populate нужно  "?? undefined;"
+  6. сам добавил "entity.id = document.id; //! временно" в BaseMongoRepository, для created.user.rdo - будет в коммитах про API-Gate
+  7. .env
         а можно заставить Joi вывести сразу все ошибки валидации, сейчас на первой ошибке прекращает валидацию...
         вынести/обеденить конфигурации в один модуль
         account-config сделать в один как  у всех
-  9. entity.id = undefined; //! пустая строка из базового класса и id не гененируется
+        Для blog сделать конфиг
+          project\apps\...\.env - nx или node добавляет в process.env при запуске?
+          envFilePath: ENV_FILE_PATH - загружает ConfigModule?
+  8. entity.id = undefined; //! пустая строка из базового класса и id не гененируется
         А в тегах вызывается конструктор с минимальным объектом и при вызове populate записывает в _id undefined
-  10. куда делся первый "@Inject(*.KEY)"?
-  11. что такое FileSchema.virtul('id').get( ?  может сделать как BlogUserModel?
+  9. куда делся первый "@Inject(*.KEY)"?
+  10. что такое FileSchema.virtul('id').get( ?  может сделать как BlogUserModel?
         отключил это пока, отрабатывает - entity.id = document.id;
         и при сохраннении даты пустые
-  12. а как забрать через config module?
+  11. а как забрать через config module?
         @RabbitSubscribe({
           exchange: process.env[ConfigAlias.AppRabbitExchange], //! 'readme.notify', а как забрать через config module?
           routingKey: RabbitRouting.AddSubscriber,
           queue: process.env[ConfigAlias.AppRabbitQueue] //! 'readme.notify.income', а как забрать через config module?
         })
-  13. двойной импорт модулей и в основном модуле и в подмодулях, а можно только в одном?
+  12. двойной импорт модулей и в основном модуле и в подмодулях, а можно только в одном?
         BlogUserModule
         MailModule
-  14. Entity и Service, dto, rdo, Ropositary, Factory
+  13. Entity и Service, dto, rdo, Ropositary, Factory
         переделать:
           const blogTagFactory = new BlogTagFactory();
           может просто new BlogPostEntity, как ниже написано this.repostedPost = new BlogPostEntity(post.repostedPost);
