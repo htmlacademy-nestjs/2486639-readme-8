@@ -185,4 +185,22 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
       totalItems: postCount
     }
   }
+
+  public async updateCommentsCount(id: string, step: number): Promise<void> {
+    const { commentsCount } = await this.client.post.findFirst({ select: { commentsCount: true }, where: { id } });
+
+    await this.client.post.update({
+      where: { id },
+      data: { commentsCount: commentsCount + step }
+    });
+  }
+
+  public async updateLikesCount(id: string, step: number): Promise<void> {
+    const { likesCount } = await this.client.post.findFirst({ select: { likesCount: true }, where: { id } });
+
+    await this.client.post.update({
+      where: { id },
+      data: { likesCount: likesCount + step }
+    });
+  }
 }

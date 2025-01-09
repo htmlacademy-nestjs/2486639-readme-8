@@ -163,4 +163,20 @@ export class BlogPostService {
     this.allowModifyPost(existsPost.userId, userId);
     await this.blogPostRepository.deleteById(id);
   }
+
+  public async incrementCommentsCount(id: string): Promise<void> {
+    await this.blogPostRepository.updateCommentsCount(id, 1);
+  }
+
+  public async decrementCommentsCount(id: string): Promise<void> {
+    await this.blogPostRepository.updateCommentsCount(id, -1);
+  }
+
+  public async incrementLikesCount(id: string): Promise<void> {
+    await this.blogPostRepository.updateLikesCount(id, 1);
+  }
+
+  public async decrementLikesCount(id: string): Promise<void> {
+    await this.blogPostRepository.updateLikesCount(id, -1);
+  }
 }
