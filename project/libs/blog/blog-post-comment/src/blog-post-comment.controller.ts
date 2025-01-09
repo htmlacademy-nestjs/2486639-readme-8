@@ -24,7 +24,6 @@ export class BlogPostCommentController {
   @ApiParam(PostIdApiParam)
   @Get(POST_ID_PARAM)
   public async index(@Param(PostIdApiParam.name, GuidValidationPipe) postId: string, @Query() query: BlogPostCommentQuery) {
-    //! нужно проверить существование поста из параметров, пока временная проверка в репозитарии
     const postCommentsWithPagination = await this.blogPostCommentService.getComments(postId, query);
     const result = {
       ...postCommentsWithPagination,

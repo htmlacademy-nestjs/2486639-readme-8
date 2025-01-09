@@ -12,7 +12,9 @@ export class MailService {
   @Inject(notifyConfig.KEY)
   private readonly notifyConfig: ConfigType<typeof notifyConfig>
 
-  constructor(private readonly mailerService: MailerService) { }
+  constructor(
+    private readonly mailerService: MailerService
+  ) { }
 
   public async sendNotifyNewSubscriber(subscriber: Subscriber, template: string = DEFAULT_ADD_SUBCRIBER_TEMPLATE) {
     await this.mailerService.sendMail({

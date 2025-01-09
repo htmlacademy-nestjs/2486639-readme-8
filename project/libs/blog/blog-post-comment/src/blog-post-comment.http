@@ -1,5 +1,5 @@
 # Create a new comment for postId
-POST http://localhost:4100/api/post-comments/6dcd63b0-0caa-4566-ba21-86accb338e1b HTTP/1.1
+POST http://localhost:4100/api/post-comments/0ea047a7-6a12-4778-8972-f62bdaf72a60 HTTP/1.1
 Content-Type: application/json
 
 {
@@ -9,7 +9,7 @@ Content-Type: application/json
 ###
 
 # Get comments by postId
-GET http://localhost:4100/api/post-comments/6dcd63b0-0caa-4566-ba21-86accb338e1b HTTP/1.1
+GET http://localhost:4100/api/post-comments/0ea047a7-6a12-4778-8972-f62bdaf72a60 HTTP/1.1
 
 ###
 

@@ -1,15 +1,14 @@
-import { BadRequestException, ConflictException, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 
 import { PrismaClientService } from '@project/blog/models';
 import { BasePostgresRepository } from '@project/shared/data-access';
 import { Comment, PaginationResult } from '@project/shared/core';
-import { getMetaError } from '@project/shared/helpers';
 
 import { BlogPostCommentEntity } from './blog-post-comment.entity';
 import { BlogPostCommentFactory } from './blog-post-comment.factory';
 import { BlogPostCommentQuery } from './blog-post-comment.query';
-import { BlogPostCommentMessage, Default } from './blog-post-comment.constant';
-import { Prisma } from '@prisma/client';
+import { Default } from './blog-post-comment.constant';
 
 @Injectable()
 export class BlogPostCommentRepository extends BasePostgresRepository<BlogPostCommentEntity, Comment> {
@@ -56,33 +55,12 @@ export class BlogPostCommentRepository extends BasePostgresRepository<BlogPostCo
   }
 
   public async save(entity: BlogPostCommentEntity): Promise<void> {
-    try {
-      const record = await this.client.comment.create({
-        data: { ...entity.toPOJO() }
-      });
+    //! добавить проверку что есть коммент
+    const record = await this.client.comment.create({
+      data: { ...entity.toPOJO() }
+    });
 
-      entity.id = record.id;
-    } catch (error) {
-      //! как правильно обработать? где взять описание ключей, индексов и т.д.
-      const { code, message, fieldName } = getMetaError(error);
-
-      //! при ошибке, что нет поста { modelName: 'Comment', field_name: 'comments_post_id_fkey (index)' }
-      if (fieldName === 'comments_post_id_fkey (index)') {
-        throw new NotFoundException(`${BlogPostCommentMessage.PostNotFound} postId: ${entity.postId}`);
-      }
-
-      //! при ошибке, что пользователь уже комментировал этот пост
-      //Unique constraint failed on the (not available)
-      //code: 'P2002',
-      //meta: { modelName: 'Comment', target: null }
-      if ((code === 'P2002') && (message.indexOf('Unique constraint failed on the (not available)'))) {
-        throw new ConflictException(`${BlogPostCommentMessage.CommentExist} postId: ${entity.postId}`);
-      }
-
-      Logger.log(`Error in BlogPostCommentRepository.save postId: ${entity.postId}, userId: ${entity.userId}`);
-      Logger.log(error);
-      throw new BadRequestException('Bad request');
-    }
+    entity.id = record.id;
   }
 
   public async delete(postId: string, userId: string): Promise<void> {
@@ -90,6 +68,7 @@ export class BlogPostCommentRepository extends BasePostgresRepository<BlogPostCo
       where: { postId, userId }
     });
 
+    //! добавить проверку что есть коммент
     if (!comment) {
       throw new NotFoundException(`Your comment for post not found. postId: ${postId}`);
       //! а еще возможно, что автор только что удалил пост
