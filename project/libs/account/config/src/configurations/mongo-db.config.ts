@@ -26,8 +26,6 @@ async function getMongoDbConfig(): Promise<MongoDbConfiguration> {
     authBase: process.env[ConfigAlias.MongoDbAuthBaseEnv]
   });
 
-  console.log(config);
-
   try {
     await config.validate();
   } catch (error) {

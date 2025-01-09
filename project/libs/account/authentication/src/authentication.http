@@ -12,8 +12,7 @@ Content-Type: application/json
 ###
 
 # Get user by ID
-GET http://localhost:4000/api/auth/6770b0648ce6df57a766948e HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzcwYjA2NDhjZTZkZjU3YTc2Njk0OGUiLCJlbWFpbCI6InVzZXJAbG9jYWwubG9jYWwiLCJuYW1lIjoiS2VrcyIsImlhdCI6MTczNTU3NjE2MywiZXhwIjoxNzM1NTc2NDYzfQ.SAgL2uYZWV141xsjpnH87ddJNt665BiYSw5mcm-zDO4
+GET http://localhost:4000/api/auth/677e5f315c8166b2ea7f7015 HTTP/1.1
 
 ###
 

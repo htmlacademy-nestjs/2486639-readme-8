@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { fillDto } from '@project/shared/helpers';
@@ -10,7 +10,6 @@ import { LoginUserDto } from './dto/login-user.dto';
 import { LoggedUserRdo } from './rdo/logged-user.rdo';
 import { UserRdo } from './rdo/user.rdo';
 import { UserIdApiParam, AuthenticationApiResponse } from './authentication.constant';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @ApiTags('authentication')
 @Controller('auth')
@@ -19,13 +18,11 @@ export class AuthenticationController {
     private readonly authService: AuthenticationService
   ) { }
 
-  //!@UseGuards(JwtAuthGuard)
   @ApiResponse(AuthenticationApiResponse.UserCreated)
   @ApiResponse(AuthenticationApiResponse.UserExist)
   @ApiResponse(AuthenticationApiResponse.NotAllow)
   @Post('register')
   public async create(@Body() dto: CreateUserDto) {
-    //! проверить, что разлогиннен  @UseGuards(JwtAuthGuard) ? как достать sub
     const newUser = await this.authService.registerUser(dto);
 
     return fillDto(UserRdo, newUser.toPOJO());
@@ -41,7 +38,6 @@ export class AuthenticationController {
     return fillDto(LoggedUserRdo, { ...verifiedUser.toPOJO(), ...userToken });
   }
 
-  @UseGuards(JwtAuthGuard) //! на время
   @ApiResponse(AuthenticationApiResponse.UserFound)
   @ApiResponse(AuthenticationApiResponse.UserNotFound)
   @ApiParam(UserIdApiParam)
