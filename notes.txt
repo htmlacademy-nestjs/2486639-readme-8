@@ -23,8 +23,7 @@
               перед вставкой вызвать поиск? через BlogPostService или BlogPostRepository
                 а что правильней использовать Service или Repository
               обработать try.... Foreign key constraint failed on the field: `comments_post_id_fkey (index)`
-      1.2.2 будем валидировать postId? как для userId MongoIdValidationPipe, а для GUID? - проверить guid! А в сервисе exist
-              GUID - const regexGuud = new RegExp(/^[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?$/);
+      1.2.2 проверка существования поста на сервис и вызавать перед созданием - exist
               в комментариях и постах
               и наличии самого объекта как прошлом курсе - exist...
       1.2.3. для поста с типом фото, как загружать картинку, после добавления или сразу?

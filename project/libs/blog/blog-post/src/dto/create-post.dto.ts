@@ -20,7 +20,7 @@ export class CreatePostDto {
   @IsArray()
   @ArrayMaxSize(PostValidation.Tags.MaxCount)
   @IsString({ each: true })
-  @Matches(PostValidation.Tags.TagRegExp, { each: true })
+  @Matches(PostValidation.Tags.TagRegexp, { each: true })
   @MinLength(PostValidation.Tags.TagMinLength, { each: true })
   @MaxLength(PostValidation.Tags.TagMaxLength, { each: true })
   public tags?: string[];

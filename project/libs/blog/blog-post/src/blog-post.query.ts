@@ -33,7 +33,7 @@ export class BlogPostQuery {
 
   @ApiProperty(PostQueryApiProperty.Tag)
   @IsString()
-  @Matches(PostValidation.Tags.TagRegExp)
+  @Matches(PostValidation.Tags.TagRegexp)
   @MinLength(PostValidation.Tags.TagMinLength)
   @MaxLength(PostValidation.Tags.TagMaxLength)
   @IsOptional()

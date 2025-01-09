@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestj
 import { ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { fillDto } from '@project/shared/helpers';
+import { GuidValidationPipe } from '@project/shared/pipes';
 
 import { BlogPostService } from './blog-post.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -37,8 +38,7 @@ export class BlogPostController {
   @ApiResponse(BlogPostApiResponse.PostNotFound)
   @ApiParam(PostIdApiParam)
   @Get(`:${PostIdApiParam.name}`)
-  public async show(@Param(PostIdApiParam.name) postId: string) {
-    //! нужно провалидировать корректроность postId на guid
+  public async show(@Param(PostIdApiParam.name, GuidValidationPipe) postId: string) {
     //! нужно проверить существование поста из параметров
     const existPost = await this.blogPostService.getPost(postId);
 
@@ -51,7 +51,6 @@ export class BlogPostController {
   @ApiBody({ description: blogPostApiBodyDescription, type: CreatePostDto })
   @Post()
   public async create(@Body() dto: CreatePostDto) {
-    //! нужно провалидировать корректроность postId на guid
     //! нужно проверить существование поста из параметров
     //! нужно проверить авторизацию
     const userId = '11223344';
@@ -66,8 +65,7 @@ export class BlogPostController {
   @ApiResponse(BlogPostApiResponse.NotAllow)
   @ApiParam(PostIdApiParam)
   @Patch(`:${PostIdApiParam.name}`)
-  public async update(@Param(PostIdApiParam.name) postId: string, @Body() dto: UpdatePostDto) {
-    //! нужно провалидировать корректроность postId на guid
+  public async update(@Param(PostIdApiParam.name, GuidValidationPipe) postId: string, @Body() dto: UpdatePostDto) {
     //! нужно проверить существование поста из параметров - в сервисе есть запрос на получение поста
     //! нужно проверить авторизацию
     //! нужно проверить, что пользователь это автор этого поста - сделал в сервисе
@@ -83,8 +81,7 @@ export class BlogPostController {
   @ApiResponse(BlogPostApiResponse.NotAllow)
   @ApiParam(PostIdApiParam)
   @Delete(`:${PostIdApiParam.name}`)
-  public async delete(@Param(PostIdApiParam.name) postId: string) {
-    //! нужно провалидировать корректроность postId на guid
+  public async delete(@Param(PostIdApiParam.name, GuidValidationPipe) postId: string) {
     //! нужно проверить существование поста из параметров- в сервисе есть запрос на получение поста, для получения автора
     //! нужно проверить авторизацию
     //! нужно проверить, что пользователь это автор этого поста - сделал в сервисе

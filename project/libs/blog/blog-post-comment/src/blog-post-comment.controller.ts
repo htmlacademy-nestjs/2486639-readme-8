@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, Param, Post, Query } from '@nestjs/commo
 import { ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { fillDto } from '@project/shared/helpers';
+import { GuidValidationPipe } from '@project/shared/pipes';
 
 import { POST_ID_PARAM, BlogPostCommentApiResponse, PostIdApiParam } from './blog-post-comment.constant';
 import { BlogPostCommentService } from './blog-post-comment.service';
@@ -22,8 +23,7 @@ export class BlogPostCommentController {
   @ApiResponse(BlogPostCommentApiResponse.PostNotFound)
   @ApiParam(PostIdApiParam)
   @Get(POST_ID_PARAM)
-  public async index(@Param(PostIdApiParam.name) postId: string, @Query() query: BlogPostCommentQuery) {
-    //! нужно провалидировать корректроность postId на guid
+  public async index(@Param(PostIdApiParam.name, GuidValidationPipe) postId: string, @Query() query: BlogPostCommentQuery) {
     //! нужно проверить существование поста из параметров, пока временная проверка в репозитарии
     const postCommentsWithPagination = await this.blogPostCommentService.getComments(postId, query);
     const result = {
@@ -41,8 +41,7 @@ export class BlogPostCommentController {
   @ApiResponse(BlogPostCommentApiResponse.CommentOnPostExist)
   @ApiParam(PostIdApiParam)
   @Post(POST_ID_PARAM)
-  public async create(@Param(PostIdApiParam.name) postId: string, @Body() dto: CreatePostCommentDto) {
-    //! нужно провалидировать корректроность postId на guid
+  public async create(@Param(PostIdApiParam.name, GuidValidationPipe) postId: string, @Body() dto: CreatePostCommentDto) {
     //! нужно проверить существование поста из параметров
     //! нужно проверить авторизацию
     const userId = '12321321321'; //! временно, необходимо определить пользователя
@@ -57,8 +56,7 @@ export class BlogPostCommentController {
   @ApiResponse(BlogPostCommentApiResponse.CommentNotFound)
   @ApiParam(PostIdApiParam)
   @Delete(POST_ID_PARAM)
-  public async delete(@Param(PostIdApiParam.name) postId: string) {
-    //! нужно провалидировать корректроность postId на guid
+  public async delete(@Param(PostIdApiParam.name, GuidValidationPipe) postId: string) {
     //! нужно проверить существование поста из параметров
     //! нужно проверить авторизацию
     const userId = '12321321321' //! временно
