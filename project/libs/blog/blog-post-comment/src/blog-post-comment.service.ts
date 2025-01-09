@@ -16,25 +16,25 @@ export class BlogPostCommentService {
     private readonly blogPostCommentRepository: BlogPostCommentRepository
   ) { }
 
-  public async getComments(postId: string, query: BlogPostCommentQuery): Promise<PaginationResult<BlogPostCommentEntity>> {
-    await this.blogPostSevice.existsPost(postId);
+  public async getComments(postId: string, currentUserId: string, query: BlogPostCommentQuery): Promise<PaginationResult<BlogPostCommentEntity>> {
+    await this.blogPostSevice.existsPost(postId, currentUserId);
 
     const commentEntities = await this.blogPostCommentRepository.findByPostId(postId, query);
 
     return commentEntities;
   }
 
-  public async createComment(dto: CreatePostCommentDto, postId: string, userId: string): Promise<BlogPostCommentEntity> {
-    await this.blogPostSevice.existsPost(postId);
+  public async createComment(dto: CreatePostCommentDto, postId: string, currentUserId: string): Promise<BlogPostCommentEntity> {
+    await this.blogPostSevice.existsPost(postId, currentUserId);
 
-    const foundCommentId = await this.blogPostCommentRepository.findId(postId, userId);
+    const foundCommentId = await this.blogPostCommentRepository.findCommentId(postId, currentUserId);
 
     if (foundCommentId) {
       throw new ConflictException(BlogPostCommentMessage.CommentExist);
     }
 
     const { message } = dto;
-    const commentEntity = new BlogPostCommentEntity({ message, postId, userId });
+    const commentEntity = new BlogPostCommentEntity({ message, postId, userId: currentUserId });
 
     await this.blogPostCommentRepository.save(commentEntity);
     await this.blogPostSevice.incrementCommentsCount(postId);
@@ -42,10 +42,10 @@ export class BlogPostCommentService {
     return commentEntity;
   }
 
-  public async deleteComment(postId: string, userId: string) {
-    await this.blogPostSevice.existsPost(postId);
+  public async deleteComment(postId: string, currentUserId: string) {
+    await this.blogPostSevice.existsPost(postId, currentUserId);
 
-    const foundCommentId = await this.blogPostCommentRepository.findId(postId, userId);
+    const foundCommentId = await this.blogPostCommentRepository.findCommentId(postId, currentUserId);
 
     if (!foundCommentId) {
       throw new NotFoundException(BlogPostCommentMessage.CommentNotFound);

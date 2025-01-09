@@ -1,6 +1,5 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { format } from 'util';
 
 import { PrismaClientService } from '@project/blog/models';
 import { BasePostgresRepository } from '@project/shared/data-access';
@@ -11,7 +10,7 @@ import { BlogTagService } from '@project/blog/blog-tag';
 import { BlogPostEntity } from './blog-post.entity';
 import { BlogPostFactory } from './blog-post.factory';
 import { BlogPostQuery } from './blog-post.query';
-import { BlogPostMessage, Default } from './blog-post.constant';
+import { Default } from './blog-post.constant';
 
 @Injectable()
 export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, Post> {
@@ -39,28 +38,14 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     return Math.ceil(totalCount / limit);
   }
 
-  public async exists(id: string): Promise<boolean> {
-    const record = await this.client.post.findFirst({
-      select: { id: true },
-      where: { id }
-    });
-
-    return record !== null;
-  }
-
-  public async findById(id: string): Promise<BlogPostEntity> {
-    const record = await this.client.post.findFirst(
-      {
-        where: { id },
-        include: {
-          tags: true,
-          repostedPost: true
-        }
-      }
-    );
+  public async findById(id: string, giveDetailInfo = true): Promise<BlogPostEntity> {
+    const include = (giveDetailInfo)
+      ? { tags: true, repostedPost: true }
+      : undefined;
+    const record = await this.client.post.findFirst({ where: { id }, include });
 
     if (!record) {
-      throw new NotFoundException(format(BlogPostMessage.NotFoundPostId, id));
+      return null;
     }
 
     const repostedPost: Post = (record.repostedPost)
@@ -73,6 +58,7 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
 
     const post: Post = {
       ...record,
+      tags: record.tags ?? [], // пусто без детальной информации
       ...this.getTypeAndState(record),
       repostedPost
     };

@@ -23,9 +23,8 @@ export class BlogPostController {
   @ApiResponse(BlogPostApiResponse.BadRequest)
   @Get('/')
   public async index(@Query() query: BlogPostQuery) {
-    query.showDraft = ((query.showDraft) && (query.userId) && (query.userId === '11223344'));//! пользователя можно определить, если требуются черновики
-
-    const postsWithPagination = await this.blogPostService.getAllPosts(query);
+    const currentUserId = '11223344';
+    const postsWithPagination = await this.blogPostService.getAllPosts(query, currentUserId);
     const result = {
       ...postsWithPagination,
       entities: postsWithPagination.entities.map((post) => post.toPOJO())
@@ -39,7 +38,8 @@ export class BlogPostController {
   @ApiParam(PostIdApiParam)
   @Get(`:${PostIdApiParam.name}`)
   public async show(@Param(PostIdApiParam.name, GuidValidationPipe) postId: string) {
-    const existPost = await this.blogPostService.getPost(postId);
+    const currentUserId = '11223344';
+    const existPost = await this.blogPostService.getPost(postId, currentUserId);
 
     return fillDto(DetailPostRdo, existPost.toPOJO());
   }
@@ -51,8 +51,8 @@ export class BlogPostController {
   @Post()
   public async create(@Body() dto: CreatePostDto) {
     //! нужно проверить авторизацию
-    const userId = '11223344';
-    const newPost = await this.blogPostService.createPost(dto, userId);
+    const currentUserId = '11223344';
+    const newPost = await this.blogPostService.createPost(dto, currentUserId);
 
     return fillDto(DetailPostRdo, newPost.toPOJO());
   }
@@ -65,8 +65,8 @@ export class BlogPostController {
   @Patch(`:${PostIdApiParam.name}`)
   public async update(@Param(PostIdApiParam.name, GuidValidationPipe) postId: string, @Body() dto: UpdatePostDto) {
     //! нужно проверить авторизацию
-    const userId = '11223344';
-    const updatedPost = await this.blogPostService.updatePost(postId, dto, userId);
+    const currentUserId = '11223344';
+    const updatedPost = await this.blogPostService.updatePost(postId, dto, currentUserId);
 
     return fillDto(DetailPostRdo, updatedPost.toPOJO());
   }
@@ -79,8 +79,8 @@ export class BlogPostController {
   @Delete(`:${PostIdApiParam.name}`)
   public async delete(@Param(PostIdApiParam.name, GuidValidationPipe) postId: string) {
     //! нужно проверить авторизацию
-    const userId = '11223344';
+    const currentUserId = '11223344';
 
-    await this.blogPostService.deletePost(postId, userId);
+    await this.blogPostService.deletePost(postId, currentUserId);
   }
 }

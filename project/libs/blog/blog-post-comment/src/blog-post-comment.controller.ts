@@ -24,7 +24,8 @@ export class BlogPostCommentController {
   @ApiParam(PostIdApiParam)
   @Get(POST_ID_PARAM)
   public async index(@Param(PostIdApiParam.name, GuidValidationPipe) postId: string, @Query() query: BlogPostCommentQuery) {
-    const postCommentsWithPagination = await this.blogPostCommentService.getComments(postId, query);
+    const currentUserId = '11223344';
+    const postCommentsWithPagination = await this.blogPostCommentService.getComments(postId, currentUserId, query);
     const result = {
       ...postCommentsWithPagination,
       entities: postCommentsWithPagination.entities.map((comment) => comment.toPOJO())
@@ -43,8 +44,8 @@ export class BlogPostCommentController {
   public async create(@Param(PostIdApiParam.name, GuidValidationPipe) postId: string, @Body() dto: CreatePostCommentDto) {
     //! нужно проверить существование поста из параметров
     //! нужно проверить авторизацию
-    const userId = '12321321321'; //! временно, необходимо определить пользователя
-    const newComment = await this.blogPostCommentService.createComment(dto, postId, userId);
+    const currentUserId = '11223344'; //! временно, необходимо определить пользователя
+    const newComment = await this.blogPostCommentService.createComment(dto, postId, currentUserId);
 
     return fillDto(PostCommentRdo, newComment.toPOJO());
   }
@@ -58,8 +59,8 @@ export class BlogPostCommentController {
   public async delete(@Param(PostIdApiParam.name, GuidValidationPipe) postId: string) {
     //! нужно проверить существование поста из параметров
     //! нужно проверить авторизацию
-    const userId = '12321321321' //! временно
+    const currentUserId = '11223344' //! временно
 
-    await this.blogPostCommentService.deleteComment(postId, userId);
+    await this.blogPostCommentService.deleteComment(postId, currentUserId);
   }
 }

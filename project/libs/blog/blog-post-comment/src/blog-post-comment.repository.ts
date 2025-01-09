@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 
 import { PrismaClientService } from '@project/blog/models';
@@ -27,7 +27,7 @@ export class BlogPostCommentRepository extends BasePostgresRepository<BlogPostCo
     return Math.ceil(totalCount / limit);
   }
 
-  public async findId(postId: string, userId: string): Promise<string> {
+  public async findCommentId(postId: string, userId: string): Promise<string> {
     const record = await this.client.comment.findFirst({
       select: { id: true },
       where: { postId, userId }
