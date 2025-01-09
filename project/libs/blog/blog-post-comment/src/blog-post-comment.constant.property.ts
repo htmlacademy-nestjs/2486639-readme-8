@@ -1,6 +1,6 @@
 export const PostCommentApiProperty = {
   PostId: {
-    description: 'The uniq post ID',
+    description: 'The unique post ID',
     example: '2f31b19b-97eb-4305-877a-0b9be7faca8f'
   },
   Message: {
@@ -8,7 +8,7 @@ export const PostCommentApiProperty = {
     example: 'Comment message, comment message'
   },
   UserId: {
-    description: 'The uniq user ID',
+    description: 'The unique user ID',
     example: '658170cbb954e9f5b905ccf4'
   },
   CreatedAt: {

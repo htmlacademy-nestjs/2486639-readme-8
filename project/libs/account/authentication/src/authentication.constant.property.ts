@@ -1,11 +1,11 @@
 // дополнительный файл с константами, т.к. были ошибки при сборке webpack, ругался AuthenticationApiProperty.User....  User not found
 export const UserApiProperty = {
   Id: {
-    description: 'The uniq user ID',
+    description: 'The unique user ID',
     example: '658170cbb954e9f5b905ccf4'
   },
   Email: {
-    description: 'The uniq user email',
+    description: 'The unique user email',
     example: 'user@local.ru'
   },
   Name: {

@@ -1,6 +1,6 @@
 export const FileApiProperty = {
   Id: {
-    description: 'The uniq file ID',
+    description: 'The unique file ID',
     example: '658170cbb954e9f5b905ccf4'
   },
   OriginalName: {

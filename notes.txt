@@ -21,6 +21,7 @@
                 а что правильней использовать Service или Repository
               обработать try.... Foreign key constraint failed on the field: `comments_post_id_fkey (index)`
       1.2.3 будем валидировать postId? как для userId MongoIdValidationPipe, а для GUID? - проверить guid! А в сервисе exist
+              GUID - const regexGuud = new RegExp(/^[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?$/);
               в комментариях и постах
               и наличии самого объекта как прошлом курсе - exist...
       1.2.4. для поста с типом фото, как загружать картинку, после добавления или сразу?
@@ -79,6 +80,16 @@
         BlogUserModule
         MailModule
   14. Entity и Service, dto, rdo, Ropositary, Factory
+        переделать:
+          const blogTagFactory = new BlogTagFactory();
+          может просто new BlogPostEntity, как ниже написано this.repostedPost = new BlogPostEntity(post.repostedPost);
+        'Repository.save(' почти всегда сервис делает entity:
+          const commentEntity = new BlogPostCommentEntity({ message, postId, userId });
+          await this.blogPostCommentRepository.save(commentEntity);
+          return commentEntity;
+          ->
+          return await this.blogPostCommentRepository.save({ message, postId, userId });
+        ? может контроллен должен не знать об Entity?
 
 
 Заметки:
