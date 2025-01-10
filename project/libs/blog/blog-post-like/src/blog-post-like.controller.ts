@@ -36,7 +36,6 @@ export class BlogPostLikeController {
   public async delete(@Param(PostIdApiParam.name, GuidValidationPipe) postId: string) {
     // необходимо определить пользователя
     const currentUserId = '11223344'
-
     await this.blogPostLikeService.unlike(postId, currentUserId);
   }
 }

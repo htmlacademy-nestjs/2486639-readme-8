@@ -1,0 +1,9 @@
+# Like for post
+POST http://localhost:4100/api/subscriptions/658170cbb954e9f5b905ccf4 HTTP/1.1
+
+###
+
+# Unlike for post
+DELETE http://localhost:4100/api/subscriptions/658170cbb954e9f5b905ccf4 HTTP/1.1
+
+###
