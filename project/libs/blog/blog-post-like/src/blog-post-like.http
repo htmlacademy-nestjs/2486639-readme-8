@@ -1,0 +1,9 @@
+# Like for post
+POST http://localhost:4100/api/post-likes/eab06dc6-ba52-4169-a369-f2f825d44ebb HTTP/1.1
+
+###
+
+# Unlike for post
+DELETE http://localhost:4100/api/post-likes/eab06dc6-ba52-4169-a369-f2f825d44ebb HTTP/1.1
+
+###
