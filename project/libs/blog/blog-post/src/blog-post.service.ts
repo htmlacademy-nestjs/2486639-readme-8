@@ -27,28 +27,40 @@ export class BlogPostService {
     }
   }
 
+  private isPublishedPost(post: BlogPostEntity): boolean {
+    return post.state === PostState.Published;
+  }
+
   private checkAuthorization(currentUserId: string) {
     if (!currentUserId) {
       throw new UnauthorizedException(BlogPostApiResponse.Unauthorized);
     }
   }
 
-  private allowModifyPost(post: BlogPostEntity, currentUserId: string) {
+  private canChangePost(post: BlogPostEntity, currentUserId: string) {
     if (post.userId !== currentUserId) {
       throw new ForbiddenException(BlogPostMessage.NotAllow);
     }
   }
 
-  public allowViewPost(post: BlogPostEntity, currentUserId: string) {
-    if (post.userId !== currentUserId) {
-      this.allowCommentAndLikePost(post);
+  private throwIfPostNotPublished(post: BlogPostEntity) {
+    if (!this.isPublishedPost(post)) {
+      throw new NotFoundException(BlogPostMessage.NotFound);
     }
   }
 
-  public allowCommentAndLikePost(post: BlogPostEntity) {
-    if (post.state !== PostState.Published) {
-      throw new NotFoundException(BlogPostMessage.NotFound);
+  public canViewPost(post: BlogPostEntity, currentUserId: string) {
+    if (post.userId !== currentUserId) {
+      this.throwIfPostNotPublished(post);
     }
+  }
+
+  public canCommentPost(post: BlogPostEntity) {
+    this.throwIfPostNotPublished(post);
+  }
+
+  public canLikePost(post: BlogPostEntity) {
+    this.throwIfPostNotPublished(post);
   }
 
   public async findById(postId: string) {
@@ -67,7 +79,7 @@ export class BlogPostService {
   public async getPost(postId: string, currentUserId: string) {
     const post = await this.blogPostRepository.findById(postId, true);
     // проверяем кто просмтаривает... автор или нет? опубликованные доступны всем, черновики только автору
-    this.allowViewPost(post, currentUserId);
+    this.canViewPost(post, currentUserId);
 
     return post;
   }
@@ -90,7 +102,7 @@ export class BlogPostService {
 
     const existsPost = await this.blogPostRepository.findById(postId, true);
 
-    this.allowModifyPost(existsPost, currentUserId);
+    this.canChangePost(existsPost, currentUserId);
 
     let isSameTags = true;
     let hasChanges = false;
@@ -140,7 +152,7 @@ export class BlogPostService {
 
     const existsPost = await this.blogPostRepository.findById(postId);
 
-    this.allowModifyPost(existsPost, currentUserId);
+    this.canChangePost(existsPost, currentUserId);
     await this.blogPostRepository.deleteById(postId);
   }
 

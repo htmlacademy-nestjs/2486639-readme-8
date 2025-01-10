@@ -22,20 +22,20 @@ export class BlogPostCommentService {
     }
   }
 
-  private async allowViewPost(postId: string, currentUserId: string) {
+  private async canViewPost(postId: string, currentUserId: string) {
     const foundPost = await this.blogPostSevice.findById(postId);
 
-    this.blogPostSevice.allowViewPost(foundPost, currentUserId);
+    this.blogPostSevice.canViewPost(foundPost, currentUserId);
   }
 
-  private async allowCommentAndLikePost(postId: string) {
+  private async canCommentPost(postId: string) {
     const foundPost = await this.blogPostSevice.findById(postId);
 
-    this.blogPostSevice.allowCommentAndLikePost(foundPost);
+    this.blogPostSevice.canCommentPost(foundPost);
   }
 
   public async getComments(postId: string, currentUserId: string, query: BlogPostCommentQuery): Promise<PaginationResult<BlogPostCommentEntity>> {
-    await this.allowViewPost(postId, currentUserId);
+    await this.canViewPost(postId, currentUserId);
 
     const commentEntities = await this.blogPostCommentRepository.findByPostId(postId, query);
 
@@ -44,7 +44,7 @@ export class BlogPostCommentService {
 
   public async createComment(dto: CreatePostCommentDto, postId: string, currentUserId: string): Promise<BlogPostCommentEntity> {
     this.checkAuthorization(currentUserId);
-    await this.allowCommentAndLikePost(postId);
+    await this.canCommentPost(postId);
 
     const foundCommentId = await this.blogPostCommentRepository.findCommentId(postId, currentUserId);
 
@@ -63,7 +63,7 @@ export class BlogPostCommentService {
 
   public async deleteComment(postId: string, currentUserId: string) {
     this.checkAuthorization(currentUserId);
-    await this.allowCommentAndLikePost(postId);
+    await this.canCommentPost(postId);
 
     const foundCommentId = await this.blogPostCommentRepository.findCommentId(postId, currentUserId);
 
