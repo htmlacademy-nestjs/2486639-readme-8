@@ -1,1 +1,1 @@
-export * from './lib/blog-subscription';
+export { BlogSubscriptionModule } from './blog-subscription.module';
