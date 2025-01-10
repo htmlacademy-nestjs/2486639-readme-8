@@ -5,8 +5,8 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
   public type: PostType;
   public tags: BlogTagEntity[];
   public publishDate: Date;
-  public repostedPost: BlogPostEntity;
   public state: PostState;
+  public userId: string;
   public title: string;
   public url: string;
   public previewText: string;
@@ -15,11 +15,11 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
   public quoteAuthor: string;
   public imagePath: string;
   public linkDescription: string;
-  public userId: string;
   public createdAt: Date;
   public updatedAt: Date;
   public likesCount: number;
   public commentsCount: number;
+  public repostedPost: BlogPostEntity;
 
   constructor(post?: Post) {
     super();
@@ -36,7 +36,6 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
     this.type = post.type;
     this.tags = [];
     this.publishDate = post.publishDate ?? undefined;
-    this.repostedPost = undefined;
     this.state = post.state ?? undefined;
     this.userId = post.userId ?? undefined;
     this.title = post.title ?? undefined;
@@ -51,6 +50,7 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
     this.updatedAt = post.updatedAt ?? undefined;
     this.likesCount = post.likesCount ?? undefined;
     this.commentsCount = post.commentsCount ?? undefined;
+    this.repostedPost = undefined;
 
     if (post.tags) {
       for (const tag of post.tags) {
@@ -73,10 +73,9 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
     return {
       id: this.id,
       type: this.type,
-      tags,
       publishDate: this.publishDate,
-      repostedPost: this.repostedPost?.toPOJO(),
       state: this.state,
+      userId: this.userId,
       title: this.title,
       url: this.url,
       previewText: this.previewText,
@@ -85,11 +84,12 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
       quoteAuthor: this.quoteAuthor,
       imagePath: this.imagePath,
       linkDescription: this.linkDescription,
-      userId: this.userId,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
       likesCount: this.likesCount,
-      commentsCount: this.commentsCount
+      commentsCount: this.commentsCount,
+      repostedPost: this.repostedPost?.toPOJO(),
+      tags
     }
   }
 }

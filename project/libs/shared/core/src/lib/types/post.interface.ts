@@ -5,10 +5,9 @@ import { Tag } from './tag.interface';
 export interface Post {
   id?: string;
   type: PostType;
-  tags?: Tag[];
   publishDate?: Date;
-  repostedPost?: Post;
   state: PostState;
+  userId: string;
   title?: string;           // types: video, text
   url?: string;             // types: video, link
   previewText?: string;     // types: text
@@ -17,9 +16,10 @@ export interface Post {
   quoteAuthor?: string;     // types: quote
   imagePath?: string;       // types: photo
   linkDescription?: string; // types: link
-  userId: string;
   createdAt?: Date;
   updatedAt?: Date;
   likesCount?: number;
   commentsCount?: number;
+  repostedPost?: Post;
+  tags?: Tag[];
 }

@@ -70,15 +70,15 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
 
   public async save(entity: BlogPostEntity): Promise<void> {
     const pojoEntity = entity.toPOJO();
-    const tags = { connect: this.getTagIds(pojoEntity.tags) };
     const repostedPost = (pojoEntity.repostedPost)
       ? { connect: { id: pojoEntity.repostedPost.id } }
       : undefined;
+    const tags = { connect: this.getTagIds(pojoEntity.tags) };
     const record = await this.client.post.create({
       data: {
         ...pojoEntity,
-        tags,
-        repostedPost
+        repostedPost,
+        tags
       }
       //, include: { repostedPost: true } //! возможно нужно при репосте
     });
@@ -86,7 +86,7 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     entity.id = record.id;
     entity.publishDate = record.publishDate;
     entity.likesCount = record.likesCount;
-    entity.commentsCount = record.commentsCount; //! возможно нужны еще данные...
+    entity.commentsCount = record.commentsCount; //! возможно нужны еще данные...  или есть какой ключ чтобы бы переселект
   }
 
   public async update(entity: BlogPostEntity): Promise<void> {
@@ -99,9 +99,9 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
       where: { id },
       data: {
         ...pojoEntity,
-        tags,
         publishDate,
-        repostedPost: undefined // при обновлении не меняем данные о репосте
+        repostedPost: undefined, // при обновлении не меняем данные о репосте
+        tags
       }
     });
   }
