@@ -1,4 +1,4 @@
-import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 
 import { PaginationResult, PostState } from '@project/shared/core';
 import { BlogTagService } from '@project/blog/blog-tag';
@@ -9,7 +9,8 @@ import { BlogPostRepository } from './blog-post.repository';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { BlogPostQuery } from './blog-post.query';
-import { BlogPostMessage, PostField, PostFieldsByType } from './blog-post.constant';
+import { BlogPostApiResponse, BlogPostMessage, PostField } from './blog-post.constant';
+import { validatePostData } from './blog-post.validate.post.data';
 
 @Injectable()
 export class BlogPostService {
@@ -18,59 +19,17 @@ export class BlogPostService {
     private readonly blogPostRepository: BlogPostRepository
   ) { }
 
-  //! вынести отдельно
   private validatePostData(dto: CreatePostDto | UpdatePostDto): void {
-    const { type } = dto;
-    const messages: string[] = [];
-    const keys = Object.values(PostField);
+    const message = validatePostData(dto);
 
-    if (!type) {
-      keys.forEach((key) => {
-        if (dto[key]) {
-          messages.push(key);
-        }
-
-        if (messages.length) {
-          messages.unshift('For empty post type not need:');
-        }
-      })
-    } else {
-      const fields = PostFieldsByType[type];
-      const needMessages: string[] = [];
-      const notNeedMessages: string[] = [];
-
-      keys.forEach((key) => {
-        //const shouldBeKey = fields.includes(key); //! Argument of type 'PostField' is not assignable to parameter of type 'never'
-        const shouldBeKey = [...fields].includes(key);
-        const existDtoKey = !!dto[key];
-
-        if (shouldBeKey && !existDtoKey) {
-          needMessages.push(key);
-        }
-
-        if (!shouldBeKey && existDtoKey) {
-          notNeedMessages.push(key);
-        }
-      })
-
-      if (needMessages.length || notNeedMessages.length) {
-        messages.push(`For post type "${type}"`);
-
-        if (needMessages.length) {
-          messages.push(`need: ${needMessages.join(', ')}`);
-        }
-
-        if (notNeedMessages.length) {
-          if (needMessages.length) {
-            messages.push('and');
-          }
-          messages.push(`not need: ${notNeedMessages.join(', ')}`);
-        }
-      }
+    if (message) {
+      throw new BadRequestException(message);
     }
+  }
 
-    if (messages.length) {
-      throw new BadRequestException(messages.join(' '));
+  private checkAuthorization(currentUserId: string) {
+    if (!currentUserId) {
+      throw new UnauthorizedException(BlogPostApiResponse.Unauthorized);
     }
   }
 
@@ -80,41 +39,41 @@ export class BlogPostService {
     }
   }
 
-  private allowViewPost(post: BlogPostEntity, currentUserId: string) {
-    if (post.state !== PostState.Published) {
-      if (post.userId !== currentUserId) {
-        throw new NotFoundException(BlogPostMessage.NotFound);
-      }
+  public allowViewPost(post: BlogPostEntity, currentUserId: string) {
+    if (post.userId !== currentUserId) {
+      this.allowCommentAndLikePost(post);
     }
   }
 
-  public async existsPost(postId: string, currentUserId: string): Promise<void> {
-    const existsPost = await this.blogPostRepository.findById(postId, false);
-
-    if (!existsPost) {
+  public allowCommentAndLikePost(post: BlogPostEntity) {
+    if (post.state !== PostState.Published) {
       throw new NotFoundException(BlogPostMessage.NotFound);
     }
+  }
 
-    this.allowViewPost(existsPost, currentUserId);
+  public async findById(postId: string) {
+    const foundPost = await this.blogPostRepository.findById(postId);
+
+    return foundPost;
   }
 
   public async getAllPosts(query: BlogPostQuery, currentUserId: string): Promise<PaginationResult<BlogPostEntity>> {
-    //! если требуется показать черновики автора, то query.userId === currentUserId, иначе отключем показ черновиков
+    // если требуется показать черновики автора, то query.userId === currentUserId, иначе отключем показ черновиков
     query.showDraft = ((query.showDraft) && (query.userId) && (query.userId === currentUserId));
 
     return await this.blogPostRepository.find(query);
   }
 
   public async getPost(postId: string, currentUserId: string) {
-    //! нужно проверить кто просмтаривает... автор или нет? опубликованные доступны всем, черновики только автору
-    await this.existsPost(postId, currentUserId);
-
-    const post = await this.blogPostRepository.findById(postId);
+    const post = await this.blogPostRepository.findById(postId, true);
+    // проверяем кто просмтаривает... автор или нет? опубликованные доступны всем, черновики только автору
+    this.allowViewPost(post, currentUserId);
 
     return post;
   }
 
   public async createPost(dto: CreatePostDto, currentUserId: string): Promise<BlogPostEntity> {
+    this.checkAuthorization(currentUserId);
     this.validatePostData(dto);
 
     const tags = await this.blogTagService.getByTitles(dto.tags);
@@ -126,9 +85,10 @@ export class BlogPostService {
   }
 
   public async updatePost(postId: string, dto: UpdatePostDto, currentUserId: string) {
+    this.checkAuthorization(currentUserId);
     this.validatePostData(dto);
 
-    const existsPost = await this.blogPostRepository.findById(postId);
+    const existsPost = await this.blogPostRepository.findById(postId, true);
 
     this.allowModifyPost(existsPost, currentUserId);
 
@@ -136,6 +96,7 @@ export class BlogPostService {
     let hasChanges = false;
 
     // обнуляем поля, чтобы был null в БД
+    // можно вынести отдельно
     Object.values(PostField).forEach((key) => {
       existsPost[key] = null;
     });
@@ -164,6 +125,7 @@ export class BlogPostService {
     }
 
     // поля с null в undefined, чтобы их небыло в rdo
+    // можно вынести отдельно
     Object.values(PostField).forEach((key) => {
       if (existsPost[key] === null) {
         existsPost[key] = undefined;
@@ -174,6 +136,8 @@ export class BlogPostService {
   }
 
   public async deletePost(postId: string, currentUserId: string) {
+    this.checkAuthorization(currentUserId);
+
     const existsPost = await this.blogPostRepository.findById(postId);
 
     this.allowModifyPost(existsPost, currentUserId);

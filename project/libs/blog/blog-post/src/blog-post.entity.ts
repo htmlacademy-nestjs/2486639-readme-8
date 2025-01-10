@@ -1,5 +1,5 @@
-import { Entity, PostType, PostState, Post, StorableEntity } from '@project/shared/core';
-import { BlogTagEntity, BlogTagFactory } from '@project/blog/blog-tag';
+import { Entity, PostType, PostState, Post, StorableEntity, Tag } from '@project/shared/core';
+import { BlogTagEntity } from '@project/blog/blog-tag';
 
 export class BlogPostEntity extends Entity implements StorableEntity<Post> {
   public type: PostType;
@@ -52,12 +52,12 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
     this.likesCount = post.likesCount ?? undefined;
     this.commentsCount = post.commentsCount ?? undefined;
 
-    const blogTagFactory = new BlogTagFactory();
+    if (post.tags) {
+      for (const tag of post.tags) {
+        const blogTagEntity = new BlogTagEntity(tag);
 
-    for (const tag of post.tags) {
-      const blogTagEntity = blogTagFactory.create(tag);
-
-      this.tags.push(blogTagEntity);
+        this.tags.push(blogTagEntity);
+      }
     }
 
     if (post.repostedPost) {
@@ -66,10 +66,14 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
   }
 
   public toPOJO(): Post {
+    const tags: Tag[] = (this.tags)
+      ? this.tags.map((tagEntity) => tagEntity.toPOJO())
+      : [];
+
     return {
       id: this.id,
       type: this.type,
-      tags: this.tags.map((tagEntity) => tagEntity.toPOJO()), //! смысл? при сохранении нужны id
+      tags,
       publishDate: this.publishDate,
       repostedPost: this.repostedPost?.toPOJO(),
       state: this.state,

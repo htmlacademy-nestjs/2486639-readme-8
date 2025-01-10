@@ -5,7 +5,7 @@ import { Tag } from './tag.interface';
 export interface Post {
   id?: string;
   type: PostType;
-  tags: Tag[];
+  tags?: Tag[];
   publishDate?: Date;
   repostedPost?: Post;
   state: PostState;

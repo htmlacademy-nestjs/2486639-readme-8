@@ -23,6 +23,7 @@ export class BlogPostController {
   @ApiResponse(BlogPostApiResponse.BadRequest)
   @Get('/')
   public async index(@Query() query: BlogPostQuery) {
+    //! определить пользователя
     const currentUserId = '11223344';
     const postsWithPagination = await this.blogPostService.getAllPosts(query, currentUserId);
     const result = {
@@ -38,6 +39,7 @@ export class BlogPostController {
   @ApiParam(PostIdApiParam)
   @Get(`:${PostIdApiParam.name}`)
   public async show(@Param(PostIdApiParam.name, GuidValidationPipe) postId: string) {
+    //! определить пользователя
     const currentUserId = '11223344';
     const existPost = await this.blogPostService.getPost(postId, currentUserId);
 
@@ -50,7 +52,7 @@ export class BlogPostController {
   @ApiBody({ description: blogPostApiBodyDescription, type: CreatePostDto })
   @Post()
   public async create(@Body() dto: CreatePostDto) {
-    //! нужно проверить авторизацию
+    //! определить пользователя
     const currentUserId = '11223344';
     const newPost = await this.blogPostService.createPost(dto, currentUserId);
 
@@ -64,7 +66,7 @@ export class BlogPostController {
   @ApiParam(PostIdApiParam)
   @Patch(`:${PostIdApiParam.name}`)
   public async update(@Param(PostIdApiParam.name, GuidValidationPipe) postId: string, @Body() dto: UpdatePostDto) {
-    //! нужно проверить авторизацию
+    //! определить пользователя
     const currentUserId = '11223344';
     const updatedPost = await this.blogPostService.updatePost(postId, dto, currentUserId);
 
@@ -78,7 +80,7 @@ export class BlogPostController {
   @ApiParam(PostIdApiParam)
   @Delete(`:${PostIdApiParam.name}`)
   public async delete(@Param(PostIdApiParam.name, GuidValidationPipe) postId: string) {
-    //! нужно проверить авторизацию
+    //! определить пользователя
     const currentUserId = '11223344';
 
     await this.blogPostService.deletePost(postId, currentUserId);

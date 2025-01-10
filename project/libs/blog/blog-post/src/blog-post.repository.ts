@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 
 import { PrismaClientService } from '@project/blog/models';
@@ -10,7 +10,7 @@ import { BlogTagService } from '@project/blog/blog-tag';
 import { BlogPostEntity } from './blog-post.entity';
 import { BlogPostFactory } from './blog-post.factory';
 import { BlogPostQuery } from './blog-post.query';
-import { Default } from './blog-post.constant';
+import { BlogPostMessage, Default } from './blog-post.constant';
 
 @Injectable()
 export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, Post> {
@@ -27,6 +27,10 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
   }
 
   private getTagIds(tags: Tag[]): { id: string }[] {
+    if (!tags) {
+      return [];
+    }
+
     return tags.map(({ id }) => ({ id }));
   }
 
@@ -38,27 +42,25 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     return Math.ceil(totalCount / limit);
   }
 
-  public async findById(id: string, giveDetailInfo = true): Promise<BlogPostEntity> {
+  public async findById(id: string, giveDetailInfo = false): Promise<BlogPostEntity> {
     const include = (giveDetailInfo)
       ? { tags: true, repostedPost: true }
       : undefined;
     const record = await this.client.post.findFirst({ where: { id }, include });
 
     if (!record) {
-      return null;
+      throw new NotFoundException(BlogPostMessage.NotFound);
     }
 
     const repostedPost: Post = (record.repostedPost)
       ? {
         ...record.repostedPost,
-        ...this.getTypeAndState(record.repostedPost),
-        tags: [] // в репосте поста не собираются теги
+        ...this.getTypeAndState(record.repostedPost)
       }
       : undefined;
 
     const post: Post = {
       ...record,
-      tags: record.tags ?? [], // пусто без детальной информации
       ...this.getTypeAndState(record),
       repostedPost
     };

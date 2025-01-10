@@ -24,6 +24,7 @@ export class BlogPostCommentController {
   @ApiParam(PostIdApiParam)
   @Get(POST_ID_PARAM)
   public async index(@Param(PostIdApiParam.name, GuidValidationPipe) postId: string, @Query() query: BlogPostCommentQuery) {
+    // необходимо определить пользователя
     const currentUserId = '11223344';
     const postCommentsWithPagination = await this.blogPostCommentService.getComments(postId, currentUserId, query);
     const result = {
@@ -42,9 +43,8 @@ export class BlogPostCommentController {
   @ApiParam(PostIdApiParam)
   @Post(POST_ID_PARAM)
   public async create(@Param(PostIdApiParam.name, GuidValidationPipe) postId: string, @Body() dto: CreatePostCommentDto) {
-    //! нужно проверить существование поста из параметров
-    //! нужно проверить авторизацию
-    const currentUserId = '11223344'; //! временно, необходимо определить пользователя
+    // необходимо определить пользователя
+    const currentUserId = '11223344';
     const newComment = await this.blogPostCommentService.createComment(dto, postId, currentUserId);
 
     return fillDto(PostCommentRdo, newComment.toPOJO());
@@ -57,9 +57,8 @@ export class BlogPostCommentController {
   @ApiParam(PostIdApiParam)
   @Delete(POST_ID_PARAM)
   public async delete(@Param(PostIdApiParam.name, GuidValidationPipe) postId: string) {
-    //! нужно проверить существование поста из параметров
-    //! нужно проверить авторизацию
-    const currentUserId = '11223344' //! временно
+    // необходимо определить пользователя
+    const currentUserId = '11223344'
 
     await this.blogPostCommentService.deleteComment(postId, currentUserId);
   }

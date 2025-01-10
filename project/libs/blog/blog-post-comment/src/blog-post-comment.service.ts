@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 
 import { PaginationResult } from '@project/shared/core';
 import { BlogPostService } from '@project/blog/blog-post';
@@ -7,7 +7,7 @@ import { BlogPostCommentEntity } from './blog-post-comment.entity';
 import { BlogPostCommentRepository } from './blog-post-comment.repository';
 import { BlogPostCommentQuery } from './blog-post-comment.query';
 import { CreatePostCommentDto } from './dto/create-post-comment.dto';
-import { BlogPostCommentMessage } from './blog-post-comment.constant';
+import { BlogPostCommentApiResponse, BlogPostCommentMessage } from './blog-post-comment.constant';
 
 @Injectable()
 export class BlogPostCommentService {
@@ -16,8 +16,26 @@ export class BlogPostCommentService {
     private readonly blogPostCommentRepository: BlogPostCommentRepository
   ) { }
 
+  private checkAuthorization(currentUserId: string) {
+    if (!currentUserId) {
+      throw new UnauthorizedException(BlogPostCommentApiResponse.Unauthorized);
+    }
+  }
+
+  private async allowViewPost(postId: string, currentUserId: string) {
+    const foundPost = await this.blogPostSevice.findById(postId);
+
+    this.blogPostSevice.allowViewPost(foundPost, currentUserId);
+  }
+
+  private async allowCommentAndLikePost(postId: string) {
+    const foundPost = await this.blogPostSevice.findById(postId);
+
+    this.blogPostSevice.allowCommentAndLikePost(foundPost);
+  }
+
   public async getComments(postId: string, currentUserId: string, query: BlogPostCommentQuery): Promise<PaginationResult<BlogPostCommentEntity>> {
-    await this.blogPostSevice.existsPost(postId, currentUserId);
+    await this.allowViewPost(postId, currentUserId);
 
     const commentEntities = await this.blogPostCommentRepository.findByPostId(postId, query);
 
@@ -25,7 +43,8 @@ export class BlogPostCommentService {
   }
 
   public async createComment(dto: CreatePostCommentDto, postId: string, currentUserId: string): Promise<BlogPostCommentEntity> {
-    await this.blogPostSevice.existsPost(postId, currentUserId);
+    this.checkAuthorization(currentUserId);
+    await this.allowCommentAndLikePost(postId);
 
     const foundCommentId = await this.blogPostCommentRepository.findCommentId(postId, currentUserId);
 
@@ -43,7 +62,8 @@ export class BlogPostCommentService {
   }
 
   public async deleteComment(postId: string, currentUserId: string) {
-    await this.blogPostSevice.existsPost(postId, currentUserId);
+    this.checkAuthorization(currentUserId);
+    await this.allowCommentAndLikePost(postId);
 
     const foundCommentId = await this.blogPostCommentRepository.findCommentId(postId, currentUserId);
 
