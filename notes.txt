@@ -85,6 +85,8 @@
           ->
           return await this.blogPostCommentRepository.save({ message, postId, userId });
         ? может контроллен должен не знать об Entity?
+  13. базовый класс для сервиса
+        вынести в него - private checkAuthorization(currentUserId: string)
 
 
 Заметки:
@@ -145,5 +147,6 @@
     16.2. профиль:
       мои лайки - посты лайкнутые мной
       лайки моих постов
+  17. попробовать Factory сделать через дженерик, можно заменить в нескольких модулях
 
 

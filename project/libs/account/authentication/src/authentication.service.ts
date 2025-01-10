@@ -48,7 +48,7 @@ export class AuthenticationService {
     return userEntity;
   }
 
-  public async verifyUser(dto: LoginUserDto) {
+  public async verifyUser(dto: LoginUserDto): Promise<BlogUserEntity> {
     const { email, password } = dto;
     const existUser = await this.blogUserRepository.findByEmail(email);
 
@@ -65,7 +65,7 @@ export class AuthenticationService {
     return existUser;
   }
 
-  public async getUser(id: string) {
+  public async getUser(id: string): Promise<BlogUserEntity> {
     const user = await this.blogUserRepository.findById(id);
 
     if (!user) {

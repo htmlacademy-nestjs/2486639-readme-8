@@ -16,19 +16,19 @@ export class BlogPostCommentService {
     private readonly blogPostCommentRepository: BlogPostCommentRepository
   ) { }
 
-  private checkAuthorization(currentUserId: string) {
+  private checkAuthorization(currentUserId: string): void {
     if (!currentUserId) {
       throw new UnauthorizedException(BlogPostCommentApiResponse.Unauthorized);
     }
   }
 
-  private async canViewPost(postId: string, currentUserId: string) {
+  private async canViewPost(postId: string, currentUserId: string): Promise<void> {
     const foundPost = await this.blogPostSevice.findById(postId);
 
     this.blogPostSevice.canViewPost(foundPost, currentUserId);
   }
 
-  private async canCommentPost(postId: string) {
+  private async canCommentPost(postId: string): Promise<void> {
     const foundPost = await this.blogPostSevice.findById(postId);
 
     this.blogPostSevice.canCommentPost(foundPost);
@@ -61,7 +61,7 @@ export class BlogPostCommentService {
     return commentEntity;
   }
 
-  public async deleteComment(postId: string, currentUserId: string) {
+  public async deleteComment(postId: string, currentUserId: string): Promise<void> {
     this.checkAuthorization(currentUserId);
     await this.canCommentPost(postId);
 

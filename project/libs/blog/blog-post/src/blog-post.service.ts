@@ -31,39 +31,39 @@ export class BlogPostService {
     return post.state === PostState.Published;
   }
 
-  private checkAuthorization(currentUserId: string) {
+  private checkAuthorization(currentUserId: string): void {
     if (!currentUserId) {
       throw new UnauthorizedException(BlogPostApiResponse.Unauthorized);
     }
   }
 
-  private canChangePost(post: BlogPostEntity, currentUserId: string) {
+  private canChangePost(post: BlogPostEntity, currentUserId: string): void {
     if (post.userId !== currentUserId) {
       throw new ForbiddenException(BlogPostMessage.NotAllow);
     }
   }
 
-  private throwIfPostNotPublished(post: BlogPostEntity) {
+  private throwIfPostNotPublished(post: BlogPostEntity): void {
     if (!this.isPublishedPost(post)) {
       throw new NotFoundException(BlogPostMessage.NotFound);
     }
   }
 
-  public canViewPost(post: BlogPostEntity, currentUserId: string) {
+  public canViewPost(post: BlogPostEntity, currentUserId: string): void {
     if (post.userId !== currentUserId) {
       this.throwIfPostNotPublished(post);
     }
   }
 
-  public canCommentPost(post: BlogPostEntity) {
+  public canCommentPost(post: BlogPostEntity): void {
     this.throwIfPostNotPublished(post);
   }
 
-  public canLikePost(post: BlogPostEntity) {
+  public canLikePost(post: BlogPostEntity): void {
     this.throwIfPostNotPublished(post);
   }
 
-  public async findById(postId: string) {
+  public async findById(postId: string): Promise<BlogPostEntity> {
     const foundPost = await this.blogPostRepository.findById(postId);
 
     return foundPost;
@@ -76,7 +76,7 @@ export class BlogPostService {
     return await this.blogPostRepository.find(query);
   }
 
-  public async getPost(postId: string, currentUserId: string) {
+  public async getPost(postId: string, currentUserId: string): Promise<BlogPostEntity> {
     const post = await this.blogPostRepository.findById(postId, true);
     // проверяем кто просмтаривает... автор или нет? опубликованные доступны всем, черновики только автору
     this.canViewPost(post, currentUserId);
@@ -96,7 +96,7 @@ export class BlogPostService {
     return newPost;
   }
 
-  public async updatePost(postId: string, dto: UpdatePostDto, currentUserId: string) {
+  public async updatePost(postId: string, dto: UpdatePostDto, currentUserId: string): Promise<BlogPostEntity> {
     this.checkAuthorization(currentUserId);
     this.validatePostData(dto);
 
@@ -147,7 +147,7 @@ export class BlogPostService {
     return existsPost;
   }
 
-  public async deletePost(postId: string, currentUserId: string) {
+  public async deletePost(postId: string, currentUserId: string): Promise<void> {
     this.checkAuthorization(currentUserId);
 
     const existsPost = await this.blogPostRepository.findById(postId);
