@@ -3,7 +3,7 @@ import { ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { GuidValidationPipe } from '@project/shared/pipes';
 
-//!import { POST_ID_PARAM, BlogPostLikeApiResponse, PostIdApiParam } from './blog-post-like.constant';
+import { POST_ID_PARAM, PostIdApiParam, BlogPostLikeApiResponse } from './blog-post-like.constant';
 import { BlogPostLikeService } from './blog-post-like.service';
 
 @ApiTags('blog-post-like')
@@ -13,31 +13,27 @@ export class BlogPostLikeController {
     private readonly blogPostLikeService: BlogPostLikeService
   ) { }
 
-  //!
-  /*
   @ApiResponse(BlogPostLikeApiResponse.PostLikeCreated)
   @ApiResponse(BlogPostLikeApiResponse.Unauthorized)
   @ApiResponse(BlogPostLikeApiResponse.BadRequest)
   @ApiResponse(BlogPostLikeApiResponse.PostNotFound)
   @ApiResponse(BlogPostLikeApiResponse.LikeOnPostExist)
   @ApiParam(PostIdApiParam)
-  */
-  @Post()//!POST_ID_PARAM)
-  public async create(@Param(/*PostIdApiParam.name, GuidValidationPipe*/) postId: string) {
+  @Post(POST_ID_PARAM)
+  public async create(@Param(PostIdApiParam.name, GuidValidationPipe) postId: string) {
     // необходимо определить пользователя
     const currentUserId = '11223344';
-    const newLike = await this.blogPostLikeService.like(postId, currentUserId);
+    await this.blogPostLikeService.like(postId, currentUserId);
   }
 
-  /*
-   @ApiResponse(BlogPostLikeApiResponse.PostLikeDeleted)
-   @ApiResponse(BlogPostLikeApiResponse.Unauthorized)
-   @ApiResponse(BlogPostLikeApiResponse.PostNotFound)
-   @ApiResponse(BlogPostLikeApiResponse.LikeNotFound)
-   @ApiParam(PostIdApiParam)
-   */
-  @Delete()//!POST_ID_PARAM)
-  public async delete(@Param(/*PostIdApiParam.name, GuidValidationPipe*/) postId: string) {
+  @ApiResponse(BlogPostLikeApiResponse.PostLikeDeleted)
+  @ApiResponse(BlogPostLikeApiResponse.Unauthorized)
+  @ApiResponse(BlogPostLikeApiResponse.BadRequest)
+  @ApiResponse(BlogPostLikeApiResponse.PostNotFound)
+  @ApiResponse(BlogPostLikeApiResponse.LikeNotFound)
+  @ApiParam(PostIdApiParam)
+  @Delete(POST_ID_PARAM)
+  public async delete(@Param(PostIdApiParam.name, GuidValidationPipe) postId: string) {
     // необходимо определить пользователя
     const currentUserId = '11223344'
 

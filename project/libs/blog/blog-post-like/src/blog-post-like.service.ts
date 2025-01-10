@@ -4,7 +4,7 @@ import { BlogPostService } from '@project/blog/blog-post';
 
 import { BlogPostLikeEntity } from './blog-post-like.entity';
 import { BlogPostLikeRepository } from './blog-post-like.repository';
-//!import { BlogPostLikeApiResponse, BlogPostLikeMessage } from './blog-post-like.constant';
+import { BlogPostLikeApiResponse, BlogPostLikeMessage } from './blog-post-like.constant';
 
 @Injectable()
 export class BlogPostLikeService {
@@ -15,7 +15,7 @@ export class BlogPostLikeService {
 
   private checkAuthorization(currentUserId: string) {
     if (!currentUserId) {
-      throw new UnauthorizedException();//!BlogPostLikeApiResponse.Unauthorized);
+      throw new UnauthorizedException(BlogPostLikeApiResponse.Unauthorized);
     }
   }
 
@@ -32,7 +32,7 @@ export class BlogPostLikeService {
     const foundLikeId = await this.blogPostLikeRepository.findLikeId(postId, currentUserId);
 
     if (foundLikeId) {
-      throw new ConflictException();//!BlogPostLikeMessage.LikeExist);
+      throw new ConflictException(BlogPostLikeMessage.LikeExist);
     }
 
     const likeEntity = new BlogPostLikeEntity({ postId, userId: currentUserId });
@@ -48,7 +48,7 @@ export class BlogPostLikeService {
     const foundLikeId = await this.blogPostLikeRepository.findLikeId(postId, currentUserId);
 
     if (!foundLikeId) {
-      throw new NotFoundException();//BlogPostLikeMessage.LikeNotFound);
+      throw new NotFoundException(BlogPostLikeMessage.LikeNotFound);
     }
 
     await this.blogPostLikeRepository.deleteById(foundLikeId);
