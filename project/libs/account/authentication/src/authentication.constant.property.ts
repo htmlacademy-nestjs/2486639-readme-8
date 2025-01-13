@@ -6,7 +6,7 @@ export const UserApiProperty = {
   },
   Email: {
     description: 'The unique user email',
-    example: 'user@local.ru'
+    example: 'user@local.local'
   },
   Name: {
     description: 'The user name',

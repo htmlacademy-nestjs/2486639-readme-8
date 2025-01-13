@@ -8,7 +8,7 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 
-import { ConfigAlias } from '@project/shared/core';
+import { BearerAuth, BearerAuthOption, ConfigAlias } from '@project/shared/core';
 
 import { AppModule } from './app/app.module';
 
@@ -25,6 +25,8 @@ async function bootstrap() {
     .setTitle('Account API')
     .setDescription('The Account API description')
     .setVersion('1.0')
+    .addBearerAuth(BearerAuthOption, BearerAuth.AccessToken)
+    .addBearerAuth(BearerAuthOption, BearerAuth.RefreshToken)
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, documentBuilder);
 

@@ -2,6 +2,7 @@ export { Entity } from './lib/base/entity';
 
 export { ConfigAlias } from './lib/constants/config-alias';
 export * from './lib/constants/default-port';
+export * from './lib/constants/bearer-auth';
 export { PageQueryApiProperty } from './lib/constants/page-query-api-property';
 export { PaginationApiProperty } from './lib/constants/pagination-api-property';
 

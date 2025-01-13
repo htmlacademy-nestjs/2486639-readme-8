@@ -1,7 +1,7 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Req, UseGuards } from '@nestjs/common';
-import { ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBasicAuth, ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
 
-import { RequestWithTokenPayload } from '@project/shared/core';
+import { BearerAuth, RequestWithTokenPayload } from '@project/shared/core';
 import { fillDto } from '@project/shared/helpers';
 import { MongoIdValidationPipe } from '@project/shared/pipes';
 import { RequestWithBlogUserEntity } from '@project/account/blog-user';
@@ -19,6 +19,7 @@ import { UserRdo } from './rdo/user.rdo';
 import { UserIdApiParam, AuthenticationApiResponse } from './authentication.constant';
 
 @ApiTags('authentication')
+@ApiBasicAuth()
 @Controller('auth')
 export class AuthenticationController {
   constructor(
@@ -63,8 +64,9 @@ export class AuthenticationController {
   @ApiResponse(AuthenticationApiResponse.RefreshTokens)
   @ApiResponse(AuthenticationApiResponse.BadRequest)
   @ApiResponse(AuthenticationApiResponse.Unauthorized)
-  @UseGuards(JwtRefreshGuard)
   @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth(BearerAuth.RefreshToken)
+  @UseGuards(JwtRefreshGuard)
   @Post('refresh')
   public async refreshToken(@Req() { user }: RequestWithBlogUserEntity) {
     const userToken = await this.authService.createUserToken(user);
@@ -75,8 +77,9 @@ export class AuthenticationController {
   @ApiResponse(AuthenticationApiResponse.CheckSuccess)
   @ApiResponse(AuthenticationApiResponse.BadRequest)
   @ApiResponse(AuthenticationApiResponse.Unauthorized)
-  @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth(BearerAuth.AccessToken)
+  @UseGuards(JwtAuthGuard)
   @Post('check')
   public async checkToken(@Req() { user: payload }: RequestWithTokenPayload) {
     return fillDto(TokenPayloadRdo, payload);
