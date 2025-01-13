@@ -24,13 +24,8 @@ export class BlogController {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public async create(@Body() dto: any) {
     const url = `${this.apiOptions.blog.serviceUrl}/${this.apiOptions.blog.postsRoute}/`;
-    console.log(url);
-
     const { data } = await this.httpService.axiosRef.post(url, dto);
-    console.log(data);
-
 
     return data;
   }
-
 }
