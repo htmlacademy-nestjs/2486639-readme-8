@@ -1,11 +1,13 @@
 import { HttpService } from '@nestjs/axios';
-import { Body, Controller, Inject, Post, Req, UseFilters } from '@nestjs/common';
+import { Body, Controller, Inject, Post, Req, UseFilters, UseGuards } from '@nestjs/common';
+import { ConfigType } from '@nestjs/config';
 
+import { RequestWithTokenPayload } from '@project/shared/core';
+import { apiConfig } from '@project/api/config';
 import { LoginUserDto } from '@project/account/authentication';
 
 import { AxiosExceptionFilter } from './filters/axios-exception.filter';
-import { apiConfig } from '@project/api/config';
-import { ConfigType } from '@nestjs/config';
+import { CheckAuthGuard } from './guards/check-auth.guard';
 
 @Controller('users')
 @UseFilters(AxiosExceptionFilter)
@@ -17,9 +19,9 @@ export class UsersController {
   ) { }
 
   @Post('login')
-  public async login(@Body() loginUserDto: LoginUserDto) {
+  public async login(@Body() dto: LoginUserDto) {
     const url = `${this.apiOptions.account.serviceUrl}/${this.apiOptions.account.authRoute}/login`;
-    const { data } = await this.httpService.axiosRef.post(url, loginUserDto);
+    const { data } = await this.httpService.axiosRef.post(url, dto);
 
     return data;
   }
@@ -32,5 +34,11 @@ export class UsersController {
     });
 
     return data;
+  }
+
+  @UseGuards(CheckAuthGuard)
+  @Post('check')
+  public async checkToken(@Req() { user: payload }: RequestWithTokenPayload) {
+    return payload;
   }
 }
