@@ -1,7 +1,9 @@
 import { Module } from '@nestjs/common';
 
+import { ApiConfigModule } from '@project/api/config';
+
 @Module({
-  imports: [],
+  imports: [ApiConfigModule],
   controllers: [],
   providers: []
 })
