@@ -26,3 +26,15 @@ Content-Type: application/json
 }
 
 ###
+
+# Get new JWT pair
+POST http://localhost:4000/api/auth/refresh HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzdlNWYzMTVjODE2NmIyZWE3ZjcwMTUiLCJlbWFpbCI6InVzZXJAbG9jYWwubG9jYWwiLCJuYW1lIjoiS2VrcyIsImlhdCI6MTczNjc0NTY3NSwiZXhwIjoxNzM2NzQ1OTc1fQ.Hy4yEpYFX5Qy0yvO1etXA6r-RhdDpmTH7Ni9Ei8BIRI
+
+###
+
+# Check user token
+POST http://localhost:4000/api/auth/check HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzdlNWYzMTVjODE2NmIyZWE3ZjcwMTUiLCJlbWFpbCI6InVzZXJAbG9jYWwubG9jYWwiLCJuYW1lIjoiS2VrcyIsImlhdCI6MTczNjc0NjMwMSwiZXhwIjoxNzM2NzQ2NjAxfQ.Uwai0Orye4EizDvy82JD1QekDYo5cJlyn1Q6sVNgCHA
+
+###
