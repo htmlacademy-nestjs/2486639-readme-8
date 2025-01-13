@@ -1,5 +1,5 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Req, UseGuards } from '@nestjs/common';
-import { ApiBasicAuth, ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { ApiBasicAuth, ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { BearerAuth, RequestWithTokenPayload } from '@project/shared/core';
 import { fillDto } from '@project/shared/helpers';
