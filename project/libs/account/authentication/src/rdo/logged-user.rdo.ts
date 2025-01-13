@@ -15,4 +15,8 @@ export class LoggedUserRdo {
   @ApiProperty(UserApiProperty.AccessToken)
   @Expose()
   public accessToken: string;
+
+  @ApiProperty(UserApiProperty.RefreshToken)
+  @Expose()
+  public refreshToken: string;
 }
