@@ -1,3 +1,4 @@
+import { ValidationError } from '@nestjs/common';
 import { ClassTransformOptions, plainToInstance } from 'class-transformer';
 
 export function getPort(evnName: string, defaultPort: number): number {
@@ -34,3 +35,10 @@ export function getMongoConnectionString({ host, port, user, password, database,
 export function getRabbitMQConnectionString({ host, port, user, password }): string {
   return `amqp://${user}:${password}@${host}:${port}`;
 }
+
+export function getValidationErrorString(errors: ValidationError[]): string {
+  const errorList = errors.map((item: ValidationError) => (Object.values(item.constraints).join(', ')));
+
+  return errorList.join(', ');
+}
+

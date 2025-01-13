@@ -7,6 +7,7 @@ import { getRabbitMQConnectionString } from './common';
 export function getRabbitMQOptions() {
   return {
     useFactory: async (config: ConfigService) => ({
+      // описание exchanges нужно для их автоматического создания, при первом подключении любым сервисом
       exchanges: [
         {
           name: config.get<string>(ConfigAlias.AppRabbitExchange),

@@ -1,6 +1,10 @@
 Вопросы:
   1. Реализовать маршруты:
     1.1. account
+      1.1.0. а как валидировать LoginUserDto, заменили RequestWithBlogUserEntity?
+               типы сделал не такие как в демо, т.к. возвращаемые значения другие.
+               валидацию сделал вручную в LocalStrategy
+                 const error = validateSync(plainToClass(LoginUserDto, dto));
       1.1.0. добавить описание для авторизации в Swagger
       1.1.1. нужен logout! - DELETE - //ничего не выполняем, т.к. токен нужно забыть на клиентской стороне - noContent
               и скорре всего на api нужно обнулить refresh token

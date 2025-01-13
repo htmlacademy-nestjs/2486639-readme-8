@@ -9,6 +9,7 @@ import { NotifyModule } from '@project/account/notify';
 import { AuthenticationController } from './authentication.controller';
 import { AuthenticationService } from './authentication.service';
 import { JwtAccessStrategy } from './strategies/jwt-access.strategy';
+import { LocalStrategy } from './strategies/local.strategy';
 
 const JwtModuleOption = {
   inject: [ConfigService],
@@ -24,7 +25,8 @@ const JwtModuleOption = {
   controllers: [AuthenticationController],
   providers: [
     AuthenticationService,
-    JwtAccessStrategy
+    JwtAccessStrategy,
+    LocalStrategy
   ]
 })
 export class AuthenticationModule { }
