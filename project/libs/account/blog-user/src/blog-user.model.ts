@@ -8,23 +8,16 @@ import { AuthUser } from '@project/shared/core';
   timestamps: true
 })
 export class BlogUserModel extends Document implements AuthUser {
-  @Prop({
-    required: true,
-    unique: true
-  })
+  @Prop({ required: true, unique: true })
   public email: string;
 
-  @Prop({
-    required: true
-  })
+  @Prop({ required: true })
   public name: string;
 
   @Prop()
   public avatrPath: string;
 
-  @Prop({
-    required: true
-  })
+  @Prop({ required: true })
   public passwordHash: string;
 }
 

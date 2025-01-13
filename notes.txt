@@ -84,10 +84,7 @@
   3. заполнить данные в mongodb, и в разных сервисах
   4. удалить BaseMemoryRepository если не будет использоватся?
   5. всем свойствам в Entity.populate нужно  "?? undefined;"
-  6. сам добавил "entity.id = document.id; //! временно" в BaseMongoRepository, для created.user.rdo - будет в коммитах про API-Gate
-      EmailSubscriberModel  id? убрать?
-      заполнять служебные поля в Mongo?
-  7. .env
+  6. .env
         project\apps\...\.env - nx или node добавляет в process.env при запуске!
         envFilePath: ENV_FILE_PATH - загружает ConfigModule в process.env!
           но нет ошибки при отсутвии файла! как добавить?
@@ -95,19 +92,19 @@
         вынести/обеденить конфигурации в один модуль
         account-config сделать в один как  у всех
         для blog сделать конфиг
-  8. entity.id = undefined; //! пустая строка из базового класса и id не гененируется
+  7. entity.id = undefined; //! пустая строка из базового класса и id не гененируется
         А в тегах вызывается конструктор с минимальным объектом и при вызове populate записывает в _id undefined
-  9. куда делся первый "@Inject(*.KEY)"?
-  10. что такое FileSchema.virtul('id').get( ?  может сделать как BlogUserModel?
-        отключил это пока, отрабатывает - entity.id = document.id;
-        и при сохраннении даты пустые
-  11. а как забрать через config module?
+  8. куда делся первый "@Inject(*.KEY)"?
+  9. что такое virtual('id').get(.... ?
+        отключил это пока в EmailSubscriberSchema и в FileSchema
+        при сохраннении даты остались пустые пустые? перепроверить, я добавил BaseMongoRepository - .toObject({ getters: true, versionKey: false, flattenObjectIds: true })
+  10. а как забрать через config module?
         @RabbitSubscribe({
           exchange: process.env[ConfigAlias.AppRabbitExchange], //! 'readme.notify', а как забрать через config module?
           routingKey: RabbitRouting.AddSubscriber,
           queue: process.env[ConfigAlias.AppRabbitQueue] //! 'readme.notify.income', а как забрать через config module?
         })
-  12. Controller: [rdo, dto, entity], Service: [Entity], Ropositary: [Entity], Factory: [Entity]
+  11. Controller: [rdo, dto, entity], Service: [Entity], Ropositary: [Entity], Factory: [Entity]
         'Repository.save(' почти всегда сервис делает entity:
           const commentEntity = new BlogPostCommentEntity({ message, postId, userId });
           await this.blogPostCommentRepository.save(commentEntity);
@@ -115,7 +112,7 @@
           ->
           return await this.blogPostCommentRepository.save({ message, postId, userId });
         ? может контроллен должен не знать об Entity?
-  13. базовый класс для сервиса
+  12. базовый класс для сервиса
         вынести в него - private checkAuthorization(currentUserId: string)
 
 

@@ -10,16 +10,10 @@ import { Subscriber } from '@project/shared/core';
   toObject: { virtuals: true }
 })
 export class EmailSubscriberModel extends Document implements Subscriber {
-  public id?: string;
-
-  @Prop({
-    required: true,
-  })
+  @Prop({ required: true })
   public email: string;
 
-  @Prop({
-    required: true
-  })
+  @Prop({ required: true })
   public name: string;
 }
 

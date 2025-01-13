@@ -20,10 +20,8 @@ export abstract class BaseMongoRepository<
       return null;
     }
 
-    const plainObject = document.toObject({ versionKey: false }) as ReturnType<T['toPOJO']>;
+    const plainObject = document.toObject({ getters: true, versionKey: false, flattenObjectIds: true }) as ReturnType<T['toPOJO']>;
     const entity = this.entityFactory.create(plainObject);
-
-    entity.id = document.id; //! временно
 
     return entity;
   }
