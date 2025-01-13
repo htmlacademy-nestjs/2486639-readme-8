@@ -1,6 +1,6 @@
-import { HttpService } from '@nestjs/axios';
 import { Body, Controller, Inject, Post, Req, UseFilters, UseGuards } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
+import { HttpService } from '@nestjs/axios';
 
 import { RequestWithTokenPayload } from '@project/shared/core';
 import { apiConfig } from '@project/api/config';

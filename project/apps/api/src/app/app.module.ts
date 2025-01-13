@@ -5,6 +5,7 @@ import { ApiConfigModule } from '@project/api/config';
 
 import { UsersController } from './users.controller';
 import { CheckAuthGuard } from './guards/check-auth.guard';
+import { BlogController } from './blog.controller';
 
 export const HTTP_CLIENT_MAX_REDIRECTS = 5;
 export const HTTP_CLIENT_TIMEOUT = 3000;
@@ -17,7 +18,10 @@ export const HTTP_CLIENT_TIMEOUT = 3000;
       maxRedirects: HTTP_CLIENT_MAX_REDIRECTS
     })
   ],
-  controllers: [UsersController],
+  controllers: [
+    UsersController,
+    BlogController
+  ],
   providers: [CheckAuthGuard]
 })
 export class AppModule { }
