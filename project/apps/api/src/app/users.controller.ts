@@ -1,14 +1,16 @@
 import { Body, Controller, Inject, Post, Req, UseFilters, UseGuards } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
+import { ApiTags } from '@nestjs/swagger';
 
-import { RequestWithTokenPayload } from '@project/shared/core';
+import { RequestWithTokenPayload, RouteAlias } from '@project/shared/core';
 import { apiConfig } from '@project/api/config';
 import { LoginUserDto } from '@project/account/authentication';
 
 import { AxiosExceptionFilter } from './filters/axios-exception.filter';
 import { CheckAuthGuard } from './guards/check-auth.guard';
 
+@ApiTags('users')
 @Controller('users')
 @UseFilters(AxiosExceptionFilter)
 export class UsersController {
@@ -18,17 +20,17 @@ export class UsersController {
     private readonly apiOptions: ConfigType<typeof apiConfig>
   ) { }
 
-  @Post('login')
+  @Post(RouteAlias.Login)
   public async login(@Body() dto: LoginUserDto) {
-    const url = `${this.apiOptions.account.serviceUrl}/${this.apiOptions.account.authRoute}/login`;
+    const url = `${this.apiOptions.accountServiceUrl}/${RouteAlias.Login}`;
     const { data } = await this.httpService.axiosRef.post(url, dto);
 
     return data;
   }
 
-  @Post('refresh')
+  @Post(RouteAlias.Refresh)
   public async refreshToken(@Req() req: Request) {
-    const url = `${this.apiOptions.account.serviceUrl}/${this.apiOptions.account.authRoute}/refresh`;
+    const url = `${this.apiOptions.accountServiceUrl}/refresh`;
     const { data } = await this.httpService.axiosRef.post(url, null, {
       headers: { 'Authorization': req.headers['authorization'] }
     });
@@ -37,7 +39,7 @@ export class UsersController {
   }
 
   @UseGuards(CheckAuthGuard)
-  @Post('check')
+  @Post(RouteAlias.Check)
   public async checkToken(@Req() { user: payload }: RequestWithTokenPayload) {
     return payload;
   }

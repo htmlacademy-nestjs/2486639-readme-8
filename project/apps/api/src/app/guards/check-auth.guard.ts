@@ -14,7 +14,7 @@ export class CheckAuthGuard implements CanActivate {
 
   public async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    const url = `${this.apiOptions.account.serviceUrl}/${this.apiOptions.account.authRoute}/check`;
+    const url = `${this.apiOptions.accountServiceUrl}/check`;
     const { data } = await this.httpService.axiosRef.post(url, {}, {
       headers: {
         'Authorization': request.headers['authorization']

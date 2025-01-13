@@ -99,7 +99,6 @@ export enum ConfigAlias {
 
   AccountEnv = 'ACCOUNT',
   AccountServiceUrlEnv = `${AccountEnv}_${ServiceUrlEnv}`,
-  AccountAuthRouteEnv = `${AccountEnv}_AUTH_ROUTE`,
 
   BlogEnv = 'BLOG',
   BlogServiceUrlEnv = `${BlogEnv}_${ServiceUrlEnv}`,
@@ -114,7 +113,6 @@ export enum ConfigAlias {
 
   AppAccount = `${Application}.account`,
   AppAccountServiceUrl = `${AppAccount}.${ServiceUrl}`,
-  AppAccountAuthRoute = `${AppAccount}.authRoute`,
 
   AppBlog = `${Application}.blog`,
   AppBlogServiceUrl = `${AppBlog}.${ServiceUrl}`,

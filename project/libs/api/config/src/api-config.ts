@@ -7,10 +7,7 @@ import { getPort } from '@project/shared/helpers';
 export interface ApiConfig {
   environment: string;
   port: number;
-  account: {
-    serviceUrl: string;
-    authRoute: string;
-  }
+  accountServiceUrl: string;
   blog: {
     serviceUrl: string;
     postsRoute: string;
@@ -27,10 +24,7 @@ export interface ApiConfig {
 const validationSchema = Joi.object({
   environment: Joi.string().valid(...ENVIRONMENTS).required().label(ConfigAlias.NodeEnv),
   port: Joi.number().port().default(DEFAULT_PORT),
-  account: Joi.object({
-    serviceUrl: Joi.string().required().label(ConfigAlias.AccountServiceUrlEnv),
-    authRoute: Joi.string().required().label(ConfigAlias.AccountAuthRouteEnv)
-  }),
+  accountServiceUrl: Joi.string().required().label(ConfigAlias.AccountServiceUrlEnv),
   blog: Joi.object({
     serviceUrl: Joi.string().required().label(ConfigAlias.BlogServiceUrlEnv),
     postsRoute: Joi.string().required().label(ConfigAlias.BlogPostsRouteEnv),
@@ -56,10 +50,7 @@ function getConfig(): ApiConfig {
   const config: ApiConfig = {
     environment: process.env[ConfigAlias.NodeEnv] as Environment,
     port: getPort(ConfigAlias.PortEnv, DEFAULT_PORT),
-    account: {
-      serviceUrl: process.env[ConfigAlias.AccountServiceUrlEnv],
-      authRoute: process.env[ConfigAlias.AccountAuthRouteEnv]
-    },
+    accountServiceUrl: process.env[ConfigAlias.AccountServiceUrlEnv],
     blog: {
       serviceUrl: process.env[ConfigAlias.BlogServiceUrlEnv],
       postsRoute: process.env[ConfigAlias.BlogPostsRouteEnv],

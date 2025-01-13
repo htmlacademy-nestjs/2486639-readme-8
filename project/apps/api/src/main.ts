@@ -35,13 +35,10 @@ async function bootstrap() {
 
   // Микросервисы и маршруты
   Logger.log(`Account Service on: ${configService.get<number>(ConfigAlias.AppAccountServiceUrl)}`);
-  Logger.log(`Account Service routes: [${configService.get<number>(ConfigAlias.AppAccountAuthRoute)}]`);
   //
   Logger.log(`Blog Service on: ${configService.get<number>(ConfigAlias.AppBlogServiceUrl)}`);
-  Logger.log(`Blog Service routes: [${configService.get<number>(ConfigAlias.AppBlogPostsRoute)}, ${configService.get<number>(ConfigAlias.AppBlogPostCommentsRoute)}, ${configService.get<number>(ConfigAlias.AppBlogPostLikesRoute)}, ${configService.get<number>(ConfigAlias.AppBlogSubscriptionsRoute)}]`);
   //
   Logger.log(`FileStorage Service on: ${configService.get<number>(ConfigAlias.AppFileStorageServiceUrl)}`);
-  Logger.log(`FileStorage Service routes: [${configService.get<number>(ConfigAlias.AppFileStorageUploadRoute)}]`);
   //
 
   app.useGlobalPipes(new ValidationPipe({ transform: true }));

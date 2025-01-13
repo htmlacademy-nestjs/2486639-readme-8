@@ -1,7 +1,7 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Req, UseGuards } from '@nestjs/common';
-import { ApiBasicAuth, ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { BearerAuth, RequestWithTokenPayload } from '@project/shared/core';
+import { BearerAuth, RequestWithTokenPayload, RouteAlias } from '@project/shared/core';
 import { fillDto } from '@project/shared/helpers';
 import { MongoIdValidationPipe } from '@project/shared/pipes';
 import { RequestWithBlogUserEntity } from '@project/account/blog-user';
@@ -19,7 +19,6 @@ import { UserRdo } from './rdo/user.rdo';
 import { UserIdApiParam, AuthenticationApiResponse } from './authentication.constant';
 
 @ApiTags('authentication')
-@ApiBasicAuth()
 @Controller('auth')
 export class AuthenticationController {
   constructor(
@@ -30,7 +29,7 @@ export class AuthenticationController {
   @ApiResponse(AuthenticationApiResponse.UserExist)
   @ApiResponse(AuthenticationApiResponse.BadRequest)
   @ApiResponse(AuthenticationApiResponse.NotAllow)
-  @Post('register')
+  @Post(RouteAlias.Register)
   public async create(@Body() dto: CreateUserDto) {
     const newUser = await this.authService.registerUser(dto);
 
@@ -43,7 +42,7 @@ export class AuthenticationController {
   @ApiResponse(AuthenticationApiResponse.Unauthorized)
   @ApiBody({ type: LoginUserDto, required: true })
   @UseGuards(LocalAuthGuard)
-  @Post('login')
+  @Post(RouteAlias.Login)
   public async login(@Req() { user }: RequestWithBlogUserEntity) {
     const userToken = await this.authService.createUserToken(user);
 
@@ -67,7 +66,7 @@ export class AuthenticationController {
   @HttpCode(HttpStatus.OK)
   @ApiBearerAuth(BearerAuth.RefreshToken)
   @UseGuards(JwtRefreshGuard)
-  @Post('refresh')
+  @Post(RouteAlias.Refresh)
   public async refreshToken(@Req() { user }: RequestWithBlogUserEntity) {
     const userToken = await this.authService.createUserToken(user);
 
@@ -80,7 +79,7 @@ export class AuthenticationController {
   @HttpCode(HttpStatus.OK)
   @ApiBearerAuth(BearerAuth.AccessToken)
   @UseGuards(JwtAuthGuard)
-  @Post('check')
+  @Post(RouteAlias.Check)
   public async checkToken(@Req() { user: payload }: RequestWithTokenPayload) {
     return fillDto(TokenPayloadRdo, payload);
   }
