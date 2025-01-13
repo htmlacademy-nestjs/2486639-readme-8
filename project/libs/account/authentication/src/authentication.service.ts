@@ -95,9 +95,19 @@ export class AuthenticationService {
 
       return { accessToken, refreshToken };
     } catch (error) {
-      this.logger.error('[Token generation error]: ' + error.message);
+      this.logger.error(`[Token generation error]: ${error.message}`);
 
       throw new HttpException('Ошибка при создании токена.', HttpStatus.INTERNAL_SERVER_ERROR);
     }
+  }
+
+  public async getUserByEmail(email: string) {
+    const existUser = await this.blogUserRepository.findByEmail(email);
+
+    if (!existUser) {
+      throw new NotFoundException(`User with email ${email} not found`);
+    }
+
+    return existUser;
   }
 }

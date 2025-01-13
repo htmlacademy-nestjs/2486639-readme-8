@@ -8,6 +8,8 @@ export { PaginationApiProperty } from './lib/constants/pagination-api-property';
 export { EntityFactory } from './lib/interfaces/entity-factory.interface';
 export { File } from './lib/interfaces/file.interface';
 export { PaginationResult } from './lib/interfaces/pagination.interface';
+export { JwtToken } from './lib/interfaces/jwt-token.interface';
+export { RefreshTokenPayload } from './lib/interfaces/refresh-token-payload.interface';
 export { RequestWithTokenPayload } from './lib/interfaces/request-with-token-payload.interface';
 export { StorableEntity } from './lib/interfaces/storable-entity.interface';
 export { StoredFile } from './lib/interfaces/stored-file.interface';
