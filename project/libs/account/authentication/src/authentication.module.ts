@@ -11,6 +11,7 @@ import { AuthenticationController } from './authentication.controller';
 import { AuthenticationService } from './authentication.service';
 import { JwtAccessStrategy } from './strategies/jwt-access.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
+import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
 
 const JwtModuleOption = {
   inject: [ConfigService],
@@ -28,7 +29,8 @@ const JwtModuleOption = {
   providers: [
     AuthenticationService,
     JwtAccessStrategy,
-    LocalStrategy
+    LocalStrategy,
+    JwtRefreshStrategy
   ]
 })
 export class AuthenticationModule { }
