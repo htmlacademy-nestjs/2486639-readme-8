@@ -8,34 +8,16 @@ export interface ApiConfig {
   environment: string;
   port: number;
   accountServiceUrl: string;
-  blog: {
-    serviceUrl: string;
-    postsRoute: string;
-    postCommentsRoute: string;
-    postLikesRoute: string;
-    subscriptionsRoute: string;
-  }
-  fileStorage: {
-    serviceUrl: string;
-    uploadRoute: string;
-  }
+  blogPostServiceUrl: string;
+  fileStorageServiceUrl: string;
 }
 
 const validationSchema = Joi.object({
   environment: Joi.string().valid(...ENVIRONMENTS).required().label(ConfigAlias.NodeEnv),
   port: Joi.number().port().default(DEFAULT_PORT),
   accountServiceUrl: Joi.string().required().label(ConfigAlias.AccountServiceUrlEnv),
-  blog: Joi.object({
-    serviceUrl: Joi.string().required().label(ConfigAlias.BlogServiceUrlEnv),
-    postsRoute: Joi.string().required().label(ConfigAlias.BlogPostsRouteEnv),
-    postCommentsRoute: Joi.string().required().label(ConfigAlias.BlogPostCommentsRouteEnv),
-    postLikesRoute: Joi.string().required().label(ConfigAlias.BlogPostLikesRouteEnv),
-    subscriptionsRoute: Joi.string().required().label(ConfigAlias.BlogSubscriptionsRouteEnv)
-  }),
-  fileStorage: Joi.object({
-    serviceUrl: Joi.string().required().label(ConfigAlias.FileStorageServiceUrlEnv),
-    uploadRoute: Joi.string().required().label(ConfigAlias.FileStorageUploadRouteEnv)
-  })
+  blogPostServiceUrl: Joi.string().required().label(ConfigAlias.BlogPostServiceUrlEnv),
+  fileStorageServiceUrl: Joi.string().required().label(ConfigAlias.FileStorageServiceUrlEnv)
 });
 
 function validateConfig(config: ApiConfig): void {
@@ -51,17 +33,8 @@ function getConfig(): ApiConfig {
     environment: process.env[ConfigAlias.NodeEnv] as Environment,
     port: getPort(ConfigAlias.PortEnv, DEFAULT_PORT),
     accountServiceUrl: process.env[ConfigAlias.AccountServiceUrlEnv],
-    blog: {
-      serviceUrl: process.env[ConfigAlias.BlogServiceUrlEnv],
-      postsRoute: process.env[ConfigAlias.BlogPostsRouteEnv],
-      postCommentsRoute: process.env[ConfigAlias.BlogPostCommentsRouteEnv],
-      postLikesRoute: process.env[ConfigAlias.BlogPostLikesRouteEnv],
-      subscriptionsRoute: process.env[ConfigAlias.BlogSubscriptionsRouteEnv]
-    },
-    fileStorage: {
-      serviceUrl: process.env[ConfigAlias.FileStorageServiceUrlEnv],
-      uploadRoute: process.env[ConfigAlias.FileStorageUploadRouteEnv]
-    }
+    blogPostServiceUrl: process.env[ConfigAlias.BlogPostServiceUrlEnv],
+    fileStorageServiceUrl: process.env[ConfigAlias.FileStorageServiceUrlEnv]
   };
 
   validateConfig(config);

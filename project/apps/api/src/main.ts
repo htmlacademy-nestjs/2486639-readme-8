@@ -35,9 +35,7 @@ async function bootstrap() {
 
   // Микросервисы и маршруты
   Logger.log(`Account Service on: ${configService.get<number>(ConfigAlias.AppAccountServiceUrl)}`);
-  //
-  Logger.log(`Blog Service on: ${configService.get<number>(ConfigAlias.AppBlogServiceUrl)}`);
-  //
+  Logger.log(`BlogPost Service on: ${configService.get<number>(ConfigAlias.AppBlogPostServiceUrl)}`);
   Logger.log(`FileStorage Service on: ${configService.get<number>(ConfigAlias.AppFileStorageServiceUrl)}`);
   //
 

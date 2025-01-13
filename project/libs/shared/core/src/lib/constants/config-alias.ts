@@ -95,34 +95,14 @@ export enum ConfigAlias {
   AppJwtRefreshTokenExpiresIn = `${AppJwt}.refreshTokenExpiresIn`,
   // микросервисы
   ServiceUrlEnv = 'SERVICE_URL',
-  ServiceUrl = 'serviceUrl',
+  ServiceUrl = 'ServiceUrl',
 
-  AccountEnv = 'ACCOUNT',
-  AccountServiceUrlEnv = `${AccountEnv}_${ServiceUrlEnv}`,
+  AccountServiceUrlEnv = `ACCOUNT_${ServiceUrlEnv}`,
+  BlogPostServiceUrlEnv = `BLOG_POST_${ServiceUrlEnv}`,
+  FileStorageServiceUrlEnv = `FILE_STORAGE_${ServiceUrlEnv}`,
 
-  BlogEnv = 'BLOG',
-  BlogServiceUrlEnv = `${BlogEnv}_${ServiceUrlEnv}`,
-  BlogPostsRouteEnv = `${BlogEnv}_POSTS_ROUTE`,
-  BlogPostCommentsRouteEnv = `${BlogEnv}_POST_COMMENTS_ROUTE`,
-  BlogPostLikesRouteEnv = `${BlogEnv}_POST_LIKES_ROUTE`,
-  BlogSubscriptionsRouteEnv = `${BlogEnv}_SUBSCRIPTIONS_ROUTE`,
-
-  FileStorageEnv = 'FILE_STORAGE',
-  FileStorageServiceUrlEnv = `${FileStorageEnv}_${ServiceUrlEnv}`,
-  FileStorageUploadRouteEnv = `${FileStorageEnv}_UPLOAD_ROUTE`,
-
-  AppAccount = `${Application}.account`,
-  AppAccountServiceUrl = `${AppAccount}.${ServiceUrl}`,
-
-  AppBlog = `${Application}.blog`,
-  AppBlogServiceUrl = `${AppBlog}.${ServiceUrl}`,
-  AppBlogPostsRoute = `${AppBlog}.postsRoute`,
-  AppBlogPostCommentsRoute = `${AppBlog}.postCommentsRoute`,
-  AppBlogPostLikesRoute = `${AppBlog}.postLikesRoute`,
-  AppBlogSubscriptionsRoute = `${AppBlog}.subscriptionsRoute`,
-
-  AppFileStorage = `${Application}.fileStorage`,
-  AppFileStorageServiceUrl = `${AppFileStorage}.${ServiceUrl}`,
-  AppFileStorageUploadRoute = `${AppFileStorage}.uploadRoute`
+  AppAccountServiceUrl = `${Application}.account${ServiceUrl}`,
+  AppBlogPostServiceUrl = `${Application}.blogPost${ServiceUrl}`,
+  AppFileStorageServiceUrl = `${Application}.fileStorage${ServiceUrl}`,
   //...
 }
