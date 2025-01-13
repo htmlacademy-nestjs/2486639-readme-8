@@ -41,4 +41,3 @@ export function getValidationErrorString(errors: ValidationError[]): string {
 
   return errorList.join(', ');
 }
-

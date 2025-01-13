@@ -85,6 +85,8 @@
   4. удалить BaseMemoryRepository если не будет использоватся?
   5. всем свойствам в Entity.populate нужно  "?? undefined;"
   6. сам добавил "entity.id = document.id; //! временно" в BaseMongoRepository, для created.user.rdo - будет в коммитах про API-Gate
+      EmailSubscriberModel  id? убрать?
+      заполнять служебные поля в Mongo?
   7. .env
         project\apps\...\.env - nx или node добавляет в process.env при запуске!
         envFilePath: ENV_FILE_PATH - загружает ConfigModule в process.env!
@@ -142,6 +144,7 @@
       - поискать <from ".../dist/....>
       - еще <, }>
       - проверить неиспользуемые импорты
+      - <' +>
   5. Title: { description: 'The post title for types: video and text',
     все ограничения перечислены в PostFieldsByType
   6. есть одинаковые сообщения в разных бибилиотеках, возможно стоит сделать общие сообщения и описание, например "export const PostApiProperty = {"
