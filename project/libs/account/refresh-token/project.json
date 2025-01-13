@@ -1,0 +1,9 @@
+{
+  "name": "account-refresh-token",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/account/refresh-token/src",
+  "projectType": "library",
+  "tags": [],
+  "// targets": "to see all targets run: nx show project account-refresh-token --web",
+  "targets": {}
+}

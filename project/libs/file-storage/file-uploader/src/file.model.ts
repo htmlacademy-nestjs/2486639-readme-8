@@ -10,8 +10,6 @@ import { File } from '@project/shared/core';
   toObject: { virtuals: true }
 })
 export class FileModel extends Document implements File {
-  public id?: string;
-
   @Prop({ required: true })
   public originalName: string;
 

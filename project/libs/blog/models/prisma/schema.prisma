@@ -26,11 +26,9 @@ model Tag {
 model Post {
   id              String    @id @default(uuid())
   type            String
-  tags            Tag[]
   publishDate     DateTime  @default(now()) @map("publish_date")
-  repostedPost    Post?     @relation("repostedPosts", fields: [repostedPostId], references: [id])
-  repostedPostId  String?   @map("reposted_post_id")
   state           String
+  userId          String    @map("user_id")
   title           String?
   url             String?
   previewText     String?
@@ -39,15 +37,18 @@ model Post {
   quoteAuthor     String?
   imagePath       String?
   linkDescription String?
-  createdAt       DateTime  @default(now()) @map("created_at")
-  updatedAt       DateTime  @updatedAt @map("updated_at")
-  userId          String    @map("user_id")
   likesCount      Int       @default(0) @map("likes_count")
   commentsCount   Int       @default(0) @map("comments_count")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+  repostedPostId  String?   @map("reposted_post_id")
+  tags            Tag[]
+  repostedPosts   Post[]    @relation("repostedPosts")
+  repostedPost    Post?     @relation("repostedPosts", fields: [repostedPostId], references: [id])
   comments        Comment[]
   likes           Like[]
-  repostedPosts   Post[]    @relation("repostedPosts")
 
+  @@unique([repostedPostId, userId])
   @@index([type])
   @@index([publishDate])
   @@index([state])
@@ -58,31 +59,35 @@ model Post {
 model Comment {
   id        String   @id @default(uuid())
   message   String
+  postId    String   @map("post_id")
   userId    String   @map("user_id")
   createdAt DateTime @default(now()) @map("created_at")
   post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  postId    String   @map("post_id")
 
-  @@unique([postId, userId], name: "unique_postId_and_userId")
+  @@unique([postId, userId])
   @@index([postId])
   @@map("comments")
 }
 
 model Like {
-  id     String @id @default(uuid())
-  userId String @map("user_id")
-  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  postId String @map("post_id")
+  id        String   @id @default(uuid())
+  postId    String   @map("post_id")
+  userId    String   @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
+  @@unique([postId, userId])
   @@index([postId])
   @@map("likes")
 }
 
 model Subscription {
-  id           String @id @default(uuid())
-  authorUserId String @map("author_user_id")
-  userId       String @map("user_id")
+  id           String   @id @default(uuid())
+  authorUserId String   @map("author_user_id")
+  userId       String   @map("user_id")
+  createdAt    DateTime @default(now()) @map("created_at")
 
+  @@unique([authorUserId, userId])
   @@index([userId])
   @@map("subscriptions")
 }

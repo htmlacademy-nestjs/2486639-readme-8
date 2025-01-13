@@ -1,12 +1,12 @@
 // дополнительный файл с константами, т.к. были ошибки при сборке webpack, ругался AuthenticationApiProperty.User....  User not found
 export const UserApiProperty = {
   Id: {
-    description: 'The uniq user ID',
+    description: 'The unique user ID',
     example: '658170cbb954e9f5b905ccf4'
   },
   Email: {
-    description: 'The uniq user email',
-    example: 'user@local.ru'
+    description: 'The unique user email',
+    example: 'user@local.local'
   },
   Name: {
     description: 'The user name',
@@ -23,5 +23,9 @@ export const UserApiProperty = {
   AccessToken: {
     description: 'The user access JWT token',
     example: 'asdasdsdfetyhetyhythgfnghnlkcsdkfajowfjlsdkmcv'
+  },
+  RefreshToken: {
+    description: 'The user refresh JWT token',
+    example: 'fvdfvbdgbsdfbfgbfgfghdr6he5656hsrthsfhfg'
   }
 } as const;

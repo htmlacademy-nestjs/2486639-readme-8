@@ -7,12 +7,15 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
+import { getPort } from '@project/shared/helpers';
+import { ConfigAlias, DEFAULT_PORT } from '@project/shared/core';
+
 import { AppModule } from './app/app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const globalPrefix = 'api';
-  const port = process.env.PORT || 3000;
+  const port = getPort(ConfigAlias.PortEnv, DEFAULT_PORT);
 
   app.setGlobalPrefix(globalPrefix);
 

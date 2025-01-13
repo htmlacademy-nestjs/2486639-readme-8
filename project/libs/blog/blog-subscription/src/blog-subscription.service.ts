@@ -1,0 +1,44 @@
+import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+
+import { BlogSubscriptionEntity } from './blog-subscription.entity';
+import { BlogSubscriptionRepository } from './blog-subscription.repository';
+//!import { BlogSubscriptionApiResponse, BlogSubscriptionMessage } from './blog-subscription.constant';
+
+@Injectable()
+export class BlogSubscriptionService {
+  constructor(
+    private readonly blogSubscriptionRepository: BlogSubscriptionRepository
+  ) { }
+
+  private checkAuthorization(currentUserId: string) {
+    if (!currentUserId) {
+      throw new UnauthorizedException();//!BlogSubscriptionApiResponse.Unauthorized);
+    }
+  }
+
+  public async subscribe(authorUserId: string, currentUserId: string): Promise<void> {
+    this.checkAuthorization(currentUserId);
+
+    const foundLikeId = await this.blogSubscriptionRepository.findSubscriptionId(authorUserId, currentUserId);
+
+    if (foundLikeId) {
+      throw new ConflictException();//!BlogSubscriptionMessage.LikeExist);
+    }
+
+    const likeEntity = new BlogSubscriptionEntity({ authorUserId, userId: currentUserId });
+
+    await this.blogSubscriptionRepository.save(likeEntity);
+  }
+
+  public async unsubscribe(authorUserId: string, currentUserId: string): Promise<void> {
+    this.checkAuthorization(currentUserId);
+
+    const foundLikeId = await this.blogSubscriptionRepository.findSubscriptionId(authorUserId, currentUserId);
+
+    if (!foundLikeId) {
+      throw new NotFoundException();//!BlogSubscriptionMessage.LikeNotFound);
+    }
+
+    await this.blogSubscriptionRepository.deleteById(foundLikeId);
+  }
+}

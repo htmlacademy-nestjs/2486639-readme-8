@@ -2,7 +2,7 @@ import { ConfigType, registerAs } from '@nestjs/config';
 import { plainToClass } from 'class-transformer';
 
 import { ConfigAlias, DEFAULT_MONGODB_PORT } from '@project/shared/core';
-import { getPort } from '@project/shared/helpers';
+import { getPort, getValidationErrorString } from '@project/shared/helpers';
 
 import { MongoDbConfiguration } from './mongodb/mongo-db.env';
 
@@ -25,7 +25,16 @@ async function getMongoDbConfig(): Promise<MongoDbConfiguration> {
     authBase: process.env[ConfigAlias.MongoDbAuthBaseEnv]
   });
 
-  await config.validate();
+  try {
+    await config.validate();
+  } catch (error) {
+    // не было ошибки с полной валидацией, просто undefined
+    if (!error.length) {
+      throw new Error(error);
+    }
+
+    throw new Error(getValidationErrorString(error));
+  }
 
   return config;
 }

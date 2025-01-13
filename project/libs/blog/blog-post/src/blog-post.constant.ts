@@ -20,7 +20,7 @@ export const PostValidation = {
     MaxCount: 8,
     TagMinLength: 3,
     TagMaxLength: 10,
-    TagRegExp: /^[a-zA-Zа-юА-Ю]{1}[a-zA-Zа-юА-Ю0-9-]{2,10}$/
+    TagRegexp: /^[a-zA-Zа-юА-Ю]{1}[a-zA-Zа-юА-Ю0-9-]{2,10}$/
   },
   Title: {
     MinLength: 20,

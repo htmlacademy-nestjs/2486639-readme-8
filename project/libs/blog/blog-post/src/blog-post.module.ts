@@ -14,6 +14,7 @@ import { BlogPostService } from './blog-post.service';
     BlogPostService,
     BlogPostRepository,
     BlogPostFactory
-  ]
+  ],
+  exports: [BlogPostService]
 })
 export class BlogPostModule { }

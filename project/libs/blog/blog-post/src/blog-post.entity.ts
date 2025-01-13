@@ -1,12 +1,12 @@
-import { Entity, PostType, PostState, Post, StorableEntity } from '@project/shared/core';
-import { BlogTagEntity, BlogTagFactory } from '@project/blog/blog-tag';
+import { Entity, PostType, PostState, Post, StorableEntity, Tag } from '@project/shared/core';
+import { BlogTagEntity } from '@project/blog/blog-tag';
 
 export class BlogPostEntity extends Entity implements StorableEntity<Post> {
   public type: PostType;
   public tags: BlogTagEntity[];
   public publishDate: Date;
-  public repostedPost: BlogPostEntity;
   public state: PostState;
+  public userId: string;
   public title: string;
   public url: string;
   public previewText: string;
@@ -15,11 +15,11 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
   public quoteAuthor: string;
   public imagePath: string;
   public linkDescription: string;
-  public userId: string;
   public createdAt: Date;
   public updatedAt: Date;
   public likesCount: number;
   public commentsCount: number;
+  public repostedPost: BlogPostEntity;
 
   constructor(post?: Post) {
     super();
@@ -36,7 +36,6 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
     this.type = post.type;
     this.tags = [];
     this.publishDate = post.publishDate ?? undefined;
-    this.repostedPost = undefined;
     this.state = post.state ?? undefined;
     this.userId = post.userId ?? undefined;
     this.title = post.title ?? undefined;
@@ -51,13 +50,14 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
     this.updatedAt = post.updatedAt ?? undefined;
     this.likesCount = post.likesCount ?? undefined;
     this.commentsCount = post.commentsCount ?? undefined;
+    this.repostedPost = undefined;
 
-    const blogTagFactory = new BlogTagFactory();
+    if (post.tags) {
+      for (const tag of post.tags) {
+        const blogTagEntity = new BlogTagEntity(tag);
 
-    for (const tag of post.tags) {
-      const blogTagEntity = blogTagFactory.create(tag);
-
-      this.tags.push(blogTagEntity);
+        this.tags.push(blogTagEntity);
+      }
     }
 
     if (post.repostedPost) {
@@ -66,13 +66,16 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
   }
 
   public toPOJO(): Post {
+    const tags: Tag[] = (this.tags)
+      ? this.tags.map((tagEntity) => tagEntity.toPOJO())
+      : [];
+
     return {
       id: this.id,
       type: this.type,
-      tags: this.tags.map((tagEntity) => tagEntity.toPOJO()), //! смысл? при сохранении нужны id
       publishDate: this.publishDate,
-      repostedPost: this.repostedPost?.toPOJO(),
       state: this.state,
+      userId: this.userId,
       title: this.title,
       url: this.url,
       previewText: this.previewText,
@@ -81,11 +84,12 @@ export class BlogPostEntity extends Entity implements StorableEntity<Post> {
       quoteAuthor: this.quoteAuthor,
       imagePath: this.imagePath,
       linkDescription: this.linkDescription,
-      userId: this.userId,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
       likesCount: this.likesCount,
-      commentsCount: this.commentsCount
+      commentsCount: this.commentsCount,
+      repostedPost: this.repostedPost?.toPOJO(),
+      tags
     }
   }
 }

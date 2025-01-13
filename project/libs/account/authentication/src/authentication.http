@@ -12,8 +12,7 @@ Content-Type: application/json
 ###
 
 # Get user by ID
-GET http://localhost:4000/api/auth/6770b0648ce6df57a766948e HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzcwYjA2NDhjZTZkZjU3YTc2Njk0OGUiLCJlbWFpbCI6InVzZXJAbG9jYWwubG9jYWwiLCJuYW1lIjoiS2VrcyIsImlhdCI6MTczNTU3NjE2MywiZXhwIjoxNzM1NTc2NDYzfQ.SAgL2uYZWV141xsjpnH87ddJNt665BiYSw5mcm-zDO4
+GET http://localhost:4000/api/auth/677e5f315c8166b2ea7f7015 HTTP/1.1
 
 ###
 
@@ -25,5 +24,17 @@ Content-Type: application/json
   "email": "user@local.local",
   "password": "123456"
 }
+
+###
+
+# Get new JWT pair
+POST http://localhost:4000/api/auth/refresh HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzdlNWYzMTVjODE2NmIyZWE3ZjcwMTUiLCJlbWFpbCI6InVzZXJAbG9jYWwubG9jYWwiLCJuYW1lIjoiS2VrcyIsInRva2VuSWQiOiIxYmI3OWVkZi05MmQ5LTQwNjUtYTlhNS1mZjRkMjFkYTQ3YTAiLCJpYXQiOjE3MzY3NDc4NjYsImV4cCI6MTczOTMzOTg2Nn0.p_3sMwRZ-5bhCp9wNQabL1phSdVo0o5x0iDDjasFpD8
+
+###
+
+# Check user token
+POST http://localhost:4000/api/auth/check HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzdlNWYzMTVjODE2NmIyZWE3ZjcwMTUiLCJlbWFpbCI6InVzZXJAbG9jYWwubG9jYWwiLCJuYW1lIjoiS2VrcyIsImlhdCI6MTczNjc0Nzg2NiwiZXhwIjoxNzM2NzQ4MTY2fQ.1BHbfTjaWESWSoNauE-R79JgsBT9WesglhwN3LHtZtw
 
 ###

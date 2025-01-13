@@ -33,6 +33,10 @@ export class DetailPostRdo {
   @Expose()
   public publishDate: string;
 
+  @ApiProperty(PostApiProperty.UserId)
+  @Expose()
+  public userId: string;
+
   @ApiProperty(PostApiProperty.Title)
   @Expose()
   public title: string;
@@ -65,6 +69,14 @@ export class DetailPostRdo {
   @Expose()
   public linkDescription: string;
 
+  @ApiProperty(PostApiProperty.LikesCount)
+  @Expose()
+  public likesCount: number;
+
+  @ApiProperty(PostApiProperty.CommentsCount)
+  @Expose()
+  public commentsCount: number;
+
   @ApiProperty(PostApiProperty.IsRepost)
   @Expose()
   @Transform(({ obj }) => (!!obj.repostedPost?.id))
@@ -80,15 +92,4 @@ export class DetailPostRdo {
   @Transform(({ obj }) => (obj.repostedPost?.userId))
   public repostedPostUserId: string;
 
-  @ApiProperty(PostApiProperty.UserId)
-  @Expose()
-  public userId: string;
-
-  @ApiProperty(PostApiProperty.LikesCount)
-  @Expose()
-  public likesCount: number;
-
-  @ApiProperty(PostApiProperty.CommentsCount)
-  @Expose()
-  public commentsCount: number;
 }

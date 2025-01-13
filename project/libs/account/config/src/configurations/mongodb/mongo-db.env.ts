@@ -20,13 +20,13 @@ export class MongoDbConfiguration {
   @IsString({ message: EnvValidationMessage.DBPasswordRequired })
   public password: string;
 
-  @IsString({ message: EnvValidationMessage.DBNameRequired })
+  @IsString({ message: EnvValidationMessage.DBDatabaseRequired })
   public database: string;
 
   @IsString({ message: EnvValidationMessage.DBBaseAuthRequired })
   public authBase: string;
 
   public async validate(): Promise<void> {
-    await validateOrReject(this);
+    await validateOrReject(this, { dismissDefaultMessages: true });
   }
 }

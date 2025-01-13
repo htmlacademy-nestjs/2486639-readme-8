@@ -1,0 +1,40 @@
+# Create a new user
+POST http://localhost:3000/api/users/register HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "user@local.local",
+  "name": "Keks",
+  "name1111": "Keks1asdasdasdasdasdasdasdasdasddsadasd11",
+  "password": "123456"
+}
+
+###
+
+# Get user by ID
+GET http://localhost:3000/api/users/677e5f315c8166b2ea7f7015 HTTP/1.1
+
+###
+
+# Login user by email and password
+POST http://localhost:3000/api/users/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "user@local.local",
+  "password": "123456"
+}
+
+###
+
+# Get new JWT pair
+POST http://localhost:3000/api/users/refresh HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzdlNWYzMTVjODE2NmIyZWE3ZjcwMTUiLCJlbWFpbCI6InVzZXJAbG9jYWwubG9jYWwiLCJuYW1lIjoiS2VrcyIsInRva2VuSWQiOiI4ODIxYmE4YS1hMDI0LTQ5YzMtYTlmNi04NThlMGRmNTgzYWUiLCJpYXQiOjE3MzY3NjQzNjQsImV4cCI6MTczOTM1NjM2NH0.O9FIXV8lA_B9I_zVH0G6nWBVXRT4oCKitZ0Zw_WTfso
+
+###
+
+# Check user token
+POST http://localhost:3000/api/users/check HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzdlNWYzMTVjODE2NmIyZWE3ZjcwMTUiLCJlbWFpbCI6InVzZXJAbG9jYWwubG9jYWwiLCJuYW1lIjoiS2VrcyIsImlhdCI6MTczNjc2NDk0MCwiZXhwIjoxNzM2NzY1MjQwfQ.EGk3rAVa111dUWaSLVl-Tv2ozqBFvEUndF5IXgIDAS8
+
+###

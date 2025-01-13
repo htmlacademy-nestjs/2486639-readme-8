@@ -2,7 +2,7 @@ import { PostState, PostType, SortType } from '@project/shared/core';
 
 export const PostApiProperty = {
   Id: {
-    description: 'The uniq post ID',
+    description: 'The unique post ID',
     example: '2f31b19b-97eb-4305-877a-0b9be7faca8f'
   },
   Type: {
@@ -19,9 +19,9 @@ export const PostApiProperty = {
     description: 'The post publish date',
     example: "2024-07-09"
   },
-  Tags: {
-    description: 'The post tags',
-    example: ["tag1", "tag2"]
+  UserId: {
+    description: 'The post user id',
+    example: "658170cbb954e9f5b905ccf4"
   },
   // для формирования "for types:..." можно применить PostFieldsByType, но данные поля по типам, а тут нужно типы по полям
   Title: {
@@ -65,6 +65,14 @@ export const PostApiProperty = {
     example: "link description"
   },
   //
+  LikesCount: {
+    description: 'The post likes count',
+    example: "5"
+  },
+  CommentsCount: {
+    description: 'The post comments count',
+    example: "5"
+  },
   IsRepost: {
     description: 'The post is repost attribute',
     example: "true"
@@ -79,17 +87,9 @@ export const PostApiProperty = {
     required: false,
     example: "658170cbb954e9f5b905ccf4"
   },
-  UserId: {
-    description: 'The post user id',
-    example: "658170cbb954e9f5b905ccf4"
-  },
-  LikesCount: {
-    description: 'The post likes count',
-    example: "5"
-  },
-  CommentsCount: {
-    description: 'The post comments count',
-    example: "5"
+  Tags: {
+    description: 'The post tags',
+    example: ["tag1", "tag2"]
   }
 } as const;
 

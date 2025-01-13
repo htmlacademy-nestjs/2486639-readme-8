@@ -1,3 +1,4 @@
+import { ValidationError } from '@nestjs/common';
 import { ClassTransformOptions, plainToInstance } from 'class-transformer';
 
 export function getPort(evnName: string, defaultPort: number): number {
@@ -35,20 +36,8 @@ export function getRabbitMQConnectionString({ host, port, user, password }): str
   return `amqp://${user}:${password}@${host}:${port}`;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function getMetaError(error: any): { message: string, code: string, modelName: string, fieldName: string, target: string } {
-  //! временно? пока для обработки ошибок
-  const message = error.message ?? '';
-  const code = error.code ?? '';
-  const modelName = error.meta?.modelName ?? '';
-  const fieldName = error.meta?.field_name ?? '';
-  const target = error.meta?.target ?? '';
+export function getValidationErrorString(errors: ValidationError[]): string {
+  const errorList = errors.map((item: ValidationError) => (Object.values(item.constraints).join(', ')));
 
-  return {
-    message,
-    code,
-    modelName,
-    fieldName,
-    target
-  };
+  return errorList.join(', ');
 }

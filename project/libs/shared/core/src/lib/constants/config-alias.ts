@@ -92,5 +92,17 @@ export enum ConfigAlias {
   AppJwtAccessTokenSecret = `${AppJwt}.accessTokenSecret`,
   AppJwtAccessTokenExpiresIn = `${AppJwt}.accessTokenExpiresIn`,
   AppJwtRefreshTokenSecret = `${AppJwt}.refreshTokenSecret`,
-  AppJwtRefreshTokenExpiresIn = `${AppJwt}.refreshTokenExpiresIn`
+  AppJwtRefreshTokenExpiresIn = `${AppJwt}.refreshTokenExpiresIn`,
+  // микросервисы
+  ServiceUrlEnv = 'SERVICE_URL',
+  ServiceUrl = 'ServiceUrl',
+
+  AccountServiceUrlEnv = `ACCOUNT_${ServiceUrlEnv}`,
+  BlogPostServiceUrlEnv = `BLOG_POST_${ServiceUrlEnv}`,
+  FileStorageServiceUrlEnv = `FILE_STORAGE_${ServiceUrlEnv}`,
+
+  AppAccountServiceUrl = `${Application}.account${ServiceUrl}`,
+  AppBlogPostServiceUrl = `${Application}.blogPost${ServiceUrl}`,
+  AppFileStorageServiceUrl = `${Application}.fileStorage${ServiceUrl}`,
+  //...
 }

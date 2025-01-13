@@ -12,7 +12,8 @@ import { BlogUserModel } from './blog-user.model';
 export class BlogUserRepository extends BaseMongoRepository<BlogUserEntity, BlogUserModel> {
   constructor(
     entityFactory: BlogUserFactory,
-    @InjectModel(BlogUserModel.name) blogUserModel: Model<BlogUserModel>
+    @InjectModel(BlogUserModel.name)
+    blogUserModel: Model<BlogUserModel>
   ) {
     super(entityFactory, blogUserModel);
   }

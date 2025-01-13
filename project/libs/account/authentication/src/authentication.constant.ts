@@ -3,6 +3,8 @@ import { HttpStatus } from '@nestjs/common';
 import { UserApiProperty } from './authentication.constant.property';
 import { UserRdo } from './rdo/user.rdo';
 import { LoggedUserRdo } from './rdo/logged-user.rdo';
+import { UserTokenRdo } from './rdo/user-token.rdo';
+import { TokenPayloadRdo } from './rdo/token-payload.rdo';
 
 export const AuthenticationUserMessage = {
   Exists: 'User with this email already exists',
@@ -36,14 +38,32 @@ export const AuthenticationApiResponse = {
     status: HttpStatus.CONFLICT,
     description: AuthenticationUserMessage.Exists
   },
+  RefreshTokens: {
+    type: UserTokenRdo,
+    status: HttpStatus.OK,
+    description: 'Get a new access/refresh tokens.'
+  },
+  Unauthorized: {
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Unauthorized.'
+  },
   NotAllow: {
     status: HttpStatus.FORBIDDEN,
     description: 'Require logout.'
+  },
+  BadRequest: {
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Bad request.'
   },
   LoggedSuccess: {
     type: LoggedUserRdo,
     status: HttpStatus.OK,
     description: 'User has been successfully logged.'
+  },
+  CheckSuccess: {
+    type: TokenPayloadRdo,
+    status: HttpStatus.OK,
+    description: 'Check access token success.'
   },
   LoggedError: {
     status: HttpStatus.UNAUTHORIZED,

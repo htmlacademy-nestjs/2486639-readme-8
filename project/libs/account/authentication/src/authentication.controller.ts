@@ -1,16 +1,22 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
-import { ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Req, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
+import { BearerAuth, RequestWithTokenPayload, RouteAlias } from '@project/shared/core';
 import { fillDto } from '@project/shared/helpers';
 import { MongoIdValidationPipe } from '@project/shared/pipes';
+import { RequestWithBlogUserEntity } from '@project/account/blog-user';
 
 import { AuthenticationService } from './authentication.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
+import { LocalAuthGuard } from './guards/local-auth.guard';
+import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LoggedUserRdo } from './rdo/logged-user.rdo';
+import { UserTokenRdo } from './rdo/user-token.rdo';
+import { TokenPayloadRdo } from './rdo/token-payload.rdo';
 import { UserRdo } from './rdo/user.rdo';
 import { UserIdApiParam, AuthenticationApiResponse } from './authentication.constant';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @ApiTags('authentication')
 @Controller('auth')
@@ -19,13 +25,12 @@ export class AuthenticationController {
     private readonly authService: AuthenticationService
   ) { }
 
-  //!@UseGuards(JwtAuthGuard)
   @ApiResponse(AuthenticationApiResponse.UserCreated)
   @ApiResponse(AuthenticationApiResponse.UserExist)
+  @ApiResponse(AuthenticationApiResponse.BadRequest)
   @ApiResponse(AuthenticationApiResponse.NotAllow)
-  @Post('register')
+  @Post(RouteAlias.Register)
   public async create(@Body() dto: CreateUserDto) {
-    //! проверить, что разлогиннен  @UseGuards(JwtAuthGuard) ? как достать sub
     const newUser = await this.authService.registerUser(dto);
 
     return fillDto(UserRdo, newUser.toPOJO());
@@ -33,22 +38,49 @@ export class AuthenticationController {
 
   @ApiResponse(AuthenticationApiResponse.LoggedSuccess)
   @ApiResponse(AuthenticationApiResponse.LoggedError)
-  @Post('login')
-  public async login(@Body() dto: LoginUserDto) {
-    const verifiedUser = await this.authService.verifyUser(dto);
-    const userToken = await this.authService.createUserToken(verifiedUser);
+  @ApiResponse(AuthenticationApiResponse.BadRequest)
+  @ApiResponse(AuthenticationApiResponse.Unauthorized)
+  @ApiBody({ type: LoginUserDto, required: true })
+  @UseGuards(LocalAuthGuard)
+  @Post(RouteAlias.Login)
+  public async login(@Req() { user }: RequestWithBlogUserEntity) {
+    const userToken = await this.authService.createUserToken(user);
 
-    return fillDto(LoggedUserRdo, { ...verifiedUser.toPOJO(), ...userToken });
+    return fillDto(LoggedUserRdo, { ...user.toPOJO(), ...userToken });
   }
 
-  @UseGuards(JwtAuthGuard) //! на время
   @ApiResponse(AuthenticationApiResponse.UserFound)
   @ApiResponse(AuthenticationApiResponse.UserNotFound)
+  @ApiResponse(AuthenticationApiResponse.BadRequest)
   @ApiParam(UserIdApiParam)
   @Get(`:${UserIdApiParam.name}`)
   public async show(@Param(UserIdApiParam.name, MongoIdValidationPipe) userId: string) {
     const existUser = await this.authService.getUser(userId);
 
     return fillDto(UserRdo, existUser.toPOJO());
+  }
+
+  @ApiResponse(AuthenticationApiResponse.RefreshTokens)
+  @ApiResponse(AuthenticationApiResponse.BadRequest)
+  @ApiResponse(AuthenticationApiResponse.Unauthorized)
+  @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth(BearerAuth.RefreshToken)
+  @UseGuards(JwtRefreshGuard)
+  @Post(RouteAlias.Refresh)
+  public async refreshToken(@Req() { user }: RequestWithBlogUserEntity) {
+    const userToken = await this.authService.createUserToken(user);
+
+    return fillDto(UserTokenRdo, userToken);
+  }
+
+  @ApiResponse(AuthenticationApiResponse.CheckSuccess)
+  @ApiResponse(AuthenticationApiResponse.BadRequest)
+  @ApiResponse(AuthenticationApiResponse.Unauthorized)
+  @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth(BearerAuth.AccessToken)
+  @UseGuards(JwtAuthGuard)
+  @Post(RouteAlias.Check)
+  public async checkToken(@Req() { user: payload }: RequestWithTokenPayload) {
+    return fillDto(TokenPayloadRdo, payload);
   }
 }

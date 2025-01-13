@@ -12,7 +12,8 @@ import { FileModel } from './file.model';
 export class FileUploaderRepository extends BaseMongoRepository<FileUploaderEntity, FileModel> {
   constructor(
     entityFactory: FileUploaderFactory,
-    @InjectModel(FileModel.name) fileModel: Model<FileModel>
+    @InjectModel(FileModel.name)
+    fileModel: Model<FileModel>
   ) {
     super(entityFactory, fileModel);
   }

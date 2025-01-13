@@ -10,7 +10,7 @@ import { BlogTagService } from '@project/blog/blog-tag';
 import { BlogPostEntity } from './blog-post.entity';
 import { BlogPostFactory } from './blog-post.factory';
 import { BlogPostQuery } from './blog-post.query';
-import { Default } from './blog-post.constant';
+import { BlogPostMessage, Default } from './blog-post.constant';
 
 @Injectable()
 export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, Post> {
@@ -27,6 +27,10 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
   }
 
   private getTagIds(tags: Tag[]): { id: string }[] {
+    if (!tags) {
+      return [];
+    }
+
     return tags.map(({ id }) => ({ id }));
   }
 
@@ -38,26 +42,20 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     return Math.ceil(totalCount / limit);
   }
 
-  public async findById(id: string): Promise<BlogPostEntity> {
-    const record = await this.client.post.findFirst(
-      {
-        where: { id },
-        include: {
-          tags: true,
-          repostedPost: true
-        }
-      }
-    );
+  public async findById(id: string, giveDetailInfo = false): Promise<BlogPostEntity> {
+    const include = (giveDetailInfo)
+      ? { tags: true, repostedPost: true }
+      : undefined;
+    const record = await this.client.post.findFirst({ where: { id }, include });
 
     if (!record) {
-      throw new NotFoundException(`Post with id ${id} not found.`);
+      throw new NotFoundException(BlogPostMessage.NotFound);
     }
 
     const repostedPost: Post = (record.repostedPost)
       ? {
         ...record.repostedPost,
-        ...this.getTypeAndState(record.repostedPost),
-        tags: []
+        ...this.getTypeAndState(record.repostedPost)
       }
       : undefined;
 
@@ -72,15 +70,15 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
 
   public async save(entity: BlogPostEntity): Promise<void> {
     const pojoEntity = entity.toPOJO();
-    const tags = { connect: this.getTagIds(pojoEntity.tags) };
     const repostedPost = (pojoEntity.repostedPost)
       ? { connect: { id: pojoEntity.repostedPost.id } }
       : undefined;
+    const tags = { connect: this.getTagIds(pojoEntity.tags) };
     const record = await this.client.post.create({
       data: {
         ...pojoEntity,
-        tags,
-        repostedPost
+        repostedPost,
+        tags
       }
       //, include: { repostedPost: true } //! возможно нужно при репосте
     });
@@ -88,7 +86,7 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     entity.id = record.id;
     entity.publishDate = record.publishDate;
     entity.likesCount = record.likesCount;
-    entity.commentsCount = record.commentsCount; //! возможно нужны еще данные...
+    entity.commentsCount = record.commentsCount; //! возможно нужны еще данные...  или есть какой ключ чтобы бы переселект
   }
 
   public async update(entity: BlogPostEntity): Promise<void> {
@@ -101,9 +99,9 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
       where: { id },
       data: {
         ...pojoEntity,
-        tags,
         publishDate,
-        repostedPost: undefined // при обновлении не меняем данные о репосте
+        repostedPost: undefined, // при обновлении не меняем данные о репосте
+        tags
       }
     });
   }
@@ -177,5 +175,23 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
       itemsPerPage: take,
       totalItems: postCount
     }
+  }
+
+  public async updateCommentsCount(id: string, step: number): Promise<void> {
+    const { commentsCount } = await this.client.post.findFirst({ select: { commentsCount: true }, where: { id } });
+
+    await this.client.post.update({
+      where: { id },
+      data: { commentsCount: commentsCount + step }
+    });
+  }
+
+  public async updateLikesCount(id: string, step: number): Promise<void> {
+    const { likesCount } = await this.client.post.findFirst({ select: { likesCount: true }, where: { id } });
+
+    await this.client.post.update({
+      where: { id },
+      data: { likesCount: likesCount + step }
+    });
   }
 }
