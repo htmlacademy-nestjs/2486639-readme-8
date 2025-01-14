@@ -21,7 +21,7 @@ GET http://localhost:3000/api/posts/85ad346e-46e1-4191-be1b-b3d39e868930 HTTP/1.
 
 # Create a new post
 POST http://localhost:3000/api/blog HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzdlNWYzMTVjODE2NmIyZWE3ZjcwMTUiLCJlbWFpbCI6InVzZXJAbG9jYWwubG9jYWwiLCJuYW1lIjoiS2VrcyIsImlhdCI6MTczNjc2NDk0MCwiZXhwIjoxNzM2NzY1MjQwfQ.EGk3rAVa111dUWaSLVl-Tv2ozqBFvEUndF5IXgIDAS8
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzdlNWYzMTVjODE2NmIyZWE3ZjcwMTUiLCJlbWFpbCI6InVzZXJAbG9jYWwubG9jYWwiLCJuYW1lIjoiS2VrcyIsImlhdCI6MTczNjgyMzk0MiwiZXhwIjoxNzM3MjU1OTQyfQ.7s9dsUY5DBCr38ffXjHEIplbev3dlJYMUj5_Dab_Duk
 Content-Type: application/json
 
 {

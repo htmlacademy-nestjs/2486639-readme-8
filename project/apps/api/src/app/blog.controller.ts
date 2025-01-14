@@ -3,6 +3,7 @@ import { ConfigType } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
 
 import { apiConfig } from '@project/api/config';
+import { InjectUserIdInterceptor } from '@project/shared/interceptors';
 
 import { AxiosExceptionFilter } from './filters/axios-exception.filter';
 import { CheckAuthGuard } from './guards/check-auth.guard';
@@ -18,7 +19,7 @@ export class BlogController {
   ) { }
 
   @UseGuards(CheckAuthGuard)
-  @UseInterceptors(UseInterceptors)
+  @UseInterceptors(InjectUserIdInterceptor)
   @Post('/')
   //! временно
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
