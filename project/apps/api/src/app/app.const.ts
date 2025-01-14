@@ -1,6 +1,7 @@
 import { HttpStatus } from "@nestjs/common";
 
 export const Avatar = {
+  KEY: 'avatarFile',
   MAX_SIZE: 500 * 1024,
   MIME_TYPES: ['image/jpeg', 'image/png']
 } as const;

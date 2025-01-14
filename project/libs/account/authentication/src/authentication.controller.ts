@@ -10,7 +10,7 @@ import { MongoIdValidationPipe } from '@project/shared/pipes';
 import { RequestWithBlogUserEntity } from '@project/account/blog-user';
 
 import { AuthenticationService } from './authentication.service';
-import { CreateUserWithAvatarPathDto } from './dto/create-user-with-avatar-path.dto';
+import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
@@ -35,7 +35,7 @@ export class AuthenticationController {
   //@ApiConsumes('multipart/form-data')  //! все свойства из dto в swagger-е в отдельных полях, но в body не передает, хотя в api похожее и работает!
   //@UseInterceptors()
   @Post(RouteAlias.Register)
-  public async create(@Body() dto: CreateUserWithAvatarPathDto/*, @Headers('Authorization') authorizationHeader?: string*/) {
+  public async create(@Body() dto: CreateUserDto/*, @Headers('Authorization') authorizationHeader?: string*/) {
     const newUser = await this.authService.registerUser(''/*authorizationHeader*/, dto);
 
     return fillDto(UserRdo, newUser.toPOJO());

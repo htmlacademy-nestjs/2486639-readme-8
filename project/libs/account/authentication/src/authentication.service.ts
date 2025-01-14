@@ -12,7 +12,7 @@ import { jwtConfig } from '@project/account/config';
 import { NotifyService } from '@project/account/notify';
 import { RefreshTokenService } from '@project/account/refresh-token';
 
-import { CreateUserWithAvatarPathDto } from './dto/create-user-with-avatar-path.dto';
+import { CreateUserDto } from './dto/create-user.dto';
 import { AuthenticationUserMessage } from './authentication.constant';
 import { LoginUserDto } from './dto/login-user.dto';
 
@@ -29,7 +29,7 @@ export class AuthenticationService {
     private readonly refreshTokenService: RefreshTokenService
   ) { }
 
-  public async registerUser(authorizationHeader: string, dto: CreateUserWithAvatarPathDto): Promise<BlogUserEntity> {
+  public async registerUser(authorizationHeader: string, dto: CreateUserDto): Promise<BlogUserEntity> {
     if (authorizationHeader) {
       throw new ForbiddenException(AuthenticationUserMessage.RequireLogout);
     }

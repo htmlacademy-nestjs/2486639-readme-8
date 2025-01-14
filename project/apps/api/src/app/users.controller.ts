@@ -10,13 +10,13 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { RequestWithTokenPayload, RouteAlias } from '@project/shared/core';
 import { makePath } from '@project/shared/helpers';
 import { apiConfig } from '@project/api/config';
-import { AuthenticationApiResponse, CreateUserWithAvatarPathDto, LoginUserDto, UserRdo } from '@project/account/authentication';
+import { AuthenticationApiResponse, CreateUserDto as AccountCreateUserDto, LoginUserDto, UserRdo } from '@project/account/authentication';
 import { UploadedFileRdo } from '@project/file-storage/file-uploader';
 
 import { AxiosExceptionFilter } from './filters/axios-exception.filter';
 import { CheckAuthGuard } from './guards/check-auth.guard';
-import { CreateUserWithAvatarFileDto } from './dto/create-user-with-avatar-file.dto';
-import { AvatarFileValidator } from './app.const';
+import { CreateUserDto } from './dto/create-user.dto';
+import { Avatar, AvatarFileValidator } from './app.const';
 
 @ApiTags('users')
 @Controller('users')
@@ -28,21 +28,21 @@ export class UsersController {
     private readonly apiOptions: ConfigType<typeof apiConfig>
   ) { }
 
-  @ApiResponse(AuthenticationApiResponse.UserCreated)  //!кривой тип?
+  @ApiResponse(AuthenticationApiResponse.UserCreated)
   @ApiResponse(AuthenticationApiResponse.UserExist)
   @ApiResponse(AuthenticationApiResponse.BadRequest)
   @ApiResponse(AuthenticationApiResponse.NotAllow)
   @ApiConsumes('multipart/form-data')
-  @UseInterceptors(FileInterceptor('avatarFile'))
+  @UseInterceptors(FileInterceptor(Avatar.KEY))
   @Post(RouteAlias.Register)
   public async register(
-    @Body() dto: CreateUserWithAvatarFileDto,
+    @Body() dto: CreateUserDto,
     @UploadedFile(
       new ParseFilePipeBuilder()
         .addFileTypeValidator(AvatarFileValidator.Type)
         .addMaxSizeValidator(AvatarFileValidator.MaxSize)
         .build(AvatarFileValidator.Build)) avatarFile?: Express.Multer.File) {
-    const userDto: CreateUserWithAvatarPathDto = { ...dto };
+    const userDto: AccountCreateUserDto = { ...dto };
 
     console.log(dto);
     console.log(avatarFile);
