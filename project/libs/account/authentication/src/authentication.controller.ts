@@ -1,6 +1,6 @@
 import {
-  Body, Controller, Get, Headers, HttpCode,
-  HttpStatus, Param, Post, Req, UseGuards
+  Body, Controller, Get, HttpCode, HttpStatus,
+  Param, Post, Req, UseGuards
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
@@ -32,11 +32,13 @@ export class AuthenticationController {
   @ApiResponse(AuthenticationApiResponse.UserExist)
   @ApiResponse(AuthenticationApiResponse.BadRequest)
   @ApiResponse(AuthenticationApiResponse.NotAllow)
+  @ApiBearerAuth(BearerAuth.AccessToken) // для тестироватния - анонимный пользователь может регистрироваться
   //@ApiConsumes('multipart/form-data')  //! все свойства из dto в swagger-е в отдельных полях, но в body не передает, хотя в api похожее и работает!
   //@UseInterceptors()
   @Post(RouteAlias.Register)
-  public async create(@Body() dto: CreateUserDto/*, @Headers('Authorization') authorizationHeader?: string*/) {
-    const newUser = await this.authService.registerUser(''/*authorizationHeader*/, dto);
+  public async create(@Body() dto: CreateUserDto, @Req() req: Request) {
+    // headers: Authorization - т.к. только анонимный пользователь может регистрироваться
+    const newUser = await this.authService.registerUser(req.headers['authorization'], dto);
 
     return fillDto(UserRdo, newUser.toPOJO());
   }

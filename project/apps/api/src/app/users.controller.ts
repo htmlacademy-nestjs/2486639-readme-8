@@ -4,10 +4,10 @@ import {
 } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
-import { ApiConsumes, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiConsumes, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 
-import { RequestWithTokenPayload, RouteAlias } from '@project/shared/core';
+import { BearerAuth, RequestWithTokenPayload, RouteAlias } from '@project/shared/core';
 import { makePath } from '@project/shared/helpers';
 import { apiConfig } from '@project/api/config';
 import { AuthenticationApiResponse, CreateUserDto as AccountCreateUserDto, LoginUserDto, UserRdo } from '@project/account/authentication';
@@ -32,11 +32,13 @@ export class UsersController {
   @ApiResponse(AuthenticationApiResponse.UserExist)
   @ApiResponse(AuthenticationApiResponse.BadRequest)
   @ApiResponse(AuthenticationApiResponse.NotAllow)
+  @ApiBearerAuth(BearerAuth.AccessToken)
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor(Avatar.KEY))
   @Post(RouteAlias.Register)
   public async register(
     @Body() dto: CreateUserDto,
+    @Req() req: Request,
     @UploadedFile(
       new ParseFilePipeBuilder()
         .addFileTypeValidator(AvatarFileValidator.Type)
@@ -47,7 +49,7 @@ export class UsersController {
     console.log(dto);
     console.log(avatarFile);
 
-    return 'ok';
+    //return 'ok';
 
     if (avatarFile) {
       const fileFormData = new FormData();
@@ -64,7 +66,12 @@ export class UsersController {
     }
 
     const registerUrl = `${this.apiOptions.accountServiceUrl}/${RouteAlias.Register}`;
-    const { data: registerData } = await this.httpService.axiosRef.post<UserRdo>(registerUrl, userDto);
+    const { data: registerData } = await this.httpService.axiosRef.post<UserRdo>(
+      registerUrl,
+      userDto,
+      // headers: Authorization - т.к. только анонимный пользователь может регистрироваться
+      { headers: { 'Authorization': req.headers['authorization'] } }
+    );
 
     return registerData;
   }
@@ -80,9 +87,11 @@ export class UsersController {
   @Post(RouteAlias.Refresh)
   public async refreshToken(@Req() req: Request) {
     const url = `${this.apiOptions.accountServiceUrl}/refresh`;
-    const { data } = await this.httpService.axiosRef.post(url, null, {
-      headers: { 'Authorization': req.headers['authorization'] }
-    });
+    const { data } = await this.httpService.axiosRef.post(
+      url,
+      null,
+      { headers: { 'Authorization': req.headers['authorization'] } }
+    );
 
     return data;
   }

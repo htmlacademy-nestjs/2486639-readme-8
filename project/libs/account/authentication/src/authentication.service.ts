@@ -1,6 +1,6 @@
 import {
-  ConflictException, ForbiddenException, HttpException, HttpStatus, Inject, Injectable,
-  Logger, NotFoundException, UnauthorizedException
+  ConflictException, ForbiddenException, HttpException, HttpStatus, Inject,
+  Injectable, Logger, NotFoundException, UnauthorizedException
 } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
