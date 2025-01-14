@@ -1,5 +1,8 @@
-import { Body, Controller, Get, Headers, HttpCode, HttpStatus, Param, Post, Req, UseGuards, UseInterceptors } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiConsumes, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  Body, Controller, Get, Headers, HttpCode,
+  HttpStatus, Param, Post, Req, UseGuards
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { BearerAuth, RequestWithTokenPayload, RouteAlias } from '@project/shared/core';
 import { fillDto } from '@project/shared/helpers';
@@ -7,7 +10,7 @@ import { MongoIdValidationPipe } from '@project/shared/pipes';
 import { RequestWithBlogUserEntity } from '@project/account/blog-user';
 
 import { AuthenticationService } from './authentication.service';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserWithAvatarPathDto } from './dto/create-user-with-avatar-path.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
@@ -29,10 +32,10 @@ export class AuthenticationController {
   @ApiResponse(AuthenticationApiResponse.UserExist)
   @ApiResponse(AuthenticationApiResponse.BadRequest)
   @ApiResponse(AuthenticationApiResponse.NotAllow)
-  //@ApiConsumes('multipart/form-data')  //! все свойстка из dto в swagger-е в отдельных полях, но в body не передает, хотя в api похожее и работает!
+  //@ApiConsumes('multipart/form-data')  //! все свойства из dto в swagger-е в отдельных полях, но в body не передает, хотя в api похожее и работает!
   //@UseInterceptors()
   @Post(RouteAlias.Register)
-  public async create(@Body() dto: CreateUserDto/*, @Headers('Authorization') authorizationHeader?: string*/) {
+  public async create(@Body() dto: CreateUserWithAvatarPathDto/*, @Headers('Authorization') authorizationHeader?: string*/) {
     const newUser = await this.authService.registerUser(''/*authorizationHeader*/, dto);
 
     return fillDto(UserRdo, newUser.toPOJO());
