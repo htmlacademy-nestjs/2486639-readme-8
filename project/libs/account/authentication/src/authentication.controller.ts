@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Headers, HttpCode, HttpStatus, Param, Post, Req, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { BearerAuth, RequestWithTokenPayload, RouteAlias } from '@project/shared/core';
@@ -30,8 +30,8 @@ export class AuthenticationController {
   @ApiResponse(AuthenticationApiResponse.BadRequest)
   @ApiResponse(AuthenticationApiResponse.NotAllow)
   @Post(RouteAlias.Register)
-  public async create(@Body() dto: CreateUserDto) {
-    const newUser = await this.authService.registerUser(dto);
+  public async create(@Headers('Authorization') authorizationHeader: string, @Body() dto: CreateUserDto) {
+    const newUser = await this.authService.registerUser(authorizationHeader, dto);
 
     return fillDto(UserRdo, newUser.toPOJO());
   }

@@ -7,9 +7,10 @@ import { UserTokenRdo } from './rdo/user-token.rdo';
 import { TokenPayloadRdo } from './rdo/token-payload.rdo';
 
 export const AuthenticationUserMessage = {
-  Exists: 'User with this email already exists',
-  NotFound: 'User not found',
-  WrongPassword: 'User password is wrong'
+  Exists: 'User with this email already exists.',
+  NotFound: 'User not found.',
+  WrongPassword: 'User password is wrong.',
+  RequireLogout: 'Require logout.'
 } as const;
 
 export const UserValidation = {
@@ -49,7 +50,7 @@ export const AuthenticationApiResponse = {
   },
   NotAllow: {
     status: HttpStatus.FORBIDDEN,
-    description: 'Require logout.'
+    description: AuthenticationUserMessage.RequireLogout
   },
   BadRequest: {
     status: HttpStatus.BAD_REQUEST,

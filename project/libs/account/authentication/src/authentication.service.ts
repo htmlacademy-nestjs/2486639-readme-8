@@ -1,5 +1,5 @@
 import {
-  ConflictException, HttpException, HttpStatus, Inject, Injectable,
+  ConflictException, ForbiddenException, HttpException, HttpStatus, Inject, Injectable,
   Logger, NotFoundException, UnauthorizedException
 } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
@@ -29,7 +29,11 @@ export class AuthenticationService {
     private readonly refreshTokenService: RefreshTokenService
   ) { }
 
-  public async registerUser(dto: CreateUserDto): Promise<BlogUserEntity> {
+  public async registerUser(authorizationHeader: string, dto: CreateUserDto): Promise<BlogUserEntity> {
+    if (authorizationHeader) {
+      throw new ForbiddenException(AuthenticationUserMessage.RequireLogout);
+    }
+
     const { email, name, password } = dto;
 
     const blogUser = {

@@ -5,7 +5,7 @@ import { ApiTags } from '@nestjs/swagger';
 
 import { RequestWithTokenPayload, RouteAlias } from '@project/shared/core';
 import { apiConfig } from '@project/api/config';
-import { LoginUserDto } from '@project/account/authentication';
+import { CreateUserDto, LoginUserDto } from '@project/account/authentication';
 
 import { AxiosExceptionFilter } from './filters/axios-exception.filter';
 import { CheckAuthGuard } from './guards/check-auth.guard';
@@ -19,6 +19,14 @@ export class UsersController {
     @Inject(apiConfig.KEY)
     private readonly apiOptions: ConfigType<typeof apiConfig>
   ) { }
+
+  @Post(RouteAlias.Register)
+  public async register(@Body() dto: CreateUserDto) {
+    const url = `${this.apiOptions.accountServiceUrl}/${RouteAlias.Register}`;
+    const { data } = await this.httpService.axiosRef.post(url, dto);
+
+    return data;
+  }
 
   @Post(RouteAlias.Login)
   public async login(@Body() dto: LoginUserDto) {
