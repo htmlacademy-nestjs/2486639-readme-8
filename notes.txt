@@ -6,6 +6,14 @@
                ApiImplicitFile - попробовать
                еще https://github.com/nestjs/swagger/issues/167
                еще https://stackoverflow.com/questions/66605192/file-uploading-along-with-other-data-in-swagger-nestjs
+               import { FileSystemStoredFile, HasMimeType, IsFile, MaxFileSize } from 'nestjs-form-data';
+                  export class FormDataTestDto {
+                    @IsFile()
+                    @MaxFileSize(1e6)
+                    @HasMimeType(['image/jpeg', 'image/png'])
+                    avatar: FileSystemStoredFile;
+                  }
+                попробовать!
       1.1.0. а как валидировать LoginUserDto, заменили RequestWithBlogUserEntity?
                типы сделал не такие как в демо, т.к. возвращаемые значения другие.
                валидацию сделал вручную в LocalStrategy

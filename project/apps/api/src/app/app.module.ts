@@ -3,8 +3,8 @@ import { HttpModule } from '@nestjs/axios';
 
 import { ApiConfigModule } from '@project/api/config';
 
-import { UsersController } from './users.controller';
 import { CheckAuthGuard } from './guards/check-auth.guard';
+import { UsersController } from './users.controller';
 import { BlogController } from './blog.controller';
 
 export const HTTP_CLIENT_MAX_REDIRECTS = 5;

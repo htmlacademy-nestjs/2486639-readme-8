@@ -20,4 +20,8 @@ export class CreateUserDto {
   @MinLength(UserValidation.Password.MinLength)
   @MaxLength(UserValidation.Password.MaxLength)
   public password: string;
+
+  @ApiProperty(UserApiProperty.AvatarPath)
+  @IsString()
+  public avatarPath: string;
 }

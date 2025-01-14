@@ -17,6 +17,7 @@ export const UserApiProperty = {
     example: 'password'
   },
   AvatarPath: {
+    required: false,
     description: 'The user avatar path',
     example: '/img/avatar.jpg'
   },

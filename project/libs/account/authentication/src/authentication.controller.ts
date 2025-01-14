@@ -1,5 +1,5 @@
-import { Body, Controller, Get, Headers, HttpCode, HttpStatus, Param, Post, Req, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Get, Headers, HttpCode, HttpStatus, Param, Post, Req, UseGuards, UseInterceptors } from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { BearerAuth, RequestWithTokenPayload, RouteAlias } from '@project/shared/core';
 import { fillDto } from '@project/shared/helpers';
@@ -29,9 +29,11 @@ export class AuthenticationController {
   @ApiResponse(AuthenticationApiResponse.UserExist)
   @ApiResponse(AuthenticationApiResponse.BadRequest)
   @ApiResponse(AuthenticationApiResponse.NotAllow)
+  //@ApiConsumes('multipart/form-data')  //! все свойстка из dto в swagger-е в отдельных полях, но в body не передает, хотя в api похожее и работает!
+  //@UseInterceptors()
   @Post(RouteAlias.Register)
-  public async create(@Headers('Authorization') authorizationHeader: string, @Body() dto: CreateUserDto) {
-    const newUser = await this.authService.registerUser(authorizationHeader, dto);
+  public async create(@Body() dto: CreateUserDto/*, @Headers('Authorization') authorizationHeader?: string*/) {
+    const newUser = await this.authService.registerUser(''/*authorizationHeader*/, dto);
 
     return fillDto(UserRdo, newUser.toPOJO());
   }
