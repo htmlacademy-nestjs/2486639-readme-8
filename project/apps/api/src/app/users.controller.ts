@@ -55,8 +55,8 @@ export class UsersController {
     //! временно //! any
     const { subDirectory, hashName } = fileUploadData;
 
+    //! временно //! типизировать!
     dto['avatarPath'] = makePath(subDirectory, hashName);
-    console.log(fileUploadData); //!
 
     const registerUrl = `${this.apiOptions.accountServiceUrl}/${RouteAlias.Register}`;
     const { data: registerData } = await this.httpService.axiosRef.post(registerUrl, dto);
