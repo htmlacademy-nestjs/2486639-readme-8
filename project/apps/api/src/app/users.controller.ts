@@ -1,6 +1,6 @@
 import {
-  Body, Controller, HttpStatus, Inject, ParseFilePipeBuilder,
-  Post, Req, UploadedFile, UseFilters, UseGuards, UseInterceptors
+  Body, Controller, Inject, ParseFilePipeBuilder, Post,
+  Req, UploadedFile, UseFilters, UseGuards, UseInterceptors
 } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
@@ -16,6 +16,7 @@ import { UploadedFileRdo } from '@project/file-storage/file-uploader';
 import { AxiosExceptionFilter } from './filters/axios-exception.filter';
 import { CheckAuthGuard } from './guards/check-auth.guard';
 import { CreateUserWithAvatarFileDto } from './dto/create-user-with-avatar-file.dto';
+import { AvatarFileValidator } from './app.const';
 
 @ApiTags('users')
 @Controller('users')
@@ -27,7 +28,7 @@ export class UsersController {
     private readonly apiOptions: ConfigType<typeof apiConfig>
   ) { }
 
-  //!@ApiResponse(AuthenticationApiResponse.UserCreated)  кривой тип
+  @ApiResponse(AuthenticationApiResponse.UserCreated)  //!кривой тип?
   @ApiResponse(AuthenticationApiResponse.UserExist)
   @ApiResponse(AuthenticationApiResponse.BadRequest)
   @ApiResponse(AuthenticationApiResponse.NotAllow)
@@ -38,13 +39,15 @@ export class UsersController {
     @Body() dto: CreateUserWithAvatarFileDto,
     @UploadedFile(
       new ParseFilePipeBuilder()
-        .addFileTypeValidator({ fileType: 'image/jpeg|image/png' })
-        .addMaxSizeValidator({ maxSize: 500 * 1024 })
-        .build({
-          fileIsRequired: false,
-          errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
-        })) avatarFile?: Express.Multer.File) {
+        .addFileTypeValidator(AvatarFileValidator.Type)
+        .addMaxSizeValidator(AvatarFileValidator.MaxSize)
+        .build(AvatarFileValidator.Build)) avatarFile?: Express.Multer.File) {
     const userDto: CreateUserWithAvatarPathDto = { ...dto };
+
+    console.log(dto);
+    console.log(avatarFile);
+
+    return 'ok';
 
     if (avatarFile) {
       const fileFormData = new FormData();
