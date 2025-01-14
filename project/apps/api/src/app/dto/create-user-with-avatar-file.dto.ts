@@ -4,10 +4,8 @@ import { Express } from 'express';
 
 import { CreateUserDto } from '@project/account/authentication';
 
-
 const SIZE = 2 * 1024 * 1024;
 const VALID_UPLOADS_MIME_TYPES = ['image/jpeg', 'image/png'];
-
 
 export class CreateUserWithAvatarFileDto extends CreateUserDto {
   @ApiProperty({

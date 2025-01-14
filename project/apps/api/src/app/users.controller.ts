@@ -10,7 +10,8 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { RequestWithTokenPayload, RouteAlias } from '@project/shared/core';
 import { makePath } from '@project/shared/helpers';
 import { apiConfig } from '@project/api/config';
-import { AuthenticationApiResponse, LoginUserDto } from '@project/account/authentication';
+import { AuthenticationApiResponse, CreateUserWithAvatarPathDto, LoginUserDto, UserRdo } from '@project/account/authentication';
+import { UploadedFileRdo } from '@project/file-storage/file-uploader';
 
 import { AxiosExceptionFilter } from './filters/axios-exception.filter';
 import { CheckAuthGuard } from './guards/check-auth.guard';
@@ -26,7 +27,7 @@ export class UsersController {
     private readonly apiOptions: ConfigType<typeof apiConfig>
   ) { }
 
-  @ApiResponse(AuthenticationApiResponse.UserCreated)
+  //!@ApiResponse(AuthenticationApiResponse.UserCreated)  кривой тип
   @ApiResponse(AuthenticationApiResponse.UserExist)
   @ApiResponse(AuthenticationApiResponse.BadRequest)
   @ApiResponse(AuthenticationApiResponse.NotAllow)
@@ -42,24 +43,25 @@ export class UsersController {
         .build({
           fileIsRequired: false,
           errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
-        })) avatarFile: Express.Multer.File) {
+        })) avatarFile?: Express.Multer.File) {
+    const userDto: CreateUserWithAvatarPathDto = { ...dto };
 
-    const fileFormData = new FormData();
-    const fileBlob = new Blob([avatarFile.buffer], { type: avatarFile.mimetype });
-    const originalFilename = Buffer.from(avatarFile.originalname, 'ascii').toString(); // коректное сохраниние исходного имени
+    if (avatarFile) {
+      const fileFormData = new FormData();
+      const fileBlob = new Blob([avatarFile.buffer], { type: avatarFile.mimetype });
+      const originalFilename = Buffer.from(avatarFile.originalname, 'ascii').toString(); // коректное сохраниние исходного имени
 
-    fileFormData.append('file', fileBlob, originalFilename);
+      fileFormData.append('file', fileBlob, originalFilename);
 
-    const fileUploadUrl = `${this.apiOptions.fileStorageServiceUrl}/${RouteAlias.Upload}`;
-    const { data: fileUploadData } = await this.httpService.axiosRef.post(fileUploadUrl, fileFormData);
-    //! временно //! any
-    const { subDirectory, hashName } = fileUploadData;
+      const fileUploadUrl = `${this.apiOptions.fileStorageServiceUrl}/${RouteAlias.Upload}`;
+      const { data: fileUploadData } = await this.httpService.axiosRef.post<UploadedFileRdo>(fileUploadUrl, fileFormData);
+      const { subDirectory, hashName } = fileUploadData;
 
-    //! временно //! типизировать!
-    dto['avatarPath'] = makePath(subDirectory, hashName);
+      userDto.avatarPath = makePath(subDirectory, hashName);
+    }
 
     const registerUrl = `${this.apiOptions.accountServiceUrl}/${RouteAlias.Register}`;
-    const { data: registerData } = await this.httpService.axiosRef.post(registerUrl, dto);
+    const { data: registerData } = await this.httpService.axiosRef.post<UserRdo>(registerUrl, userDto);
 
     return registerData;
   }
