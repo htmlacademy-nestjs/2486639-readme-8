@@ -4,6 +4,7 @@ import { Controller, Get, Param, Post, UploadedFile, UseInterceptors } from '@ne
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
+import { RouteAlias } from '@project/shared/core';
 import { MongoIdValidationPipe } from '@project/shared/pipes';
 import { fillDto } from '@project/shared/helpers';
 
@@ -22,7 +23,7 @@ export class FileUploaderController {
   @ApiResponse(FileUploaderApiResponse.BadRequest)
   @ApiConsumes('multipart/form-data')
   @ApiBody(FileUploaderFileApiBody)
-  @Post('/upload')
+  @Post(`/${RouteAlias.Upload}`)
   @UseInterceptors(FileInterceptor(FILE_KEY))
   public async uploadFile(@UploadedFile() file: Express.Multer.File) {
     const fileEntity = await this.fileUploaderService.saveFile(file);
