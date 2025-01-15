@@ -29,16 +29,16 @@ export class AuthenticationService {
     private readonly refreshTokenService: RefreshTokenService
   ) { }
 
-  public async registerUser(authorizationHeader: string, dto: CreateUserDto): Promise<BlogUserEntity> {
+  public async registerUser(authorizationHeader: string, dto: CreateUserDto, avatarFile?: Express.Multer.File): Promise<BlogUserEntity> {
     if (authorizationHeader) {
       throw new ForbiddenException(AuthenticationUserMessage.RequireLogout);
     }
 
-    const { email, name, password, avatarPath } = dto;
+    const { email, name, password } = dto;
     const blogUser = {
       email,
       name,
-      avatarPath,
+      avatarPath: '', //!
       passwordHash: ''
     };
     const existUser = await this.blogUserRepository.findByEmail(email);

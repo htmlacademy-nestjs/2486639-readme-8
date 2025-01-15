@@ -17,9 +17,14 @@ export const UserApiProperty = {
     example: 'password'
   },
   AvatarPath: {
-    required: false,
     description: 'The user avatar path',
     example: '/img/avatar.jpg'
+  },
+  AvatarFile: {
+    required: false,
+    description: 'The avatar file',
+    type: 'string',
+    format: 'binary'
   },
   AccessToken: {
     description: 'The user access JWT token',

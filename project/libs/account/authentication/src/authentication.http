@@ -6,7 +6,8 @@ Content-Type: application/json
   "email": "user@local.local",
   "name": "Keks",
   "name1111": "Keks1asdasdasdasdasdasdasdasdasddsadasd11",
-  "password": "123456"
+  "password": "123456",
+  //markup\img\cat.jpg
 }
 
 ###

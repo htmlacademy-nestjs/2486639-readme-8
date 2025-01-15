@@ -13,6 +13,12 @@ export const AuthenticationUserMessage = {
   RequireLogout: 'Require logout.'
 } as const;
 
+export const AvatarOption = {
+  KEY: 'avatarFile',
+  MAX_SIZE: 500 * 1024,
+  MIME_TYPES: ['image/jpeg', 'image/png']
+} as const;
+
 export const UserValidation = {
   Name: {
     MinLength: 3,
@@ -21,10 +27,23 @@ export const UserValidation = {
   Password: {
     MinLength: 6,
     MaxLength: 12
+  },
+  AvatarFile: {
+    Type: { fileType: AvatarOption.MIME_TYPES.join('|') },
+    MaxSize: { maxSize: AvatarOption.MAX_SIZE },
+    Build: {
+      fileIsRequired: UserApiProperty.AvatarFile.required,
+      errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY
+    }
   }
 } as const;
 
 export const UserIdApiParam = {
+  name: 'userId',
+  schema: UserApiProperty.Id
+} as const;
+
+export const AvatarFileApiParam = {
   name: 'userId',
   schema: UserApiProperty.Id
 } as const;

@@ -1,8 +1,10 @@
 import {
   Body, Controller, Get, HttpCode, HttpStatus,
-  Param, Post, Req, UseGuards
+  Param, ParseFilePipeBuilder, Post, Req, UploadedFile,
+  UseGuards, UseInterceptors
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import 'multer'; // Express.Multer.File
 
 import { BearerAuth, RequestWithTokenPayload, RouteAlias } from '@project/shared/core';
 import { fillDto } from '@project/shared/helpers';
@@ -19,7 +21,8 @@ import { LoggedUserRdo } from './rdo/logged-user.rdo';
 import { UserTokenRdo } from './rdo/user-token.rdo';
 import { TokenPayloadRdo } from './rdo/token-payload.rdo';
 import { UserRdo } from './rdo/user.rdo';
-import { UserIdApiParam, AuthenticationApiResponse } from './authentication.constant';
+import { UserIdApiParam, AuthenticationApiResponse, AvatarOption, UserValidation } from './authentication.constant';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('authentication')
 @Controller('auth')
@@ -33,12 +36,19 @@ export class AuthenticationController {
   @ApiResponse(AuthenticationApiResponse.BadRequest)
   @ApiResponse(AuthenticationApiResponse.NotAllow)
   @ApiBearerAuth(BearerAuth.AccessToken) // для тестироватния - анонимный пользователь может регистрироваться
-  //@ApiConsumes('multipart/form-data')  //! все свойства из dto в swagger-е в отдельных полях, но в body не передает, хотя в api похожее и работает!
-  //@UseInterceptors()
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileInterceptor(AvatarOption.KEY))
   @Post(RouteAlias.Register)
-  public async create(@Body() dto: CreateUserDto, @Req() req: Request) {
+  public async register(
+    @Body() dto: CreateUserDto,
+    @Req() req: Request,
+    @UploadedFile(
+      new ParseFilePipeBuilder()
+        .addFileTypeValidator(UserValidation.AvatarFile.Type)
+        .addMaxSizeValidator(UserValidation.AvatarFile.MaxSize)
+        .build(UserValidation.AvatarFile.Build)) avatarFile?: Express.Multer.File) {
     // headers: Authorization - т.к. только анонимный пользователь может регистрироваться
-    const newUser = await this.authService.registerUser(req.headers['authorization'], dto);
+    const newUser = await this.authService.registerUser(req.headers['authorization'], dto, avatarFile);
 
     return fillDto(UserRdo, newUser.toPOJO());
   }
