@@ -77,33 +77,6 @@ export class AuthenticationService {
     return userEntity;
   }
 
-  public async verifyUser(dto: LoginUserDto): Promise<BlogUserEntity> {
-    const { email, password } = dto;
-    const existUser = await this.blogUserRepository.findByEmail(email);
-
-    if (!existUser) {
-      throw new NotFoundException(AuthenticationUserMessage.NotFound);
-    }
-
-    const isCorrectPassword = await existUser.comparePassword(password);
-
-    if (!isCorrectPassword) {
-      throw new UnauthorizedException(AuthenticationUserMessage.WrongPassword);
-    }
-
-    return existUser;
-  }
-
-  public async getUser(id: string): Promise<BlogUserEntity> {
-    const user = await this.blogUserRepository.findById(id);
-
-    if (!user) {
-      throw new NotFoundException(AuthenticationUserMessage.NotFound);
-    }
-
-    return user;
-  }
-
   public async createUserToken(user: User): Promise<Token> {
     const accessTokenPayload = createJWTPayload(user);
     const refreshTokenPayload = { ...accessTokenPayload, tokenId: crypto.randomUUID() };
@@ -125,11 +98,34 @@ export class AuthenticationService {
     }
   }
 
+  public async getUser(id: string): Promise<BlogUserEntity> {
+    const user = await this.blogUserRepository.findById(id);
+
+    if (!user) {
+      throw new NotFoundException(AuthenticationUserMessage.NotFound);
+    }
+
+    return user;
+  }
+
   public async getUserByEmail(email: string) {
     const existUser = await this.blogUserRepository.findByEmail(email);
 
     if (!existUser) {
       throw new NotFoundException(`User with email ${email} not found`);
+    }
+
+    return existUser;
+  }
+
+  public async verifyUser(dto: LoginUserDto): Promise<BlogUserEntity> {
+    const { email, password } = dto;
+    const existUser = await this.getUserByEmail(email);
+
+    const isCorrectPassword = await existUser.comparePassword(password);
+
+    if (!isCorrectPassword) {
+      throw new UnauthorizedException(AuthenticationUserMessage.WrongPassword);
     }
 
     return existUser;

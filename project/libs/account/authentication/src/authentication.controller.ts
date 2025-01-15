@@ -65,17 +65,6 @@ export class AuthenticationController {
     return fillDto(LoggedUserRdo, { ...user.toPOJO(), ...userToken });
   }
 
-  @ApiResponse(AuthenticationApiResponse.UserFound)
-  @ApiResponse(AuthenticationApiResponse.UserNotFound)
-  @ApiResponse(AuthenticationApiResponse.BadRequest)
-  @ApiParam(UserIdApiParam)
-  @Get(`:${UserIdApiParam.name}`)
-  public async show(@Param(UserIdApiParam.name, MongoIdValidationPipe) userId: string) {
-    const existUser = await this.authService.getUser(userId);
-
-    return fillDto(UserRdo, existUser.toPOJO());
-  }
-
   @ApiResponse(AuthenticationApiResponse.RefreshTokens)
   @ApiResponse(AuthenticationApiResponse.BadRequest)
   @ApiResponse(AuthenticationApiResponse.Unauthorized)
@@ -98,5 +87,16 @@ export class AuthenticationController {
   @Post(RouteAlias.Check)
   public async checkToken(@Req() { user: payload }: RequestWithTokenPayload) {
     return fillDto(TokenPayloadRdo, payload);
+  }
+
+  @ApiResponse(AuthenticationApiResponse.UserFound)
+  @ApiResponse(AuthenticationApiResponse.UserNotFound)
+  @ApiResponse(AuthenticationApiResponse.BadRequest)
+  @ApiParam(UserIdApiParam)
+  @Get(`:${UserIdApiParam.name}`)
+  public async show(@Param(UserIdApiParam.name, MongoIdValidationPipe) userId: string) {
+    const existUser = await this.authService.getUser(userId);
+
+    return fillDto(UserRdo, existUser.toPOJO());
   }
 }
