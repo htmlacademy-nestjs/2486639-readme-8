@@ -1,4 +1,4 @@
-import { ArgumentsHost, Catch, ExceptionFilter, HttpStatus } from '@nestjs/common';
+import { ArgumentsHost, Catch, ExceptionFilter, HttpStatus, Logger } from '@nestjs/common';
 import { Response } from 'express';
 import { AxiosError } from 'axios';
 
@@ -9,16 +9,36 @@ export class AxiosExceptionFilter implements ExceptionFilter {
   catch(error: AxiosError, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
-    const statusCode = error.response?.status || HttpStatus.INTERNAL_SERVER_ERROR;
-    const errorMessage = error.response?.statusText || INTERNAL_SERVER_ERROR_MESSAGE;
-    const message = error.response?.data['message'] || INTERNAL_SERVER_ERROR_MESSAGE;
+    const errorResponse = {
+      message: INTERNAL_SERVER_ERROR_MESSAGE,
+      error: INTERNAL_SERVER_ERROR_MESSAGE,
+      statusCode: HttpStatus.INTERNAL_SERVER_ERROR
+    };
+
+    if (error.response) {
+      const { status, statusText, data } = error.response;
+      const message = data['message'];
+
+      errorResponse.statusCode = status;
+      errorResponse.error = statusText;
+
+      if (message) {
+        errorResponse.message = message;
+      }
+    }
+
+    //console.log(error); //! в лог еще бы URL исходный, гджето в _currentUrl:
+
+    if (error.cause) {
+      const errors = error.cause['errors'];
+
+      Logger.error(errors, 'AxiosExceptionFilter');
+    }
+
+    Logger.error(errorResponse, 'AxiosExceptionFilter Response');
 
     response
-      .status(statusCode)
-      .json({
-        message,
-        error: errorMessage,
-        statusCode
-      });
+      .status(errorResponse.statusCode)
+      .json(errorResponse);
   }
 }
