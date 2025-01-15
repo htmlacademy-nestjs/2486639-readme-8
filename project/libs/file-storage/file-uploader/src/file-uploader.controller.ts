@@ -1,5 +1,5 @@
-import { Controller, Get, Param, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { Controller, Get, Param, ParseFilePipeBuilder, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { FileFieldsInterceptor, FileInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import 'multer'; // Express.Multer.File
 
@@ -24,7 +24,7 @@ export class FileUploaderController {
   @ApiBody(FileUploaderFileApiBody)
   @Post(`/${RouteAlias.Upload}`)
   @UseInterceptors(FileInterceptor(FILE_KEY))
-  public async uploadFile(@UploadedFile() file: Express.Multer.File) {
+  public async uploadFile(@UploadedFile(FILE_KEY) file: Express.Multer.File) {
     const fileEntity = await this.fileUploaderService.saveFile(file);
 
     return fillDto(UploadedFileRdo, fileEntity.toPOJO());

@@ -16,7 +16,7 @@ export const AuthenticationUserMessage = {
 export const AvatarOption = {
   KEY: 'avatarFile',
   MAX_SIZE: 500 * 1024,
-  MIME_TYPES: ['image/jpeg', 'image/png']
+  MIME_TYPES: ['image/jpg', 'image/jpeg', 'image/png']
 } as const;
 
 export const UserValidation = {

@@ -56,7 +56,7 @@ export class AuthenticationService {
         const fileRdo = await uploadFile<UploadedFileRdo>(
           `${this.applicationOptions.fileStorageServiceUrl}/${RouteAlias.Upload}`,
           avatarFile,
-          'FILE_KEY'
+          FILE_KEY
         );
 
         blogUser.avatarPath = makePath(fileRdo.subDirectory, fileRdo.hashName);

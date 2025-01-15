@@ -1,7 +1,6 @@
 import {
-  Body, Controller, Get, HttpCode, HttpStatus,
-  Param, ParseFilePipeBuilder, Post, Req, UploadedFile,
-  UseGuards, UseInterceptors
+  Body, Controller, Get, HttpCode, HttpStatus, Param,
+  ParseFilePipeBuilder, Post, Req, UploadedFile, UseGuards, UseInterceptors
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
@@ -34,7 +33,7 @@ export class AuthenticationController {
   @ApiResponse(AuthenticationApiResponse.UserExist)
   @ApiResponse(AuthenticationApiResponse.BadRequest)
   @ApiResponse(AuthenticationApiResponse.NotAllow)
-  @ApiBearerAuth(BearerAuth.AccessToken) // для тестироватния - анонимный пользователь может регистрироваться
+  @ApiBearerAuth(BearerAuth.AccessToken) // для тестирования - анонимный пользователь может регистрироваться
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor(AvatarOption.KEY))
   @Post(RouteAlias.Register)
