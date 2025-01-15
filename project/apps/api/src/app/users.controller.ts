@@ -8,6 +8,7 @@ import { ApiBearerAuth, ApiConsumes, ApiResponse, ApiTags } from '@nestjs/swagge
 import { FileInterceptor } from '@nestjs/platform-express';
 
 import { BearerAuth, RequestWithTokenPayload, RouteAlias } from '@project/shared/core';
+import { dtoToFormData, multerFileToFormData } from '@project/shared/helpers';
 import { AxiosExceptionFilter } from '@project/shared/exception-filters';
 import { apiConfig } from '@project/api/config';
 import {
@@ -46,15 +47,10 @@ export class UsersController {
         .build(UserValidation.AvatarFile.Build)) avatarFile?: Express.Multer.File) {
     const formData = new FormData();
 
-    for (const [key, value] of Object.entries(dto)) {
-      formData.append(key, value);
-    }
+    dtoToFormData(dto, formData);
 
     if (avatarFile) {
-      const fileBlob = new Blob([avatarFile.buffer], { type: avatarFile.mimetype });
-      const originalFilename = Buffer.from(avatarFile.originalname, 'ascii').toString(); // коректное сохраниние исходного имени
-
-      formData.append(AvatarOption.KEY, fileBlob, originalFilename);
+      multerFileToFormData(avatarFile, formData, AvatarOption.KEY);
     }
 
     const registerUrl = `${this.apiOptions.accountServiceUrl}/${RouteAlias.Register}`;
