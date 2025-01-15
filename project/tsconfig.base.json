@@ -49,6 +49,9 @@
       "@project/notify/mail": ["libs/notify/mail/src/index.ts"],
       "@project/shared/core": ["libs/shared/core/src/index.ts"],
       "@project/shared/data-access": ["libs/shared/data-access/src/index.ts"],
+      "@project/shared/exception-filters": [
+        "libs/shared/exception-filters/src/index.ts"
+      ],
       "@project/shared/helpers": ["libs/shared/helpers/src/index.ts"],
       "@project/shared/interceptors": ["libs/shared/interceptors/src/index.ts"],
       "@project/shared/pipes": ["libs/shared/pipes/src/index.ts"]
