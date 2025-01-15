@@ -1,8 +1,7 @@
-import 'multer';
-import { Express } from 'express';
 import { Controller, Get, Param, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import 'multer'; // Express.Multer.File
 
 import { RouteAlias } from '@project/shared/core';
 import { MongoIdValidationPipe } from '@project/shared/pipes';
