@@ -29,17 +29,6 @@ export class AxiosExceptionFilter implements ExceptionFilter {
       }
     }
 
-    //console.log(error); //! в лог еще бы URL исходный, где то в error.request._currentUrl
-    /*
-    if (error.cause) {
-      const errors = error.cause['errors'];
-
-      Logger.error(errors, 'AxiosExceptionFilter');
-    }
-
-    Logger.error(errorResponse, 'AxiosExceptionFilter Response');
-    */
-    //! другой вариант - логировать все
     Logger.error(parseAxiosError(error), 'AxiosExceptionFilter');
 
     response
