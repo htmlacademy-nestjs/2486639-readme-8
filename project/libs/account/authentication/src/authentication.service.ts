@@ -98,9 +98,7 @@ export class AuthenticationService {
     }
   }
 
-  public async logout(request: Request): Promise<BlogUserEntity> {
-    const authorizationHeader = request.headers['authorization'];
-
+  public async logout(authorizationHeader: string): Promise<void> {
     if (!authorizationHeader) {
       return;
     }

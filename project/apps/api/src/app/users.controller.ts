@@ -85,6 +85,7 @@ export class UsersController {
   @Delete(RouteAlias.Logout)
   public async logout(@Req() request: Request) {
     const url = `${this.apiOptions.accountServiceUrl}/${RouteAlias.Logout}`;
+
     await this.httpService.axiosRef.delete(url, { headers: { 'Authorization': request.headers['authorization'] } });
   }
 

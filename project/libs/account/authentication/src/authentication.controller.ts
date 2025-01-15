@@ -70,7 +70,7 @@ export class AuthenticationController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(RouteAlias.Logout)
   public async logout(@Req() request: Request) {
-    await this.authService.logout(request);
+    await this.authService.logout(request.headers['authorization']);
   }
 
   @ApiResponse(AuthenticationApiResponse.RefreshTokens)

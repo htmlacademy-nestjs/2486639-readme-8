@@ -7,6 +7,11 @@
       api-gate добавит userId ко все запросам? или проанализировать header?
       в сам сервис добавил header Authorization - попробовать добавить интерсептор он подойдет в login
 
+await для this.subscriberService и Repository
+
+JwtAccessStrategy возможно есть обработчик для изменения поведения, чтобы убрать <.headers['authorization']>
+если сложно, то для api-gate можно сделать перехват ошибки axios запроса
+
   1. Реализовать маршруты:
     1.1. account
       1.1.1. как сделать в swagger @Body в JSON если выставлено @ApiConsumes('multipart/form-data'), через DTO?
