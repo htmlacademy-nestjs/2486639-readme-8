@@ -1,19 +1,21 @@
 import {
-  Body, Controller, HttpCode, HttpStatus, Inject, ParseFilePipeBuilder, Post,
-  Req, UploadedFile, UseFilters, UseGuards, UseInterceptors
+  Body, Controller, Get, HttpCode, HttpStatus,
+  Inject, Param, ParseFilePipeBuilder, Post, Req,
+  UploadedFile, UseFilters, UseGuards, UseInterceptors
 } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
-import { ApiBearerAuth, ApiBody, ApiConsumes, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 import { BearerAuth, RequestWithTokenPayload, RouteAlias } from '@project/shared/core';
 import { dtoToFormData, multerFileToFormData } from '@project/shared/helpers';
+import { MongoIdValidationPipe } from '@project/shared/pipes';
 import { AxiosExceptionFilter } from '@project/shared/exception-filters';
 import { apiConfig } from '@project/api/config';
 import {
-  AuthenticationApiResponse, AvatarOption, CreateUserDto, LoginUserDto,
-  UserRdo, UserValidation
+  AuthenticationApiResponse, AvatarOption, CreateUserDto, LoggedUserRdo, LoginUserDto,
+  UserIdApiParam, UserRdo, UserTokenRdo, UserValidation
 } from '@project/account/authentication';
 
 import { CheckAuthGuard } from './guards/check-auth.guard';
@@ -72,7 +74,7 @@ export class UsersController {
   @Post(RouteAlias.Login)
   public async login(@Body() dto: LoginUserDto) {
     const url = `${this.apiOptions.accountServiceUrl}/${RouteAlias.Login}`;
-    const { data } = await this.httpService.axiosRef.post(url, dto);
+    const { data } = await this.httpService.axiosRef.post<LoggedUserRdo>(url, dto);
 
     return data;
   }
@@ -85,7 +87,7 @@ export class UsersController {
   @Post(RouteAlias.Refresh)
   public async refreshToken(@Req() req: Request) {
     const url = `${this.apiOptions.accountServiceUrl}/refresh`;
-    const { data } = await this.httpService.axiosRef.post(
+    const { data } = await this.httpService.axiosRef.post<UserTokenRdo>(
       url,
       null,
       { headers: { 'Authorization': req.headers['authorization'] } }
@@ -103,5 +105,17 @@ export class UsersController {
   @Post(RouteAlias.Check)
   public async checkToken(@Req() { user: payload }: RequestWithTokenPayload) {
     return payload;
+  }
+
+  @ApiResponse(AuthenticationApiResponse.UserFound)
+  @ApiResponse(AuthenticationApiResponse.UserNotFound)
+  @ApiResponse(AuthenticationApiResponse.BadRequest)
+  @ApiParam(UserIdApiParam)
+  @Get(`:${UserIdApiParam.name}`)
+  public async show(@Param(UserIdApiParam.name, MongoIdValidationPipe) userId: string) {
+    const url = `${this.apiOptions.accountServiceUrl}/${userId}`;
+    const { data } = await this.httpService.axiosRef.get<UserRdo>(url);
+
+    return data;
   }
 }
