@@ -1,5 +1,5 @@
 import {
-  Body, Controller, Get, HttpCode, HttpStatus, Param,
+  Body, Controller, Delete, Get, HttpCode, HttpStatus, Param,
   ParseFilePipeBuilder, Post, Req, UploadedFile, UseGuards, UseInterceptors
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -63,6 +63,14 @@ export class AuthenticationController {
     const userToken = await this.authService.createUserToken(user);
 
     return fillDto(LoggedUserRdo, { ...user.toPOJO(), ...userToken });
+  }
+
+  @ApiResponse(AuthenticationApiResponse.LogoutSuccess)
+  @ApiBearerAuth(BearerAuth.RefreshToken)
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Delete(RouteAlias.Logout)
+  public async logout(@Req() request: Request) {
+    await this.authService.logout(request);
   }
 
   @ApiResponse(AuthenticationApiResponse.RefreshTokens)

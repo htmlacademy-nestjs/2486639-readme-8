@@ -98,6 +98,18 @@ export class AuthenticationService {
     }
   }
 
+  public async logout(request: Request): Promise<BlogUserEntity> {
+    const authorizationHeader = request.headers['authorization'];
+
+    if (!authorizationHeader) {
+      return;
+    }
+
+    Logger.log('AuthenticationService.logout');
+    // доделать позже проверить, что это refreh token... удалить его ...refreshTokenService.deleteRefreshSession...
+  }
+
+
   public async getUser(id: string): Promise<BlogUserEntity> {
     const user = await this.blogUserRepository.findById(id);
 

@@ -75,6 +75,10 @@ export const AuthenticationApiResponse = {
     status: HttpStatus.OK,
     description: 'User has been successfully logged.'
   },
+  LogoutSuccess: {
+    status: HttpStatus.NO_CONTENT,
+    description: 'User has been successfully logout.'
+  },
   CheckSuccess: {
     type: TokenPayloadRdo,
     status: HttpStatus.OK,

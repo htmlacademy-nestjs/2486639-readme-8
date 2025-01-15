@@ -1,5 +1,5 @@
 import {
-  Body, Controller, Get, HttpCode, HttpStatus,
+  Body, Controller, Delete, Get, HttpCode, HttpStatus,
   Inject, Param, ParseFilePipeBuilder, Post, Req,
   UploadedFile, UseFilters, UseGuards, UseInterceptors
 } from '@nestjs/common';
@@ -40,7 +40,7 @@ export class UsersController {
   @Post(RouteAlias.Register)
   public async register(
     @Body() dto: CreateUserDto,
-    @Req() req: Request,
+    @Req() request: Request,
     @UploadedFile(
       //AvatarOption.KEY, ! avatarFile - undefined
       new ParseFilePipeBuilder()
@@ -60,7 +60,7 @@ export class UsersController {
       registerUrl,
       formData,
       // headers: Authorization - т.к. только анонимный пользователь может регистрироваться
-      { headers: { 'Authorization': req.headers['authorization'] } }
+      { headers: { 'Authorization': request.headers['authorization'] } }
     );
 
     return registerData;
@@ -79,18 +79,27 @@ export class UsersController {
     return data;
   }
 
+  @ApiResponse(AuthenticationApiResponse.LogoutSuccess)
+  @ApiBearerAuth(BearerAuth.RefreshToken)
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Delete(RouteAlias.Logout)
+  public async logout(@Req() request: Request) {
+    const url = `${this.apiOptions.accountServiceUrl}/${RouteAlias.Logout}`;
+    await this.httpService.axiosRef.delete(url, { headers: { 'Authorization': request.headers['authorization'] } });
+  }
+
   @ApiResponse(AuthenticationApiResponse.RefreshTokens)
   @ApiResponse(AuthenticationApiResponse.BadRequest)
   @ApiResponse(AuthenticationApiResponse.Unauthorized)
   @HttpCode(HttpStatus.OK)
   @ApiBearerAuth(BearerAuth.RefreshToken)
   @Post(RouteAlias.Refresh)
-  public async refreshToken(@Req() req: Request) {
+  public async refreshToken(@Req() request: Request) {
     const url = `${this.apiOptions.accountServiceUrl}/refresh`;
     const { data } = await this.httpService.axiosRef.post<UserTokenRdo>(
       url,
       null,
-      { headers: { 'Authorization': req.headers['authorization'] } }
+      { headers: { 'Authorization': request.headers['authorization'] } }
     );
 
     return data;
