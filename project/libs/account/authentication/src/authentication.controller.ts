@@ -4,7 +4,6 @@ import {
   UseGuards, UseInterceptors
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
-import 'multer'; // Express.Multer.File
 
 import { BearerAuth, RequestWithTokenPayload, RouteAlias } from '@project/shared/core';
 import { fillDto } from '@project/shared/helpers';

@@ -1,16 +1,17 @@
 import {
   ConflictException, ForbiddenException, HttpException, HttpStatus, Inject,
-  Injectable, Logger, NotFoundException, UnauthorizedException
+  Injectable, InternalServerErrorException, Logger, NotFoundException, UnauthorizedException
 } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 
-import { Token, User } from '@project/shared/core';
-import { createJWTPayload } from '@project/shared/helpers';
+import { RouteAlias, Token, User } from '@project/shared/core';
+import { createJWTPayload, makePath, parseAxiosError, uploadFile } from '@project/shared/helpers';
 import { BlogUserRepository, BlogUserEntity } from '@project/account/blog-user';
-import { jwtConfig } from '@project/account/config';
+import { applicationConfig, jwtConfig } from '@project/account/config';
 import { NotifyService } from '@project/account/notify';
 import { RefreshTokenService } from '@project/account/refresh-token';
+import { FILE_KEY, UploadedFileRdo } from '@project/file-storage/file-uploader';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { AuthenticationUserMessage } from './authentication.constant';
@@ -26,6 +27,8 @@ export class AuthenticationService {
     private readonly notifyService: NotifyService,
     @Inject(jwtConfig.KEY)
     private readonly jwtOptions: ConfigType<typeof jwtConfig>,
+    @Inject(applicationConfig.KEY)
+    private readonly applicationOptions: ConfigType<typeof applicationConfig>,
     private readonly refreshTokenService: RefreshTokenService
   ) { }
 
@@ -35,16 +38,33 @@ export class AuthenticationService {
     }
 
     const { email, name, password } = dto;
-    const blogUser = {
-      email,
-      name,
-      avatarPath: '', //!
-      passwordHash: ''
-    };
     const existUser = await this.blogUserRepository.findByEmail(email);
 
     if (existUser) {
       throw new ConflictException(AuthenticationUserMessage.Exists);
+    }
+
+    const blogUser = {
+      email,
+      name,
+      avatarPath: '',
+      passwordHash: ''
+    };
+
+    if (avatarFile) {
+      try {
+        const fileRdo = await uploadFile<UploadedFileRdo>(
+          `${this.applicationOptions.fileStorageServiceUrl}/${RouteAlias.Upload}`,
+          avatarFile,
+          'FILE_KEY'
+        );
+
+        blogUser.avatarPath = makePath(fileRdo.subDirectory, fileRdo.hashName);
+      } catch (error) {
+        Logger.error(parseAxiosError(error), 'AuthenticationService.RegisterUser.FileUploadError');
+
+        throw new InternalServerErrorException('File upload error!');
+      }
     }
 
     const userEntity = new BlogUserEntity(blogUser);

@@ -2,6 +2,8 @@ import { ArgumentsHost, Catch, ExceptionFilter, HttpStatus, Logger } from '@nest
 import { Response } from 'express';
 import { AxiosError } from 'axios';
 
+import { parseAxiosError } from '@project/shared/helpers';
+
 const INTERNAL_SERVER_ERROR_MESSAGE = 'Internal server error';
 
 @Catch(AxiosError)
@@ -27,8 +29,8 @@ export class AxiosExceptionFilter implements ExceptionFilter {
       }
     }
 
-    //console.log(error); //! в лог еще бы URL исходный, гджето в _currentUrl:
-
+    //console.log(error); //! в лог еще бы URL исходный, где то в error.request._currentUrl
+    /*
     if (error.cause) {
       const errors = error.cause['errors'];
 
@@ -36,6 +38,9 @@ export class AxiosExceptionFilter implements ExceptionFilter {
     }
 
     Logger.error(errorResponse, 'AxiosExceptionFilter Response');
+    */
+    //! другой вариант - логировать все
+    Logger.error(parseAxiosError(error), 'AxiosExceptionFilter');
 
     response
       .status(errorResponse.statusCode)
