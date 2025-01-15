@@ -1,10 +1,10 @@
 import {
-  Body, Controller, Inject, ParseFilePipeBuilder, Post,
+  Body, Controller, HttpCode, HttpStatus, Inject, ParseFilePipeBuilder, Post,
   Req, UploadedFile, UseFilters, UseGuards, UseInterceptors
 } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
-import { ApiBearerAuth, ApiConsumes, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 import { BearerAuth, RequestWithTokenPayload, RouteAlias } from '@project/shared/core';
@@ -64,6 +64,11 @@ export class UsersController {
     return registerData;
   }
 
+  @ApiResponse(AuthenticationApiResponse.LoggedSuccess)
+  @ApiResponse(AuthenticationApiResponse.LoggedError)
+  @ApiResponse(AuthenticationApiResponse.BadRequest)
+  @ApiResponse(AuthenticationApiResponse.Unauthorized)
+  @ApiBody({ type: LoginUserDto, required: true })
   @Post(RouteAlias.Login)
   public async login(@Body() dto: LoginUserDto) {
     const url = `${this.apiOptions.accountServiceUrl}/${RouteAlias.Login}`;
@@ -72,6 +77,11 @@ export class UsersController {
     return data;
   }
 
+  @ApiResponse(AuthenticationApiResponse.RefreshTokens)
+  @ApiResponse(AuthenticationApiResponse.BadRequest)
+  @ApiResponse(AuthenticationApiResponse.Unauthorized)
+  @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth(BearerAuth.RefreshToken)
   @Post(RouteAlias.Refresh)
   public async refreshToken(@Req() req: Request) {
     const url = `${this.apiOptions.accountServiceUrl}/refresh`;
@@ -84,6 +94,11 @@ export class UsersController {
     return data;
   }
 
+  @ApiResponse(AuthenticationApiResponse.CheckSuccess)
+  @ApiResponse(AuthenticationApiResponse.BadRequest)
+  @ApiResponse(AuthenticationApiResponse.Unauthorized)
+  @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth(BearerAuth.AccessToken)
   @UseGuards(CheckAuthGuard)
   @Post(RouteAlias.Check)
   public async checkToken(@Req() { user: payload }: RequestWithTokenPayload) {
