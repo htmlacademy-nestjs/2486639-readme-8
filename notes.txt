@@ -188,7 +188,7 @@
   17. попробовать Factory сделать через дженерик, можно заменить в нескольких модулях
   18. из присылаемых dto убрать не нужные поля...
     в file-storage если загружаешь не стем именем файла, то "Unexpected field" в public async uploadFile(@UploadedFile() file: Express.Multer.File)
-    попробовать - https://docs.nestjs.com/techniques/file-upload
+    попробовать - https://docs.nestjs.com/techniques/file-upload !  заменить ParseFilePipeBuilder
     @UseInterceptors(FileFieldsInterceptor([
       { name: 'avatar', maxCount: 1 },
       { name: 'background', maxCount: 1 },

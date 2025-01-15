@@ -4,8 +4,8 @@ import { HttpService } from '@nestjs/axios';
 
 import { apiConfig } from '@project/api/config';
 import { InjectUserIdInterceptor } from '@project/shared/interceptors';
+import { AxiosExceptionFilter } from '@project/shared/exception-filters';
 
-import { AxiosExceptionFilter } from './filters/axios-exception.filter';
 import { CheckAuthGuard } from './guards/check-auth.guard';
 
 @Controller('blog')

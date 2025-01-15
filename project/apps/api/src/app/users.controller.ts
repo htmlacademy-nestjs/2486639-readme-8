@@ -8,15 +8,14 @@ import { ApiBearerAuth, ApiConsumes, ApiResponse, ApiTags } from '@nestjs/swagge
 import { FileInterceptor } from '@nestjs/platform-express';
 
 import { BearerAuth, RequestWithTokenPayload, RouteAlias } from '@project/shared/core';
-import { makePath } from '@project/shared/helpers';
+import { AxiosExceptionFilter } from '@project/shared/exception-filters';
 import { apiConfig } from '@project/api/config';
-import { AuthenticationApiResponse, CreateUserDto as AccountCreateUserDto, LoginUserDto, UserRdo } from '@project/account/authentication';
-import { UploadedFileRdo } from '@project/file-storage/file-uploader';
+import {
+  AuthenticationApiResponse, AvatarOption, CreateUserDto, LoginUserDto,
+  UserRdo, UserValidation
+} from '@project/account/authentication';
 
-import { AxiosExceptionFilter } from './filters/axios-exception.filter';
 import { CheckAuthGuard } from './guards/check-auth.guard';
-import { CreateUserDto } from './dto/create-user.dto';
-import { Avatar, AvatarFileValidator } from './app.const';
 
 @ApiTags('users')
 @Controller('users')
@@ -32,43 +31,36 @@ export class UsersController {
   @ApiResponse(AuthenticationApiResponse.UserExist)
   @ApiResponse(AuthenticationApiResponse.BadRequest)
   @ApiResponse(AuthenticationApiResponse.NotAllow)
-  @ApiBearerAuth(BearerAuth.AccessToken)
+  @ApiBearerAuth(BearerAuth.AccessToken) // для тестирования - анонимный пользователь может регистрироваться
   @ApiConsumes('multipart/form-data')
-  @UseInterceptors(FileInterceptor(Avatar.KEY))
+  @UseInterceptors(FileInterceptor(AvatarOption.KEY))
   @Post(RouteAlias.Register)
   public async register(
     @Body() dto: CreateUserDto,
     @Req() req: Request,
     @UploadedFile(
+      //AvatarOption.KEY, ! avatarFile - undefined
       new ParseFilePipeBuilder()
-        .addFileTypeValidator(AvatarFileValidator.Type)
-        .addMaxSizeValidator(AvatarFileValidator.MaxSize)
-        .build(AvatarFileValidator.Build)) avatarFile?: Express.Multer.File) {
-    const userDto: AccountCreateUserDto = { ...dto };
+        .addFileTypeValidator(UserValidation.AvatarFile.Type)
+        .addMaxSizeValidator(UserValidation.AvatarFile.MaxSize)
+        .build(UserValidation.AvatarFile.Build)) avatarFile?: Express.Multer.File) {
+    const formData = new FormData();
 
-    console.log(dto);
-    console.log(avatarFile);
-
-    //return 'ok';
+    for (const [key, value] of Object.entries(dto)) {
+      formData.append(key, value);
+    }
 
     if (avatarFile) {
-      const fileFormData = new FormData();
       const fileBlob = new Blob([avatarFile.buffer], { type: avatarFile.mimetype });
       const originalFilename = Buffer.from(avatarFile.originalname, 'ascii').toString(); // коректное сохраниние исходного имени
 
-      fileFormData.append('file', fileBlob, originalFilename);
-
-      const fileUploadUrl = `${this.apiOptions.fileStorageServiceUrl}/${RouteAlias.Upload}`;
-      const { data: fileUploadData } = await this.httpService.axiosRef.post<UploadedFileRdo>(fileUploadUrl, fileFormData);
-      const { subDirectory, hashName } = fileUploadData;
-
-      userDto.avatarPath = makePath(subDirectory, hashName);
+      formData.append(AvatarOption.KEY, fileBlob, originalFilename);
     }
 
     const registerUrl = `${this.apiOptions.accountServiceUrl}/${RouteAlias.Register}`;
     const { data: registerData } = await this.httpService.axiosRef.post<UserRdo>(
       registerUrl,
-      userDto,
+      formData,
       // headers: Authorization - т.к. только анонимный пользователь может регистрироваться
       { headers: { 'Authorization': req.headers['authorization'] } }
     );

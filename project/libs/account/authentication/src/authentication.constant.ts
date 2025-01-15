@@ -43,11 +43,6 @@ export const UserIdApiParam = {
   schema: UserApiProperty.Id
 } as const;
 
-export const AvatarFileApiParam = {
-  name: 'userId',
-  schema: UserApiProperty.Id
-} as const;
-
 export const AuthenticationApiResponse = {
   UserCreated: {
     type: UserRdo,

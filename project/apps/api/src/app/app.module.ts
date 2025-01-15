@@ -7,8 +7,8 @@ import { CheckAuthGuard } from './guards/check-auth.guard';
 import { UsersController } from './users.controller';
 import { BlogController } from './blog.controller';
 
-export const HTTP_CLIENT_MAX_REDIRECTS = 5;
-export const HTTP_CLIENT_TIMEOUT = 3000;
+const HTTP_CLIENT_MAX_REDIRECTS = 5;
+const HTTP_CLIENT_TIMEOUT = 3000;
 
 @Module({
   imports: [

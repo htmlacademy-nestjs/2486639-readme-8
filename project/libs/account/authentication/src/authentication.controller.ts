@@ -41,6 +41,7 @@ export class AuthenticationController {
     @Body() dto: CreateUserDto,
     @Req() req: Request,
     @UploadedFile(
+      //AvatarOption.KEY, ! avatarFile - undefined
       new ParseFilePipeBuilder()
         .addFileTypeValidator(UserValidation.AvatarFile.Type)
         .addMaxSizeValidator(UserValidation.AvatarFile.MaxSize)
