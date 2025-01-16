@@ -1,4 +1,4 @@
-import { HttpStatus } from '@nestjs/common';
+import { HttpStatus, ParseFilePipeBuilder } from '@nestjs/common';
 
 import { UserApiProperty } from './authentication.constant.property';
 import { UserRdo } from './rdo/user.rdo';
@@ -37,6 +37,12 @@ export const UserValidation = {
     }
   }
 } as const;
+
+export const parseFilePipeBuilder =
+  new ParseFilePipeBuilder()
+    .addFileTypeValidator(UserValidation.AvatarFile.Type)
+    .addMaxSizeValidator(UserValidation.AvatarFile.MaxSize)
+    .build(UserValidation.AvatarFile.Build)
 
 export const UserIdApiParam = {
   name: 'userId',

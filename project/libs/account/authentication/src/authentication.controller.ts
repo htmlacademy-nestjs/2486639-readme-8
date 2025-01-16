@@ -1,8 +1,8 @@
 import {
   Body, Controller, Delete, Get, HttpCode, HttpStatus, Param,
-  ParseFilePipeBuilder, Post, Req, UploadedFile, UseGuards, UseInterceptors
+  Post, Req, UploadedFile, UseGuards, UseInterceptors
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiConsumes, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiConsumes, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 import { BearerAuth, RequestWithTokenPayload, RouteAlias } from '@project/shared/core';
@@ -20,7 +20,7 @@ import { LoggedUserRdo } from './rdo/logged-user.rdo';
 import { UserTokenRdo } from './rdo/user-token.rdo';
 import { TokenPayloadRdo } from './rdo/token-payload.rdo';
 import { UserRdo } from './rdo/user.rdo';
-import { UserIdApiParam, AuthenticationApiResponse, AvatarOption, UserValidation } from './authentication.constant';
+import { UserIdApiParam, AuthenticationApiResponse, AvatarOption, parseFilePipeBuilder } from './authentication.constant';
 
 @ApiTags('authentication')
 @Controller('auth')
@@ -39,14 +39,11 @@ export class AuthenticationController {
   @Post(RouteAlias.Register)
   public async register(
     @Body() dto: CreateUserDto,
-    @Req() req: Request,
-    @UploadedFile(
-      new ParseFilePipeBuilder()
-        .addFileTypeValidator(UserValidation.AvatarFile.Type)
-        .addMaxSizeValidator(UserValidation.AvatarFile.MaxSize)
-        .build(UserValidation.AvatarFile.Build)) avatarFile?: Express.Multer.File) {
+    @Req() request: Request,
+    @UploadedFile(parseFilePipeBuilder) avatarFile?: Express.Multer.File
+  ): Promise<UserRdo> {
     // headers: Authorization - т.к. только анонимный пользователь может регистрироваться
-    const newUser = await this.authService.registerUser(req.headers['authorization'], dto, avatarFile);
+    const newUser = await this.authService.registerUser(request.headers['authorization'], dto, avatarFile);
 
     return fillDto(UserRdo, newUser.toPOJO());
   }
@@ -55,10 +52,12 @@ export class AuthenticationController {
   @ApiResponse(AuthenticationApiResponse.LoggedError)
   @ApiResponse(AuthenticationApiResponse.BadRequest)
   @ApiResponse(AuthenticationApiResponse.Unauthorized)
-  @ApiBody({ type: LoginUserDto, required: true }) //! проверить
   @UseGuards(LocalAuthGuard)
   @Post(RouteAlias.Login)
-  public async login(@Req() { user }: RequestWithBlogUserEntity) {
+  public async login(
+    @Body() _dto: LoginUserDto, // для swagger
+    @Req() { user }: RequestWithBlogUserEntity
+  ): Promise<LoggedUserRdo> {
     const userToken = await this.authService.createUserToken(user);
 
     return fillDto(LoggedUserRdo, { ...user.toPOJO(), ...userToken });
@@ -68,7 +67,7 @@ export class AuthenticationController {
   @ApiBearerAuth(BearerAuth.RefreshToken)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(RouteAlias.Logout)
-  public async logout(@Req() request: Request) {
+  public async logout(@Req() request: Request): Promise<void> {
     await this.authService.logout(request.headers['authorization']);
   }
 
@@ -79,7 +78,7 @@ export class AuthenticationController {
   @ApiBearerAuth(BearerAuth.RefreshToken)
   @UseGuards(JwtRefreshGuard)
   @Post(RouteAlias.Refresh)
-  public async refreshToken(@Req() { user }: RequestWithBlogUserEntity) {
+  public async refreshToken(@Req() { user }: RequestWithBlogUserEntity): Promise<UserTokenRdo> {
     const userToken = await this.authService.createUserToken(user);
 
     return fillDto(UserTokenRdo, userToken);
@@ -92,7 +91,7 @@ export class AuthenticationController {
   @ApiBearerAuth(BearerAuth.AccessToken)
   @UseGuards(JwtAuthGuard)
   @Post(RouteAlias.Check)
-  public async checkToken(@Req() { user: payload }: RequestWithTokenPayload) {
+  public async checkToken(@Req() { user: payload }: RequestWithTokenPayload): Promise<TokenPayloadRdo> {
     return fillDto(TokenPayloadRdo, payload);
   }
 
@@ -101,7 +100,7 @@ export class AuthenticationController {
   @ApiResponse(AuthenticationApiResponse.BadRequest)
   @ApiParam(UserIdApiParam)
   @Get(`:${UserIdApiParam.name}`)
-  public async show(@Param(UserIdApiParam.name, MongoIdValidationPipe) userId: string) {
+  public async show(@Param(UserIdApiParam.name, MongoIdValidationPipe) userId: string): Promise<UserRdo> {
     const existUser = await this.authService.getUser(userId);
 
     return fillDto(UserRdo, existUser.toPOJO());

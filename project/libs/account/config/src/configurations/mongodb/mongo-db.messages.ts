@@ -1,4 +1,4 @@
-import { ConfigAlias } from "@project/shared/core";
+import { ConfigAlias } from '@project/shared/core';
 
 export enum EnvValidationMessage {
   DBHostRequired = `env ${ConfigAlias.MongoDbHostEnv} is required`,

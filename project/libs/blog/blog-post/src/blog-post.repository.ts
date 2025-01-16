@@ -4,7 +4,6 @@ import { Prisma } from '@prisma/client';
 import { PrismaClientService } from '@project/blog/models';
 import { BasePostgresRepository } from '@project/shared/data-access';
 import { PaginationResult, Post, PostState, PostType, SortDirection, SortType, Tag } from '@project/shared/core';
-
 import { BlogTagService } from '@project/blog/blog-tag';
 
 import { BlogPostEntity } from './blog-post.entity';
