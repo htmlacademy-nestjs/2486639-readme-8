@@ -10,7 +10,7 @@ export class BlogSubscriptionService {
     private readonly blogSubscriptionRepository: BlogSubscriptionRepository
   ) { }
 
-  private checkAuthorization(currentUserId: string) {
+  private checkAuthorization(currentUserId: string): void {
     if (!currentUserId) {
       throw new UnauthorizedException();//!BlogSubscriptionApiResponse.Unauthorized);
     }

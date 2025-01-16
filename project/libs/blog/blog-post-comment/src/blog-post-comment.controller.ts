@@ -23,7 +23,7 @@ export class BlogPostCommentController {
   @ApiResponse(BlogPostCommentApiResponse.PostNotFound)
   @ApiParam(PostIdApiParam)
   @Get(POST_ID_PARAM)
-  public async index(@Param(PostIdApiParam.name, GuidValidationPipe) postId: string, @Query() query: BlogPostCommentQuery) {
+  public async index(@Param(PostIdApiParam.name, GuidValidationPipe) postId: string, @Query() query: BlogPostCommentQuery): Promise<PostCommentWithPaginationRdo> {
     // необходимо определить пользователя
     const currentUserId = '11223344';
     const postCommentsWithPagination = await this.blogPostCommentService.getComments(postId, currentUserId, query);
@@ -42,7 +42,7 @@ export class BlogPostCommentController {
   @ApiResponse(BlogPostCommentApiResponse.CommentOnPostExist)
   @ApiParam(PostIdApiParam)
   @Post(POST_ID_PARAM)
-  public async create(@Param(PostIdApiParam.name, GuidValidationPipe) postId: string, @Body() dto: CreatePostCommentDto) {
+  public async create(@Param(PostIdApiParam.name, GuidValidationPipe) postId: string, @Body() dto: CreatePostCommentDto): Promise<PostCommentRdo> {
     // необходимо определить пользователя
     const currentUserId = '11223344';
     const newComment = await this.blogPostCommentService.createComment(dto, postId, currentUserId);
@@ -57,7 +57,7 @@ export class BlogPostCommentController {
   @ApiResponse(BlogPostCommentApiResponse.CommentNotFound)
   @ApiParam(PostIdApiParam)
   @Delete(POST_ID_PARAM)
-  public async delete(@Param(PostIdApiParam.name, GuidValidationPipe) postId: string) {
+  public async delete(@Param(PostIdApiParam.name, GuidValidationPipe) postId: string): Promise<void> {
     // необходимо определить пользователя
     const currentUserId = '11223344'
 

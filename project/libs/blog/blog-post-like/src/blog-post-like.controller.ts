@@ -20,9 +20,10 @@ export class BlogPostLikeController {
   @ApiResponse(BlogPostLikeApiResponse.LikeOnPostExist)
   @ApiParam(PostIdApiParam)
   @Post(POST_ID_PARAM)
-  public async create(@Param(PostIdApiParam.name, GuidValidationPipe) postId: string) {
+  public async create(@Param(PostIdApiParam.name, GuidValidationPipe) postId: string): Promise<void> {
     // необходимо определить пользователя
     const currentUserId = '11223344';
+
     await this.blogPostLikeService.like(postId, currentUserId);
   }
 
@@ -33,9 +34,10 @@ export class BlogPostLikeController {
   @ApiResponse(BlogPostLikeApiResponse.LikeNotFound)
   @ApiParam(PostIdApiParam)
   @Delete(POST_ID_PARAM)
-  public async delete(@Param(PostIdApiParam.name, GuidValidationPipe) postId: string) {
+  public async delete(@Param(PostIdApiParam.name, GuidValidationPipe) postId: string): Promise<void> {
     // необходимо определить пользователя
     const currentUserId = '11223344'
+
     await this.blogPostLikeService.unlike(postId, currentUserId);
   }
 }

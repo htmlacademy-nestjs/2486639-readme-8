@@ -22,7 +22,7 @@ export class BlogPostController {
   @ApiResponse(BlogPostApiResponse.PostsFound)
   @ApiResponse(BlogPostApiResponse.BadRequest)
   @Get('/')
-  public async index(@Query() query: BlogPostQuery) {
+  public async index(@Query() query: BlogPostQuery): Promise<PostWithPaginationRdo> {
     //! определить пользователя
     const currentUserId = '11223344';
     const postsWithPagination = await this.blogPostService.getAllPosts(query, currentUserId);
@@ -38,7 +38,7 @@ export class BlogPostController {
   @ApiResponse(BlogPostApiResponse.PostNotFound)
   @ApiParam(PostIdApiParam)
   @Get(`:${PostIdApiParam.name}`)
-  public async show(@Param(PostIdApiParam.name, GuidValidationPipe) postId: string) {
+  public async show(@Param(PostIdApiParam.name, GuidValidationPipe) postId: string): Promise<DetailPostRdo> {
     //! определить пользователя
     const currentUserId = '11223344';
     const existPost = await this.blogPostService.getPost(postId, currentUserId);
@@ -51,7 +51,7 @@ export class BlogPostController {
   @ApiResponse(BlogPostApiResponse.BadRequest)
   @ApiBody({ description: blogPostApiBodyDescription, type: CreatePostDto })
   @Post()
-  public async create(@Body() dto: CreatePostDto) {
+  public async create(@Body() dto: CreatePostDto): Promise<DetailPostRdo> {
     //! определить пользователя
     const currentUserId = '11223344';
     const newPost = await this.blogPostService.createPost(dto, currentUserId);
@@ -65,7 +65,7 @@ export class BlogPostController {
   @ApiResponse(BlogPostApiResponse.NotAllow)
   @ApiParam(PostIdApiParam)
   @Patch(`:${PostIdApiParam.name}`)
-  public async update(@Param(PostIdApiParam.name, GuidValidationPipe) postId: string, @Body() dto: UpdatePostDto) {
+  public async update(@Param(PostIdApiParam.name, GuidValidationPipe) postId: string, @Body() dto: UpdatePostDto): Promise<DetailPostRdo> {
     //! определить пользователя
     const currentUserId = '11223344';
     const updatedPost = await this.blogPostService.updatePost(postId, dto, currentUserId);
@@ -79,7 +79,7 @@ export class BlogPostController {
   @ApiResponse(BlogPostApiResponse.NotAllow)
   @ApiParam(PostIdApiParam)
   @Delete(`:${PostIdApiParam.name}`)
-  public async delete(@Param(PostIdApiParam.name, GuidValidationPipe) postId: string) {
+  public async delete(@Param(PostIdApiParam.name, GuidValidationPipe) postId: string): Promise<void> {
     //! определить пользователя
     const currentUserId = '11223344';
 

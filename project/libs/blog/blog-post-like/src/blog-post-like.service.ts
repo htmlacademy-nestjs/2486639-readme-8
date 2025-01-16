@@ -13,7 +13,7 @@ export class BlogPostLikeService {
     private readonly blogPostLikeRepository: BlogPostLikeRepository
   ) { }
 
-  private checkAuthorization(currentUserId: string) {
+  private checkAuthorization(currentUserId: string): void {
     if (!currentUserId) {
       throw new UnauthorizedException(BlogPostLikeApiResponse.Unauthorized);
     }

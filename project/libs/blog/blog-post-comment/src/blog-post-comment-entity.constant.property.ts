@@ -9,7 +9,7 @@ export const EntityApiProperty = {
     example: [{
       message: PostCommentApiProperty.Message.example,
       userId: PostCommentApiProperty.UserId.example,
-      createdAt: PostCommentApiProperty.CreatedAt.example,
+      createdAt: PostCommentApiProperty.CreatedAt.example
     }]
   }
 } as const;

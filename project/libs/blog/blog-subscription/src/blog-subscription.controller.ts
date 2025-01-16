@@ -1,5 +1,5 @@
 import { Controller, Delete, Param, Post } from '@nestjs/common';
-import { ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiParam, ApiTags } from '@nestjs/swagger';
 
 import { MongoIdValidationPipe } from '@project/shared/pipes';
 
@@ -22,9 +22,10 @@ export class BlogSubscriptionController {
   */
   @ApiParam(authorUserIdApiParam)
   @Post(AUTHOR_USER_ID_PARAM)
-  public async create(@Param(authorUserIdApiParam.name, MongoIdValidationPipe) authorUserId: string) {
+  public async create(@Param(authorUserIdApiParam.name, MongoIdValidationPipe) authorUserId: string): Promise<void> {
     // необходимо определить пользователя
     const currentUserId = '11223344';
+
     await this.blogSubscriptionService.subscribe(authorUserId, currentUserId);
   }
 
@@ -37,9 +38,10 @@ export class BlogSubscriptionController {
   */
   @ApiParam(authorUserIdApiParam)
   @Delete(AUTHOR_USER_ID_PARAM)
-  public async delete(@Param(authorUserIdApiParam.name, MongoIdValidationPipe) authorUserId: string) {
+  public async delete(@Param(authorUserIdApiParam.name, MongoIdValidationPipe) authorUserId: string): Promise<void> {
     // необходимо определить пользователя
     const currentUserId = '11223344'
+
     await this.blogSubscriptionService.unsubscribe(authorUserId, currentUserId);
   }
 }
