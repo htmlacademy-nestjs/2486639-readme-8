@@ -73,7 +73,9 @@ export class BlogPostService {
     // если требуется показать черновики автора, то query.userId === currentUserId, иначе отключем показ черновиков
     query.showDraft = ((query.showDraft) && (query.userId) && (query.userId === currentUserId));
 
-    return await this.blogPostRepository.find(query);
+    const result = await this.blogPostRepository.find(query);
+
+    return result;
   }
 
   public async getPost(postId: string, currentUserId: string): Promise<BlogPostEntity> {

@@ -16,7 +16,7 @@ export class RefreshTokenService {
     @Inject(jwtConfig.KEY) private readonly jwtOptions: ConfigType<typeof jwtConfig>,
   ) { }
 
-  public async createRefreshSession(payload: RefreshTokenPayload) {
+  public async createRefreshSession(payload: RefreshTokenPayload): Promise<void> {
     const timeValue = parseTime(this.jwtOptions.refreshTokenExpiresIn);
     const refreshToken = new RefreshTokenEntity({
       tokenId: payload.tokenId,
@@ -25,7 +25,7 @@ export class RefreshTokenService {
       expiresIn: dayjs().add(timeValue.value, timeValue.unit).toDate()
     });
 
-    return this.refreshTokenRepository.save(refreshToken);
+    await this.refreshTokenRepository.save(refreshToken);
   }
 
   public async deleteRefreshSession(tokenId: string): Promise<void> {
@@ -38,7 +38,7 @@ export class RefreshTokenService {
     return (refreshToken !== null);
   }
 
-  public async deleteExpiredRefreshTokens() {
+  public async deleteExpiredRefreshTokens(): Promise<void> {
     await this.refreshTokenRepository.deleteExpiredTokens();
   }
 }
