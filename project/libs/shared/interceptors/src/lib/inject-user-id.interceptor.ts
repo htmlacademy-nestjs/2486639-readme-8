@@ -1,11 +1,17 @@
-import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
+import { CallHandler, ExecutionContext, Injectable, Logger, NestInterceptor } from '@nestjs/common';
+import { Observable } from 'rxjs';
+
+import { xHeader } from '@project/shared/core';
 
 @Injectable()
 export class InjectUserIdInterceptor implements NestInterceptor {
-  public intercept(context: ExecutionContext, next: CallHandler) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const request = context.switchToHttp().getRequest();
+    const userId = request.user.sub;
 
-    request.body['userId'] = request.user.sub;  //! 'userId'
+    request.headers[xHeader.UserId] = userId;
+    Logger.log(`[${request.method}: ${request.url}]: UserID is ${userId}`);
 
     return next.handle();
   }

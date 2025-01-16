@@ -6,6 +6,9 @@
   2. ТЗ 1.1. Регистрация доступна только анонимным клиентам. - public async create(@Body() dto: CreateUserDto) {
       api-gate добавит userId ко все запросам? или проанализировать header?
       в сам сервис добавил header Authorization - попробовать добавить интерсептор он подойдет в login
+
+!использовать RequestIdInterceptor
+
   1. Реализовать маршруты:
     1.1. account
       1.1.1. как сделать в swagger @Body в JSON если выставлено @ApiConsumes('multipart/form-data'), через DTO?

@@ -6,6 +6,7 @@ export * from './lib/constants/bearer-auth';
 export { PageQueryApiProperty } from './lib/constants/page-query-api-property';
 export { PaginationApiProperty } from './lib/constants/pagination-api-property';
 export * from './lib/constants/route-alias';
+export { xHeader } from './lib/constants/x-header';
 
 export { EntityFactory } from './lib/interfaces/entity-factory.interface';
 export { File } from './lib/interfaces/file.interface';
