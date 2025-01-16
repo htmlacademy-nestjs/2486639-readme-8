@@ -55,7 +55,7 @@ export class AuthenticationController {
   @ApiResponse(AuthenticationApiResponse.LoggedError)
   @ApiResponse(AuthenticationApiResponse.BadRequest)
   @ApiResponse(AuthenticationApiResponse.Unauthorized)
-  @ApiBody({ type: LoginUserDto, required: true })
+  @ApiBody({ type: LoginUserDto, required: true }) //! проверить
   @UseGuards(LocalAuthGuard)
   @Post(RouteAlias.Login)
   public async login(@Req() { user }: RequestWithBlogUserEntity) {

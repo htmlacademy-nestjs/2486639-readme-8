@@ -3,6 +3,44 @@
       типы сделал не такие как в демо, т.к. возвращаемые значения другие.
       валидацию сделал вручную в LocalStrategy
       const error = validateSync(plainToClass(LoginUserDto, dto));
+https://github.com/swagger-api/swagger-ui/issues/4741
+https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.1.md#special-considerations-for-multipart-content
+// пока так...
+//в DTO
+  //name: 'tags[]', //!  - более менне -  tags: [ 'tag1,tag2' ] - сделать с одним
+// из .http
+--boundary
+Content-Disposition: form-data; name="tag"
+tag1
+--boundary
+Content-Disposition: form-data; name="tag"
+tag2
+--
+// из контроллера
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        //'tags[]': {
+        'tags[0]': {
+          example: 'tag1',
+          type: 'string'
+        },
+        'tags[1]': {
+          example: 'tag2',
+          type: 'string'
+        },
+        email: { type: 'string' },
+        name: { type: 'string' },
+        password: { type: 'string' },
+        avatarFile: {
+          type: 'string',
+          format: 'binary'
+        }
+      }
+    }
+  })
+//
   2. ТЗ 1.1. Регистрация доступна только анонимным клиентам. - public async create(@Body() dto: CreateUserDto) {
       api-gate добавит userId ко все запросам? или проанализировать header?
       в сам сервис добавил header Authorization - попробовать добавить интерсептор он подойдет в login
