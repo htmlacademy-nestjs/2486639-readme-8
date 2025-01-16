@@ -95,6 +95,21 @@ export class AuthenticationController {
     return fillDto(TokenPayloadRdo, payload);
   }
 
+  /*
+  @ApiResponse(AuthenticationApiResponse.CheckSuccess)
+  @ApiResponse(AuthenticationApiResponse.BadRequest)
+  @ApiResponse(AuthenticationApiResponse.Unauthorized)
+  */
+  @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth(BearerAuth.AccessToken)
+  @UseGuards(JwtAuthGuard)
+  @Post(RouteAlias.ChangePassword)
+  public async changePassword(@Body() dto: { password: string }): Promise<void> {
+    console.log(dto);
+
+    //
+  }
+
   @ApiResponse(AuthenticationApiResponse.UserFound)
   @ApiResponse(AuthenticationApiResponse.UserNotFound)
   @ApiResponse(AuthenticationApiResponse.BadRequest)
