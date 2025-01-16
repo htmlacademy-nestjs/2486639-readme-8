@@ -9,6 +9,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 
 import { BearerAuth, BearerAuthOption, ConfigAlias } from '@project/shared/core';
+import { RequestIdInterceptor } from '@project/shared/interceptors';
 
 import { AppModule } from './app/app.module';
 
@@ -39,6 +40,7 @@ async function bootstrap() {
   Logger.log(`FileStorage Service on: ${configService.get<number>(ConfigAlias.AppFileStorageServiceUrl)}`);
   //
 
+  app.useGlobalInterceptors(new RequestIdInterceptor());
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
   await app.listen(port);
