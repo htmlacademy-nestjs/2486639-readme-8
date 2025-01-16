@@ -10,7 +10,7 @@ export abstract class BasePostgresRepository<
 
   constructor(
     protected entityFactory: EntityFactory<T>,
-    protected readonly client: PrismaClientService,
+    protected readonly client: PrismaClientService
   ) { }
 
   protected createEntityFromDocument(document: DocumentType): T | null {

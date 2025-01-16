@@ -12,7 +12,7 @@ export abstract class BaseMongoRepository<
 
   constructor(
     protected entityFactory: EntityFactory<T>,
-    protected readonly model: Model<DocumentType>,
+    protected readonly model: Model<DocumentType>
   ) { }
 
   protected createEntityFromDocument(document: DocumentType): T | null {

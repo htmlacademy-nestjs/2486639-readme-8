@@ -19,7 +19,7 @@ export class EmailSubscriberController {
     queue: process.env[ConfigAlias.RabbitQueueEnv], //! 'readme.notify.income', а как забрать через config module?
     routingKey: RabbitRouting.AddSubscriber
   })
-  public async create(subscriber: CreateSubscriberDto) {
+  public async create(subscriber: CreateSubscriberDto): Promise<void> {
     await this.subscriberService.addSubscriber(subscriber);
     await this.mailService.sendNotifyNewSubscriber(subscriber);
   }

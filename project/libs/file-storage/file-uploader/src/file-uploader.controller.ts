@@ -24,7 +24,7 @@ export class FileUploaderController {
   @ApiBody(FileUploaderFileApiBody)
   @Post(`/${RouteAlias.Upload}`)
   @UseInterceptors(FileInterceptor(FILE_KEY))
-  public async uploadFile(@UploadedFile(FILE_KEY) file: Express.Multer.File) {
+  public async uploadFile(@UploadedFile(FILE_KEY) file: Express.Multer.File): Promise<UploadedFileRdo> {
     const fileEntity = await this.fileUploaderService.saveFile(file);
 
     return fillDto(UploadedFileRdo, fileEntity.toPOJO());
@@ -35,7 +35,7 @@ export class FileUploaderController {
   @ApiResponse(FileUploaderApiResponse.BadRequest)
   @ApiParam(FileIdApiParam)
   @Get(`:${FileIdApiParam.name}`)
-  public async show(@Param(FileIdApiParam.name, MongoIdValidationPipe) fileId: string) {
+  public async show(@Param(FileIdApiParam.name, MongoIdValidationPipe) fileId: string): Promise<UploadedFileRdo> {
     const existFile = await this.fileUploaderService.getFile(fileId);
 
     return fillDto(UploadedFileRdo, existFile);

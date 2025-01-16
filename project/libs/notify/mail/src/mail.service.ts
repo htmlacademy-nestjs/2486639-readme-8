@@ -16,7 +16,7 @@ export class MailService {
     private readonly mailerService: MailerService
   ) { }
 
-  public async sendNotifyNewSubscriber(subscriber: Subscriber, template: string = DEFAULT_ADD_SUBCRIBER_TEMPLATE) {
+  public async sendNotifyNewSubscriber(subscriber: Subscriber, template: string = DEFAULT_ADD_SUBCRIBER_TEMPLATE): Promise<void> {
     await this.mailerService.sendMail({
       from: this.notifyConfig.mailSmtp.from,
       to: subscriber.email,
