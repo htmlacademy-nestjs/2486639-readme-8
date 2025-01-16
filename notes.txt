@@ -1,66 +1,10 @@
 Вопросы:
-  1. как валидировать LoginUserDto, т.к. dto заменили на <@Req() { user }: RequestWithBlogUserEntity>?
-      типы сделал не такие как в демо, т.к. возвращаемые значения другие.
-      валидацию сделал вручную в LocalStrategy
-      const error = validateSync(plainToClass(LoginUserDto, dto));
-https://github.com/swagger-api/swagger-ui/issues/4741
-https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.1.md#special-considerations-for-multipart-content
-// пока так...
-//в DTO
-  //name: 'tags[]', //!  - более менне -  tags: [ 'tag1,tag2' ] - сделать с одним
-// из .http
---boundary
-Content-Disposition: form-data; name="tag"
-tag1
---boundary
-Content-Disposition: form-data; name="tag"
-tag2
---
-// из контроллера
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        //'tags[]': {
-        'tags[0]': {
-          example: 'tag1',
-          type: 'string'
-        },
-        'tags[1]': {
-          example: 'tag2',
-          type: 'string'
-        },
-        email: { type: 'string' },
-        name: { type: 'string' },
-        password: { type: 'string' },
-        avatarFile: {
-          type: 'string',
-          format: 'binary'
-        }
-      }
-    }
-  })
-//
-  2. ТЗ 1.1. Регистрация доступна только анонимным клиентам. - public async create(@Body() dto: CreateUserDto) {
-      api-gate добавит userId ко все запросам? или проанализировать header?
-      в сам сервис добавил header Authorization - попробовать добавить интерсептор он подойдет в login
   1. Реализовать маршруты:
     1.1. account
-      1.1.1. как сделать в swagger @Body в JSON если выставлено @ApiConsumes('multipart/form-data'), через DTO?
-               все запросы можно так сделать!
-               ApiImplicitFile - попробовать
-               еще https://github.com/nestjs/swagger/issues/167
-               еще https://stackoverflow.com/questions/66605192/file-uploading-along-with-other-data-in-swagger-nestjs
-      1.1.2. нужна смена пароля! /api/auth/change-password
-               что то делать с рефреш токеном, текущий удалить, новый создать?
+      1.1.1. нужна смена пароля! /api/auth/change-password
+              что то делать с рефреш токеном, текущий удалить, новый создать?
               токен доступа требовать?
-      1.1.3. для Пользователя дополнительный запрос или через api-gate
-        о количестве подписок на него и количестве его комментариев...
-          возможно сделать поля в пользователе или считать, т.к. запрос отдельный
-        возможно получение всех лайков пользователя/только своих
-        возможно получение всех подписок пользователя/только своих
-      1.1.4. exist хотябы в сервисе
-      1.1.5. для списка комментариев и нового комментария к посту нужно ли выводить детальную информацию о пользователе, пока оставил userId? а postId нужен? - скорей всего через api-gate
+      1.1.2. exist хотябы в сервисе
     1.2. blog
       1.2.0. Отдельный маршрут
                мои посты
@@ -104,6 +48,9 @@ tag2
             что вернуть после подписки/отписки
               только http-статус?
               обновленной информации о пользователе? можно через api-gate...  убрать в Заметки.п.16?
+      1.2.6. для Пользователя дополнительный запрос для api-gate
+               о количестве подписок на него и количестве его комментариев...
+               считать, т.к. запрос отдельный
       1.2.7. моя лента
       1.2.8. в ТЗ не указана сортировка комментариев, видимо как добавлены, посомтреть как возвращает БД и если что добавить orderBy.createdAt = desc
     1.3. api-gate
@@ -117,45 +64,15 @@ tag2
       1.3.3. дополнять список комментариев информацией о пользователе:
                в ТЗ ничего не указано, что дополянет о пользовате..
                в маркапах: фото, имя, id
-  2. под windows не водит имя для миграции db:migrate, выполнил отдельно всю команду из нужного каталога
-      для .env
-        cd readme/project/libs/blog/models/prisma
-        (Windows) mklink /h .env ..\..\..\..\apps\blog\.env
-  3. заполнить данные в mongodb, и в разных сервисах
-  4. удалить BaseMemoryRepository если не будет использоватся?
-  5. всем свойствам в Entity.populate нужно  "?? undefined;"
-  6. .env
-        project\apps\...\.env - nx или node добавляет в process.env при запуске!
-        envFilePath: ENV_FILE_PATH - загружает ConfigModule в process.env!
-          но нет ошибки при отсутвии файла! как добавить?
-        а можно заставить Joi вывести сразу все ошибки валидации, сейчас на первой ошибке прекращает валидацию...
-        вынести/обеденить конфигурации в один модуль
-        account-config сделать в один как  у всех
-        для blog сделать конфиг
-  7. entity.id = undefined; //! пустая строка из базового класса и id не гененируется
-        А в тегах вызывается конструктор с минимальным объектом и при вызове populate записывает в _id undefined
-  8. куда делся первый "@Inject(*.KEY)"?
-  9. что такое virtual('id').get(.... ?
-        отключил это пока в EmailSubscriberSchema и в FileSchema
-        при сохраннении даты остались пустые пустые? перепроверить, я добавил BaseMongoRepository - .toObject({ getters: true, versionKey: false, flattenObjectIds: true })
-  10. а как забрать через config module?
-        @RabbitSubscribe({
-          exchange: process.env[ConfigAlias.AppRabbitExchange], //! 'readme.notify', а как забрать через config module?
-          routingKey: RabbitRouting.AddSubscriber,
-          queue: process.env[ConfigAlias.AppRabbitQueue] //! 'readme.notify.income', а как забрать через config module?
-        })
-  11. Controller: [rdo, dto, entity], Service: [Entity], Ropositary: [Entity], Factory: [Entity]
-        'Repository.save(' почти всегда сервис делает entity:
-          const commentEntity = new BlogPostCommentEntity({ message, postId, userId });
-          await this.blogPostCommentRepository.save(commentEntity);
-          return commentEntity;
-          ->
-          return await this.blogPostCommentRepository.save({ message, postId, userId });
-        ? может контроллен должен не знать об Entity?
-  12. базовый класс для сервиса
-        вынести в него - private checkAuthorization(currentUserId: string)
-  13. JwtAccessStrategy возможно есть обработчик для изменения поведения, чтобы убрать <.headers['authorization']>
-        если сложно, то для api-gate можно сделать перехват ошибки axios запроса
+      1.3.4. дополнить при получении списка комментариев
+      1.3.5. дополнить после добавления комментария
+
+  2. удалить BaseMemoryRepository если не будет использоватся?
+  3. entity.id = undefined; //! пустая строка из базового класса и id не гененируется
+       А в тегах вызывается конструктор с минимальным объектом и при вызове populate записывает в _id undefined
+  4. JwtAccessStrategy возможно есть обработчик для изменения поведения или сделать отдельный Guard которые не валят ошибку...
+       чтобы убрать <.headers['authorization']>
+       если сложно, то для api-gate можно сделать перехват ошибки axios запроса
 
 
 Заметки:
@@ -229,3 +146,86 @@ tag2
           если это это refresh token, то обнулить его
   20. удилить AnyExceptionFilter
   21. проверять await для <...Service.> и <...Repository.>
+  22. await this.notifyService.registerSubscriber({ email, name });
+        а если будет RabbitMQ не досупен... клиенту придет 500, при этом пользователь будет зарегестрирован...
+  23. как валидировать LoginUserDto, т.к. dto заменили на <@Req() { user }: RequestWithBlogUserEntity>?
+      типы сделал не такие как в демо, т.к. возвращаемые значения другие.
+      валидацию сделал вручную в LocalStrategy
+      const error = validateSync(plainToClass(LoginUserDto, dto));
+https://github.com/swagger-api/swagger-ui/issues/4741
+https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.0.1.md#special-considerations-for-multipart-content
+https://github.com/nestjs/swagger/issues/167
+https://stackoverflow.com/questions/66605192/file-uploading-along-with-other-data-in-swagger-nestjs
+// пока так...
+//в DTO
+  //name: 'tags[]', //!  - более менне -  tags: [ 'tag1,tag2' ] - сделать с одним
+// из .http
+--boundary
+Content-Disposition: form-data; name="tag"
+tag1
+--boundary
+Content-Disposition: form-data; name="tag"
+tag2
+--
+// из контроллера
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        //'tags[]': {
+        'tags[0]': {
+          example: 'tag1',
+          type: 'string'
+        },
+        'tags[1]': {
+          example: 'tag2',
+          type: 'string'
+        },
+        email: { type: 'string' },
+        name: { type: 'string' },
+        password: { type: 'string' },
+        avatarFile: {
+          type: 'string',
+          format: 'binary'
+        }
+      }
+    }
+  })
+//
+  24. ТЗ 1.1. Регистрация доступна только анонимным клиентам. - public async create(@Body() dto: CreateUserDto) {
+      api-gate добавит userId ко все запросам? или проанализировать header?
+      в сам сервис добавил header Authorization - попробовать добавить интерсептор он подойдет в login
+  25. для блога
+        возможно получение всех лайков пользователя/только своих
+        возможно получение всех подписок пользователя/только своих
+  26. Controller: [rdo, dto, entity], Service: [Entity], Ropositary: [Entity], Factory: [Entity]
+        'Repository.save(' почти всегда сервис делает entity:
+          const commentEntity = new BlogPostCommentEntity({ message, postId, userId });
+          await this.blogPostCommentRepository.save(commentEntity);
+          return commentEntity;
+          ->
+          return await this.blogPostCommentRepository.save({ message, postId, userId });
+        ? может контроллен должен не знать об Entity?
+  27. базовый класс для сервиса
+        вынести в него - private checkAuthorization(currentUserId: string)
+  28. .env
+        project\apps\...\.env - nx или node добавляет в process.env при запуске!
+        envFilePath: ENV_FILE_PATH - загружает ConfigModule в process.env!
+          но нет ошибки при отсутвии файла! как добавить?
+        а можно заставить Joi вывести сразу все ошибки валидации, сейчас на первой ошибке прекращает валидацию...
+        вынести/обеденить конфигурации в один модуль
+        account-config сделать в один как  у всех
+        для blog сделать конфиг
+  29. под windows не водит имя для миграции db:migrate, выполнил отдельно всю команду из нужного каталога
+        для .env
+          cd readme/project/libs/blog/models/prisma
+          (Windows) mklink /h .env ..\..\..\..\apps\blog\.env
+      !! к сдаче перепроверить генерацию в командах дописаны файлы пути до env
+      !! если что вернуть или указать нужный файл в конфигурации
+  30. заполнить данные в mongodb, и в разных сервисах
+  31. а как забрать через config module?
+        @RabbitSubscribe({
+          exchange: process.env[ConfigAlias.AppRabbitExchange], //! 'readme.notify', а как забрать через config module?
+          routingKey: RabbitRouting.AddSubscriber,
+          queue: process.env[ConfigAlias.AppRabbitQueue] //! 'readme.notify.income', а как забрать через config module?
+        })
