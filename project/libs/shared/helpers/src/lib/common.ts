@@ -42,7 +42,7 @@ export function getValidationErrorString(errors: ValidationError[]): string {
   return errorList.join(', ');
 }
 
-export function makePath(directory: string, filename: string) {
+export function makePath(directory: string, filename: string): string {
   const path = directory.replace('\\', '/');
 
   return `/${path}/${filename}`;

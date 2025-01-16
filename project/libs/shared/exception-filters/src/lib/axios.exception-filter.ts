@@ -8,7 +8,7 @@ const INTERNAL_SERVER_ERROR_MESSAGE = 'Internal server error';
 
 @Catch(AxiosError)
 export class AxiosExceptionFilter implements ExceptionFilter {
-  catch(error: AxiosError, host: ArgumentsHost) {
+  catch(error: AxiosError, host: ArgumentsHost): void {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const errorResponse = {

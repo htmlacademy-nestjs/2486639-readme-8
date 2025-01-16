@@ -8,9 +8,9 @@ import { EmailSubscriberRepository } from './email-subscriber.repository';
 export class EmailSubscriberService {
   constructor(
     private readonly emailSubscriberRepository: EmailSubscriberRepository
-  ) {}
+  ) { }
 
-  public async addSubscriber(subscriber: CreateSubscriberDto) {
+  public async addSubscriber(subscriber: CreateSubscriberDto): Promise<EmailSubscriberEntity> {
     const { email } = subscriber;
     const existsSubscriber = await this.emailSubscriberRepository.findByEmail(email);
 
@@ -19,7 +19,7 @@ export class EmailSubscriberService {
     }
 
     const emailSubscriber = new EmailSubscriberEntity(subscriber);
-    
+
     await this.emailSubscriberRepository.save(emailSubscriber);
 
     return emailSubscriber;

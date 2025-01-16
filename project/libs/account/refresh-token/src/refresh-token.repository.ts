@@ -13,13 +13,13 @@ export class RefreshTokenRepository extends BaseMongoRepository<RefreshTokenEnti
   constructor(
     entityFactory: RefreshTokenFactory,
     @InjectModel(RefreshTokenModel.name)
-    blogUserModel: Model<RefreshTokenModel>
+    refreshTokenModel: Model<RefreshTokenModel>
   ) {
-    super(entityFactory, blogUserModel);
+    super(entityFactory, refreshTokenModel);
   }
 
-  public async deleteByTokenId(tokenId: string) {
-    return this.model.deleteOne({ tokenId }).exec();
+  public async deleteByTokenId(tokenId: string): Promise<void> {
+    await this.model.deleteOne({ tokenId }).exec();
   }
 
   public async findByTokenId(tokenId: string): Promise<RefreshTokenEntity | null> {
@@ -29,6 +29,6 @@ export class RefreshTokenRepository extends BaseMongoRepository<RefreshTokenEnti
   }
 
   public async deleteExpiredTokens(): Promise<void> {
-    this.model.deleteMany({ expiresIn: { $lt: new Date() } })
+    await this.model.deleteMany({ expiresIn: { $lt: new Date() } });
   }
 }
