@@ -3,6 +3,7 @@ import {
   ParseFilePipeBuilder, Post, Req, UploadedFile, UseGuards, UseInterceptors
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 import { BearerAuth, RequestWithTokenPayload, RouteAlias } from '@project/shared/core';
 import { fillDto } from '@project/shared/helpers';
@@ -19,8 +20,7 @@ import { LoggedUserRdo } from './rdo/logged-user.rdo';
 import { UserTokenRdo } from './rdo/user-token.rdo';
 import { TokenPayloadRdo } from './rdo/token-payload.rdo';
 import { UserRdo } from './rdo/user.rdo';
-import { UserIdApiParam, AuthenticationApiResponse, AvatarOption, UserValidation } from './authentication.constant';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { UserIdApiParam, AuthenticationApiResponse, AvatarOption, UserValidation, AuthenticationRegisterApiBody } from './authentication.constant';
 
 @ApiTags('authentication')
 @Controller('auth')
@@ -35,6 +35,7 @@ export class AuthenticationController {
   @ApiResponse(AuthenticationApiResponse.NotAllow)
   @ApiBearerAuth(BearerAuth.AccessToken) // для тестирования - анонимный пользователь может регистрироваться
   @ApiConsumes('multipart/form-data')
+  @ApiBody(AuthenticationRegisterApiBody) // в CreateUserDto нет описания про файл...
   @UseInterceptors(FileInterceptor(AvatarOption.KEY))
   @Post(RouteAlias.Register)
   public async register(

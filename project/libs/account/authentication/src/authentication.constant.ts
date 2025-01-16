@@ -19,6 +19,22 @@ export const AvatarOption = {
   MIME_TYPES: ['image/jpg', 'image/jpeg', 'image/png']
 } as const;
 
+export const AuthenticationRegisterApiBody = {
+  schema: {
+    type: 'object',
+    properties: {
+      // как то собрать из CreateUserDto, но описание по загрузку файла там нет
+      email: { type: 'string' },
+      name: { type: 'string' },
+      password: { type: 'string' },
+      [AvatarOption.KEY]: {
+        type: 'string',
+        format: 'binary'
+      }
+    }
+  }
+} as const;
+
 export const UserValidation = {
   Name: {
     MinLength: 3,
