@@ -200,3 +200,4 @@ JwtAccessStrategy возможно есть обработчик для изме
           @UseGuards(JwtAuthGuard) не поставить
           нужно в заголовках посмотреть есть ли там token
           если это это refresh token, то обнулить его
+  20. удилить AnyExceptionFilter
