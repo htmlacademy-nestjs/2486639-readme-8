@@ -20,7 +20,7 @@ import { LoggedUserRdo } from './rdo/logged-user.rdo';
 import { UserTokenRdo } from './rdo/user-token.rdo';
 import { TokenPayloadRdo } from './rdo/token-payload.rdo';
 import { UserRdo } from './rdo/user.rdo';
-import { UserIdApiParam, AuthenticationApiResponse, AvatarOption, UserValidation, AuthenticationRegisterApiBody } from './authentication.constant';
+import { UserIdApiParam, AuthenticationApiResponse, AvatarOption, UserValidation } from './authentication.constant';
 
 @ApiTags('authentication')
 @Controller('auth')
@@ -35,14 +35,12 @@ export class AuthenticationController {
   @ApiResponse(AuthenticationApiResponse.NotAllow)
   @ApiBearerAuth(BearerAuth.AccessToken) // для тестирования - анонимный пользователь может регистрироваться
   @ApiConsumes('multipart/form-data')
-  @ApiBody(AuthenticationRegisterApiBody) // в CreateUserDto нет описания про файл...
   @UseInterceptors(FileInterceptor(AvatarOption.KEY))
   @Post(RouteAlias.Register)
   public async register(
     @Body() dto: CreateUserDto,
     @Req() req: Request,
     @UploadedFile(
-      //AvatarOption.KEY, ! avatarFile - undefined
       new ParseFilePipeBuilder()
         .addFileTypeValidator(UserValidation.AvatarFile.Type)
         .addMaxSizeValidator(UserValidation.AvatarFile.MaxSize)

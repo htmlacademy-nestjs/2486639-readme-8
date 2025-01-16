@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsString, MaxLength, MinLength } from 'class-validator';
+import { IsEmail, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
 
 import { UserApiProperty } from '../authentication.constant.property';
 import { UserValidation } from '../authentication.constant';
@@ -20,4 +20,8 @@ export class CreateUserDto {
   @MinLength(UserValidation.Password.MinLength)
   @MaxLength(UserValidation.Password.MaxLength)
   public password: string;
+
+  @ApiProperty(UserApiProperty.AvatarFile)
+  @IsOptional()
+  public avatarFile?: Express.Multer.File;
 }

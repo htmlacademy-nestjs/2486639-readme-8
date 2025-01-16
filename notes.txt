@@ -184,16 +184,9 @@ JwtAccessStrategy возможно есть обработчик для изме
       мои лайки - посты лайкнутые мной
       лайки моих постов
   17. попробовать Factory сделать через дженерик, можно заменить в нескольких модулях
-  18. из присылаемых dto убрать не нужные поля...
-    в file-storage если загружаешь не стем именем файла, то "Unexpected field" в public async uploadFile(@UploadedFile() file: Express.Multer.File)
-    попробовать - https://docs.nestjs.com/techniques/file-upload !  заменить ParseFilePipeBuilder
-    @UseInterceptors(FileFieldsInterceptor([
-      { name: 'avatar', maxCount: 1 },
-      { name: 'background', maxCount: 1 },
-    ]))
-    uploadFile(@UploadedFiles() files: { avatar?: Express.Multer.File[], background?: Express.Multer.File[] }) {
-      console.log(files);
-    }
+  18. в ошибку ри загрузке файла "Unexpected field" добавить имя ожидаемого поля
+    !заменить ParseFilePipeBuilder
+    попробовать - https://docs.nestjs.com/techniques/file-upload
   19. logout доделать
         ничего не выполняем, т.к. токен нужно забыть на клиентской стороне
         НО можно удалить refresh token

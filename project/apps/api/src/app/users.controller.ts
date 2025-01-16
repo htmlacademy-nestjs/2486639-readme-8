@@ -42,7 +42,6 @@ export class UsersController {
     @Body() dto: CreateUserDto,
     @Req() request: Request,
     @UploadedFile(
-      //AvatarOption.KEY, ! avatarFile - undefined
       new ParseFilePipeBuilder()
         .addFileTypeValidator(UserValidation.AvatarFile.Type)
         .addMaxSizeValidator(UserValidation.AvatarFile.MaxSize)
