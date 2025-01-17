@@ -1,4 +1,4 @@
-import { Body, Controller, Inject, Post, Req, UseFilters, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Inject, Post, Req, UseFilters, UseGuards } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
 
