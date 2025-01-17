@@ -11,15 +11,15 @@ export class InjectRequestIdAndUserIdInterceptor implements NestInterceptor {
     const requestId = request.headers[XHeader.RequestId];
     const userId = request.headers[XHeader.UserId];
 
-    request[RequestProperty.RequestId] = requestId;
-    request[RequestProperty.UserId] = userId;
+    request[RequestProperty.RequestId] = requestId; // можно доделать валидацию по MongoIdValidationPipe
+    request[RequestProperty.UserId] = userId; //  можно доделать валидацию по GuidValidationPipe
 
     if (requestId) {
       Logger.log(`[${request.method}: ${request.url}]: ${XHeader.RequestId}: ${requestId}`);
     }
 
     if (userId) {
-      Logger.log(`[${request.method}: ${request.url}]: ${XHeader.RequestId}: ${userId}`);
+      Logger.log(`[${request.method}: ${request.url}]: ${XHeader.UserId}: ${userId}`);
     }
 
     return next.handle();

@@ -47,49 +47,49 @@ export const PostApiProperty = {
   QuoteText: {
     description: 'The post quote text for type: quote',
     required: false,
-    example: "quote text quote text"
+    example: 'quote text quote text'
   },
   QuoteAuthor: {
     description: 'The post quote author for type: quote',
     required: false,
-    example: "quote author"
+    example: 'quote author'
   },
   ImagePath: {
     description: 'The post image path for type: photo',
     required: false,
-    example: "/img/12345.jpg"
+    example: '/img/12345.jpg'
   },
   LinkDescription: {
     description: 'The post link description for type: link',
     required: false,
-    example: "link description"
+    example: 'link description'
   },
   //
   LikesCount: {
     description: 'The post likes count',
-    example: "5"
+    example: 5
   },
   CommentsCount: {
     description: 'The post comments count',
-    example: "5"
+    example: 5
   },
   IsRepost: {
     description: 'The post is repost attribute',
-    example: "true"
+    example: 'true'
   },
   RepostedPostId: {
     description: 'The reposted post id',
     required: false,
-    example: "2f31b19b-97eb-4305-877a-0b9be7faca8f"
+    example: '2f31b19b-97eb-4305-877a-0b9be7faca8f'
   },
   RepostedPostUserId: {
     description: 'The reposted post user id',
     required: false,
-    example: "658170cbb954e9f5b905ccf4"
+    example: '658170cbb954e9f5b905ccf4'
   },
   Tags: {
     description: 'The post tags',
-    example: ["tag1", "tag2"]
+    example: ['tag1', 'tag2']
   }
 } as const;
 

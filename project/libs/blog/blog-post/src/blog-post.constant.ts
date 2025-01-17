@@ -76,7 +76,6 @@ export const blogPostApiBodyDescription =
       return `For type "${key}" required ${fields}.<br>`;
     }
   ).join('');
-
 export const BlogPostMessage = {
   NotFound: 'Post not found.',
   NotAllow: 'Post is not yours.'

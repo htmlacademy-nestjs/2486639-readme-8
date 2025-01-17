@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Req, UseInter
 import { ApiBody, ApiHeaders, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { fillDto } from '@project/shared/helpers';
-import { RequestWithUserId, XHeader } from '@project/shared/core';
+import { RequestWithUserId } from '@project/shared/core';
 import { GuidValidationPipe } from '@project/shared/pipes';
 import { InjectRequestIdAndUserIdInterceptor } from '@project/shared/interceptors';
 
@@ -13,6 +13,7 @@ import { DetailPostRdo } from './rdo/detail-post.rdo';
 import { PostWithPaginationRdo } from './rdo/post-with-pagination.rdo';
 import { BlogPostQuery } from './blog-post.query';
 import { PostIdApiParam, BlogPostApiResponse, blogPostApiBodyDescription } from './blog-post.constant';
+import { BlogRequestIdApiHeader, BlogUserIdRequiredApiHeader } from './blog-post.constant.header';
 
 @ApiTags('blog-post')
 @Controller('posts')
@@ -51,10 +52,11 @@ export class BlogPostController {
   @ApiResponse(BlogPostApiResponse.PostCreated)
   @ApiResponse(BlogPostApiResponse.Unauthorized)
   @ApiResponse(BlogPostApiResponse.BadRequest)
-  @ApiHeaders([{ name: XHeader.RequestId, example: '111111111-22222222222' }, { name: XHeader.UserId, example: '22222222222-111111111' }])
+  @ApiHeaders([BlogRequestIdApiHeader, BlogUserIdRequiredApiHeader])
+
   //! вынести в константы, если они есть можно провалидировать их в InjectRequestIdAndUserIdInterceptor
   //! userId -> currentUserId ?
-  @ApiBody({ description: blogPostApiBodyDescription, type: CreatePostDto })
+  @ApiBody({ description: blogPostApiBodyDescription, type: CreatePostDto, examples: { video: {} } }) // попробовать добавить examples с готовыми примерами, т.к. по умолчанию пример собран по дто
   @UseInterceptors(InjectRequestIdAndUserIdInterceptor)
   @Post()
   public async create(@Body() dto: CreatePostDto, @Req() { userId }: RequestWithUserId): Promise<DetailPostRdo> {
