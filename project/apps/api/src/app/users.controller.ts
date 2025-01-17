@@ -14,7 +14,7 @@ import { MongoIdValidationPipe } from '@project/shared/pipes';
 import { AxiosExceptionFilter } from '@project/shared/exception-filters';
 import { apiConfig } from '@project/api/config';
 import {
-  AuthenticationApiResponse, AvatarOption, CreateUserDto, LoggedUserRdo, LoginUserDto,
+  AuthenticationApiResponse, AvatarOption, ChangePasswordDto, CreateUserDto, LoggedUserRdo, LoginUserDto,
   parseFilePipeBuilder, TokenPayloadRdo, UserIdApiParam, UserRdo, UserTokenRdo
 } from '@project/account/authentication';
 
@@ -90,8 +90,8 @@ export class UsersController {
   @ApiResponse(AuthenticationApiResponse.RefreshTokens)
   @ApiResponse(AuthenticationApiResponse.BadRequest)
   @ApiResponse(AuthenticationApiResponse.Unauthorized)
-  @HttpCode(HttpStatus.OK)
   @ApiBearerAuth(BearerAuth.RefreshToken)
+  @HttpCode(HttpStatus.OK)
   @Post(RouteAlias.Refresh)
   public async refreshToken(@Req() request: Request): Promise<UserTokenRdo> {
     const url = `${this.apiOptions.accountServiceUrl}/refresh`;
@@ -107,12 +107,28 @@ export class UsersController {
   @ApiResponse(AuthenticationApiResponse.CheckSuccess)
   @ApiResponse(AuthenticationApiResponse.BadRequest)
   @ApiResponse(AuthenticationApiResponse.Unauthorized)
-  @HttpCode(HttpStatus.OK)
   @ApiBearerAuth(BearerAuth.AccessToken)
+  @HttpCode(HttpStatus.OK)
   @UseGuards(CheckAuthGuard)
   @Post(RouteAlias.Check)
   public async checkToken(@Req() { user: payload }: RequestWithTokenPayload): Promise<TokenPayloadRdo> {
     return payload;
+  }
+
+  @ApiResponse(AuthenticationApiResponse.ChangePasswordSuccess)
+  @ApiResponse(AuthenticationApiResponse.BadRequest)
+  @ApiResponse(AuthenticationApiResponse.Unauthorized)
+  @ApiBearerAuth(BearerAuth.AccessToken)
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Post(RouteAlias.ChangePassword)
+  public async changePassword(@Body() dto: ChangePasswordDto, @Req() request: Request): Promise<void> {
+    const url = `${this.apiOptions.accountServiceUrl}/${RouteAlias.ChangePassword}`;
+
+    await this.httpService.axiosRef.post(
+      url,
+      dto,
+      { headers: { 'Authorization': request.headers['authorization'] } }
+    );
   }
 
   @ApiResponse(AuthenticationApiResponse.UserFound)

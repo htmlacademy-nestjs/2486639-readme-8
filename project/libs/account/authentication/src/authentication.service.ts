@@ -77,6 +77,13 @@ export class AuthenticationService {
     return userEntity;
   }
 
+  public async changeUserPassword(userId: string, newPassword: string): Promise<void> {
+    const userEntity = await this.blogUserRepository.findById(userId);
+
+    await userEntity.setPassword(newPassword);
+    await this.blogUserRepository.update(userEntity);
+  }
+
   public async createUserToken(user: User): Promise<Token> {
     const accessTokenPayload = createJWTPayload(user);
     const refreshTokenPayload = { ...accessTokenPayload, tokenId: crypto.randomUUID() };

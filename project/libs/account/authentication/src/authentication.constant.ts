@@ -90,6 +90,10 @@ export const AuthenticationApiResponse = {
     status: HttpStatus.OK,
     description: 'Check access token success.'
   },
+  ChangePasswordSuccess: {
+    status: HttpStatus.NO_CONTENT,
+    description: 'Change password success.'
+  },
   LoggedError: {
     status: HttpStatus.UNAUTHORIZED,
     description: 'Password or Login is wrong.'

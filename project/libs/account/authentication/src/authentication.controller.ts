@@ -13,6 +13,7 @@ import { RequestWithBlogUserEntity } from '@project/account/blog-user';
 import { AuthenticationService } from './authentication.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
@@ -74,8 +75,8 @@ export class AuthenticationController {
   @ApiResponse(AuthenticationApiResponse.RefreshTokens)
   @ApiResponse(AuthenticationApiResponse.BadRequest)
   @ApiResponse(AuthenticationApiResponse.Unauthorized)
-  @HttpCode(HttpStatus.OK)
   @ApiBearerAuth(BearerAuth.RefreshToken)
+  @HttpCode(HttpStatus.OK)
   @UseGuards(JwtRefreshGuard)
   @Post(RouteAlias.Refresh)
   public async refreshToken(@Req() { user }: RequestWithBlogUserEntity): Promise<UserTokenRdo> {
@@ -87,27 +88,23 @@ export class AuthenticationController {
   @ApiResponse(AuthenticationApiResponse.CheckSuccess)
   @ApiResponse(AuthenticationApiResponse.BadRequest)
   @ApiResponse(AuthenticationApiResponse.Unauthorized)
-  @HttpCode(HttpStatus.OK)
   @ApiBearerAuth(BearerAuth.AccessToken)
+  @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthGuard)
   @Post(RouteAlias.Check)
   public async checkToken(@Req() { user: payload }: RequestWithTokenPayload): Promise<TokenPayloadRdo> {
     return fillDto(TokenPayloadRdo, payload);
   }
 
-  /*
-  @ApiResponse(AuthenticationApiResponse.CheckSuccess)
+  @ApiResponse(AuthenticationApiResponse.ChangePasswordSuccess)
   @ApiResponse(AuthenticationApiResponse.BadRequest)
   @ApiResponse(AuthenticationApiResponse.Unauthorized)
-  */
-  @HttpCode(HttpStatus.OK)
   @ApiBearerAuth(BearerAuth.AccessToken)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @UseGuards(JwtAuthGuard)
   @Post(RouteAlias.ChangePassword)
-  public async changePassword(@Body() dto: { password: string }): Promise<void> {
-    console.log(dto);
-
-    //
+  public async changePassword(@Body() dto: ChangePasswordDto, @Req() { user }: RequestWithTokenPayload): Promise<void> {
+    await this.authService.changeUserPassword(user.sub, dto.password);
   }
 
   @ApiResponse(AuthenticationApiResponse.UserFound)
