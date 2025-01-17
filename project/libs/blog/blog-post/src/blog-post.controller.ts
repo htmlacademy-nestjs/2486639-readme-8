@@ -53,18 +53,11 @@ export class BlogPostController {
   @ApiResponse(BlogPostApiResponse.Unauthorized)
   @ApiResponse(BlogPostApiResponse.BadRequest)
   @ApiHeaders([BlogRequestIdApiHeader, BlogUserIdRequiredApiHeader])
-
-  //! вынести в константы, если они есть можно провалидировать их в InjectRequestIdAndUserIdInterceptor
-  //! userId -> currentUserId ?
   @ApiBody({ description: blogPostApiBodyDescription, type: CreatePostDto, examples: { video: {} } }) // попробовать добавить examples с готовыми примерами, т.к. по умолчанию пример собран по дто
   @UseInterceptors(InjectRequestIdAndUserIdInterceptor)
   @Post()
   public async create(@Body() dto: CreatePostDto, @Req() { userId }: RequestWithUserId): Promise<DetailPostRdo> {
-    console.log(userId);
-
-    //! определить пользователя
-    const currentUserId = '11223344';
-    const newPost = await this.blogPostService.createPost(dto, currentUserId);
+    const newPost = await this.blogPostService.createPost(dto, userId);
 
     return fillDto(DetailPostRdo, newPost.toPOJO());
   }

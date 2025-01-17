@@ -14,6 +14,7 @@ export { File } from './lib/interfaces/file.interface';
 export { PaginationResult } from './lib/interfaces/pagination.interface';
 export { JwtToken } from './lib/interfaces/jwt-token.interface';
 export { RefreshTokenPayload } from './lib/interfaces/refresh-token-payload.interface';
+export { RequestWithRequestIdAndUserId } from './lib/interfaces/request-with-request-id-and-user-id.interface';
 export { RequestWithTokenPayload } from './lib/interfaces/request-with-token-payload.interface';
 export { RequestWithUserId } from './lib/interfaces/request-with-user-id.interface';
 export { StorableEntity } from './lib/interfaces/storable-entity.interface';
