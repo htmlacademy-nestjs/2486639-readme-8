@@ -8,6 +8,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { BearerAuth, RequestWithTokenPayload, RouteAlias } from '@project/shared/core';
 import { fillDto, getAuthorizationHeaderValue } from '@project/shared/helpers';
 import { MongoIdValidationPipe } from '@project/shared/pipes';
+import { InjectRequestIdAndUserIdInterceptor, RequestIdInterceptor } from '@project/shared/interceptors';
 import { RequestWithBlogUserEntity } from '@project/account/blog-user';
 
 import { AuthenticationService } from './authentication.service';
@@ -36,6 +37,7 @@ export class AuthenticationController {
   @ApiResponse(AuthenticationApiResponse.NotAllow)
   @ApiBearerAuth(BearerAuth.AccessToken) // для тестирования - анонимный пользователь может регистрироваться
   @ApiConsumes('multipart/form-data')
+  @UseInterceptors(InjectRequestIdAndUserIdInterceptor) //!разбить на 2?
   @UseInterceptors(FileInterceptor(AvatarOption.KEY))
   @Post(RouteAlias.Register)
   public async register(

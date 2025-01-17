@@ -15,11 +15,11 @@ export class InjectRequestIdAndUserIdInterceptor implements NestInterceptor {
     request[RequestProperty.UserId] = userId; //  можно доделать валидацию по GuidValidationPipe
 
     if (requestId) {
-      Logger.log(`[${request.method}: ${request.url}]: ${XHeader.RequestId}: ${requestId}`);
+      Logger.log(`[${request.method}: ${request.url}]: ${RequestProperty.RequestId}: ${requestId}`);
     }
 
     if (userId) {
-      Logger.log(`[${request.method}: ${request.url}]: ${XHeader.UserId}: ${userId}`);
+      Logger.log(`[${request.method}: ${request.url}]: ${RequestProperty.UserId}: ${userId}`);
     }
 
     return next.handle();

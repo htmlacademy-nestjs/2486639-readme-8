@@ -8,7 +8,7 @@ import { HttpService } from '@nestjs/axios';
 import { ApiBearerAuth, ApiConsumes, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 
-import { BearerAuth, RequestWithTokenPayload, RouteAlias } from '@project/shared/core';
+import { BearerAuth, RequestProperty, RequestWithTokenPayload, RouteAlias, XHeader } from '@project/shared/core';
 import { dtoToFormData, getAuthorizationHeader, multerFileToFormData } from '@project/shared/helpers';
 import { MongoIdValidationPipe } from '@project/shared/pipes';
 import { AxiosExceptionFilter } from '@project/shared/exception-filters';
@@ -29,6 +29,18 @@ export class UsersController {
     @Inject(apiConfig.KEY)
     private readonly apiOptions: ConfigType<typeof apiConfig>
   ) { }
+
+  private getHeaders(request: Request, addAuthorizationHeader = false): { headers: { [XHeader.RequestId]: string, [XHeader.UserId]?: string } } {
+    const headers = { [XHeader.RequestId]: request[RequestProperty.RequestId] };
+
+    if (addAuthorizationHeader) {
+      const authorizationHeader = getAuthorizationHeader(request);
+
+      headers['Authorization'] = authorizationHeader.Authorization;
+    }
+
+    return { headers };
+  }
 
   @ApiResponse(AuthenticationApiResponse.UserCreated)
   @ApiResponse(AuthenticationApiResponse.UserExist)
@@ -57,7 +69,7 @@ export class UsersController {
       registerUrl,
       formData,
       // headers: Authorization - т.к. только анонимный пользователь может регистрироваться
-      { headers: getAuthorizationHeader(request) }
+      this.getHeaders(request, true)
     );
 
     return registerData;
