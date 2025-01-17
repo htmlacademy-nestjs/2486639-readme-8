@@ -19,18 +19,6 @@ async function bootstrap() {
   const port = configService.get<number>(ConfigAlias.AppPort);
 
   app.setGlobalPrefix(globalPrefix);
-
-  //Swagger
-  const documentBuilder = new DocumentBuilder()
-    .setTitle('Notify API')
-    .setDescription('The Notify API description')
-    .setVersion('1.0')
-    .build();
-  const documentFactory = () => SwaggerModule.createDocument(app, documentBuilder);
-
-  SwaggerModule.setup('spec', app, documentFactory);
-  //
-
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
   await app.listen(port);

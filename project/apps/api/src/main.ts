@@ -16,6 +16,7 @@ import { AppModule } from './app/app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const globalPrefix = 'api';
+  const swaggerPrefix = 'spec';
   const configService = app.get(ConfigService);
   const port = configService.get<number>(ConfigAlias.AppPort);
 
@@ -31,7 +32,7 @@ async function bootstrap() {
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, documentBuilder);
 
-  SwaggerModule.setup('spec', app, documentFactory);
+  SwaggerModule.setup(swaggerPrefix, app, documentFactory);
   //
 
   // Микросервисы и маршруты
@@ -45,6 +46,7 @@ async function bootstrap() {
 
   await app.listen(port);
   Logger.log(`🚀 Application is running on: http://localhost:${port}/${globalPrefix}`);
+  Logger.log(`Swagger on: http://localhost:${port}/${swaggerPrefix}`);
 }
 
 bootstrap();
