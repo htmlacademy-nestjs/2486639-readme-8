@@ -5,8 +5,9 @@ export * from './lib/constants/default-port';
 export * from './lib/constants/bearer-auth';
 export { PageQueryApiProperty } from './lib/constants/page-query-api-property';
 export { PaginationApiProperty } from './lib/constants/pagination-api-property';
+export { RequestProperty } from './lib/constants/request-property';
 export * from './lib/constants/route-alias';
-export { xHeader } from './lib/constants/x-header';
+export { XHeader } from './lib/constants/x-header';
 
 export { EntityFactory } from './lib/interfaces/entity-factory.interface';
 export { File } from './lib/interfaces/file.interface';
@@ -14,6 +15,7 @@ export { PaginationResult } from './lib/interfaces/pagination.interface';
 export { JwtToken } from './lib/interfaces/jwt-token.interface';
 export { RefreshTokenPayload } from './lib/interfaces/refresh-token-payload.interface';
 export { RequestWithTokenPayload } from './lib/interfaces/request-with-token-payload.interface';
+export { RequestWithUserId } from './lib/interfaces/request-with-user-id.interface';
 export { StorableEntity } from './lib/interfaces/storable-entity.interface';
 export { StoredFile } from './lib/interfaces/stored-file.interface';
 export { TokenPayload } from './lib/interfaces/token-payload.interface';
