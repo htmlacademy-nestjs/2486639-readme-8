@@ -23,5 +23,5 @@ export class CreateUserDto {
 
   @ApiProperty(UserApiProperty.AvatarFile)
   @IsOptional()
-  public avatarFile?: Express.Multer.File;
+  public avatarFile?: string; // для описания Swagger, фактически будет в @UploadedFile... avatarFile?: Express.Multer.File
 }
