@@ -9,7 +9,7 @@ import { ApiBearerAuth, ApiConsumes, ApiParam, ApiResponse, ApiTags } from '@nes
 import { FileInterceptor } from '@nestjs/platform-express';
 
 import { BearerAuth, RequestWithTokenPayload, RouteAlias } from '@project/shared/core';
-import { dtoToFormData, multerFileToFormData } from '@project/shared/helpers';
+import { dtoToFormData, getAuthorizationHeader, multerFileToFormData } from '@project/shared/helpers';
 import { MongoIdValidationPipe } from '@project/shared/pipes';
 import { AxiosExceptionFilter } from '@project/shared/exception-filters';
 import { apiConfig } from '@project/api/config';
@@ -57,7 +57,7 @@ export class UsersController {
       registerUrl,
       formData,
       // headers: Authorization - т.к. только анонимный пользователь может регистрироваться
-      { headers: { 'Authorization': request.headers['authorization'] } }
+      { headers: getAuthorizationHeader(request) }
     );
 
     return registerData;
@@ -84,7 +84,7 @@ export class UsersController {
   public async logout(@Req() request: Request): Promise<void> {
     const url = `${this.apiOptions.accountServiceUrl}/${RouteAlias.Logout}`;
 
-    await this.httpService.axiosRef.delete(url, { headers: { 'Authorization': request.headers['authorization'] } });
+    await this.httpService.axiosRef.delete(url, { headers: getAuthorizationHeader(request) });
   }
 
   @ApiResponse(AuthenticationApiResponse.RefreshTokens)
@@ -95,11 +95,7 @@ export class UsersController {
   @Post(RouteAlias.Refresh)
   public async refreshToken(@Req() request: Request): Promise<UserTokenRdo> {
     const url = `${this.apiOptions.accountServiceUrl}/refresh`;
-    const { data } = await this.httpService.axiosRef.post<UserTokenRdo>(
-      url,
-      null,
-      { headers: { 'Authorization': request.headers['authorization'] } }
-    );
+    const { data } = await this.httpService.axiosRef.post<UserTokenRdo>(url, null, { headers: getAuthorizationHeader(request) });
 
     return data;
   }
@@ -124,11 +120,7 @@ export class UsersController {
   public async changePassword(@Body() dto: ChangePasswordDto, @Req() request: Request): Promise<void> {
     const url = `${this.apiOptions.accountServiceUrl}/${RouteAlias.ChangePassword}`;
 
-    await this.httpService.axiosRef.post(
-      url,
-      dto,
-      { headers: { 'Authorization': request.headers['authorization'] } }
-    );
+    await this.httpService.axiosRef.post(url, dto, { headers: getAuthorizationHeader(request) });
   }
 
   @ApiResponse(AuthenticationApiResponse.UserFound)

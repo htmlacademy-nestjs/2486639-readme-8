@@ -6,7 +6,7 @@ import { ApiBearerAuth, ApiConsumes, ApiParam, ApiResponse, ApiTags } from '@nes
 import { FileInterceptor } from '@nestjs/platform-express';
 
 import { BearerAuth, RequestWithTokenPayload, RouteAlias } from '@project/shared/core';
-import { fillDto } from '@project/shared/helpers';
+import { fillDto, getAuthorizationHeaderValue } from '@project/shared/helpers';
 import { MongoIdValidationPipe } from '@project/shared/pipes';
 import { RequestWithBlogUserEntity } from '@project/account/blog-user';
 
@@ -44,7 +44,7 @@ export class AuthenticationController {
     @UploadedFile(parseFilePipeBuilder) avatarFile?: Express.Multer.File
   ): Promise<UserRdo> {
     // headers: Authorization - т.к. только анонимный пользователь может регистрироваться
-    const newUser = await this.authService.registerUser(request.headers['authorization'], dto, avatarFile);
+    const newUser = await this.authService.registerUser(getAuthorizationHeaderValue(request), dto, avatarFile);
 
     return fillDto(UserRdo, newUser.toPOJO());
   }
@@ -69,7 +69,7 @@ export class AuthenticationController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(RouteAlias.Logout)
   public async logout(@Req() request: Request): Promise<void> {
-    await this.authService.logout(request.headers['authorization']);
+    await this.authService.logout(getAuthorizationHeaderValue(request));
   }
 
   @ApiResponse(AuthenticationApiResponse.RefreshTokens)
