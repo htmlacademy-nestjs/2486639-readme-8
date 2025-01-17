@@ -17,32 +17,32 @@ export const PostApiProperty = {
   },
   PublishDate: {
     description: 'The post publish date',
-    example: "2024-07-09"
+    example: '2024-07-09'
   },
   UserId: {
     description: 'The post user id',
-    example: "658170cbb954e9f5b905ccf4"
+    example: '658170cbb954e9f5b905ccf4'
   },
   // для формирования "for types:..." можно применить PostFieldsByType, но данные поля по типам, а тут нужно типы по полям
   Title: {
     description: 'The post title for types: video and text',
     required: false,
-    example: "description, description"
+    example: 'description, description'
   },
   Url: {
     description: 'The post url for types: video and link',
     required: false,
-    example: "http://local.ru/12345"
+    example: 'http://local.ru/12345'
   },
   PreviewText: {
     description: 'The post preview text for type: text',
     required: false,
-    example: "preview text preview text preview text preview text"
+    example: 'preview text preview text preview text preview text'
   },
   Text: {
     description: 'The post text for type: text',
     required: false,
-    example: "text text text text text text text text text text text text text text text text text text text text text"
+    example: 'text text text text text text text text text text text text text text text text text text text text text'
   },
   QuoteText: {
     description: 'The post quote text for type: quote',
@@ -107,7 +107,7 @@ export const PostQueryApiProperty = {
   },
   Tag: {
     description: 'The post tag',
-    example: "tag1",
+    example: 'tag1',
     required: false
   }
 } as const;
