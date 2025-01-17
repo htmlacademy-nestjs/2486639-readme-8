@@ -51,7 +51,9 @@ export class BlogPostController {
   @ApiResponse(BlogPostApiResponse.PostCreated)
   @ApiResponse(BlogPostApiResponse.Unauthorized)
   @ApiResponse(BlogPostApiResponse.BadRequest)
-  @ApiHeaders([{ name: XHeader.RequestId }, { name: XHeader.UserId }])
+  @ApiHeaders([{ name: XHeader.RequestId, example: '111111111-22222222222' }, { name: XHeader.UserId, example: '22222222222-111111111' }])
+  //! вынести в константы, если они есть можно провалидировать их в InjectRequestIdAndUserIdInterceptor
+  //! userId -> currentUserId ?
   @ApiBody({ description: blogPostApiBodyDescription, type: CreatePostDto })
   @UseInterceptors(InjectRequestIdAndUserIdInterceptor)
   @Post()

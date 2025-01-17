@@ -13,8 +13,14 @@ export class InjectRequestIdAndUserIdInterceptor implements NestInterceptor {
 
     request[RequestProperty.RequestId] = requestId;
     request[RequestProperty.UserId] = userId;
-    Logger.log(`[${request.method}: ${request.url}]: RequestID is ${requestId}`);
-    Logger.log(`[${request.method}: ${request.url}]: UserID is ${userId}`);
+
+    if (requestId) {
+      Logger.log(`[${request.method}: ${request.url}]: ${XHeader.RequestId}: ${requestId}`);
+    }
+
+    if (userId) {
+      Logger.log(`[${request.method}: ${request.url}]: ${XHeader.RequestId}: ${userId}`);
+    }
 
     return next.handle();
   }
