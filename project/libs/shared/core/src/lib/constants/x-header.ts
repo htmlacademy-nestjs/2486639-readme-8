@@ -1,4 +1,4 @@
-export enum xHeader {
-  RequestId = 'X-Request-Id',
-  UserId = 'X-User-Id'
+export enum XHeader {
+  RequestId = 'x-request-id',
+  UserId = 'x-user-id'
 };
