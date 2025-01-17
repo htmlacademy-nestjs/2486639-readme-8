@@ -1,8 +1,10 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
-import { ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Req, UseInterceptors } from '@nestjs/common';
+import { ApiBody, ApiHeaders, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { fillDto } from '@project/shared/helpers';
+import { RequestWithUserId, XHeader } from '@project/shared/core';
 import { GuidValidationPipe } from '@project/shared/pipes';
+import { InjectRequestIdAndUserIdInterceptor } from '@project/shared/interceptors';
 
 import { BlogPostService } from './blog-post.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -49,9 +51,13 @@ export class BlogPostController {
   @ApiResponse(BlogPostApiResponse.PostCreated)
   @ApiResponse(BlogPostApiResponse.Unauthorized)
   @ApiResponse(BlogPostApiResponse.BadRequest)
+  @ApiHeaders([{ name: XHeader.RequestId }, { name: XHeader.UserId }])
   @ApiBody({ description: blogPostApiBodyDescription, type: CreatePostDto })
+  @UseInterceptors(InjectRequestIdAndUserIdInterceptor)
   @Post()
-  public async create(@Body() dto: CreatePostDto): Promise<DetailPostRdo> {
+  public async create(@Body() dto: CreatePostDto, @Req() { userId }: RequestWithUserId): Promise<DetailPostRdo> {
+    console.log(userId);
+
     //! определить пользователя
     const currentUserId = '11223344';
     const newPost = await this.blogPostService.createPost(dto, currentUserId);
