@@ -23,7 +23,7 @@ export class CheckAuthGuard implements CanActivate {
 
     request[RequestProperty.User] = data; // для UsersController.checkToken
     request[RequestProperty.UserId] = userId; // для всех
-    Logger.log(`[${request.method}: ${request.url}]: ${RequestProperty.UserId} is ${userId}`);
+    Logger.log(`[CheckAuthGuard: ${request.method}: ${request.url}]: ${RequestProperty.UserId} is ${userId}`);
 
     return true;
   }
