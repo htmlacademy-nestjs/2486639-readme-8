@@ -5,10 +5,10 @@ import {
 import { ApiBearerAuth, ApiConsumes, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 
-import { BearerAuth, RequestWithTokenPayload, RouteAlias } from '@project/shared/core';
-import { fillDto, getAuthorizationHeaderValue } from '@project/shared/helpers';
+import { BearerAuth, RequestWithBearerAuth, RequestWithTokenPayload, RouteAlias } from '@project/shared/core';
+import { fillDto } from '@project/shared/helpers';
 import { MongoIdValidationPipe } from '@project/shared/pipes';
-import { InjectRequestIdAndUserIdInterceptor, RequestIdInterceptor } from '@project/shared/interceptors';
+import { InjectBearerAuthInterceptor } from '@project/shared/interceptors';
 import { RequestWithBlogUserEntity } from '@project/account/blog-user';
 
 import { AuthenticationService } from './authentication.service';
@@ -37,16 +37,18 @@ export class AuthenticationController {
   @ApiResponse(AuthenticationApiResponse.NotAllow)
   @ApiBearerAuth(BearerAuth.AccessToken) // для тестирования - анонимный пользователь может регистрироваться
   @ApiConsumes('multipart/form-data')
-  @UseInterceptors(InjectRequestIdAndUserIdInterceptor) //!разбить на 2?
+  @UseInterceptors(InjectBearerAuthInterceptor)
   @UseInterceptors(FileInterceptor(AvatarOption.KEY))
   @Post(RouteAlias.Register)
   public async register(
     @Body() dto: CreateUserDto,
-    @Req() request: Request,
+    @Req() { bearerAuth }: RequestWithBearerAuth,
     @UploadedFile(parseFilePipeBuilder) avatarFile?: Express.Multer.File
   ): Promise<UserRdo> {
+    console.log(bearerAuth); //!
+
     // headers: Authorization - т.к. только анонимный пользователь может регистрироваться
-    const newUser = await this.authService.registerUser(getAuthorizationHeaderValue(request), dto, avatarFile);
+    const newUser = await this.authService.registerUser(bearerAuth, dto, avatarFile);
 
     return fillDto(UserRdo, newUser.toPOJO());
   }
@@ -68,10 +70,11 @@ export class AuthenticationController {
 
   @ApiResponse(AuthenticationApiResponse.LogoutSuccess)
   @ApiBearerAuth(BearerAuth.RefreshToken)
+  @UseInterceptors(InjectBearerAuthInterceptor)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(RouteAlias.Logout)
-  public async logout(@Req() request: Request): Promise<void> {
-    await this.authService.logout(getAuthorizationHeaderValue(request));
+  public async logout(@Req() { bearerAuth }: RequestWithBearerAuth): Promise<void> {
+    await this.authService.logout(bearerAuth);
   }
 
   @ApiResponse(AuthenticationApiResponse.RefreshTokens)
