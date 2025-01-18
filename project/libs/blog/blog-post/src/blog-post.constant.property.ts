@@ -59,6 +59,12 @@ export const PostApiProperty = {
     required: false,
     example: '/img/12345.jpg'
   },
+  ImageFile: {
+    description: 'The post image file for type: photo',
+    required: false,
+    type: 'string',
+    format: 'binary'
+  },
   LinkDescription: {
     description: 'The post link description for type: link',
     required: false,

@@ -1,5 +1,11 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Req } from '@nestjs/common';
-import { ApiBody, ApiHeaders, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  Body, Controller, Delete, Get, Param, Patch,
+  Post, Query, Req, UploadedFile, UseInterceptors
+} from '@nestjs/common';
+import {
+  ApiBody, ApiConsumes, ApiHeaders, ApiParam,
+  ApiResponse, ApiTags
+} from '@nestjs/swagger';
 
 import { fillDto } from '@project/shared/helpers';
 import { RequestWithUserId } from '@project/shared/core';
@@ -11,8 +17,12 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { DetailPostRdo } from './rdo/detail-post.rdo';
 import { PostWithPaginationRdo } from './rdo/post-with-pagination.rdo';
 import { BlogPostQuery } from './blog-post.query';
-import { PostIdApiParam, BlogPostApiResponse, blogPostApiBodyDescription } from './blog-post.constant';
+import {
+  PostIdApiParam, BlogPostApiResponse, blogPostApiBodyDescription,
+  ImageOption, parseFilePipeBuilder
+} from './blog-post.constant';
 import { BlogRequestIdApiHeader, BlogUserIdRequiredApiHeader } from './blog-post.constant.header';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('blog-post')
 @ApiHeaders([BlogRequestIdApiHeader, BlogUserIdRequiredApiHeader]) // глобально вроде не добавить? и примеры почемуто не работают...
@@ -59,11 +69,17 @@ export class BlogPostController {
     type: CreatePostDto, //! а type нужен?
     examples: { video: {} } //! попробовать добавить examples с готовыми примерами, т.к. по умолчанию пример собран по дто
   })
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileInterceptor(ImageOption.KEY))
   @Post()
   public async create(
     @Body() dto: CreatePostDto,
-    @Req() { userId }: RequestWithUserId
+    @Req() { userId }: RequestWithUserId,
+    @UploadedFile(parseFilePipeBuilder) imageFile?: Express.Multer.File
   ): Promise<DetailPostRdo> {
+    console.log(imageFile);
+    console.log(dto);
+
     const newPost = await this.blogPostService.createPost(dto, userId);
 
     return fillDto(DetailPostRdo, newPost.toPOJO());
@@ -74,12 +90,18 @@ export class BlogPostController {
   @ApiResponse(BlogPostApiResponse.PostNotFound)
   @ApiResponse(BlogPostApiResponse.NotAllow)
   @ApiParam(PostIdApiParam)
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileInterceptor(ImageOption.KEY))
   @Patch(`:${PostIdApiParam.name}`)
   public async update(
     @Param(PostIdApiParam.name, GuidValidationPipe) postId: string,
     @Body() dto: UpdatePostDto,
-    @Req() { userId }: RequestWithUserId
+    @Req() { userId }: RequestWithUserId,
+    @UploadedFile(parseFilePipeBuilder) imageFile?: Express.Multer.File
   ): Promise<DetailPostRdo> {
+    console.log(imageFile);
+    console.log(dto);
+
     const updatedPost = await this.blogPostService.updatePost(postId, dto, userId);
 
     return fillDto(DetailPostRdo, updatedPost.toPOJO());

@@ -28,7 +28,7 @@ export class BlogPostFactory implements EntityFactory<BlogPostEntity> {
     entity.text = dto.text;
     entity.quoteText = dto.quoteText;
     entity.quoteAuthor = dto.quoteAuthor;
-    entity.imagePath = dto.imagePath;
+    entity.imagePath = '';//! временно dto.imagePath;
     entity.linkDescription = dto.linkDescription;
     entity.userId = userId;
 

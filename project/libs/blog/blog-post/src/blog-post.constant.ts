@@ -1,4 +1,4 @@
-import { HttpStatus } from '@nestjs/common';
+import { HttpStatus, ParseFilePipeBuilder } from '@nestjs/common';
 
 import { PostState, PostType, SortType } from '@project/shared/core';
 
@@ -13,6 +13,12 @@ export const Default = {
   POST_COUNT: 25,
   CURRENT_PAGE: 1,
   SORT_TYPE: SortType.Date
+} as const;
+
+export const ImageOption = {
+  KEY: 'imageFile',
+  MAX_SIZE: 1204 * 1024,
+  MIME_TYPES: ['image/jpg', 'image/jpeg', 'image/png']
 } as const;
 
 export const PostValidation = {
@@ -45,7 +51,21 @@ export const PostValidation = {
   LinkDescription: {
     MaxLength: 300
   },
+  ImageFile: {
+    Type: { fileType: ImageOption.MIME_TYPES.join('|') },
+    MaxSize: { maxSize: ImageOption.MAX_SIZE },
+    Build: {
+      fileIsRequired: PostApiProperty.ImageFile.required,
+      errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY
+    }
+  }
 } as const;
+
+export const parseFilePipeBuilder =
+  new ParseFilePipeBuilder()
+    .addFileTypeValidator(PostValidation.ImageFile.Type)
+    .addMaxSizeValidator(PostValidation.ImageFile.MaxSize)
+    .build(PostValidation.ImageFile.Build);
 
 export enum PostField {
   Title = 'title',

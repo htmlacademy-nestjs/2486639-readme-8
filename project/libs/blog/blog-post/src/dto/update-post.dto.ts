@@ -90,10 +90,10 @@ export class UpdatePostDto {
   @MaxLength(PostValidation.QuoteAuthor.MaxLength)
   public quoteAuthor?: string;
 
-  @ApiProperty(PostApiProperty.ImagePath) //! Максимальный размер фотографии: 1 мегабайт. Допускаются форматы: jpg, png.
+  @ApiProperty(PostApiProperty.ImageFile)
   @IsOptional()
   @IsString()
-  public imagePath?: string;
+  public imageFile?: string;
 
   @ApiProperty(PostApiProperty.LinkDescription)
   @IsOptional()

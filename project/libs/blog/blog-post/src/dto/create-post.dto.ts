@@ -1,5 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ArrayMaxSize, IsArray, IsEnum, IsOptional, IsString, IsUrl, Matches, MaxLength, MinLength } from 'class-validator';
+import {
+  ArrayMaxSize, IsArray, IsEnum, IsOptional, IsString,
+  IsUrl, Matches, MaxLength, MinLength
+} from 'class-validator';
 
 import { PostType } from '@project/shared/core';
 
@@ -14,7 +17,9 @@ export class CreatePostDto {
 
   @ApiProperty({
     ...PostApiProperty.Tags,
-    required: false
+    name: 'tag[0]',
+    required: false,
+    example: ['tag1']
   })
   @IsOptional()
   @IsArray()
@@ -38,7 +43,7 @@ export class CreatePostDto {
   @IsUrl() // по умолчанию require_tld - true и не пропускает localhost, а require_tld - false пропускает любые строки
   public url?: string;
 
-  @ApiProperty(PostApiProperty.PreviewText)
+  @ApiProperty({ ...PostApiProperty.PreviewText, example: '' })
   @IsOptional()
   @IsString()
   @MinLength(PostValidation.PreviewText.MinLength)
@@ -66,10 +71,9 @@ export class CreatePostDto {
   @MaxLength(PostValidation.QuoteAuthor.MaxLength)
   public quoteAuthor?: string;
 
-  @ApiProperty(PostApiProperty.ImagePath) //! Максимальный размер фотографии: 1 мегабайт. Допускаются форматы: jpg, png.
+  @ApiProperty(PostApiProperty.ImageFile)
   @IsOptional()
-  @IsString()
-  public imagePath?: string;
+  public imageFile?: string;
 
   @ApiProperty(PostApiProperty.LinkDescription)
   @IsOptional()

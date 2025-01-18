@@ -42,7 +42,7 @@ export const parseFilePipeBuilder =
   new ParseFilePipeBuilder()
     .addFileTypeValidator(UserValidation.AvatarFile.Type)
     .addMaxSizeValidator(UserValidation.AvatarFile.MaxSize)
-    .build(UserValidation.AvatarFile.Build)
+    .build(UserValidation.AvatarFile.Build);
 
 export const UserIdApiParam = {
   name: 'userId',
