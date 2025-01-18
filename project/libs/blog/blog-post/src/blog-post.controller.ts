@@ -4,7 +4,6 @@ import { ApiBody, ApiHeaders, ApiParam, ApiResponse, ApiTags } from '@nestjs/swa
 import { fillDto } from '@project/shared/helpers';
 import { RequestWithUserId } from '@project/shared/core';
 import { GuidValidationPipe } from '@project/shared/pipes';
-import { InjectRequestIdAndUserIdInterceptor } from '@project/shared/interceptors';
 
 import { BlogPostService } from './blog-post.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -52,9 +51,8 @@ export class BlogPostController {
   @ApiResponse(BlogPostApiResponse.PostCreated)
   @ApiResponse(BlogPostApiResponse.Unauthorized)
   @ApiResponse(BlogPostApiResponse.BadRequest)
-  @ApiHeaders([BlogRequestIdApiHeader, BlogUserIdRequiredApiHeader])
-  @ApiBody({ description: blogPostApiBodyDescription, type: CreatePostDto, examples: { video: {} } }) // попробовать добавить examples с готовыми примерами, т.к. по умолчанию пример собран по дто
-  @UseInterceptors(InjectRequestIdAndUserIdInterceptor)
+  @ApiHeaders([BlogRequestIdApiHeader, BlogUserIdRequiredApiHeader]) //! попроббовать у контроллера, глобально вроде не добавить? и примеры почемуто не работают...
+  @ApiBody({ description: blogPostApiBodyDescription, type: CreatePostDto, examples: { video: {} } }) //! а type нужен? и попробовать добавить examples с готовыми примерами, т.к. по умолчанию пример собран по дто
   @Post()
   public async create(@Body() dto: CreatePostDto, @Req() { userId }: RequestWithUserId): Promise<DetailPostRdo> {
     const newPost = await this.blogPostService.createPost(dto, userId);

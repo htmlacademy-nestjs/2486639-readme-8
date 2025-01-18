@@ -11,6 +11,7 @@ import { getPort } from '@project/shared/helpers';
 import { ConfigAlias, DEFAULT_PORT } from '@project/shared/core';
 
 import { AppModule } from './app/app.module';
+import { InjectRequestIdInterceptor, InjectUserIdInterceptor } from '@project/shared/interceptors';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -31,6 +32,10 @@ async function bootstrap() {
   SwaggerModule.setup(swaggerPrefix, app, documentFactory);
   //
 
+  app.useGlobalInterceptors(
+    new InjectRequestIdInterceptor(),
+    new InjectUserIdInterceptor()
+  );
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
   await app.listen(port);
