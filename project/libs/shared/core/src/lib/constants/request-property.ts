@@ -1,5 +1,6 @@
 export enum RequestProperty {
   User = 'user',
   RequestId = 'requestId',
-  UserId = 'userId'
+  UserId = 'userId',
+  BearerAuth = 'bearerAuth'
 };
