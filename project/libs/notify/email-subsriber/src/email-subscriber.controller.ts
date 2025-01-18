@@ -15,8 +15,8 @@ export class EmailSubscriberController {
   ) { }
 
   @RabbitSubscribe({
-    exchange: process.env[ConfigAlias.RabbitExchangeEnv], //! 'readme.notify', а как забрать через config module?
-    queue: process.env[ConfigAlias.RabbitQueueEnv], //! 'readme.notify.income', а как забрать через config module?
+    exchange: process.env[ConfigAlias.RabbitExchangeEnv], // а как забрать через config module?
+    queue: process.env[ConfigAlias.RabbitQueueEnv], // а как забрать через config module?
     routingKey: RabbitRouting.AddSubscriber
   })
   public async create(subscriber: CreateSubscriberDto): Promise<void> {

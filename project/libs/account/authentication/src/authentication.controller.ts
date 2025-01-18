@@ -45,8 +45,6 @@ export class AuthenticationController {
     @Req() { bearerAuth }: RequestWithBearerAuth,
     @UploadedFile(parseFilePipeBuilder) avatarFile?: Express.Multer.File
   ): Promise<UserRdo> {
-    console.log(bearerAuth); //!
-
     // headers: Authorization - т.к. только анонимный пользователь может регистрироваться
     const newUser = await this.authService.registerUser(bearerAuth, dto, avatarFile);
 

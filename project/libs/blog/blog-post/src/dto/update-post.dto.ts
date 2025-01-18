@@ -59,8 +59,7 @@ export class UpdatePostDto {
   @ApiProperty(PostApiProperty.Url)
   @IsOptional()
   @IsString()
-  //@IsUrl({ 'require_tld': false }) //! пропускает любые строки
-  @IsUrl() //! не пропускает localhost
+  @IsUrl()  // по умолчанию require_tld - true и не пропускает localhost, а require_tld - false пропускает любые строки
   public url?: string;
 
   @ApiProperty(PostApiProperty.PreviewText)
@@ -91,7 +90,7 @@ export class UpdatePostDto {
   @MaxLength(PostValidation.QuoteAuthor.MaxLength)
   public quoteAuthor?: string;
 
-  @ApiProperty(PostApiProperty.ImagePath)
+  @ApiProperty(PostApiProperty.ImagePath) //! Максимальный размер фотографии: 1 мегабайт. Допускаются форматы: jpg, png.
   @IsOptional()
   @IsString()
   public imagePath?: string;

@@ -35,8 +35,7 @@ export class CreatePostDto {
   @ApiProperty(PostApiProperty.Url)
   @IsOptional()
   @IsString()
-  //@IsUrl({ 'require_tld': false }) //! пропускает любые строки
-  @IsUrl() //! не пропускает localhost
+  @IsUrl() // по умолчанию require_tld - true и не пропускает localhost, а require_tld - false пропускает любые строки
   public url?: string;
 
   @ApiProperty(PostApiProperty.PreviewText)

@@ -44,7 +44,7 @@ export class FileUploaderService {
     try {
       const uploadDirectoryPath = this.getUploadDirectoryPath();
       const subDirectory = this.getSubUploadDirectoryPath();
-      const fileExtension = extension(file.mimetype) as string; //string | false из за того что тоставил типы //! проверить
+      const fileExtension = extension(file.mimetype) as string; //string | false из за того что тоставил типы - проверить
       const fileName = `${randomUUID()}.${fileExtension}`;
       const path = this.getDestinationFilePath(fileName);
 

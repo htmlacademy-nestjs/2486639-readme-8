@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { IsEnum, IsInt, IsOptional, IsString, Matches, MaxLength, MinLength } from 'class-validator';
+import { IsEnum, IsInt, IsMongoId, IsOptional, IsString, Matches, MaxLength, MinLength } from 'class-validator';
 
 import { PageQueryApiProperty, PostType, SortType } from '@project/shared/core';
 
@@ -8,10 +8,10 @@ import { Default, PostValidation } from './blog-post.constant';
 import { PostApiProperty, PostQueryApiProperty } from './blog-post.constant.property';
 
 export class BlogPostQuery {
-  //! добавить проверку на MongoId
   @ApiProperty({ ...PostApiProperty.UserId, required: false })
   @IsString()
   @IsOptional()
+  @IsMongoId()
   public userId?: string;
 
   @ApiProperty(PostQueryApiProperty.SortType)
