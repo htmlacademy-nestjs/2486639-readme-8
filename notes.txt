@@ -1,7 +1,10 @@
 Вопросы:
   0. CheckAuthGuard срабатывает раньше useGlobalInterceptors - RequestIdInterceptor и в request[RequestProperty.RequestId] пусто
-       и в запрос на проверку токена нечего передать, можно дополнительно сгененерировать
-       удалил InjectUserIdInterceptor, а userId добавляю сразу в CheckAuthGuard
+       и в запрос на проверку токена нечего передать...
+       можно дополнительно сгененерировать RequestId
+         или сделать generateRequestIdGuard подключив глобально app.useGlobalGuards
+  0. удалил InjectUserIdInterceptor, а userId добавляю сразу в CheckAuthGuard
+       может поменять имя?
   0. переделать authorizationHeader = getAuthorizationHeader(request);
 
   1. Реализовать маршруты:

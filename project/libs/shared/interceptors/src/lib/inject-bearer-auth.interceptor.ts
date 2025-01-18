@@ -1,18 +1,18 @@
-import * as crypto from 'crypto';
 import { Observable } from 'rxjs';
 import { CallHandler, ExecutionContext, Injectable, Logger, NestInterceptor } from '@nestjs/common';
 
 import { RequestProperty } from '@project/shared/core';
+import { AUTH_NAME } from '@project/shared/helpers';
 
 @Injectable()
-export class RequestIdInterceptor implements NestInterceptor {
+export class InjectBearerAuthInterceptor implements NestInterceptor {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    const requestId = crypto.randomUUID();
     const request = context.switchToHttp().getRequest<Request>();
+    const authorization = request.headers[AUTH_NAME];
 
-    request[RequestProperty.RequestId] = requestId;
-    Logger.log(`[RequestIdInterceptor: ${request.method}: ${request.url}]: ${RequestProperty.RequestId} is ${requestId}`);
+    request[RequestProperty.BearerAuth] = authorization;
+    Logger.log(`[InjectBearerAuthInterceptor: ${request.method}: ${request.url}]: ${RequestProperty.BearerAuth}: ${(authorization) ? 'exists' : 'empty'}`);
 
     return next.handle();
   }
