@@ -1,5 +1,6 @@
 import { Body, Controller, Inject, Post, Req, UseFilters, UseGuards } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
+import { ApiTags } from '@nestjs/swagger';
 import { HttpService } from '@nestjs/axios';
 
 import { apiConfig } from '@project/api/config';
@@ -8,6 +9,7 @@ import { AxiosExceptionFilter } from '@project/shared/exception-filters';
 
 import { CheckAuthGuard } from './guards/check-auth.guard';
 
+@ApiTags('blog')
 @Controller('blog')
 @UseFilters(AxiosExceptionFilter)
 export class BlogController {
