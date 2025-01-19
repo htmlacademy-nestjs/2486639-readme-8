@@ -8,7 +8,7 @@ import {
 } from '@nestjs/swagger';
 
 import { fillDto } from '@project/shared/helpers';
-import { RequestWithUserId } from '@project/shared/core';
+import { RequestWithRequestIdAndUserId, RequestWithUserId } from '@project/shared/core';
 import { GuidValidationPipe } from '@project/shared/pipes';
 
 import { BlogPostService } from './blog-post.service';
@@ -74,10 +74,10 @@ export class BlogPostController {
   @Post()
   public async create(
     @Body() dto: CreatePostDto,
-    @Req() { userId }: RequestWithUserId,
+    @Req() { requestId, userId }: RequestWithRequestIdAndUserId,
     @UploadedFile(parseFilePipeBuilder) imageFile?: Express.Multer.File
   ): Promise<DetailPostRdo> {
-    const newPost = await this.blogPostService.createPost(dto, imageFile, userId);
+    const newPost = await this.blogPostService.createPost(dto, imageFile, userId, requestId);
 
     return fillDto(DetailPostRdo, newPost.toPOJO());
   }
@@ -93,10 +93,10 @@ export class BlogPostController {
   public async update(
     @Param(PostIdApiParam.name, GuidValidationPipe) postId: string,
     @Body() dto: UpdatePostDto,
-    @Req() { userId }: RequestWithUserId,
+    @Req() { requestId, userId }: RequestWithRequestIdAndUserId,
     @UploadedFile(parseFilePipeBuilder) imageFile?: Express.Multer.File
   ): Promise<DetailPostRdo> {
-    const updatedPost = await this.blogPostService.updatePost(postId, dto, imageFile, userId);
+    const updatedPost = await this.blogPostService.updatePost(postId, dto, imageFile, userId, requestId);
 
     return fillDto(DetailPostRdo, updatedPost.toPOJO());
   }

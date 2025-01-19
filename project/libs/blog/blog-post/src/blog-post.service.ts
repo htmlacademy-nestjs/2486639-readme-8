@@ -38,7 +38,7 @@ export class BlogPostService {
     }
   }
 
-  private async uploadImageFile(imageFile: Express.Multer.File): Promise<string> {
+  private async uploadImageFile(imageFile: Express.Multer.File, requestId: string): Promise<string> {
     if (!imageFile) {
       return undefined;
     }
@@ -47,7 +47,8 @@ export class BlogPostService {
       const fileRdo = await uploadFile<UploadedFileRdo>(
         `${this.blogOptions.fileStorageServiceUrl}/${RouteAlias.Upload}`,
         imageFile,
-        FILE_KEY
+        FILE_KEY,
+        requestId
       );
 
       return makePath(fileRdo.subDirectory, fileRdo.hashName);
@@ -117,12 +118,17 @@ export class BlogPostService {
     return post;
   }
 
-  public async createPost(dto: CreatePostDto, imageFile: Express.Multer.File, currentUserId: string): Promise<BlogPostEntity> {
+  public async createPost(
+    dto: CreatePostDto,
+    imageFile: Express.Multer.File,
+    currentUserId: string,
+    requestId: string
+  ): Promise<BlogPostEntity> {
     this.checkAuthorization(currentUserId);
     this.validatePostData(dto, imageFile);
 
     const tags = await this.blogTagService.getByTitles(dto.tags);
-    const imagePath = await this.uploadImageFile(imageFile);
+    const imagePath = await this.uploadImageFile(imageFile, requestId);
     const newPost = BlogPostFactory.createFromCreatePostDto(dto, imagePath, tags, currentUserId);
 
     await this.blogPostRepository.save(newPost);
@@ -130,7 +136,13 @@ export class BlogPostService {
     return newPost;
   }
 
-  public async updatePost(postId: string, dto: UpdatePostDto, imageFile: Express.Multer.File, currentUserId: string): Promise<BlogPostEntity> {
+  public async updatePost(
+    postId: string,
+    dto: UpdatePostDto,
+    imageFile: Express.Multer.File,
+    currentUserId: string,
+    requestId: string
+  ): Promise<BlogPostEntity> {
     this.checkAuthorization(currentUserId);
     this.validatePostData(dto, imageFile);
     //! сохранить imageFile если есть  const imagePath = await this.uploadImageFile(imageFile);

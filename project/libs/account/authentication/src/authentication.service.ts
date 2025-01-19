@@ -32,7 +32,12 @@ export class AuthenticationService {
     private readonly refreshTokenService: RefreshTokenService
   ) { }
 
-  public async registerUser(authorizationHeader: string, dto: CreateUserDto, avatarFile?: Express.Multer.File): Promise<BlogUserEntity> {
+  public async registerUser(
+    authorizationHeader: string,
+    dto: CreateUserDto,
+    requestId: string,
+    avatarFile?: Express.Multer.File
+  ): Promise<BlogUserEntity> {
     if (authorizationHeader) {
       throw new ForbiddenException(AuthenticationUserMessage.RequireLogout);
     }
@@ -56,7 +61,8 @@ export class AuthenticationService {
         const fileRdo = await uploadFile<UploadedFileRdo>(
           `${this.applicationOptions.fileStorageServiceUrl}/${RouteAlias.Upload}`,
           avatarFile,
-          FILE_KEY
+          FILE_KEY,
+          requestId
         );
 
         blogUser.avatarPath = makePath(fileRdo.subDirectory, fileRdo.hashName);

@@ -5,7 +5,7 @@ import {
 import { ApiBearerAuth, ApiConsumes, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 
-import { BearerAuth, RequestWithBearerAuth, RequestWithTokenPayload, RouteAlias } from '@project/shared/core';
+import { BearerAuth, RequestWithBearerAuth, RequestWithRequestId, RequestWithTokenPayload, RouteAlias } from '@project/shared/core';
 import { fillDto } from '@project/shared/helpers';
 import { MongoIdValidationPipe } from '@project/shared/pipes';
 import { InjectBearerAuthInterceptor } from '@project/shared/interceptors';
@@ -42,11 +42,11 @@ export class AuthenticationController {
   @Post(RouteAlias.Register)
   public async register(
     @Body() dto: CreateUserDto,
-    @Req() { bearerAuth }: RequestWithBearerAuth,
+    @Req() { bearerAuth, requestId }: RequestWithBearerAuth & RequestWithRequestId,
     @UploadedFile(parseFilePipeBuilder) avatarFile?: Express.Multer.File
   ): Promise<UserRdo> {
     // headers: Authorization - т.к. только анонимный пользователь может регистрироваться
-    const newUser = await this.authService.registerUser(bearerAuth, dto, avatarFile);
+    const newUser = await this.authService.registerUser(bearerAuth, dto, requestId, avatarFile);
 
     return fillDto(UserRdo, newUser.toPOJO());
   }
