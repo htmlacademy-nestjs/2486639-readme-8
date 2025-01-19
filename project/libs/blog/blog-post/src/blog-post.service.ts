@@ -116,6 +116,7 @@ export class BlogPostService {
 
   public async createPost(dto: CreatePostDto, imageFile: Express.Multer.File, currentUserId: string): Promise<BlogPostEntity> {
     this.checkAuthorization(currentUserId);
+    dto.imageFile = (imageFile) ? '/some/path' : undefined;
     this.validatePostData(dto);
 
     const tags = await this.blogTagService.getByTitles(dto.tags);

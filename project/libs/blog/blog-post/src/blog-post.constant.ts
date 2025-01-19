@@ -74,7 +74,7 @@ export enum PostField {
   Text = 'text',
   QuoteText = 'quoteText',
   QuoteAuthor = 'quoteAuthor',
-  ImagePath = 'imagePath',
+  ImageFile = 'imageFile',
   LinkDescription = 'linkDescription'
 };
 
@@ -83,7 +83,7 @@ export const PostFieldsByType = {
   [PostType.Text]: [PostField.Title, PostField.PreviewText, PostField.Text],
   [PostType.Link]: [PostField.Url, PostField.LinkDescription],
   [PostType.Quote]: [PostField.QuoteText, PostField.QuoteAuthor],
-  [PostType.Photo]: [PostField.ImagePath]
+  [PostType.Photo]: [PostField.ImageFile]
 } as const;
 
 export const blogPostApiBodyDescription =
