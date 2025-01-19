@@ -1,13 +1,13 @@
 import {
-  BadRequestException, ForbiddenException, Injectable,
-  InternalServerErrorException,
-  Logger,
-  NotFoundException, UnauthorizedException
+  BadRequestException, ForbiddenException, Inject, Injectable,
+  InternalServerErrorException, Logger, NotFoundException, UnauthorizedException
 } from '@nestjs/common';
+import { ConfigType } from '@nestjs/config';
 
 import { PaginationResult, PostState, RouteAlias } from '@project/shared/core';
 import { BlogTagService } from '@project/blog/blog-tag';
 import { makePath, parseAxiosError, uploadFile } from '@project/shared/helpers';
+import { blogConfig } from '@project/blog/config';
 import { FILE_KEY, UploadedFileRdo } from '@project/file-storage/file-uploader';
 
 import { BlogPostEntity } from './blog-post.entity';
@@ -21,6 +21,9 @@ import { validatePostData } from './blog-post.validate.post.data';
 
 @Injectable()
 export class BlogPostService {
+  @Inject(blogConfig.KEY)
+  private readonly blogOptions: ConfigType<typeof blogConfig>;
+
   constructor(
     private readonly blogTagService: BlogTagService,
     private readonly blogPostRepository: BlogPostRepository
@@ -41,8 +44,7 @@ export class BlogPostService {
 
     try {
       const fileRdo = await uploadFile<UploadedFileRdo>(
-        //`${this.applicationOptions.fileStorageServiceUrl}/${RouteAlias.Upload}`, //! временно
-        `http://localhost:4200/api/files/${RouteAlias.Upload}`,
+        `${this.blogOptions.fileStorageServiceUrl}/${RouteAlias.Upload}`,
         imageFile,
         FILE_KEY
       );
