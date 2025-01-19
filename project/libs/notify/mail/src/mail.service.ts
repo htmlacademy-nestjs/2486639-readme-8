@@ -10,7 +10,7 @@ import { DEFAULT_ADD_SUBCRIBER_TEMPLATE, EMAIL_ADD_SUBSCRIBER_SUBJECT } from './
 @Injectable()
 export class MailService {
   @Inject(notifyConfig.KEY)
-  private readonly notifyConfig: ConfigType<typeof notifyConfig>
+  private readonly notifyConfig: ConfigType<typeof notifyConfig>;
 
   constructor(
     private readonly mailerService: MailerService

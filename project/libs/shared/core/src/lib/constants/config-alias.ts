@@ -44,6 +44,7 @@ export enum ConfigAlias {
   PostgresUserEnv = `${PostgresEnv}_${UserEnv}`,
   PostgresPasswordEnv = `${PostgresEnv}_${PasswordEnv}`,
   PostgresDatabaseEnv = `${PostgresEnv}_${DatabaseEnv}`,
+  PostgresDatabaseUrlEnv = 'DATABASE_URL',
 
   AppPostgres = `${Application}.postgres`,
   AppPostgresHost = `${AppPostgres}.${Host}`,
@@ -51,6 +52,7 @@ export enum ConfigAlias {
   AppPostgresUser = `${AppPostgres}.${User}`,
   AppPostgresPassword = `${AppPostgres}.${Password}`,
   AppPostgresDatabase = `${AppPostgres}.${Database}`,
+  AppPostgresDatabaseUrl = `${AppPostgres}.databaseUrl`,
 
   RabbitEnv = 'RABBIT',
   RabbitHostEnv = `${RabbitEnv}_${HostEnv}`,

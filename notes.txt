@@ -218,6 +218,7 @@ tag2
         вынести/обеденить конфигурации в один модуль
         account-config сделать в один как  у всех
         для blog сделать конфиг
+          как инициилизапровать подключение для PrismaClientModule, выставить env - DATABASE_URL програмно?
   29. под windows не водит имя для миграции db:migrate, выполнил отдельно всю команду из нужного каталога
         для .env
           cd readme/project/libs/blog/models/prisma

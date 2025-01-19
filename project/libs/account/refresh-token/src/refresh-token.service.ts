@@ -13,7 +13,8 @@ import { RefreshTokenEntity } from './refresh-token.entity';
 export class RefreshTokenService {
   constructor(
     private readonly refreshTokenRepository: RefreshTokenRepository,
-    @Inject(jwtConfig.KEY) private readonly jwtOptions: ConfigType<typeof jwtConfig>,
+    @Inject(jwtConfig.KEY)
+    private readonly jwtOptions: ConfigType<typeof jwtConfig>
   ) { }
 
   public async createRefreshSession(payload: RefreshTokenPayload): Promise<void> {
