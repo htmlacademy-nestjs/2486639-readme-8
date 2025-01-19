@@ -5,10 +5,11 @@
 
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 import { ConfigAlias } from '@project/shared/core';
-import { ConfigService } from '@nestjs/config';
+import { InjectRequestIdInterceptor } from '@project/shared/interceptors';
 
 import { AppModule } from './app/app.module';
 
@@ -32,6 +33,7 @@ async function bootstrap() {
   SwaggerModule.setup(swaggerPrefix, app, documentFactory);
   //
 
+  app.useGlobalInterceptors(new InjectRequestIdInterceptor());
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
   await app.listen(port);
