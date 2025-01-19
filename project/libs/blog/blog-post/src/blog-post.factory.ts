@@ -13,7 +13,7 @@ export class BlogPostFactory implements EntityFactory<BlogPostEntity> {
     return new BlogPostEntity(entityPlainData);
   }
 
-  public static createFromCreatePostDto(dto: CreatePostDto, tags: BlogTagEntity[], userId: string): BlogPostEntity {
+  public static createFromCreatePostDto(dto: CreatePostDto, imagePath: string, tags: BlogTagEntity[], userId: string): BlogPostEntity {
     const post: Post = {
       type: dto.type,
       state: Default.NEW_POST_STATE,
@@ -24,7 +24,7 @@ export class BlogPostFactory implements EntityFactory<BlogPostEntity> {
       text: dto.text,
       quoteText: dto.quoteText,
       quoteAuthor: dto.quoteAuthor,
-      imagePath: '', //! временно dto.imageFile;
+      imagePath,
       linkDescription: dto.linkDescription
     };
     const entity = new BlogPostEntity(post);

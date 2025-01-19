@@ -1,10 +1,14 @@
 import {
   BadRequestException, ForbiddenException, Injectable,
+  InternalServerErrorException,
+  Logger,
   NotFoundException, UnauthorizedException
 } from '@nestjs/common';
 
-import { PaginationResult, PostState } from '@project/shared/core';
+import { PaginationResult, PostState, RouteAlias } from '@project/shared/core';
 import { BlogTagService } from '@project/blog/blog-tag';
+import { makePath, parseAxiosError, uploadFile } from '@project/shared/helpers';
+import { FILE_KEY, UploadedFileRdo } from '@project/file-storage/file-uploader';
 
 import { BlogPostEntity } from './blog-post.entity';
 import { BlogPostFactory } from './blog-post.factory';
@@ -27,6 +31,27 @@ export class BlogPostService {
 
     if (message) {
       throw new BadRequestException(message);
+    }
+  }
+
+  private async uploadImageFile(imageFile: Express.Multer.File): Promise<string> {
+    if (!imageFile) {
+      return undefined;
+    }
+
+    try {
+      const fileRdo = await uploadFile<UploadedFileRdo>(
+        //`${this.applicationOptions.fileStorageServiceUrl}/${RouteAlias.Upload}`, //! временно
+        `http://localhost:4200/api/files/${RouteAlias.Upload}`,
+        imageFile,
+        FILE_KEY
+      );
+
+      return makePath(fileRdo.subDirectory, fileRdo.hashName);
+    } catch (error) {
+      Logger.error(parseAxiosError(error), 'BlogPostService.uploadImageFile.FileUploadError');
+
+      throw new InternalServerErrorException('File upload error!');
     }
   }
 
@@ -89,12 +114,13 @@ export class BlogPostService {
     return post;
   }
 
-  public async createPost(dto: CreatePostDto, currentUserId: string): Promise<BlogPostEntity> {
+  public async createPost(dto: CreatePostDto, imageFile: Express.Multer.File, currentUserId: string): Promise<BlogPostEntity> {
     this.checkAuthorization(currentUserId);
     this.validatePostData(dto);
 
     const tags = await this.blogTagService.getByTitles(dto.tags);
-    const newPost = BlogPostFactory.createFromCreatePostDto(dto, tags, currentUserId);
+    const imagePath = await this.uploadImageFile(imageFile);
+    const newPost = BlogPostFactory.createFromCreatePostDto(dto, imagePath, tags, currentUserId);
 
     await this.blogPostRepository.save(newPost);
 
