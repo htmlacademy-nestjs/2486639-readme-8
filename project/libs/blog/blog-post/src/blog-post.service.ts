@@ -31,6 +31,7 @@ export class BlogPostService {
 
   private validatePostData(dto: CreatePostDto | UpdatePostDto, imageFile: Express.Multer.File): void {
     dto.imageFile = (imageFile) ? '/some/path' : undefined;
+
     const message = validatePostData(dto);
 
     if (message) {
@@ -145,8 +146,6 @@ export class BlogPostService {
   ): Promise<BlogPostEntity> {
     this.checkAuthorization(currentUserId);
     this.validatePostData(dto, imageFile);
-    //! сохранить imageFile если есть  const imagePath = await this.uploadImageFile(imageFile);
-    //! existsPost.imagePath
 
     const existsPost = await this.blogPostRepository.findById(postId, true);
 
@@ -160,6 +159,7 @@ export class BlogPostService {
     Object.values(PostField).forEach((key) => {
       existsPost[key] = null;
     });
+    existsPost.imagePath = null;
 
     for (const [key, value] of Object.entries(dto)) {
       if (key === 'tags') {
@@ -172,7 +172,13 @@ export class BlogPostService {
             existsPost.tags = await this.blogTagService.getByTitles(dto.tags);
           }
         }
-      } else {
+      } else if (key === PostField.ImageFile) {
+        if (imageFile) {
+          existsPost.imagePath = await this.uploadImageFile(imageFile, requestId);
+          hasChanges = true;
+        }
+      }
+      else {
         if (value !== undefined && existsPost[key] !== value) {
           existsPost[key] = value;
           hasChanges = true;
@@ -191,6 +197,10 @@ export class BlogPostService {
         existsPost[key] = undefined;
       }
     });
+
+    if (existsPost.imagePath === null) {
+      existsPost.imagePath = undefined;
+    }
 
     return existsPost;
   }
