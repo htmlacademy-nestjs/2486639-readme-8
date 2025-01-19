@@ -96,10 +96,7 @@ export class BlogPostController {
     @Req() { userId }: RequestWithUserId,
     @UploadedFile(parseFilePipeBuilder) imageFile?: Express.Multer.File
   ): Promise<DetailPostRdo> {
-    console.log(imageFile);
-    console.log(dto);
-
-    const updatedPost = await this.blogPostService.updatePost(postId, dto, userId);
+    const updatedPost = await this.blogPostService.updatePost(postId, dto, imageFile, userId);
 
     return fillDto(DetailPostRdo, updatedPost.toPOJO());
   }

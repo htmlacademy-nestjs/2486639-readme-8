@@ -29,7 +29,8 @@ export class BlogPostService {
     private readonly blogPostRepository: BlogPostRepository
   ) { }
 
-  private validatePostData(dto: CreatePostDto | UpdatePostDto): void {
+  private validatePostData(dto: CreatePostDto | UpdatePostDto, imageFile: Express.Multer.File): void {
+    dto.imageFile = (imageFile) ? '/some/path' : undefined;
     const message = validatePostData(dto);
 
     if (message) {
@@ -118,8 +119,7 @@ export class BlogPostService {
 
   public async createPost(dto: CreatePostDto, imageFile: Express.Multer.File, currentUserId: string): Promise<BlogPostEntity> {
     this.checkAuthorization(currentUserId);
-    dto.imageFile = (imageFile) ? '/some/path' : undefined;
-    this.validatePostData(dto);
+    this.validatePostData(dto, imageFile);
 
     const tags = await this.blogTagService.getByTitles(dto.tags);
     const imagePath = await this.uploadImageFile(imageFile);
@@ -130,9 +130,11 @@ export class BlogPostService {
     return newPost;
   }
 
-  public async updatePost(postId: string, dto: UpdatePostDto, currentUserId: string): Promise<BlogPostEntity> {
+  public async updatePost(postId: string, dto: UpdatePostDto, imageFile: Express.Multer.File, currentUserId: string): Promise<BlogPostEntity> {
     this.checkAuthorization(currentUserId);
-    this.validatePostData(dto);
+    this.validatePostData(dto, imageFile);
+    //! сохранить imageFile если есть  const imagePath = await this.uploadImageFile(imageFile);
+    //! existsPost.imagePath
 
     const existsPost = await this.blogPostRepository.findById(postId, true);
 
