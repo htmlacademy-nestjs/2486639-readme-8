@@ -1,11 +1,18 @@
 Вопросы:
-  0. CheckAuthGuard срабатывает раньше useGlobalInterceptors - RequestIdInterceptor и в request[RequestProperty.RequestId] пусто
+  1. CheckAuthGuard срабатывает раньше useGlobalInterceptors - RequestIdInterceptor и в request[RequestProperty.RequestId] пусто
        и в запрос на проверку токена нечего передать...
        можно дополнительно сгененерировать RequestId
          или сделать generateRequestIdGuard подключив глобально app.useGlobalGuards
-  0. удалил InjectUserIdInterceptor, а userId добавляю сразу в CheckAuthGuard
+  2. удалил InjectUserIdInterceptor, а userId добавляю сразу в CheckAuthGuard
        может поменять имя?
-  0. переделать authorizationHeader = getAuthorizationHeader(request);
+  3. validatePostData(dto: CreatePostDto | UpdatePostDto) - сделать Guard и валидировать ранее...
+       в Swagger есть required: ['имя поля'], в проверках есть что то похожее?
+  4. entity.id = undefined; //! пустая строка из базового класса и id не гененируется
+       А в тегах вызывается конструктор с минимальным объектом и при вызове populate записывает в _id undefined
+  5. JwtAccessStrategy возможно есть обработчик для изменения поведения или сделать отдельный Guard которые не валят ошибку...
+       чтобы убрать <.headers['authorization']>
+       если сложно, то для api-gate можно сделать перехват ошибки axios запроса
+  6. удалить BaseMemoryRepository если не будет использоваться?
 
   1. Реализовать маршруты:
     1.2. blog
@@ -69,13 +76,6 @@
                в маркапах: фото, имя, id
       1.3.4. дополнить при получении списка комментариев
       1.3.5. дополнить после добавления комментария
-
-  2. удалить BaseMemoryRepository если не будет использоваться?
-  3. entity.id = undefined; //! пустая строка из базового класса и id не гененируется
-       А в тегах вызывается конструктор с минимальным объектом и при вызове populate записывает в _id undefined
-  4. JwtAccessStrategy возможно есть обработчик для изменения поведения или сделать отдельный Guard которые не валят ошибку...
-       чтобы убрать <.headers['authorization']>
-       если сложно, то для api-gate можно сделать перехват ошибки axios запроса
 
 
 Заметки:
