@@ -80,6 +80,7 @@ export class FileUploaderService {
     });
 
     await this.fileUploaderRepository.save(fileEntity);
+    Logger.log(fileEntity.toPOJO(), '[FileUploaderService.saveFile]');
 
     return fileEntity;
   }
