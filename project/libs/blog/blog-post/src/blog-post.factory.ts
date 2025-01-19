@@ -14,23 +14,22 @@ export class BlogPostFactory implements EntityFactory<BlogPostEntity> {
   }
 
   public static createFromCreatePostDto(dto: CreatePostDto, tags: BlogTagEntity[], userId: string): BlogPostEntity {
-    const entity = new BlogPostEntity();
-    //const entity = new BlogPostEntity({ state: Default.NEW_POST_STATE, userId, type: dto.type, tags: [] });
-    //! если вызвать с мининумом, то  entity.id уже будет undefined
-    entity.id = undefined; //! пустая строка из базового класса и id не гененируется
+    const post: Post = {
+      type: dto.type,
+      state: Default.NEW_POST_STATE,
+      userId,
+      title: dto.title,
+      url: dto.url,
+      previewText: dto.previewText,
+      text: dto.text,
+      quoteText: dto.quoteText,
+      quoteAuthor: dto.quoteAuthor,
+      imagePath: '', //! временно dto.imageFile;
+      linkDescription: dto.linkDescription
+    };
+    const entity = new BlogPostEntity(post);
 
-    entity.type = dto.type;
-    entity.state = Default.NEW_POST_STATE;
     entity.tags = tags;
-    entity.title = dto.title;
-    entity.url = dto.url;
-    entity.previewText = dto.previewText;
-    entity.text = dto.text;
-    entity.quoteText = dto.quoteText;
-    entity.quoteAuthor = dto.quoteAuthor;
-    entity.imagePath = '';//! временно dto.imagePath;
-    entity.linkDescription = dto.linkDescription;
-    entity.userId = userId;
 
     return entity;
   }
