@@ -7,13 +7,15 @@ import { FileInterceptor } from '@nestjs/platform-express';
 
 import { fillDto } from '@project/shared/helpers';
 import { RequestWithRequestIdAndUserId, RequestWithUserId, RouteAlias } from '@project/shared/core';
-import { GuidValidationPipe } from '@project/shared/pipes';
+import { GuidValidationPipe, MongoIdValidationPipe } from '@project/shared/pipes';
+import { UserIdApiParam } from '@project/account/authentication';
 
 import { BlogPostService } from './blog-post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { DetailPostRdo } from './rdo/detail-post.rdo';
 import { PostWithPaginationRdo } from './rdo/post-with-pagination.rdo';
+import { UserInfoRdo } from './rdo/user-info.rdo';
 import { PageQuery } from './page.query';
 import { BlogPostQuery } from './blog-post.query';
 import { PostIdApiParam, BlogPostApiResponse, ImageOption, parseFilePipeBuilder } from './blog-post.constant';
@@ -139,5 +141,19 @@ export class BlogPostController {
     @Req() { userId }: RequestWithUserId
   ): Promise<void> {
     await this.blogPostService.deletePost(postId, userId);
+  }
+
+  @ApiResponse(BlogPostApiResponse.UserInfo)
+  @ApiResponse(BlogPostApiResponse.BadRequest)
+  @ApiParam(UserIdApiParam)
+  @Get(`/${RouteAlias.UserInfo}/:${UserIdApiParam.name}`)
+  public async getUserInfo(@Param(UserIdApiParam.name, MongoIdValidationPipe) userId: string): Promise<UserInfoRdo> {
+    const userInfo = { userId, postsCount: 0, subscriptionsCount: 0 };
+    console.log(userInfo);
+
+    //const posts = await this.getPostsWithPagination(query);
+
+    //return posts;
+    return fillDto(UserInfoRdo, userInfo);
   }
 }

@@ -12,6 +12,7 @@ export enum RouteAlias {
   PostComments = 'post-comments',
   PostLikes = 'post-likes',
   Subscriptions = 'subscriptions',
+  UserInfo = 'user-info',
   //
   Upload = 'upload'
 }

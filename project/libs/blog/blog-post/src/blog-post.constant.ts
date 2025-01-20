@@ -4,6 +4,7 @@ import { PostState, PostType, SortType } from '@project/shared/core';
 
 import { PostWithPaginationRdo } from './rdo/post-with-pagination.rdo';
 import { DetailPostRdo } from './rdo/detail-post.rdo';
+import { UserInfoRdo } from './rdo/user-info.rdo';
 import { PostApiProperty } from './blog-post.constant.property';
 
 export const ONLY_DATE_FORMAT = 'YYYY-MM-DD';
@@ -136,5 +137,10 @@ export const BlogPostApiResponse = {
   PostNotFound: {
     status: HttpStatus.NOT_FOUND,
     description: BlogPostMessage.NotFound
+  },
+  UserInfo: {
+    type: UserInfoRdo,
+    status: HttpStatus.OK,
+    description: 'User info.'
   }
 } as const;
