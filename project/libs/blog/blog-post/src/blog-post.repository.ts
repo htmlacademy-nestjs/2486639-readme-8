@@ -79,7 +79,6 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
         repostedPost,
         tags
       }
-      //, include: { repostedPost: true } //! возможно нужно при репосте
     });
 
     entity.id = record.id;
@@ -200,12 +199,9 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     return postsCount;
   }
 
-  public async findRepostId(postId: string, userId: string): Promise<string> {
-    const record = await this.client.post.findFirst({
-      select: { id: true },
-      where: { repostedPostId: postId, userId }
-    });
+  public async existsRepost(postId: string, userId: string): Promise<boolean> {
+    const count = await this.client.post.count({ where: { repostedPostId: postId, userId } });
 
-    return record?.id;
+    return count > 0;
   }
 }

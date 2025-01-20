@@ -26,12 +26,7 @@ GET http://localhost:4100/api/posts?sortType=likes&type=video&tag=tag1&page=1 HT
 ###
 
 # Get post by ID
-GET http://localhost:4100/api/posts/eab06dc6-ba52-4169-a369-f2f825d44ebb HTTP/1.1
-
-###
-
-# Get post by ID
-GET http://localhost:4100/api/posts/85ad346e-46e1-4191-be1b-b3d39e868930 HTTP/1.1
+GET http://localhost:4100/api/posts/9df2e663-2e65-45b4-a2af-ecc93d937350 HTTP/1.1
 
 ###
 
@@ -140,7 +135,14 @@ Content-Type: application/json
 
 ###
 
-# Delte post by ID
-DELETE http://localhost:4100/api/posts/04fbbb3a-68f6-4238-9247-2cd6686b01ed HTTP/1.1
+# Repost post by ID
+POST http://localhost:4100/api/posts/repost/09209f73-16a7-4a5f-b5dd-10ff6d51e92c HTTP/1.1
+X-User-Id: 1111222233334444
+
+###
+
+# Delete post by ID
+DELETE http://localhost:4100/api/posts/09209f73-16a7-4a5f-b5dd-10ff6d51e92c HTTP/1.1
+X-User-Id: 1111222233334444
 
 ###

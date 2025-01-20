@@ -46,9 +46,9 @@ export class BlogPostCommentService {
     this.checkAuthorization(currentUserId);
     await this.canCommentPost(postId);
 
-    const foundCommentId = await this.blogPostCommentRepository.findCommentId(postId, currentUserId);
+    const existsComment = await this.blogPostCommentRepository.existsComment(postId, currentUserId);
 
-    if (foundCommentId) {
+    if (existsComment) {
       throw new ConflictException(BlogPostCommentMessage.CommentExist);
     }
 

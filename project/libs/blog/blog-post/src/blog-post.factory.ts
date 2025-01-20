@@ -13,24 +13,43 @@ export class BlogPostFactory implements EntityFactory<BlogPostEntity> {
     return new BlogPostEntity(entityPlainData);
   }
 
-  public static createFromCreatePostDto(dto: CreatePostDto, imagePath: string, tags: BlogTagEntity[], userId: string): BlogPostEntity {
+  private static createFromData(
+    data: CreatePostDto | BlogPostEntity,
+    imagePath: string,
+    tags: BlogTagEntity[],
+    userId: string
+  ): BlogPostEntity {
     const post: Post = {
-      type: dto.type,
+      type: data.type,
       state: Default.NEW_POST_STATE,
       userId,
-      title: dto.title,
-      url: dto.url,
-      previewText: dto.previewText,
-      text: dto.text,
-      quoteText: dto.quoteText,
-      quoteAuthor: dto.quoteAuthor,
+      title: data.title,
+      url: data.url,
+      previewText: data.previewText,
+      text: data.text,
+      quoteText: data.quoteText,
+      quoteAuthor: data.quoteAuthor,
       imagePath,
-      linkDescription: dto.linkDescription
+      linkDescription: data.linkDescription
     };
     const entity = new BlogPostEntity(post);
 
     entity.tags = tags;
 
     return entity;
+  }
+
+
+  public static createFromCreatePostDto(dto: CreatePostDto, imagePath: string, tags: BlogTagEntity[], userId: string): BlogPostEntity {
+    return BlogPostFactory.createFromData(dto, imagePath, tags, userId);
+  }
+
+  public static createFromPostEntity(postEntity: BlogPostEntity, userId: string): BlogPostEntity {
+    const { imagePath, tags } = postEntity;
+    const repostedPostEntity = BlogPostFactory.createFromData(postEntity, imagePath, tags, userId);
+
+    repostedPostEntity.repostedPost = postEntity;
+
+    return repostedPostEntity;
   }
 }

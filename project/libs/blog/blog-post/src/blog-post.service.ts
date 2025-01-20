@@ -4,7 +4,7 @@ import {
 } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 
-import { PaginationResult, PostState, PostType, RouteAlias } from '@project/shared/core';
+import { PaginationResult, PostState, RouteAlias } from '@project/shared/core';
 import { makePath, parseAxiosError, uploadFile } from '@project/shared/helpers';
 import { BlogTagService } from '@project/blog/blog-tag';
 import { blogConfig } from '@project/blog/config';
@@ -214,46 +214,19 @@ export class BlogPostService {
   public async repostPost(postId: string, currentUserId: string): Promise<BlogPostEntity> {
     this.checkAuthorization(currentUserId);
 
-    const existsPost = await this.blogPostRepository.findById(postId);
+    const existsPost = await this.blogPostRepository.findById(postId, true);
 
     this.canViewPost(existsPost, currentUserId);
 
-    const repostId = await this.blogPostRepository.findRepostId(postId, currentUserId);
+    const existsRepost = await this.blogPostRepository.existsRepost(postId, currentUserId);
 
-    if (repostId) {
+    if (existsRepost) {
       throw new ConflictException(BlogPostMessage.RepostExist);
     }
 
-    const {
-      type,
-      state,
+    const repostedPost = BlogPostFactory.createFromPostEntity(existsPost, currentUserId);
 
-      tags,
-      imagePath
-    } = existsPost;
-
-    /*
-        {
-              userId,
-              title: dto.title,
-                url: dto.url,
-                  previewText: dto.previewText,
-                    text: dto.text,
-                      quoteText: dto.quoteText,
-                        quoteAuthor: dto.quoteAuthor,
-                          imagePath,
-                          linkDescription: dto.linkDescription
-        };
-    */
-
-    const repostedPost = BlogPostFactory.createFromCreatePostDto(dto, imagePath, tags, currentUserId);
-
-    existsPost.id = undefined;
-    //existsPost.
-
-
-    //this.canChangePost(existsPost, currentUserId);
-    //await this.blogPostRepository.save(existsPost);
+    await this.blogPostRepository.save(repostedPost);
 
     return repostedPost;
   }

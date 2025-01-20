@@ -12,6 +12,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  //url      = "postgres://admin:test@localhost:5433/readme-blog" // на windows при команде "npx nx run blog:db:migrate" не вводит название migrate
 }
 
 model Tag {
@@ -44,7 +45,7 @@ model Post {
   repostedPostId  String?   @map("reposted_post_id")
   tags            Tag[]
   repostedPosts   Post[]    @relation("repostedPosts")
-  repostedPost    Post?     @relation("repostedPosts", fields: [repostedPostId], references: [id])
+  repostedPost    Post?     @relation("repostedPosts", fields: [repostedPostId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   comments        Comment[]
   likes           Like[]
 

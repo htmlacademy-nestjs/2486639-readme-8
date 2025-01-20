@@ -27,13 +27,10 @@ export class BlogPostCommentRepository extends BasePostgresRepository<BlogPostCo
     return Math.ceil(totalCount / limit);
   }
 
-  public async findCommentId(postId: string, userId: string): Promise<string> {
-    const record = await this.client.comment.findFirst({
-      select: { id: true },
-      where: { postId, userId }
-    });
+  public async existsComment(postId: string, userId: string): Promise<boolean> {
+    const count = await this.client.comment.count({ where: { postId, userId } });
 
-    return record?.id;
+    return count > 0;
   }
 
   public async findByPostId(postId: string, query: BlogPostCommentQuery): Promise<PaginationResult<BlogPostCommentEntity>> {
