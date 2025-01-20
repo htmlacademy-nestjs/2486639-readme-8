@@ -2,10 +2,7 @@ import {
   Body, Controller, Delete, Get, Param, Patch,
   Post, Query, Req, UploadedFile, UseInterceptors
 } from '@nestjs/common';
-import {
-  ApiBody, ApiConsumes, ApiHeaders, ApiParam,
-  ApiResponse, ApiTags
-} from '@nestjs/swagger';
+import { ApiConsumes, ApiHeaders, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { fillDto } from '@project/shared/helpers';
 import { RequestWithRequestIdAndUserId, RequestWithUserId } from '@project/shared/core';
