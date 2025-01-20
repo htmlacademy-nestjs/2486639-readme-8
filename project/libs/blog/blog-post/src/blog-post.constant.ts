@@ -90,7 +90,8 @@ export const PostFieldsByType = {
 export const BlogPostMessage = {
   NotFound: 'Post not found.',
   NotAllow: 'Post is not yours.',
-  RepostExist: 'You already reposted this post.'
+  RepostExist: 'You already reposted this post.',
+  Unauthorized: 'Unauthorized.'
 } as const;
 
 export const PostIdApiParam = {
@@ -103,7 +104,7 @@ export const POST_ID_PARAM = `:${PostIdApiParam.name}`;
 export const BlogPostApiResponse = {
   Unauthorized: {
     status: HttpStatus.UNAUTHORIZED,
-    description: 'Unauthorized.'
+    description: BlogPostMessage.Unauthorized
   },
   NotAllow: {
     status: HttpStatus.FORBIDDEN,

@@ -1,6 +1,7 @@
 import { HttpStatus } from '@nestjs/common';
 
 export const BlogPostLikeMessage = {
+  Unauthorized: 'Unauthorized.',
   PostNotFound: 'Post not found.',
   LikeNotFound: 'Like not found.',
   LikeExist: 'You already liked the post.'
@@ -23,7 +24,7 @@ export const POST_ID_PARAM = `:${PostIdApiParam.name}`;
 export const BlogPostLikeApiResponse = {
   Unauthorized: {
     status: HttpStatus.UNAUTHORIZED,
-    description: 'Unauthorized.'
+    description: BlogPostLikeMessage.Unauthorized
   },
   BadRequest: {
     status: HttpStatus.BAD_REQUEST,

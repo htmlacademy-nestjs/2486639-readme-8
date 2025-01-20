@@ -7,7 +7,7 @@ import { BlogPostCommentEntity } from './blog-post-comment.entity';
 import { BlogPostCommentRepository } from './blog-post-comment.repository';
 import { BlogPostCommentQuery } from './blog-post-comment.query';
 import { CreatePostCommentDto } from './dto/create-post-comment.dto';
-import { BlogPostCommentApiResponse, BlogPostCommentMessage } from './blog-post-comment.constant';
+import { BlogPostCommentMessage } from './blog-post-comment.constant';
 
 @Injectable()
 export class BlogPostCommentService {
@@ -18,7 +18,7 @@ export class BlogPostCommentService {
 
   private checkAuthorization(currentUserId: string): void {
     if (!currentUserId) {
-      throw new UnauthorizedException(BlogPostCommentApiResponse.Unauthorized);
+      throw new UnauthorizedException(BlogPostCommentMessage.Unauthorized);
     }
   }
 

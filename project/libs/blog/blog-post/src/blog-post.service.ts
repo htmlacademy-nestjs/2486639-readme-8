@@ -66,7 +66,7 @@ export class BlogPostService {
 
   private checkAuthorization(currentUserId: string): void {
     if (!currentUserId) {
-      throw new UnauthorizedException(BlogPostApiResponse.Unauthorized);
+      throw new UnauthorizedException(BlogPostMessage.Unauthorized);
     }
   }
 

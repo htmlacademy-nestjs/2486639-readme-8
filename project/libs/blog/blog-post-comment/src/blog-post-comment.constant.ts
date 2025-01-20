@@ -15,6 +15,7 @@ export const PostCommentMessageValidation = {
 } as const;
 
 export const BlogPostCommentMessage = {
+  Unauthorized: 'Unauthorized.',
   PostNotFound: 'Post not found.',
   CommentNotFound: 'Comment not found.',
   CommentExist: 'You already commented the post.'
@@ -38,7 +39,7 @@ export const COMMENT_ID_PARAM = `:${CommentIdApiParam.name}`;
 export const BlogPostCommentApiResponse = {
   Unauthorized: {
     status: HttpStatus.UNAUTHORIZED,
-    description: 'Unauthorized.'
+    description: BlogPostCommentMessage.Unauthorized
   },
   BadRequest: {
     status: HttpStatus.BAD_REQUEST,

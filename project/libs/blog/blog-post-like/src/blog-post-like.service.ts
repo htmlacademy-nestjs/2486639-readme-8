@@ -4,7 +4,7 @@ import { BlogPostService } from '@project/blog/blog-post';
 
 import { BlogPostLikeEntity } from './blog-post-like.entity';
 import { BlogPostLikeRepository } from './blog-post-like.repository';
-import { BlogPostLikeApiResponse, BlogPostLikeMessage } from './blog-post-like.constant';
+import { BlogPostLikeMessage } from './blog-post-like.constant';
 
 @Injectable()
 export class BlogPostLikeService {
@@ -15,7 +15,7 @@ export class BlogPostLikeService {
 
   private checkAuthorization(currentUserId: string): void {
     if (!currentUserId) {
-      throw new UnauthorizedException(BlogPostLikeApiResponse.Unauthorized);
+      throw new UnauthorizedException(BlogPostLikeMessage.Unauthorized);
     }
   }
 
