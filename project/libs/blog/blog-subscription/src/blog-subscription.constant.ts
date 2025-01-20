@@ -1,18 +1,17 @@
 import { HttpStatus } from '@nestjs/common';
 
 import { UserSubscriptionsCountRdo } from './rdo/user-subscriptions-count.rdo';
+import { SubscriptionApiProperty } from './blog-subscription.constant.property';
 
 export const BlogSubscriptionMessage = {
   SubscriptionNotFound: 'Subscription not found.',
-  SubscriptionExist: 'You already subscription on author.'
+  SubscriptionExist: 'You already subscription on author.',
+  Unauthorized: 'Unauthorized.'
 } as const;
 
 export const userIdApiParam = {
   name: 'userId',
-  schema: {
-    description: 'The user ID',
-    example: '658170cbb954e9f5b905ccf4'
-  }
+  schema: SubscriptionApiProperty.UserId
 } as const;
 
 export const USER_ID_PARAM = `:${userIdApiParam.name}`;
@@ -20,7 +19,7 @@ export const USER_ID_PARAM = `:${userIdApiParam.name}`;
 export const BlogSubscriptionApiResponse = {
   Unauthorized: {
     status: HttpStatus.UNAUTHORIZED,
-    description: 'Unauthorized.'
+    description: BlogSubscriptionMessage.Unauthorized
   },
   BadRequest: {
     status: HttpStatus.BAD_REQUEST,
@@ -45,7 +44,6 @@ export const BlogSubscriptionApiResponse = {
   UserSubscriptionsCount: {
     type: UserSubscriptionsCountRdo,
     status: HttpStatus.OK,
-    description: 'User subscriptions count.',
-    example: { userID: '111111111', subscriptionsCount: 5 } // в Swagger не формирует пример ответа...
+    description: 'User subscriptions count.'
   }
 } as const;

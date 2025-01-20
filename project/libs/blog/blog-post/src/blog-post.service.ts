@@ -16,7 +16,7 @@ import { BlogPostRepository } from './blog-post.repository';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { BlogPostQuery } from './blog-post.query';
-import { BlogPostApiResponse, BlogPostMessage, PostField } from './blog-post.constant';
+import { BlogPostMessage, PostField } from './blog-post.constant';
 import { validatePostData } from './blog-post.validate.post.data';
 
 @Injectable()
