@@ -1,19 +1,17 @@
-//!import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 
-//! добавить описание
-//import { PostApiProperty } from '../blog-post.constant.property';
+import { userIdApiParam } from '../blog-subscription.constant';
 
-/*  SubscriptionsCount: {
-    description: 'The user subscriptions count',
-    example: 5
-  } */
 export class UserSubscriptionsCountRdo {
-  //@ApiProperty(PostApiProperty.UserId)
+  @ApiProperty(userIdApiParam.schema)
   @Expose()
   public userId: string;
 
-  //@ApiProperty(PostApiProperty.SubscriptionsCount)
+  @ApiProperty({
+    description: 'The user subscriptions count',
+    example: 5
+  })
   @Expose()
   public subscriptionsCount: number;
 }
