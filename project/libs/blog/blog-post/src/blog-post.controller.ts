@@ -14,7 +14,7 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { DetailPostRdo } from './rdo/detail-post.rdo';
 import { PostWithPaginationRdo } from './rdo/post-with-pagination.rdo';
 import { BlogPostQuery } from './blog-post.query';
-import { PostIdApiParam, BlogPostApiResponse, ImageOption, parseFilePipeBuilder } from './blog-post.constant';
+import { PostIdApiParam, BlogPostApiResponse, ImageOption, parseFilePipeBuilder, Default } from './blog-post.constant';
 import { BlogRequestIdApiHeader, BlogUserIdApiHeader } from './blog-post.constant.header';
 import { FileInterceptor } from '@nestjs/platform-express';
 
@@ -26,6 +26,16 @@ export class BlogPostController {
     private readonly blogPostService: BlogPostService
   ) { }
 
+  private async getPostsWithPagination(query: BlogPostQuery, userId: string, checkAuthorization: boolean): Promise<PostWithPaginationRdo> {
+    const postsWithPagination = await this.blogPostService.getAllPosts(query, userId, checkAuthorization);
+    const result = {
+      ...postsWithPagination,
+      entities: postsWithPagination.entities.map((post) => post.toPOJO())
+    }
+
+    return fillDto(PostWithPaginationRdo, result);
+  }
+
   @ApiResponse(BlogPostApiResponse.PostsFound)
   @ApiResponse(BlogPostApiResponse.BadRequest)
   @Get('/')
@@ -33,13 +43,19 @@ export class BlogPostController {
     @Query() query: BlogPostQuery,
     @Req() { userId }: RequestWithUserId
   ): Promise<PostWithPaginationRdo> {
-    const postsWithPagination = await this.blogPostService.getAllPosts(query, userId);
-    const result = {
-      ...postsWithPagination,
-      entities: postsWithPagination.entities.map((post) => post.toPOJO())
-    }
+    const posts = await this.getPostsWithPagination(query, userId, false);
 
-    return fillDto(PostWithPaginationRdo, result);
+    return posts;
+  }
+
+  @ApiResponse(BlogPostApiResponse.PostsFound)
+  @ApiResponse(BlogPostApiResponse.Unauthorized)
+  @Get(`/${RouteAlias.MyPosts}`)
+  public async getMyPosts(@Req() { userId }: RequestWithUserId): Promise<PostWithPaginationRdo> {
+    const query: BlogPostQuery = { userId, page: Default.CURRENT_PAGE };
+    const posts = await this.getPostsWithPagination(query, userId, true);
+
+    return posts;
   }
 
   @ApiResponse(BlogPostApiResponse.PostFound)

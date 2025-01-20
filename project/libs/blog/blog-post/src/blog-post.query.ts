@@ -17,7 +17,7 @@ export class BlogPostQuery {
   @ApiProperty(PostQueryApiProperty.SortType)
   @IsEnum(SortType)
   @IsOptional()
-  public sortType: SortType = Default.SORT_TYPE;
+  public sortType?: SortType = Default.SORT_TYPE;
 
   @ApiProperty({ ...PostApiProperty.Type, required: false })
   @IsEnum(PostType)
@@ -29,7 +29,7 @@ export class BlogPostQuery {
   @ApiProperty(PostQueryApiProperty.ShowDraft)
   @Transform(({ obj }) => (obj.showDraft === 'true'))
   @IsOptional()
-  public showDraft: boolean = false;
+  public showDraft?: boolean = false;
 
   @ApiProperty(PostQueryApiProperty.Tag)
   @IsString()
@@ -43,5 +43,5 @@ export class BlogPostQuery {
   @IsInt()
   @Transform(({ value }) => +value || Default.CURRENT_PAGE)
   @IsOptional()
-  public page: number = Default.CURRENT_PAGE;
+  public page?: number = Default.CURRENT_PAGE;
 }

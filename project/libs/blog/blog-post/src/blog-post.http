@@ -5,6 +5,7 @@ GET http://localhost:4100/api/posts HTTP/1.1
 
 # Get my posts
 GET http://localhost:4100/api/posts/my-posts HTTP/1.1
+X-User-Id: 1111222233334444
 
 ###
 
