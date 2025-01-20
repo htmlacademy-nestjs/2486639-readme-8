@@ -193,4 +193,16 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
       data: { likesCount: likesCount + step }
     });
   }
+
+  public async getUserPostsCount(userId: string): Promise<number> {
+    const postsCount = 0;// await this.client.post.findFirst({ select: { likesCount: true }, where: { id } });
+
+    return postsCount;
+  }
+
+  public async getUserSubscriptionsCount(userId: string): Promise<number> {
+    const subscriptionsCount = 0;// await this.client.post.findFirst({ select: { likesCount: true }, where: { id } });
+
+    return subscriptionsCount;
+  }
 }

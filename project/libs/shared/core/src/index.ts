@@ -38,4 +38,5 @@ export { SortType } from './lib/types/sort-type.enum';
 export { Subscriber } from './lib/types/subscriber.interface';
 export { Tag } from './lib/types/tag.interface';
 export { Subscription } from './lib/types/subscription.interface';
+export { UserInfo } from './lib/types/user-info.interface';
 export { User } from './lib/types/user.interface';

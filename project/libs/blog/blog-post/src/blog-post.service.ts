@@ -4,7 +4,7 @@ import {
 } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 
-import { PaginationResult, PostState, RouteAlias } from '@project/shared/core';
+import { PaginationResult, PostState, RouteAlias, UserInfo } from '@project/shared/core';
 import { BlogTagService } from '@project/blog/blog-tag';
 import { makePath, parseAxiosError, uploadFile } from '@project/shared/helpers';
 import { blogConfig } from '@project/blog/config';
@@ -235,4 +235,12 @@ export class BlogPostService {
   public async decrementLikesCount(postId: string): Promise<void> {
     await this.blogPostRepository.updateLikesCount(postId, -1);
   }
+
+  public async getUserInfo(userId: string): Promise<UserInfo> {
+    const postsCount = await this.blogPostRepository.getUserPostsCount(userId);
+    const subscriptionsCount = await this.blogPostRepository.getUserSubscriptionsCount(userId);
+
+    return { userId, postsCount, subscriptionsCount };
+  }
+
 }

@@ -148,12 +148,8 @@ export class BlogPostController {
   @ApiParam(UserIdApiParam)
   @Get(`/${RouteAlias.UserInfo}/:${UserIdApiParam.name}`)
   public async getUserInfo(@Param(UserIdApiParam.name, MongoIdValidationPipe) userId: string): Promise<UserInfoRdo> {
-    const userInfo = { userId, postsCount: 0, subscriptionsCount: 0 };
-    console.log(userInfo);
+    const userInfo = await this.blogPostService.getUserInfo(userId);
 
-    //const posts = await this.getPostsWithPagination(query);
-
-    //return posts;
     return fillDto(UserInfoRdo, userInfo);
   }
 }
