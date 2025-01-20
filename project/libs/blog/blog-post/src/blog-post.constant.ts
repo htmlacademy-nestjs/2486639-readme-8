@@ -120,6 +120,15 @@ export const BlogPostApiResponse = {
     status: HttpStatus.OK,
     description: 'The post has been successfully updated.'
   },
+  PostReposted: {
+    type: DetailPostRdo,
+    status: HttpStatus.CREATED,
+    description: 'The post has been successfully reposted.'
+  },
+  AlreadyReposted: {
+    status: HttpStatus.CONFLICT,
+    description: 'You alredy reposted this post.'
+  },
   PostDeleted: {
     status: HttpStatus.NO_CONTENT,
     description: 'The post has been successfully deleted.'

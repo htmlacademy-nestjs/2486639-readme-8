@@ -4,7 +4,7 @@ import {
 } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 
-import { PaginationResult, PostState, RouteAlias } from '@project/shared/core';
+import { PaginationResult, PostState, PostType, RouteAlias } from '@project/shared/core';
 import { makePath, parseAxiosError, uploadFile } from '@project/shared/helpers';
 import { BlogTagService } from '@project/blog/blog-tag';
 import { blogConfig } from '@project/blog/config';
@@ -209,6 +209,18 @@ export class BlogPostService {
     }
 
     return existsPost;
+  }
+
+  public async repostPost(postId: string, currentUserId: string): Promise<BlogPostEntity> {
+    this.checkAuthorization(currentUserId);
+
+    const repostedPost = new BlogPostEntity({ type: PostType.Link, state: PostState.Published, userId: currentUserId });
+
+    const existsPost = await this.blogPostRepository.findById(postId);
+
+    //this.canChangePost(existsPost, currentUserId);
+    //await this.blogPostRepository.deleteById(postId);
+    return repostedPost;
   }
 
   public async deletePost(postId: string, currentUserId: string): Promise<void> {

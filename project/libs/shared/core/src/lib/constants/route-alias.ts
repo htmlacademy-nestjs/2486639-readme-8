@@ -9,6 +9,7 @@ export enum RouteAlias {
   Posts = 'posts',
   MyPosts = 'my-posts',
   MyDtafts = 'my-drafts',
+  Repost = 'repost',
   GetUserPostsCount = 'get-user-posts-count',
   PostComments = 'post-comments',
   PostLikes = 'post-likes',

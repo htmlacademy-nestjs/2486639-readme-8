@@ -129,6 +129,21 @@ export class BlogPostController {
     return fillDto(DetailPostRdo, updatedPost.toPOJO());
   }
 
+  @ApiResponse(BlogPostApiResponse.PostReposted)
+  @ApiResponse(BlogPostApiResponse.Unauthorized)
+  @ApiResponse(BlogPostApiResponse.PostNotFound)
+  @ApiResponse(BlogPostApiResponse.AlreadyReposted)
+  @ApiParam(PostIdApiParam)
+  @Post(`/${RouteAlias.Repost}/:${PostIdApiParam.name}`)
+  public async repost(
+    @Param(PostIdApiParam.name, GuidValidationPipe) postId: string,
+    @Req() { userId }: RequestWithUserId
+  ): Promise<DetailPostRdo> {
+    const repostedPost = await this.blogPostService.repostPost(postId, userId);
+
+    return fillDto(DetailPostRdo, repostedPost.toPOJO());
+  }
+
   @ApiResponse(BlogPostApiResponse.PostDeleted)
   @ApiResponse(BlogPostApiResponse.Unauthorized)
   @ApiResponse(BlogPostApiResponse.PostNotFound)
