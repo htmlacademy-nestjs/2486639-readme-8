@@ -86,16 +86,6 @@ export const PostFieldsByType = {
   [PostType.Photo]: [PostField.ImageFile]
 } as const;
 
-export const blogPostApiBodyDescription =
-  Object.keys(PostFieldsByType).map(
-    (key: string) => {
-      const fields = PostFieldsByType[key].map(
-        (item: string) => (`"${item}"`)
-      ).join(', ');
-
-      return `For type "${key}" required ${fields}.<br>`;
-    }
-  ).join('');
 export const BlogPostMessage = {
   NotFound: 'Post not found.',
   NotAllow: 'Post is not yours.'

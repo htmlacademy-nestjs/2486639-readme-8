@@ -17,10 +17,7 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { DetailPostRdo } from './rdo/detail-post.rdo';
 import { PostWithPaginationRdo } from './rdo/post-with-pagination.rdo';
 import { BlogPostQuery } from './blog-post.query';
-import {
-  PostIdApiParam, BlogPostApiResponse, blogPostApiBodyDescription,
-  ImageOption, parseFilePipeBuilder
-} from './blog-post.constant';
+import { PostIdApiParam, BlogPostApiResponse, ImageOption, parseFilePipeBuilder } from './blog-post.constant';
 import { BlogRequestIdApiHeader, BlogUserIdRequiredApiHeader } from './blog-post.constant.header';
 import { FileInterceptor } from '@nestjs/platform-express';
 
@@ -64,11 +61,6 @@ export class BlogPostController {
   @ApiResponse(BlogPostApiResponse.PostCreated)
   @ApiResponse(BlogPostApiResponse.Unauthorized)
   @ApiResponse(BlogPostApiResponse.BadRequest)
-  @ApiBody({
-    description: blogPostApiBodyDescription,
-    type: CreatePostDto, //! а type нужен?
-    examples: { video: {} } //! попробовать добавить examples с готовыми примерами, т.к. по умолчанию пример собран по дто
-  })
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor(ImageOption.KEY))
   @Post()
