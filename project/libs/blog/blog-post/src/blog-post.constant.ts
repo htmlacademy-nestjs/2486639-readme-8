@@ -150,9 +150,9 @@ export const BlogPostApiResponse = {
     status: HttpStatus.NOT_FOUND,
     description: BlogPostMessage.NotFound
   },
-  UserInfo: {
+  UserPostsCount: {
     type: UserPostsCountRdo,
     status: HttpStatus.OK,
-    description: 'User info.'
+    description: 'User posts count.'
   }
 } as const;

@@ -158,7 +158,7 @@ export class BlogPostController {
     await this.blogPostService.deletePost(postId, userId);
   }
 
-  @ApiResponse(BlogPostApiResponse.UserInfo)
+  @ApiResponse(BlogPostApiResponse.UserPostsCount)
   @ApiResponse(BlogPostApiResponse.BadRequest)
   @ApiParam(UserIdApiParam)
   @Get(`/${RouteAlias.GetUserPostsCount}/:${UserIdApiParam.name}`)
