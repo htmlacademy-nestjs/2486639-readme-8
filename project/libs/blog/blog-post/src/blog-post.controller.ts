@@ -18,7 +18,7 @@ import { PostWithPaginationRdo } from './rdo/post-with-pagination.rdo';
 import { UserPostsCountRdo } from './rdo/user-posts-count.rdo';
 import { PageQuery } from './page.query';
 import { BlogPostQuery } from './blog-post.query';
-import { PostIdApiParam, BlogPostApiResponse, ImageOption, parseFilePipeBuilder } from './blog-post.constant';
+import { PostIdApiParam, BlogPostApiResponse, ImageOption, parseFilePipeBuilder, POST_ID_PARAM } from './blog-post.constant';
 import { BlogRequestIdApiHeader, BlogUserIdApiHeader } from './blog-post.constant.header';
 
 @ApiTags('blog-post')
@@ -82,7 +82,7 @@ export class BlogPostController {
   @ApiResponse(BlogPostApiResponse.PostFound)
   @ApiResponse(BlogPostApiResponse.PostNotFound)
   @ApiParam(PostIdApiParam)
-  @Get(`:${PostIdApiParam.name}`)
+  @Get(POST_ID_PARAM)
   public async show(
     @Param(PostIdApiParam.name, GuidValidationPipe) postId: string,
     @Req() { userId }: RequestWithUserId
@@ -117,7 +117,7 @@ export class BlogPostController {
   @ApiConsumes('multipart/form-data')
   @ApiHeader(BlogRequestIdApiHeader)
   @UseInterceptors(FileInterceptor(ImageOption.KEY))
-  @Patch(`:${PostIdApiParam.name}`)
+  @Patch(POST_ID_PARAM)
   public async update(
     @Param(PostIdApiParam.name, GuidValidationPipe) postId: string,
     @Body() dto: UpdatePostDto,
@@ -134,7 +134,7 @@ export class BlogPostController {
   @ApiResponse(BlogPostApiResponse.PostNotFound)
   @ApiResponse(BlogPostApiResponse.AlreadyReposted)
   @ApiParam(PostIdApiParam)
-  @Post(`/${RouteAlias.Repost}/:${PostIdApiParam.name}`)
+  @Post(`/${RouteAlias.Repost}/${POST_ID_PARAM}`)
   public async repost(
     @Param(PostIdApiParam.name, GuidValidationPipe) postId: string,
     @Req() { userId }: RequestWithUserId
@@ -150,7 +150,7 @@ export class BlogPostController {
   @ApiResponse(BlogPostApiResponse.NotAllow)
   @ApiParam(PostIdApiParam)
   @HttpCode(BlogPostApiResponse.PostDeleted.status)
-  @Delete(`:${PostIdApiParam.name}`)
+  @Delete(POST_ID_PARAM)
   public async delete(
     @Param(PostIdApiParam.name, GuidValidationPipe) postId: string,
     @Req() { userId }: RequestWithUserId

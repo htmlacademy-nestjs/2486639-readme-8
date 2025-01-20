@@ -98,6 +98,8 @@ export const PostIdApiParam = {
   schema: PostApiProperty.Id
 } as const;
 
+export const POST_ID_PARAM = `:${PostIdApiParam.name}`;
+
 export const BlogPostApiResponse = {
   Unauthorized: {
     status: HttpStatus.UNAUTHORIZED,
