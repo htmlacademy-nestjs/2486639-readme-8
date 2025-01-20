@@ -3,7 +3,7 @@ import { Prisma } from '@prisma/client';
 
 import { PrismaClientService } from '@project/blog/models';
 import { BasePostgresRepository } from '@project/shared/data-access';
-import { Comment, PaginationResult } from '@project/shared/core';
+import { Comment, PaginationResult, SortDirection } from '@project/shared/core';
 
 import { BlogPostCommentEntity } from './blog-post-comment.entity';
 import { BlogPostCommentFactory } from './blog-post-comment.factory';
@@ -41,12 +41,14 @@ export class BlogPostCommentRepository extends BasePostgresRepository<BlogPostCo
     const take = Default.COMMENT_COUNT;
     const skip = (currentPage - 1) * take;
     const where: Prisma.CommentWhereInput = {};
+    const orderBy: Prisma.CommentOrderByWithRelationInput = {};
 
     where.postId = postId;
+    orderBy.createdAt = SortDirection.Desc;
 
     const [records, commentCount] = await Promise.all(
       [
-        this.client.comment.findMany({ where, skip, take }),
+        this.client.comment.findMany({ where, orderBy, skip, take }),
         this.getCommentCount(where)
       ]
     );
