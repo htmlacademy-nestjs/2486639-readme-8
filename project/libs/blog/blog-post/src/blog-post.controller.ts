@@ -15,11 +15,11 @@ import { DetailPostRdo } from './rdo/detail-post.rdo';
 import { PostWithPaginationRdo } from './rdo/post-with-pagination.rdo';
 import { BlogPostQuery } from './blog-post.query';
 import { PostIdApiParam, BlogPostApiResponse, ImageOption, parseFilePipeBuilder } from './blog-post.constant';
-import { BlogRequestIdApiHeader, BlogUserIdRequiredApiHeader } from './blog-post.constant.header';
+import { BlogRequestIdApiHeader, BlogUserIdApiHeader } from './blog-post.constant.header';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('blog-post')
-@ApiHeaders([BlogRequestIdApiHeader, BlogUserIdRequiredApiHeader]) // глобально вроде не добавить? и примеры почемуто не работают...
+@ApiHeaders([BlogRequestIdApiHeader, BlogUserIdApiHeader]) // глобально вроде не добавить? и примеры почемуто не работают...
 @Controller('posts')
 export class BlogPostController {
   constructor(

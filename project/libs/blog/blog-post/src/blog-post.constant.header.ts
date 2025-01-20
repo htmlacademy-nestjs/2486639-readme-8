@@ -13,8 +13,3 @@ export const BlogUserIdApiHeader = {
   description: 'X-User-Id',
   required: false
 } as const;
-
-export const BlogUserIdRequiredApiHeader = {
-  ...BlogUserIdApiHeader,
-  required: true
-} as const;
