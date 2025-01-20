@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 
 import { PrismaClientService } from '@project/blog/models';
@@ -8,7 +8,7 @@ import { Comment, PaginationResult } from '@project/shared/core';
 import { BlogPostCommentEntity } from './blog-post-comment.entity';
 import { BlogPostCommentFactory } from './blog-post-comment.factory';
 import { BlogPostCommentQuery } from './blog-post-comment.query';
-import { Default } from './blog-post-comment.constant';
+import { BlogPostCommentMessage, Default } from './blog-post-comment.constant';
 
 @Injectable()
 export class BlogPostCommentRepository extends BasePostgresRepository<BlogPostCommentEntity, Comment> {
@@ -69,9 +69,20 @@ export class BlogPostCommentRepository extends BasePostgresRepository<BlogPostCo
     });
 
     entity.id = record.id;
+    entity.createdAt = record.createdAt;
+  }
+
+  public async findById(id: string): Promise<BlogPostCommentEntity> {
+    const record = await this.client.comment.findFirst({ where: { id } });
+
+    if (!record) {
+      throw new NotFoundException(BlogPostCommentMessage.CommentNotFound);
+    }
+
+    return this.createEntityFromDocument(record);
   }
 
   public async deleteById(id: string): Promise<void> {
-    await this.client.comment.delete({ where: { id } })
+    await this.client.comment.delete({ where: { id } });
   }
 }

@@ -1,10 +1,10 @@
-import { Body, Controller, Delete, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Post, Query } from '@nestjs/common';
 import { ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { fillDto } from '@project/shared/helpers';
 import { GuidValidationPipe } from '@project/shared/pipes';
 
-import { POST_ID_PARAM, BlogPostCommentApiResponse, PostIdApiParam } from './blog-post-comment.constant';
+import { POST_ID_PARAM, BlogPostCommentApiResponse, PostIdApiParam, CommentIdApiParam, COMMENT_ID_PARAM } from './blog-post-comment.constant';
 import { BlogPostCommentService } from './blog-post-comment.service';
 import { BlogPostCommentQuery } from './blog-post-comment.query';
 import { CreatePostCommentDto } from './dto/create-post-comment.dto';
@@ -55,12 +55,13 @@ export class BlogPostCommentController {
   @ApiResponse(BlogPostCommentApiResponse.BadRequest)
   @ApiResponse(BlogPostCommentApiResponse.PostNotFound)
   @ApiResponse(BlogPostCommentApiResponse.CommentNotFound)
-  @ApiParam(PostIdApiParam)
-  @Delete(POST_ID_PARAM)
-  public async delete(@Param(PostIdApiParam.name, GuidValidationPipe) postId: string): Promise<void> {
+  @ApiParam(CommentIdApiParam)
+  @HttpCode(BlogPostCommentApiResponse.PostCommentDeleted.status)
+  @Delete(COMMENT_ID_PARAM)
+  public async delete(@Param(CommentIdApiParam.name, GuidValidationPipe) commentId: string): Promise<void> {
     // необходимо определить пользователя
     const currentUserId = '11223344'
 
-    await this.blogPostCommentService.deleteComment(postId, currentUserId);
+    await this.blogPostCommentService.deleteComment(commentId, currentUserId);
   }
 }
