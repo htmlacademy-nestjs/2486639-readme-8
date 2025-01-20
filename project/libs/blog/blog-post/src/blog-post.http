@@ -19,17 +19,45 @@ GET http://localhost:4100/api/posts/85ad346e-46e1-4191-be1b-b3d39e868930 HTTP/1.
 
 ###
 
-# Create a new post
+# Create a new post - Content-Type: application/json
 POST http://localhost:4100/api/posts HTTP/1.1
+X-User-Id: 1111222233334444
 Content-Type: application/json
 
 {
   "type": "video",
   "tags": ["taG1", "tag2", "tttt2", "tttt2", "tttt1", "tttt1"],
   "title": "asdasdsaasdasdsaasdasdsaasd",
-  "url": "http://localhost.ru/sadasd",
-  "text": "asdasdsaasdasdsaasdasdsaasdasdsaasdasdsaasdasdsaasdasdsaasdasdsaasdasdsaasdasdsaasdasdsaasdasdsaasdasdsa"
+  "url": "http://localhost.ru/sadasd"
+//  ,
+//  "text": "asdasdsaasdasdsaasdasdsaasdasdsaasdasdsaasdasdsaasdasdsaasdasdsaasdasdsaasdasdsaasdasdsaasdasdsaasdasdsa"
 }
+
+###
+
+# Create a new post - Content-Type: multipart/form-data
+POST http://localhost:4100/api/posts HTTP/1.1
+X-User-Id: 1111222233334444
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="type"
+
+photo
+--boundary
+Content-Disposition: form-data; name="tags"
+
+taG1
+--boundary
+Content-Disposition: form-data; name="tags"
+
+tag2
+--boundary
+Content-Disposition: form-data; name="imageFile"; filename="cat.jpg"
+Content-Type: image/jpeg
+
+< ../../../../../markup/img/cat.jpg
+--boundary--
 
 ###
 
@@ -54,6 +82,32 @@ Content-Type: application/json
   "title": "asdasdsaasdasdsaasdasdsaasd",
   "url": "http://localhost.ru/sadasd"
 }
+
+###
+
+# Update post by ID - Content-Type: multipart/form-data
+PATCH http://localhost:4100/api/posts/ef38a576-cf48-4f2f-af5d-286def1aa2ed HTTP/1.1
+X-User-Id: 1111222233334444
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="type"
+
+photo
+--boundary
+Content-Disposition: form-data; name="tags"
+
+taG1
+--boundary
+Content-Disposition: form-data; name="tags"
+
+tag2
+--boundary
+Content-Disposition: form-data; name="imageFile"; filename="cat.jpg"
+Content-Type: image/jpeg
+
+< ../../../../../markup/img/cat.jpg
+--boundary--
 
 ###
 
