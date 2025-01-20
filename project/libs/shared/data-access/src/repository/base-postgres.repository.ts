@@ -21,19 +21,23 @@ export abstract class BasePostgresRepository<
     return this.entityFactory.create(document as ReturnType<T['toPOJO']>);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public async findById(id: T['id']): Promise<T> {
     throw new Error('Not implemented');
   }
 
-  public async save(entity: T): Promise<void> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public async save(_entity: T): Promise<void> {
     throw new Error('Not implemented');
   }
 
-  public async update(entity: T): Promise<void> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public async update(_entity: T): Promise<void> {
     throw new Error('Not implemented');
   }
 
-  public async deleteById(id: T['id']): Promise<void> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public async deleteById(_id: T['id']): Promise<void> {
     throw new Error('Not implemented');
   }
 }
