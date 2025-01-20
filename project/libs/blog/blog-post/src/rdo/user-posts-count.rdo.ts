@@ -3,7 +3,7 @@ import { Expose } from 'class-transformer';
 
 import { PostApiProperty } from '../blog-post.constant.property';
 
-export class UserInfoRdo {
+export class UserPostsCountRdo {
   @ApiProperty(PostApiProperty.UserId)
   @Expose()
   public userId: string;
@@ -11,8 +11,4 @@ export class UserInfoRdo {
   @ApiProperty(PostApiProperty.PostsCount)
   @Expose()
   public postsCount: number;
-
-  @ApiProperty(PostApiProperty.SubscriptionsCount)
-  @Expose()
-  public subscriptionsCount: number;
 }

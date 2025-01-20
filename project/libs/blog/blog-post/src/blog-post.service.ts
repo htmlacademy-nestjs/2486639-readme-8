@@ -4,9 +4,9 @@ import {
 } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 
-import { PaginationResult, PostState, RouteAlias, UserInfo } from '@project/shared/core';
-import { BlogTagService } from '@project/blog/blog-tag';
+import { PaginationResult, PostState, RouteAlias } from '@project/shared/core';
 import { makePath, parseAxiosError, uploadFile } from '@project/shared/helpers';
+import { BlogTagService } from '@project/blog/blog-tag';
 import { blogConfig } from '@project/blog/config';
 import { FILE_KEY, UploadedFileRdo } from '@project/file-storage/file-uploader';
 
@@ -236,11 +236,10 @@ export class BlogPostService {
     await this.blogPostRepository.updateLikesCount(postId, -1);
   }
 
-  public async getUserInfo(userId: string): Promise<UserInfo> {
+  public async getUserPostsCount(userId: string): Promise<number> {
     const postsCount = await this.blogPostRepository.getUserPostsCount(userId);
-    const subscriptionsCount = await this.blogPostRepository.getUserSubscriptionsCount(userId);
 
-    return { userId, postsCount, subscriptionsCount };
+    return postsCount;
   }
 
 }

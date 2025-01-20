@@ -9,10 +9,11 @@ export enum RouteAlias {
   Posts = 'posts',
   MyPosts = 'my-posts',
   MyDtafts = 'my-drafts',
+  GetUserPostsCount = 'get-user-posts-count',
   PostComments = 'post-comments',
   PostLikes = 'post-likes',
   Subscriptions = 'subscriptions',
-  UserInfo = 'user-info',
+  GetUserSubscriptionsCount = 'get-user-subscriptions-count',
   //
   Upload = 'upload'
 }

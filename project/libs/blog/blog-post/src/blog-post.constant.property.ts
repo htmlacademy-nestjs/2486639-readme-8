@@ -100,10 +100,6 @@ export const PostApiProperty = {
   PostsCount: {
     description: 'The user posts count',
     example: 5
-  },
-  SubscriptionsCount: {
-    description: 'The user subscriptions count',
-    example: 5
   }
 } as const;
 

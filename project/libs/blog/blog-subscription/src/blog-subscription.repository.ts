@@ -36,4 +36,10 @@ export class BlogSubscriptionRepository extends BasePostgresRepository<BlogSubsc
   public async deleteById(id: string): Promise<void> {
     await this.client.subscription.delete({ where: { id } })
   }
+
+  public async getAuthorSubscriptionsCount(authorUserId: string): Promise<number> {
+    const subscriptionsCount = await this.client.subscription.count({ where: { authorUserId } });
+
+    return subscriptionsCount;
+  }
 }

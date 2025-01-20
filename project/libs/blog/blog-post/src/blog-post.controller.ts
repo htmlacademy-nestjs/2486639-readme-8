@@ -15,7 +15,7 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { DetailPostRdo } from './rdo/detail-post.rdo';
 import { PostWithPaginationRdo } from './rdo/post-with-pagination.rdo';
-import { UserInfoRdo } from './rdo/user-info.rdo';
+import { UserPostsCountRdo } from './rdo/user-posts-count.rdo';
 import { PageQuery } from './page.query';
 import { BlogPostQuery } from './blog-post.query';
 import { PostIdApiParam, BlogPostApiResponse, ImageOption, parseFilePipeBuilder } from './blog-post.constant';
@@ -146,10 +146,10 @@ export class BlogPostController {
   @ApiResponse(BlogPostApiResponse.UserInfo)
   @ApiResponse(BlogPostApiResponse.BadRequest)
   @ApiParam(UserIdApiParam)
-  @Get(`/${RouteAlias.UserInfo}/:${UserIdApiParam.name}`)
-  public async getUserInfo(@Param(UserIdApiParam.name, MongoIdValidationPipe) userId: string): Promise<UserInfoRdo> {
-    const userInfo = await this.blogPostService.getUserInfo(userId);
+  @Get(`/${RouteAlias.GetUserPostsCount}/:${UserIdApiParam.name}`)
+  public async getUserPostsCount(@Param(UserIdApiParam.name, MongoIdValidationPipe) userId: string): Promise<UserPostsCountRdo> {
+    const postsCount = await this.blogPostService.getUserPostsCount(userId);
 
-    return fillDto(UserInfoRdo, userInfo);
+    return fillDto(UserPostsCountRdo, { userId, postsCount });
   }
 }
