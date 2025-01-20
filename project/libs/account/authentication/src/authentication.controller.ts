@@ -1,5 +1,5 @@
 import {
-  Body, Controller, Delete, Get, HttpCode, HttpStatus, Param,
+  Body, Controller, Delete, Get, HttpCode, Param,
   Post, Req, UploadedFile, UseGuards, UseInterceptors
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiConsumes, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -69,7 +69,7 @@ export class AuthenticationController {
   @ApiResponse(AuthenticationApiResponse.LogoutSuccess)
   @ApiBearerAuth(BearerAuth.RefreshToken)
   @UseInterceptors(InjectBearerAuthInterceptor)
-  @HttpCode(HttpStatus.NO_CONTENT)
+  @HttpCode(AuthenticationApiResponse.LogoutSuccess.status)
   @Delete(RouteAlias.Logout)
   public async logout(@Req() { bearerAuth }: RequestWithBearerAuth): Promise<void> {
     await this.authService.logout(bearerAuth);
@@ -79,7 +79,7 @@ export class AuthenticationController {
   @ApiResponse(AuthenticationApiResponse.BadRequest)
   @ApiResponse(AuthenticationApiResponse.Unauthorized)
   @ApiBearerAuth(BearerAuth.RefreshToken)
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(AuthenticationApiResponse.RefreshTokens.status)
   @UseGuards(JwtRefreshGuard)
   @Post(RouteAlias.Refresh)
   public async refreshToken(@Req() { user }: RequestWithBlogUserEntity): Promise<UserTokenRdo> {
@@ -92,7 +92,7 @@ export class AuthenticationController {
   @ApiResponse(AuthenticationApiResponse.BadRequest)
   @ApiResponse(AuthenticationApiResponse.Unauthorized)
   @ApiBearerAuth(BearerAuth.AccessToken)
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(AuthenticationApiResponse.CheckSuccess.status)
   @UseGuards(JwtAuthGuard)
   @Post(RouteAlias.Check)
   public async checkToken(@Req() { user: payload }: RequestWithTokenPayload): Promise<TokenPayloadRdo> {
@@ -103,7 +103,7 @@ export class AuthenticationController {
   @ApiResponse(AuthenticationApiResponse.BadRequest)
   @ApiResponse(AuthenticationApiResponse.Unauthorized)
   @ApiBearerAuth(BearerAuth.AccessToken)
-  @HttpCode(HttpStatus.NO_CONTENT)
+  @HttpCode(AuthenticationApiResponse.ChangePasswordSuccess.status)
   @UseGuards(JwtAuthGuard)
   @Post(RouteAlias.ChangePassword)
   public async changePassword(@Body() dto: ChangePasswordDto, @Req() { user }: RequestWithTokenPayload): Promise<void> {

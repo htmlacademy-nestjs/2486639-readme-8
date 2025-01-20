@@ -1,7 +1,6 @@
 import {
-  Body, Controller, Delete, Get, HttpCode, HttpStatus,
-  Inject, Param, Post, Req, UploadedFile,
-  UseFilters, UseGuards, UseInterceptors
+  Body, Controller, Delete, Get, HttpCode, Inject, Param, Post,
+  Req, UploadedFile, UseFilters, UseGuards, UseInterceptors
 } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
@@ -93,7 +92,7 @@ export class UsersController {
 
   @ApiResponse(AuthenticationApiResponse.LogoutSuccess)
   @ApiBearerAuth(BearerAuth.RefreshToken)
-  @HttpCode(HttpStatus.NO_CONTENT)
+  @HttpCode(AuthenticationApiResponse.LogoutSuccess.status)
   @Delete(RouteAlias.Logout)
   public async logout(@Req() { requestId, bearerAuth }: RequestWithRequestIdAndBearerAuth): Promise<void> {
     const url = `${this.apiOptions.accountServiceUrl}/${RouteAlias.Logout}`;
@@ -105,7 +104,7 @@ export class UsersController {
   @ApiResponse(AuthenticationApiResponse.BadRequest)
   @ApiResponse(AuthenticationApiResponse.Unauthorized)
   @ApiBearerAuth(BearerAuth.RefreshToken)
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(AuthenticationApiResponse.RefreshTokens.status)
   @Post(RouteAlias.Refresh)
   public async refreshToken({ requestId, bearerAuth }: RequestWithRequestIdAndBearerAuth): Promise<UserTokenRdo> {
     const url = `${this.apiOptions.accountServiceUrl}/refresh`;
@@ -118,7 +117,7 @@ export class UsersController {
   @ApiResponse(AuthenticationApiResponse.BadRequest)
   @ApiResponse(AuthenticationApiResponse.Unauthorized)
   @ApiBearerAuth(BearerAuth.AccessToken)
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(AuthenticationApiResponse.CheckSuccess.status)
   @UseGuards(CheckAuthGuard)
   @Post(RouteAlias.Check)
   public async checkToken(@Req() { user: payload }: RequestWithTokenPayload): Promise<TokenPayloadRdo> {
@@ -129,7 +128,7 @@ export class UsersController {
   @ApiResponse(AuthenticationApiResponse.BadRequest)
   @ApiResponse(AuthenticationApiResponse.Unauthorized)
   @ApiBearerAuth(BearerAuth.AccessToken)
-  @HttpCode(HttpStatus.NO_CONTENT)
+  @HttpCode(AuthenticationApiResponse.ChangePasswordSuccess.status)
   @Post(RouteAlias.ChangePassword)
   public async changePassword(
     @Body() dto: ChangePasswordDto,
