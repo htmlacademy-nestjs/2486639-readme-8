@@ -89,7 +89,8 @@ export const PostFieldsByType = {
 
 export const BlogPostMessage = {
   NotFound: 'Post not found.',
-  NotAllow: 'Post is not yours.'
+  NotAllow: 'Post is not yours.',
+  RepostExist: 'You already reposted this post.'
 } as const;
 
 export const PostIdApiParam = {
@@ -127,7 +128,7 @@ export const BlogPostApiResponse = {
   },
   AlreadyReposted: {
     status: HttpStatus.CONFLICT,
-    description: 'You alredy reposted this post.'
+    description: BlogPostMessage.RepostExist
   },
   PostDeleted: {
     status: HttpStatus.NO_CONTENT,

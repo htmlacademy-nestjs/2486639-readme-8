@@ -1,5 +1,5 @@
 import {
-  BadRequestException, ForbiddenException, Inject, Injectable,
+  BadRequestException, ConflictException, ForbiddenException, Inject, Injectable,
   InternalServerErrorException, Logger, NotFoundException, UnauthorizedException
 } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
@@ -214,12 +214,47 @@ export class BlogPostService {
   public async repostPost(postId: string, currentUserId: string): Promise<BlogPostEntity> {
     this.checkAuthorization(currentUserId);
 
-    const repostedPost = new BlogPostEntity({ type: PostType.Link, state: PostState.Published, userId: currentUserId });
-
     const existsPost = await this.blogPostRepository.findById(postId);
 
+    this.canViewPost(existsPost, currentUserId);
+
+    const repostId = await this.blogPostRepository.findRepostId(postId, currentUserId);
+
+    if (repostId) {
+      throw new ConflictException(BlogPostMessage.RepostExist);
+    }
+
+    const {
+      type,
+      state,
+
+      tags,
+      imagePath
+    } = existsPost;
+
+    /*
+        {
+              userId,
+              title: dto.title,
+                url: dto.url,
+                  previewText: dto.previewText,
+                    text: dto.text,
+                      quoteText: dto.quoteText,
+                        quoteAuthor: dto.quoteAuthor,
+                          imagePath,
+                          linkDescription: dto.linkDescription
+        };
+    */
+
+    const repostedPost = BlogPostFactory.createFromCreatePostDto(dto, imagePath, tags, currentUserId);
+
+    existsPost.id = undefined;
+    //existsPost.
+
+
     //this.canChangePost(existsPost, currentUserId);
-    //await this.blogPostRepository.deleteById(postId);
+    //await this.blogPostRepository.save(existsPost);
+
     return repostedPost;
   }
 

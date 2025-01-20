@@ -199,4 +199,13 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
 
     return postsCount;
   }
+
+  public async findRepostId(postId: string, userId: string): Promise<string> {
+    const record = await this.client.post.findFirst({
+      select: { id: true },
+      where: { repostedPostId: postId, userId }
+    });
+
+    return record?.id;
+  }
 }
