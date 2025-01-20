@@ -1,5 +1,5 @@
 import {
-  Body, Controller, Delete, Get, Param, Patch,
+  Body, Controller, Delete, Get, HttpCode, Param, Patch,
   Post, Query, Req, UploadedFile, UseInterceptors
 } from '@nestjs/common';
 import { ApiConsumes, ApiHeaders, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -95,6 +95,7 @@ export class BlogPostController {
   @ApiResponse(BlogPostApiResponse.PostNotFound)
   @ApiResponse(BlogPostApiResponse.NotAllow)
   @ApiParam(PostIdApiParam)
+  @HttpCode(BlogPostApiResponse.PostDeleted.status)
   @Delete(`:${PostIdApiParam.name}`)
   public async delete(
     @Param(PostIdApiParam.name, GuidValidationPipe) postId: string,

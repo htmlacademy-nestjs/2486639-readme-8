@@ -1,6 +1,6 @@
 export const PostCommentApiProperty = {
-  PostId: {
-    description: 'The unique post ID',
+  Id: {
+    description: 'Comment id',
     example: '2f31b19b-97eb-4305-877a-0b9be7faca8f'
   },
   Message: {
@@ -14,5 +14,9 @@ export const PostCommentApiProperty = {
   CreatedAt: {
     description: 'Comment date',
     example: '2024-12-27T08:29:40.245Z'
+  },
+  PostId: {
+    description: 'The unique post ID',
+    example: '2f31b19b-97eb-4305-877a-0b9be7faca8f'
   }
 } as const;

@@ -2,6 +2,7 @@ import { HttpStatus } from '@nestjs/common';
 
 import { PostCommentRdo } from './rdo/post-comment.rdo';
 import { PostCommentApiProperty } from './blog-post-comment.constant.property';
+import { PostCommentWithPaginationRdo } from './rdo/post-comment-with-pagination.rdo';
 
 export const Default = {
   CURRENT_PAGE: 1,
@@ -24,7 +25,15 @@ export const PostIdApiParam = {
   schema: PostCommentApiProperty.PostId
 } as const;
 
+
+export const CommentIdApiParam = {
+  name: 'commentId',
+  schema: PostCommentApiProperty.Id
+} as const;
+
 export const POST_ID_PARAM = `:${PostIdApiParam.name}`;
+
+export const COMMENT_ID_PARAM = `:${CommentIdApiParam.name}`;
 
 export const BlogPostCommentApiResponse = {
   Unauthorized: {
@@ -41,7 +50,7 @@ export const BlogPostCommentApiResponse = {
     description: 'The new comment has been successfully created.'
   },
   PostCommentsFound: {
-    type: PostCommentRdo,
+    type: PostCommentWithPaginationRdo,
     isArray: true,
     status: HttpStatus.OK,
     description: 'Post comments found.'

@@ -13,7 +13,7 @@ GET http://localhost:4100/api/post-comments/eab06dc6-ba52-4169-a369-f2f825d44ebb
 
 ###
 
-# Delete comment by post
+# Delete comment by ID
 DELETE http://localhost:4100/api/post-comments/eab06dc6-ba52-4169-a369-f2f825d44ebb HTTP/1.1
 
 ###
