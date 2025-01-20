@@ -4,8 +4,7 @@ import { ConfigType } from '@nestjs/config';
 
 import { RabbitRouting } from '@project/shared/core';
 import { rabbitConfig } from '@project/account/config';
-
-import { CreateSubscriberDto } from './dto/create-subscriber.dto';
+import { CreateSubscriberDto } from '@project/notify/email-subsriber';
 
 @Injectable()
 export class NotifyService {

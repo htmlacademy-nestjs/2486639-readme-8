@@ -78,7 +78,7 @@ export class AuthenticationService {
     await userEntity.setPassword(password);
     await this.blogUserRepository.save(userEntity);
 
-    await this.notifyService.registerSubscriber({ email, name });
+    await this.notifyService.registerSubscriber({ email, name, requestId });
 
     return userEntity;
   }

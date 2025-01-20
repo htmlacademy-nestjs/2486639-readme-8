@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsOptional } from 'class-validator';
 
 export class CreateSubscriberDto {
   @IsEmail()
@@ -6,4 +6,7 @@ export class CreateSubscriberDto {
 
   @IsNotEmpty()
   public name: string;
+
+  @IsOptional()
+  public requestId?: string;
 }
