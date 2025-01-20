@@ -2,12 +2,13 @@ import { Controller, Delete, Param, Post } from '@nestjs/common';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
 
 import { MongoIdValidationPipe } from '@project/shared/pipes';
+import { RouteAlias } from '@project/shared/core';
 
 import { AUTHOR_USER_ID_PARAM, authorUserIdApiParam/*, BlogPostLikeApiResponse*/ } from './blog-subscription.constant';
 import { BlogSubscriptionService } from './blog-subscription.service';
 
 @ApiTags('blog-subscription')
-@Controller('subscriptions')
+@Controller(RouteAlias.Subscriptions)
 export class BlogSubscriptionController {
   constructor(
     private readonly blogSubscriptionService: BlogSubscriptionService

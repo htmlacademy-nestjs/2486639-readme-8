@@ -5,7 +5,7 @@ import {
 import { ApiConsumes, ApiHeaders, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { fillDto } from '@project/shared/helpers';
-import { RequestWithRequestIdAndUserId, RequestWithUserId } from '@project/shared/core';
+import { RequestWithRequestIdAndUserId, RequestWithUserId, RouteAlias } from '@project/shared/core';
 import { GuidValidationPipe } from '@project/shared/pipes';
 
 import { BlogPostService } from './blog-post.service';
@@ -20,7 +20,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('blog-post')
 @ApiHeaders([BlogRequestIdApiHeader, BlogUserIdApiHeader]) // глобально вроде не добавить? и примеры почемуто не работают...
-@Controller('posts')
+@Controller(RouteAlias.Posts)
 export class BlogPostController {
   constructor(
     private readonly blogPostService: BlogPostService

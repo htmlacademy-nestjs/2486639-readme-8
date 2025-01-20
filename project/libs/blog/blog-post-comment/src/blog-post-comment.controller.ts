@@ -3,7 +3,7 @@ import { ApiHeaders, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { fillDto } from '@project/shared/helpers';
 import { GuidValidationPipe } from '@project/shared/pipes';
-import { RequestWithUserId } from '@project/shared/core';
+import { RequestWithUserId, RouteAlias } from '@project/shared/core';
 import { BlogRequestIdApiHeader, BlogUserIdApiHeader } from '@project/blog/blog-post';
 
 import { POST_ID_PARAM, BlogPostCommentApiResponse, PostIdApiParam, CommentIdApiParam, COMMENT_ID_PARAM } from './blog-post-comment.constant';
@@ -15,7 +15,7 @@ import { PostCommentWithPaginationRdo } from './rdo/post-comment-with-pagination
 
 @ApiTags('blog-post-comment')
 @ApiHeaders([BlogRequestIdApiHeader, BlogUserIdApiHeader]) // глобально вроде не добавить? и примеры почемуто не работают...
-@Controller('post-comments')
+@Controller(RouteAlias.PostComments)
 export class BlogPostCommentController {
   constructor(
     private readonly blogPostCommentService: BlogPostCommentService

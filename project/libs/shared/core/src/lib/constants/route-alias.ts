@@ -5,5 +5,9 @@ export enum RouteAlias {
   Refresh = 'refresh',
   Check = 'check',
   ChangePassword = 'change-password',
+  Posts = 'posts',
+  PostComments = 'post-comments',
+  PostLikes = 'post-likes',
+  Subscriptions = 'subscriptions',
   Upload = 'upload'
 }

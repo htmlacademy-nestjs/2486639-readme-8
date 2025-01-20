@@ -2,12 +2,13 @@ import { Controller, Delete, Param, Post } from '@nestjs/common';
 import { ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { GuidValidationPipe } from '@project/shared/pipes';
+import { RouteAlias } from '@project/shared/core';
 
 import { POST_ID_PARAM, PostIdApiParam, BlogPostLikeApiResponse } from './blog-post-like.constant';
 import { BlogPostLikeService } from './blog-post-like.service';
 
 @ApiTags('blog-post-like')
-@Controller('post-likes')
+@Controller(RouteAlias.PostLikes)
 export class BlogPostLikeController {
   constructor(
     private readonly blogPostLikeService: BlogPostLikeService

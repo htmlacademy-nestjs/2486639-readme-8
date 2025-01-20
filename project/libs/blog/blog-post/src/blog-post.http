@@ -1,12 +1,26 @@
 # Get posts
 GET http://localhost:4100/api/posts HTTP/1.1
+
 ###
 
-# Get posts query
-GET http://localhost:4100/api/posts?userId=11223344&sortType=date&showDraft=trque&tag=tag2&page=1 HTTP/1.1
+# Get my posts
+GET http://localhost:4100/api/posts/my-posts HTTP/1.1
+
 ###
 
-GET http://localhost:4100/api/posts?sortType=likes&type=video&showDraft=true&tag=tag1&page=1 HTTP/1.1
+# Get my drafts
+GET http://localhost:4100/api/posts/my-drafts HTTP/1.1
+
+###
+
+# Get posts by userId, type and tag
+GET http://localhost:4100/api/posts?userId=11223344&sortType=date&tag=tag2&page=1 HTTP/1.1
+
+###
+
+# Get posts by type and tag
+GET http://localhost:4100/api/posts?sortType=likes&type=video&tag=tag1&page=1 HTTP/1.1
+
 ###
 
 # Get post by ID
