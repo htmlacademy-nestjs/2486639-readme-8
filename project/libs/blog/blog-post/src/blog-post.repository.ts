@@ -109,7 +109,7 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     await this.client.post.delete({ where: { id } })
   }
 
-  public async find(query: BlogPostQuery): Promise<PaginationResult<BlogPostEntity>> {
+  public async find(query: BlogPostQuery, showDraft: boolean): Promise<PaginationResult<BlogPostEntity>> {
     const currentPage = query.page;
     const take = Default.POST_COUNT;
     const skip = (currentPage - 1) * take;
@@ -124,7 +124,7 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
       where.type = query.type;
     }
 
-    if (query.showDraft) {
+    if (showDraft) {
       where.state = PostState.Draft;
     } else {
       where.state = PostState.Published;

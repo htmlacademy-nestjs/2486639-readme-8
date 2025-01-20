@@ -102,15 +102,17 @@ export class BlogPostService {
     return foundPost;
   }
 
-  public async getAllPosts(query: BlogPostQuery, currentUserId: string, checkAuthorization: boolean): Promise<PaginationResult<BlogPostEntity>> {
+  public async getAllPosts(
+    query: BlogPostQuery,
+    currentUserId: string,
+    checkAuthorization: boolean,
+    showDraft: boolean
+  ): Promise<PaginationResult<BlogPostEntity>> {
     if (checkAuthorization) {
       this.checkAuthorization(currentUserId);
     }
 
-    // если требуется показать черновики автора, то query.userId === currentUserId, иначе отключем показ черновиков
-    query.showDraft = ((query.showDraft) && (query.userId) && (query.userId === currentUserId));
-
-    const result = await this.blogPostRepository.find(query);
+    const result = await this.blogPostRepository.find(query, showDraft);
 
     return result;
   }
