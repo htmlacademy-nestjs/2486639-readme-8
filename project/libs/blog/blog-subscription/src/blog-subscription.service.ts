@@ -47,4 +47,10 @@ export class BlogSubscriptionService {
 
     return subscriptionsCount;
   }
+
+  public async getUserSubscriptions(userId: string): Promise<string[]> {
+    const subscriptions = await this.blogSubscriptionRepository.getUserSubscriptions(userId);
+
+    return subscriptions;
+  }
 }

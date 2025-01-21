@@ -122,8 +122,8 @@ export class BlogPostService {
   public async getFeed(page: number, currentUserId: string): Promise<PaginationResult<BlogPostEntity>> {
     this.checkAuthorization(currentUserId);
 
-    const UserIds = await this.blogSubscriptionService.getAuthorSubscriptions(currentUserId);
-    const result = await this.blogPostRepository.findByUserIds(UserIds);
+    const userIds = await this.blogSubscriptionService.getUserSubscriptions(currentUserId);
+    const result = await this.blogPostRepository.findByUserIds(userIds, page);
 
     return result;
   }
