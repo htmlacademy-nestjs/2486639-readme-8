@@ -7,6 +7,7 @@ export enum RouteAlias {
   ChangePassword = 'change-password',
   //
   Posts = 'posts',
+  Search = 'search',
   MyPosts = 'my-posts',
   MyDtafts = 'my-drafts',
   MyFeed = 'my-feed',

@@ -27,7 +27,7 @@ export const PostApiProperty = {
   Title: {
     description: 'The post title for types: video and text',
     required: false,
-    example: 'description, description'
+    example: 'title title title title'
   },
   Url: {
     description: 'The post url for types: video and link',
@@ -110,14 +110,13 @@ export const PostQueryApiProperty = {
     example: SortType.Date,
     required: false
   },
-  ShowDraft: {
-    description: 'The post state is draft',
-    example: true,
-    required: false
-  },
   Tag: {
     description: 'The post tag',
     example: 'tag1',
     required: false
+  },
+  Title: {
+    description: 'The title for search posts',
+    example: 'title1 title2'
   }
 } as const;

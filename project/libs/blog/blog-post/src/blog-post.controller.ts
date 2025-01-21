@@ -13,10 +13,12 @@ import { UserIdApiParam } from '@project/account/authentication';
 import { BlogPostService } from './blog-post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { PostRdo } from './rdo/post.rdo';
 import { DetailPostRdo } from './rdo/detail-post.rdo';
 import { PostWithPaginationRdo } from './rdo/post-with-pagination.rdo';
 import { UserPostsCountRdo } from './rdo/user-posts-count.rdo';
 import { PageQuery } from './query/page.query';
+import { TitleQuery } from './query/title.query';
 import { BaseBlogPostQuery } from './query/base-blog-post.query';
 import { SearchBlogPostQuery } from './query/search-blog-post.query';
 import { PostIdApiParam, BlogPostApiResponse, ImageOption, parseFilePipeBuilder, POST_ID_PARAM } from './blog-post.constant';
@@ -51,6 +53,15 @@ export class BlogPostController {
     const posts = await this.getPostsWithPagination(query);
 
     return posts;
+  }
+
+  @ApiResponse(BlogPostApiResponse.PostsFound)
+  @ApiResponse(BlogPostApiResponse.BadRequest)
+  @Get(`/${RouteAlias.Search}`)
+  public async find(@Query() { title }: TitleQuery): Promise<PostRdo[]> {
+    const postEntities = await this.blogPostService.findPostsByTitle(title);
+
+    return postEntities.map((postEntity) => fillDto(PostRdo, postEntity.toPOJO()));
   }
 
   @ApiResponse(BlogPostApiResponse.PostsFound)

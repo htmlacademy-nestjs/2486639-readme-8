@@ -291,4 +291,11 @@ export class BlogPostService {
     return postsCount;
   }
 
+  public async findPostsByTitle(searchTitle: string): Promise<BlogPostEntity[]> {
+    console.log(searchTitle);//!
+
+    //!const posts = await this.blogPostRepository.....();
+
+    return [];
+  }
 }
