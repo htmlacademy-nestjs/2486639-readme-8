@@ -292,10 +292,8 @@ export class BlogPostService {
   }
 
   public async findPostsByTitle(searchTitle: string): Promise<BlogPostEntity[]> {
-    console.log(searchTitle);//!
+    const posts = await this.blogPostRepository.findPostsByTitle(searchTitle);
 
-    //!const posts = await this.blogPostRepository.....();
-
-    return [];
+    return posts;
   }
 }

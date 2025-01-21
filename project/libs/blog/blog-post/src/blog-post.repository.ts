@@ -10,6 +10,7 @@ import { BlogPostEntity } from './blog-post.entity';
 import { BlogPostFactory } from './blog-post.factory';
 import { BlogPostQuery } from './query/blog-post.query';
 import { BlogPostMessage, Default } from './blog-post.constant';
+import { getSearchTitleSql } from './blog-post.sql';
 
 @Injectable()
 export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, Post> {
@@ -203,5 +204,14 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     const count = await this.client.post.count({ where: { repostedPostId: postId, userId } });
 
     return count > 0;
+  }
+
+  public async findPostsByTitle(searchTitle: string): Promise<BlogPostEntity[]> {
+    const result = await this.client.$queryRaw<{ id: string, sum: number }[]>(getSearchTitleSql(searchTitle, Default.SEACRH_TITLE_POST_COUNT));
+    const postIds = result.map((item) => (item.id));
+
+    console.log(postIds);
+
+    return [];//posts;
   }
 }
