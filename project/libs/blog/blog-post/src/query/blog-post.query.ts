@@ -3,8 +3,8 @@ import { IsEnum, IsMongoId, IsOptional, IsString, Matches, MaxLength, MinLength 
 
 import { PostType, SortType } from '@project/shared/core';
 
-import { Default, PostValidation } from './blog-post.constant';
-import { PostApiProperty, PostQueryApiProperty } from './blog-post.constant.property';
+import { Default, PostValidation } from '../blog-post.constant';
+import { PostApiProperty, PostQueryApiProperty } from '../blog-post.constant.property';
 import { PageQuery } from './page.query';
 
 export class BlogPostQuery extends PageQuery {

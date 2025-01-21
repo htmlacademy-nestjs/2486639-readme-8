@@ -4,7 +4,7 @@ import { IsInt, IsOptional } from 'class-validator';
 
 import { PageQueryApiProperty } from '@project/shared/core';
 
-import { Default } from './blog-post.constant';
+import { Default } from '../blog-post.constant';
 
 export class PageQuery {
   @ApiProperty(PageQueryApiProperty)

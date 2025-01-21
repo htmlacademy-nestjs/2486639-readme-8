@@ -16,7 +16,7 @@ import { BlogPostFactory } from './blog-post.factory';
 import { BlogPostRepository } from './blog-post.repository';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { BlogPostQuery } from './blog-post.query';
+import { BlogPostQuery } from './query/blog-post.query';
 import { BlogPostMessage, PostField } from './blog-post.constant';
 import { validatePostData } from './blog-post.validate.post.data';
 

@@ -8,7 +8,7 @@ import { BlogTagService } from '@project/blog/blog-tag';
 
 import { BlogPostEntity } from './blog-post.entity';
 import { BlogPostFactory } from './blog-post.factory';
-import { BlogPostQuery } from './blog-post.query';
+import { BlogPostQuery } from './query/blog-post.query';
 import { BlogPostMessage, Default } from './blog-post.constant';
 
 @Injectable()

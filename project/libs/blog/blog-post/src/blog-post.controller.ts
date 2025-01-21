@@ -16,8 +16,8 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { DetailPostRdo } from './rdo/detail-post.rdo';
 import { PostWithPaginationRdo } from './rdo/post-with-pagination.rdo';
 import { UserPostsCountRdo } from './rdo/user-posts-count.rdo';
-import { PageQuery } from './page.query';
-import { BlogPostQuery } from './blog-post.query';
+import { PageQuery } from './query/page.query';
+import { BlogPostQuery } from './query/blog-post.query';
 import { PostIdApiParam, BlogPostApiResponse, ImageOption, parseFilePipeBuilder, POST_ID_PARAM } from './blog-post.constant';
 
 @ApiTags('blog-post')
