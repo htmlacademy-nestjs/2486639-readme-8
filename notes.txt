@@ -19,6 +19,36 @@
               В поиске участвуют все опубликованные публикации, у которых есть заголовки (название публикации).
               Поиск не возвращает больше 20 публикаций.
               без пагинации
+
+SELECT
+	ID,
+	SUM((POSITION(WORDS.WORD IN LOWER(TITLE)) > 0)::INT)
+FROM
+	POSTS,
+	(
+		SELECT
+			UNNEST(
+				STRING_TO_ARRAY(
+					TRIM(
+						REGEXP_REPLACE(
+							LOWER('  word0 word1   Word2           word3   '),
+							'\s+',
+							' ',
+							'g'
+						)
+					),
+					' '
+				)
+			) AS WORD
+	) WORDS
+WHERE
+	TITLE IS NOT NULL
+GROUP BY
+	ID
+ORDER BY
+	2 DESC;
+
+
       1.2.2. отправить оповещения всем подписчикам при добавлении новой публикации
                наверное через Rabbit, но кто разгребет очередь?
                  BlogSubscriptionModule?
