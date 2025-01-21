@@ -139,7 +139,7 @@ export class BlogPostService {
       sortType,
       tag,
       type,
-      userIds: (userIds.length) ? userIds : undefined
+      userIds: [...userIds, currentUserId]
     };
     const result = await this.blogPostRepository.find(query, false);
 
