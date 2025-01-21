@@ -16,6 +16,8 @@ import { BlogPostFactory } from './blog-post.factory';
 import { BlogPostRepository } from './blog-post.repository';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { BlogPostQuery } from './query/blog-post.query';
+import { BaseBlogPostQuery } from './query/base-blog-post.query';
 import { SearchBlogPostQuery } from './query/search-blog-post.query';
 import { BlogPostMessage, PostField } from './blog-post.constant';
 import { validatePostData } from './blog-post.validate.post.data';
@@ -105,7 +107,7 @@ export class BlogPostService {
   }
 
   public async getAllPosts(
-    query: SearchBlogPostQuery,
+    searchQuery: SearchBlogPostQuery,
     currentUserId: string,
     checkAuthorization: boolean,
     showDraft: boolean
@@ -114,19 +116,34 @@ export class BlogPostService {
       this.checkAuthorization(currentUserId);
     }
 
+    const { page, sortType, tag, type, userId } = searchQuery;
+    const query: BlogPostQuery = {
+      page,
+      sortType,
+      tag,
+      type,
+      userIds: (userId) ? [userId] : undefined
+    };
     const result = await this.blogPostRepository.find(query, showDraft);
 
     return result;
   }
 
-  //!  public async getFeed(page: number, currentUserId: string): Promise<PaginationResult<BlogPostEntity>> {
-  public async getFeed(page: number, currentUserId: string): Promise<void> {
+  public async getFeed(baseQuery: BaseBlogPostQuery, currentUserId: string): Promise<PaginationResult<BlogPostEntity>> {
     this.checkAuthorization(currentUserId);
 
     const userIds = await this.blogSubscriptionService.getUserSubscriptions(currentUserId);
-    //!const result = await this.blogPostRepository.findByUserIds(userIds, page);
+    const { page, sortType, tag, type } = baseQuery;
+    const query: BlogPostQuery = {
+      page,
+      sortType,
+      tag,
+      type,
+      userIds: (userIds.length) ? userIds : undefined
+    };
+    const result = await this.blogPostRepository.find(query, false);
 
-    //!return result;
+    return result;
   }
 
   public async getPost(postId: string, currentUserId: string): Promise<BlogPostEntity> {

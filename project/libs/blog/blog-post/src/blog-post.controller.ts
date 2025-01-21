@@ -17,6 +17,7 @@ import { DetailPostRdo } from './rdo/detail-post.rdo';
 import { PostWithPaginationRdo } from './rdo/post-with-pagination.rdo';
 import { UserPostsCountRdo } from './rdo/user-posts-count.rdo';
 import { PageQuery } from './query/page.query';
+import { BaseBlogPostQuery } from './query/base-blog-post.query';
 import { SearchBlogPostQuery } from './query/search-blog-post.query';
 import { PostIdApiParam, BlogPostApiResponse, ImageOption, parseFilePipeBuilder, POST_ID_PARAM } from './blog-post.constant';
 
@@ -82,18 +83,16 @@ export class BlogPostController {
   @ApiResponse(BlogPostApiResponse.Unauthorized)
   @Get(`/${RouteAlias.MyFeed}`)
   public async getMyFeed(
-    @Query() { page }: PageQuery,
+    @Query() query: BaseBlogPostQuery,
     @Req() { userId }: RequestWithUserId
   ): Promise<PostWithPaginationRdo> {
-    const postsWithPagination = await this.blogPostService.getFeed(page, userId);
-    /*
+    const postsWithPagination = await this.blogPostService.getFeed(query, userId);
     const result = {
       ...postsWithPagination,
       entities: postsWithPagination.entities.map((post) => post.toPOJO())
     }
-*/
-    //!return fillDto(PostWithPaginationRdo, result);
-    return fillDto(PostWithPaginationRdo, {});
+
+    return fillDto(PostWithPaginationRdo, result);
   }
 
   @ApiResponse(BlogPostApiResponse.PostFound)
