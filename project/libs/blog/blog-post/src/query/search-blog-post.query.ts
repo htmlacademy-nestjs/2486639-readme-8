@@ -1,34 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsMongoId, IsOptional, IsString, Matches, MaxLength, MinLength } from 'class-validator';
+import { IsMongoId, IsOptional, IsString } from 'class-validator';
 
-import { PostType, SortType } from '@project/shared/core';
+import { PostApiProperty } from '../blog-post.constant.property';
+import { BaseBlogPostQuery } from './base-blog-post.query';
 
-import { Default, PostValidation } from '../blog-post.constant';
-import { PostApiProperty, PostQueryApiProperty } from '../blog-post.constant.property';
-import { PageQuery } from './page.query';
-
-export class SearchBlogPostQuery extends PageQuery {
+export class SearchBlogPostQuery extends BaseBlogPostQuery {
   @ApiProperty({ ...PostApiProperty.UserId, required: false })
   @IsString()
   @IsOptional()
   @IsMongoId()
   public userId?: string;
-
-  @ApiProperty(PostQueryApiProperty.SortType)
-  @IsEnum(SortType)
-  @IsOptional()
-  public sortType?: SortType = Default.SORT_TYPE;
-
-  @ApiProperty({ ...PostApiProperty.Type, required: false })
-  @IsEnum(PostType)
-  @IsOptional()
-  public type?: PostType;
-
-  @ApiProperty(PostQueryApiProperty.Tag)
-  @IsString()
-  @Matches(PostValidation.Tags.TagRegexp)
-  @MinLength(PostValidation.Tags.TagMinLength)
-  @MaxLength(PostValidation.Tags.TagMaxLength)
-  @IsOptional()
-  public tag?: string;
 }
