@@ -7,7 +7,7 @@ import { Default, PostValidation } from '../blog-post.constant';
 import { PostApiProperty, PostQueryApiProperty } from '../blog-post.constant.property';
 import { PageQuery } from './page.query';
 
-export class BlogPostQuery extends PageQuery {
+export class SearchBlogPostQuery extends PageQuery {
   @ApiProperty({ ...PostApiProperty.UserId, required: false })
   @IsString()
   @IsOptional()

@@ -11,6 +11,7 @@ import { BlogSubscriptionService } from './blog-subscription.service';
     BlogSubscriptionService,
     BlogSubscriptionRepository,
     BlogSubscriptionFactory
-  ]
+  ],
+  exports: [BlogSubscriptionService]
 })
 export class BlogSubscriptionModule { }

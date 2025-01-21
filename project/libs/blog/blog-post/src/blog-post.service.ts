@@ -16,7 +16,7 @@ import { BlogPostFactory } from './blog-post.factory';
 import { BlogPostRepository } from './blog-post.repository';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { BlogPostQuery } from './query/blog-post.query';
+import { SearchBlogPostQuery } from './query/search-blog-post.query';
 import { BlogPostMessage, PostField } from './blog-post.constant';
 import { validatePostData } from './blog-post.validate.post.data';
 
@@ -105,7 +105,7 @@ export class BlogPostService {
   }
 
   public async getAllPosts(
-    query: BlogPostQuery,
+    query: SearchBlogPostQuery,
     currentUserId: string,
     checkAuthorization: boolean,
     showDraft: boolean
@@ -119,13 +119,14 @@ export class BlogPostService {
     return result;
   }
 
-  public async getFeed(page: number, currentUserId: string): Promise<PaginationResult<BlogPostEntity>> {
+  //!  public async getFeed(page: number, currentUserId: string): Promise<PaginationResult<BlogPostEntity>> {
+  public async getFeed(page: number, currentUserId: string): Promise<void> {
     this.checkAuthorization(currentUserId);
 
     const userIds = await this.blogSubscriptionService.getUserSubscriptions(currentUserId);
-    const result = await this.blogPostRepository.findByUserIds(userIds, page);
+    //!const result = await this.blogPostRepository.findByUserIds(userIds, page);
 
-    return result;
+    //!return result;
   }
 
   public async getPost(postId: string, currentUserId: string): Promise<BlogPostEntity> {

@@ -8,7 +8,7 @@ import { BlogTagService } from '@project/blog/blog-tag';
 
 import { BlogPostEntity } from './blog-post.entity';
 import { BlogPostFactory } from './blog-post.factory';
-import { BlogPostQuery } from './query/blog-post.query';
+import { SearchBlogPostQuery } from './query/search-blog-post.query';
 import { BlogPostMessage, Default } from './blog-post.constant';
 
 @Injectable()
@@ -108,7 +108,7 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     await this.client.post.delete({ where: { id } })
   }
 
-  public async find(query: BlogPostQuery, showDraft: boolean): Promise<PaginationResult<BlogPostEntity>> {
+  public async find(query: SearchBlogPostQuery, showDraft: boolean): Promise<PaginationResult<BlogPostEntity>> {
     const currentPage = query.page;
     const take = Default.POST_COUNT;
     const skip = (currentPage - 1) * take;

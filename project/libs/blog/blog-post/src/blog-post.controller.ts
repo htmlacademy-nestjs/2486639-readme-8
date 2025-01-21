@@ -17,7 +17,7 @@ import { DetailPostRdo } from './rdo/detail-post.rdo';
 import { PostWithPaginationRdo } from './rdo/post-with-pagination.rdo';
 import { UserPostsCountRdo } from './rdo/user-posts-count.rdo';
 import { PageQuery } from './query/page.query';
-import { BlogPostQuery } from './query/blog-post.query';
+import { SearchBlogPostQuery } from './query/search-blog-post.query';
 import { PostIdApiParam, BlogPostApiResponse, ImageOption, parseFilePipeBuilder, POST_ID_PARAM } from './blog-post.constant';
 
 @ApiTags('blog-post')
@@ -29,7 +29,7 @@ export class BlogPostController {
   ) { }
 
   private async getPostsWithPagination(
-    query: BlogPostQuery,
+    query: SearchBlogPostQuery,
     checkAuthorization = false,
     currentUserId?: string,
     showDraft = false
@@ -46,7 +46,7 @@ export class BlogPostController {
   @ApiResponse(BlogPostApiResponse.PostsFound)
   @ApiResponse(BlogPostApiResponse.BadRequest)
   @Get('/')
-  public async index(@Query() query: BlogPostQuery): Promise<PostWithPaginationRdo> {
+  public async index(@Query() query: SearchBlogPostQuery): Promise<PostWithPaginationRdo> {
     const posts = await this.getPostsWithPagination(query);
 
     return posts;
@@ -59,7 +59,7 @@ export class BlogPostController {
     @Query() { page }: PageQuery,
     @Req() { userId }: RequestWithUserId
   ): Promise<PostWithPaginationRdo> {
-    const query: BlogPostQuery = { userId, page };
+    const query: SearchBlogPostQuery = { userId, page };
     const posts = await this.getPostsWithPagination(query, true, userId);
 
     return posts;
@@ -72,7 +72,7 @@ export class BlogPostController {
     @Query() { page }: PageQuery,
     @Req() { userId }: RequestWithUserId
   ): Promise<PostWithPaginationRdo> {
-    const query: BlogPostQuery = { userId, page };
+    const query: SearchBlogPostQuery = { userId, page };
     const posts = await this.getPostsWithPagination(query, true, userId, true);
 
     return posts;
@@ -86,12 +86,14 @@ export class BlogPostController {
     @Req() { userId }: RequestWithUserId
   ): Promise<PostWithPaginationRdo> {
     const postsWithPagination = await this.blogPostService.getFeed(page, userId);
+    /*
     const result = {
       ...postsWithPagination,
       entities: postsWithPagination.entities.map((post) => post.toPOJO())
     }
-
-    return fillDto(PostWithPaginationRdo, result);
+*/
+    //!return fillDto(PostWithPaginationRdo, result);
+    return fillDto(PostWithPaginationRdo, {});
   }
 
   @ApiResponse(BlogPostApiResponse.PostFound)
