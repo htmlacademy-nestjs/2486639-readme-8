@@ -9,6 +9,7 @@ import { makePath, parseAxiosError, uploadFile } from '@project/shared/helpers';
 import { BlogTagService } from '@project/blog/blog-tag';
 import { blogConfig } from '@project/blog/config';
 import { FILE_KEY, UploadedFileRdo } from '@project/file-storage/file-uploader';
+import { BlogSubscriptionService } from '@project/blog/blog-subscription';
 
 import { BlogPostEntity } from './blog-post.entity';
 import { BlogPostFactory } from './blog-post.factory';
@@ -26,6 +27,7 @@ export class BlogPostService {
 
   constructor(
     private readonly blogTagService: BlogTagService,
+    private readonly blogSubscriptionService: BlogSubscriptionService,
     private readonly blogPostRepository: BlogPostRepository
   ) { }
 
@@ -113,6 +115,15 @@ export class BlogPostService {
     }
 
     const result = await this.blogPostRepository.find(query, showDraft);
+
+    return result;
+  }
+
+  public async getFeed(page: number, currentUserId: string): Promise<PaginationResult<BlogPostEntity>> {
+    this.checkAuthorization(currentUserId);
+
+    const UserIds = await this.blogSubscriptionService.getAuthorSubscriptions(currentUserId);
+    const result = await this.blogPostRepository.findByUserIds(UserIds);
 
     return result;
   }

@@ -79,6 +79,22 @@ export class BlogPostController {
     return posts;
   }
 
+  @ApiResponse(BlogPostApiResponse.PostsFound)
+  @ApiResponse(BlogPostApiResponse.Unauthorized)
+  @Get(`/${RouteAlias.MyFeed}`)
+  public async getMyFeed(
+    @Query() { page }: PageQuery,
+    @Req() { userId }: RequestWithUserId
+  ): Promise<PostWithPaginationRdo> {
+    const postsWithPagination = await this.blogPostService.getFeed(page, userId);
+    const result = {
+      ...postsWithPagination,
+      entities: postsWithPagination.entities.map((post) => post.toPOJO())
+    }
+
+    return fillDto(PostWithPaginationRdo, result);
+  }
+
   @ApiResponse(BlogPostApiResponse.PostFound)
   @ApiResponse(BlogPostApiResponse.PostNotFound)
   @ApiParam(PostIdApiParam)
