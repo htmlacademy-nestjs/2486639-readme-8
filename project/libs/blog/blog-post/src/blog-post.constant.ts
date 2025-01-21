@@ -2,8 +2,9 @@ import { HttpStatus, ParseFilePipeBuilder } from '@nestjs/common';
 
 import { PostState, PostType, SortType } from '@project/shared/core';
 
-import { PostWithPaginationRdo } from './rdo/post-with-pagination.rdo';
+import { PostRdo } from './rdo/post.rdo';
 import { DetailPostRdo } from './rdo/detail-post.rdo';
+import { PostWithPaginationRdo } from './rdo/post-with-pagination.rdo';
 import { UserPostsCountRdo } from './rdo/user-posts-count.rdo';
 import { PostApiProperty } from './blog-post.constant.property';
 
@@ -145,6 +146,12 @@ export const BlogPostApiResponse = {
   },
   PostsFound: {
     type: PostWithPaginationRdo, //! наверное будет тип с пагинацией
+    status: HttpStatus.OK,
+    description: 'Posts found.'
+  },
+  SearchPosts: {
+    type: PostRdo,
+    isArray: true,
     status: HttpStatus.OK,
     description: 'Posts found.'
   },

@@ -10,6 +10,9 @@
        чтобы убрать <.headers['authorization']>
        если сложно, то для api-gate можно сделать перехват ошибки axios запроса
   5. удалить BaseMemoryRepository если не будет использоваться?
+  6. тип из призмы для
+    можно объеденить "const entities = records.map(" в findPostsByTitle(searchTitle: string) и в find(query: BlogPostQuery,
+
 
   1. Реализовать маршруты:
     1.2. blog

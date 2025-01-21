@@ -55,7 +55,7 @@ export class BlogPostController {
     return posts;
   }
 
-  @ApiResponse(BlogPostApiResponse.PostsFound)
+  @ApiResponse(BlogPostApiResponse.SearchPosts)
   @ApiResponse(BlogPostApiResponse.BadRequest)
   @Get(`/${RouteAlias.Search}`)
   public async find(@Query() { title }: TitleQuery): Promise<PostRdo[]> {

@@ -3,7 +3,7 @@ import { Prisma } from '@prisma/client';
 export function getSearchTitleSql(searchTitle: string, limit: number) {
   return Prisma.sql`SELECT
   ID,
-  SUM((POSITION(WORDS.WORD IN LOWER(TITLE)) > 0)::INT)::INT AS SUM
+  SUM((POSITION(WORDS.WORD IN LOWER(TITLE)) > 0)::INT)::INT AS HIT_SUM
 FROM
   POSTS,
   (
@@ -26,7 +26,9 @@ WHERE
   TITLE IS NOT NULL
 GROUP BY
   ID
+HAVING
+  SUM((POSITION(WORDS.WORD IN LOWER(TITLE)) > 0)::INT) > 0
 ORDER BY
-  SUM DESC
+  HIT_SUM DESC
 LIMIT ${limit}`;
 }

@@ -207,11 +207,21 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
   }
 
   public async findPostsByTitle(searchTitle: string): Promise<BlogPostEntity[]> {
-    const result = await this.client.$queryRaw<{ id: string, sum: number }[]>(getSearchTitleSql(searchTitle, Default.SEACRH_TITLE_POST_COUNT));
+    const result = await this.client.$queryRaw<{ id: string, hit_sum: number }[]>(getSearchTitleSql(searchTitle, Default.SEACRH_TITLE_POST_COUNT));
     const postIds = result.map((item) => (item.id));
 
-    console.log(postIds);
+    const records = await this.client.post.findMany({ where: { id: { in: postIds } }, include: { tags: true } });
+    const entities = records.map(
+      (record) => {
+        const post: Post = {
+          ...record,
+          ...this.getTypeAndState(record)
+        };
 
-    return [];//posts;
+        return this.createEntityFromDocument(post);
+      }
+    );
+
+    return entities;
   }
 }
