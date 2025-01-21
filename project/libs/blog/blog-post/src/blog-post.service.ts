@@ -136,7 +136,7 @@ export class BlogPostService {
 
     const tags = await this.blogTagService.getByTitles(dto.tags);
     const imagePath = await this.uploadImageFile(imageFile, requestId);
-    const newPost = BlogPostFactory.createFromCreatePostDto(dto, imagePath, tags, currentUserId);
+    const newPost = BlogPostFactory.createFromDtoOrEntity(dto, imagePath, tags, currentUserId);
 
     await this.blogPostRepository.save(newPost);
 
