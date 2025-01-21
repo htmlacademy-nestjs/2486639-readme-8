@@ -3,9 +3,8 @@ import { ApiHeader, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { fillDto } from '@project/shared/helpers';
 import { MongoIdValidationPipe } from '@project/shared/pipes';
-import { RequestWithUserId, RouteAlias } from '@project/shared/core';
+import { BlogUserIdApiHeader, RequestWithUserId, RouteAlias } from '@project/shared/core';
 import { UserIdApiParam } from '@project/account/authentication';
-import { BlogUserIdApiHeader } from '@project/blog/blog-post';
 
 import { BlogSubscriptionService } from './blog-subscription.service';
 import { UserSubscriptionsCountRdo } from './rdo/user-subscriptions-count.rdo';
@@ -51,7 +50,7 @@ export class BlogSubscriptionController {
   @ApiParam(UserIdApiParam)
   @Get(`/${RouteAlias.GetUserSubscriptionsCount}/:${UserIdApiParam.name}`)
   public async getUserSubscriptionsCount(@Param(UserIdApiParam.name, MongoIdValidationPipe) userId: string): Promise<UserSubscriptionsCountRdo> {
-    const subscriptionsCount = await this.blogSubscriptionService.getAuthorSubscriptionsCount(userId);
+    const subscriptionsCount = await this.blogSubscriptionService.getUserSubscriptionsCount(userId);
 
     return fillDto(UserSubscriptionsCountRdo, { userId, subscriptionsCount });
   }

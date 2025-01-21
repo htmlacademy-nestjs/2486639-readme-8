@@ -2,8 +2,7 @@ import { Controller, Delete, HttpCode, Param, Post, Req } from '@nestjs/common';
 import { ApiHeader, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { GuidValidationPipe } from '@project/shared/pipes';
-import { RequestWithUserId, RouteAlias } from '@project/shared/core';
-import { BlogUserIdApiHeader } from '@project/blog/blog-post';
+import { BlogUserIdApiHeader, RequestWithUserId, RouteAlias } from '@project/shared/core';
 
 import { POST_ID_PARAM, PostIdApiParam, BlogPostLikeApiResponse } from './blog-post-like.constant';
 import { BlogPostLikeService } from './blog-post-like.service';

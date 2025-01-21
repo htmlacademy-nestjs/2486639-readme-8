@@ -3,8 +3,7 @@ import { ApiHeader, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { fillDto } from '@project/shared/helpers';
 import { GuidValidationPipe } from '@project/shared/pipes';
-import { RequestWithUserId, RouteAlias } from '@project/shared/core';
-import { BlogUserIdApiHeader } from '@project/blog/blog-post';
+import { BlogUserIdApiHeader, RequestWithUserId, RouteAlias } from '@project/shared/core';
 
 import { POST_ID_PARAM, BlogPostCommentApiResponse, PostIdApiParam, CommentIdApiParam, COMMENT_ID_PARAM } from './blog-post-comment.constant';
 import { BlogPostCommentService } from './blog-post-comment.service';

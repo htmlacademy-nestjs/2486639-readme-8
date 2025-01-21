@@ -42,9 +42,9 @@ export class BlogSubscriptionService {
     await this.blogSubscriptionRepository.deleteById(foundLikeId);
   }
 
-  public async getAuthorSubscriptionsCount(authorUserId: string): Promise<number> {
-    const postsCount = await this.blogSubscriptionRepository.getAuthorSubscriptionsCount(authorUserId);
+  public async getUserSubscriptionsCount(userId: string): Promise<number> {
+    const subscriptionsCount = await this.blogSubscriptionRepository.getUserSubscriptionsCount(userId);
 
-    return postsCount;
+    return subscriptionsCount;
   }
 }

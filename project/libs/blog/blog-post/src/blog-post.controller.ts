@@ -6,7 +6,7 @@ import { ApiConsumes, ApiHeader, ApiParam, ApiResponse, ApiTags } from '@nestjs/
 import { FileInterceptor } from '@nestjs/platform-express';
 
 import { fillDto } from '@project/shared/helpers';
-import { RequestWithRequestIdAndUserId, RequestWithUserId, RouteAlias } from '@project/shared/core';
+import { BlogRequestIdApiHeader, BlogUserIdApiHeader, RequestWithRequestIdAndUserId, RequestWithUserId, RouteAlias } from '@project/shared/core';
 import { GuidValidationPipe, MongoIdValidationPipe } from '@project/shared/pipes';
 import { UserIdApiParam } from '@project/account/authentication';
 
@@ -19,7 +19,6 @@ import { UserPostsCountRdo } from './rdo/user-posts-count.rdo';
 import { PageQuery } from './page.query';
 import { BlogPostQuery } from './blog-post.query';
 import { PostIdApiParam, BlogPostApiResponse, ImageOption, parseFilePipeBuilder, POST_ID_PARAM } from './blog-post.constant';
-import { BlogRequestIdApiHeader, BlogUserIdApiHeader } from './blog-post.constant.header';
 
 @ApiTags('blog-post')
 @ApiHeader(BlogUserIdApiHeader) // глобально вроде не добавить? и примеры почемуто не работают...
