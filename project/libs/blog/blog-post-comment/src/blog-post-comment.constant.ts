@@ -21,18 +21,10 @@ export const BlogPostCommentMessage = {
   CommentExist: 'You already commented the post.'
 } as const;
 
-export const PostIdApiParam = {
-  name: 'postId',
-  schema: PostCommentApiProperty.PostId
-} as const;
-
-
 export const CommentIdApiParam = {
   name: 'commentId',
   schema: PostCommentApiProperty.Id
 } as const;
-
-export const POST_ID_PARAM = `:${PostIdApiParam.name}`;
 
 export const COMMENT_ID_PARAM = `:${CommentIdApiParam.name}`;
 

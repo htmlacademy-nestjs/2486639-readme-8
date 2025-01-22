@@ -1,10 +1,7 @@
-import { PostState, PostType, SortType } from '@project/shared/core';
+import { ApiPropertyOption, PostState, PostType, SortType } from '@project/shared/core';
 
 export const PostApiProperty = {
-  Id: {
-    description: 'The unique post ID',
-    example: '2f31b19b-97eb-4305-877a-0b9be7faca8f'
-  },
+  Id: { ...ApiPropertyOption.Post.Id },
   Type: {
     description: 'The post type',
     enum: PostType,

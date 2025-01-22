@@ -14,13 +14,6 @@ export const PostCommentApiProperty = {
   }
 } as const;
 
-export const PostIdApiParam = {
-  name: 'postId',
-  schema: PostCommentApiProperty.PostId
-} as const;
-
-export const POST_ID_PARAM = `:${PostIdApiParam.name}`;
-
 export const BlogPostLikeApiResponse = {
   Unauthorized: {
     status: HttpStatus.UNAUTHORIZED,

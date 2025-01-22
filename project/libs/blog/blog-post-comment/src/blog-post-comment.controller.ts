@@ -3,9 +3,9 @@ import { ApiHeader, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { fillDto } from '@project/shared/helpers';
 import { GuidValidationPipe } from '@project/shared/pipes';
-import { BlogUserIdApiHeader, RequestWithUserId, RouteAlias } from '@project/shared/core';
+import { ApiParamOption, BlogUserIdApiHeader, POST_ID_PARAM, RequestWithUserId, RouteAlias } from '@project/shared/core';
 
-import { POST_ID_PARAM, BlogPostCommentApiResponse, PostIdApiParam, CommentIdApiParam, COMMENT_ID_PARAM } from './blog-post-comment.constant';
+import { BlogPostCommentApiResponse, CommentIdApiParam, COMMENT_ID_PARAM } from './blog-post-comment.constant';
 import { BlogPostCommentService } from './blog-post-comment.service';
 import { BlogPostCommentQuery } from './blog-post-comment.query';
 import { CreatePostCommentDto } from './dto/create-post-comment.dto';
@@ -23,10 +23,10 @@ export class BlogPostCommentController {
   @ApiResponse(BlogPostCommentApiResponse.PostCommentsFound)
   @ApiResponse(BlogPostCommentApiResponse.BadRequest)
   @ApiResponse(BlogPostCommentApiResponse.PostNotFound)
-  @ApiParam(PostIdApiParam)
+  @ApiParam(ApiParamOption.PostId)
   @Get(POST_ID_PARAM)
   public async index(
-    @Param(PostIdApiParam.name, GuidValidationPipe) postId: string,
+    @Param(ApiParamOption.PostId.name, GuidValidationPipe) postId: string,
     @Query() query: BlogPostCommentQuery,
     @Req() { userId }: RequestWithUserId
   ): Promise<PostCommentWithPaginationRdo> {
@@ -44,10 +44,10 @@ export class BlogPostCommentController {
   @ApiResponse(BlogPostCommentApiResponse.BadRequest)
   @ApiResponse(BlogPostCommentApiResponse.PostNotFound)
   @ApiResponse(BlogPostCommentApiResponse.CommentOnPostExist)
-  @ApiParam(PostIdApiParam)
+  @ApiParam(ApiParamOption.PostId)
   @Post(POST_ID_PARAM)
   public async create(
-    @Param(PostIdApiParam.name, GuidValidationPipe) postId: string,
+    @Param(ApiParamOption.PostId.name, GuidValidationPipe) postId: string,
     @Body() dto: CreatePostCommentDto,
     @Req() { userId }: RequestWithUserId
   ): Promise<PostCommentRdo> {

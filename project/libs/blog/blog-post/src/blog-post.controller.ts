@@ -8,7 +8,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { fillDto } from '@project/shared/helpers';
 import {
   ApiParamOption, BlogRequestIdApiHeader, BlogUserIdApiHeader, RequestWithRequestIdAndUserId,
-  RequestWithUserId, RouteAlias, USER_ID_PARAM
+  RequestWithUserId, RouteAlias, USER_ID_PARAM, POST_ID_PARAM
 } from '@project/shared/core';
 import { GuidValidationPipe, MongoIdValidationPipe } from '@project/shared/pipes';
 
@@ -23,7 +23,7 @@ import { PageQuery } from './query/page.query';
 import { TitleQuery } from './query/title.query';
 import { BaseBlogPostQuery } from './query/base-blog-post.query';
 import { SearchBlogPostQuery } from './query/search-blog-post.query';
-import { PostIdApiParam, BlogPostApiResponse, ImageOption, parseFilePipeBuilder, POST_ID_PARAM } from './blog-post.constant';
+import { BlogPostApiResponse, ImageOption, parseFilePipeBuilder } from './blog-post.constant';
 
 @ApiTags('blog-post')
 @ApiHeader(BlogUserIdApiHeader) // глобально вроде не добавить? и примеры почемуто не работают...
@@ -110,10 +110,10 @@ export class BlogPostController {
 
   @ApiResponse(BlogPostApiResponse.PostFound)
   @ApiResponse(BlogPostApiResponse.PostNotFound)
-  @ApiParam(PostIdApiParam)
+  @ApiParam(ApiParamOption.PostId)
   @Get(POST_ID_PARAM)
   public async show(
-    @Param(PostIdApiParam.name, GuidValidationPipe) postId: string,
+    @Param(ApiParamOption.PostId.name, GuidValidationPipe) postId: string,
     @Req() { userId }: RequestWithUserId
   ): Promise<DetailPostRdo> {
     const existPost = await this.blogPostService.getPost(postId, userId);
@@ -142,13 +142,13 @@ export class BlogPostController {
   @ApiResponse(BlogPostApiResponse.Unauthorized)
   @ApiResponse(BlogPostApiResponse.PostNotFound)
   @ApiResponse(BlogPostApiResponse.NotAllow)
-  @ApiParam(PostIdApiParam)
+  @ApiParam(ApiParamOption.PostId)
   @ApiConsumes('multipart/form-data')
   @ApiHeader(BlogRequestIdApiHeader)
   @UseInterceptors(FileInterceptor(ImageOption.KEY))
   @Patch(POST_ID_PARAM)
   public async update(
-    @Param(PostIdApiParam.name, GuidValidationPipe) postId: string,
+    @Param(ApiParamOption.PostId.name, GuidValidationPipe) postId: string,
     @Body() dto: UpdatePostDto,
     @Req() { requestId, userId }: RequestWithRequestIdAndUserId,
     @UploadedFile(parseFilePipeBuilder) imageFile?: Express.Multer.File
@@ -162,10 +162,10 @@ export class BlogPostController {
   @ApiResponse(BlogPostApiResponse.Unauthorized)
   @ApiResponse(BlogPostApiResponse.PostNotFound)
   @ApiResponse(BlogPostApiResponse.AlreadyReposted)
-  @ApiParam(PostIdApiParam)
+  @ApiParam(ApiParamOption.PostId)
   @Post(`/${RouteAlias.Repost}/${POST_ID_PARAM}`)
   public async repost(
-    @Param(PostIdApiParam.name, GuidValidationPipe) postId: string,
+    @Param(ApiParamOption.PostId.name, GuidValidationPipe) postId: string,
     @Req() { userId }: RequestWithUserId
   ): Promise<DetailPostRdo> {
     const repostedPost = await this.blogPostService.repostPost(postId, userId);
@@ -177,11 +177,11 @@ export class BlogPostController {
   @ApiResponse(BlogPostApiResponse.Unauthorized)
   @ApiResponse(BlogPostApiResponse.PostNotFound)
   @ApiResponse(BlogPostApiResponse.NotAllow)
-  @ApiParam(PostIdApiParam)
+  @ApiParam(ApiParamOption.PostId)
   @HttpCode(BlogPostApiResponse.PostDeleted.status)
   @Delete(POST_ID_PARAM)
   public async delete(
-    @Param(PostIdApiParam.name, GuidValidationPipe) postId: string,
+    @Param(ApiParamOption.PostId.name, GuidValidationPipe) postId: string,
     @Req() { userId }: RequestWithUserId
   ): Promise<void> {
     await this.blogPostService.deletePost(postId, userId);
