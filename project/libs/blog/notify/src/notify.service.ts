@@ -4,6 +4,7 @@ import { ConfigType } from '@nestjs/config';
 
 import { RabbitRouting } from '@project/shared/core';
 import { blogConfig } from '@project/blog/config';
+import { PostRdo } from '@project/blog/blog-post';
 
 @Injectable()
 export class NotifyService {
@@ -14,12 +15,11 @@ export class NotifyService {
     private readonly rabbitClient: AmqpConnection
   ) { }
 
-  //!
-  public async registerNewLetter(dto: any) {
-    const result = await this.rabbitClient.publish<any>(
+  public async registerNewLetter(posts: PostRdo[]) {
+    const result = await this.rabbitClient.publish<PostRdo[]>(
       this.blogOptions.rabbit.exchange,
       RabbitRouting.AddNewsLetter,
-      dto
+      posts
     );
 
     return result;

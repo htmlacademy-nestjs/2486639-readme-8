@@ -146,7 +146,7 @@ export const BlogPostApiResponse = {
     description: 'Post found.'
   },
   PostsFound: {
-    type: PostWithPaginationRdo, //! наверное будет тип с пагинацией
+    type: PostWithPaginationRdo,
     status: HttpStatus.OK,
     description: 'Posts found.'
   },
