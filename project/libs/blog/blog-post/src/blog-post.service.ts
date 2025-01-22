@@ -19,7 +19,7 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { BlogPostQuery } from './query/blog-post.query';
 import { BaseBlogPostQuery } from './query/base-blog-post.query';
 import { SearchBlogPostQuery } from './query/search-blog-post.query';
-import { BlogPostMessage, PostField } from './blog-post.constant';
+import { BlogPostMessage, Default, PostField } from './blog-post.constant';
 import { validatePostData } from './blog-post.validate.post.data';
 
 @Injectable()
@@ -292,13 +292,13 @@ export class BlogPostService {
   }
 
   public async findPostsByTitle(searchTitle: string): Promise<BlogPostEntity[]> {
-    const posts = await this.blogPostRepository.findPostsByTitle(searchTitle);
+    const posts = await this.blogPostRepository.findPostsByTitle(searchTitle, Default.SEACRH_TITLE_POST_COUNT);
 
     return posts;
   }
 
   public async findPostsByCreateAt(startDate: Date): Promise<BlogPostEntity[]> {
-    const posts = await this.blogPostRepository.findPostsByCreateAt(startDate);
+    const posts = await this.blogPostRepository.findPostsByCreateAt(startDate, Default.NEWS_LETTER_POST_COUNT);
 
     return posts;
   }

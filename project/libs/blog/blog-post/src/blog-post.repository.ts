@@ -9,7 +9,7 @@ import { BlogTagService } from '@project/blog/blog-tag';
 import { BlogPostEntity } from './blog-post.entity';
 import { BlogPostFactory } from './blog-post.factory';
 import { BlogPostQuery } from './query/blog-post.query';
-import { BlogPostMessage, Default } from './blog-post.constant';
+import { BlogPostMessage } from './blog-post.constant';
 import { getSearchTitleSql } from './blog-post.sql';
 
 @Injectable()
@@ -220,8 +220,8 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     return count > 0;
   }
 
-  public async findPostsByTitle(searchTitle: string): Promise<BlogPostEntity[]> {
-    const result = await this.client.$queryRaw<{ id: string, hit_sum: number }[]>(getSearchTitleSql(searchTitle, Default.SEACRH_TITLE_POST_COUNT));
+  public async findPostsByTitle(searchTitle: string, limit: number): Promise<BlogPostEntity[]> {
+    const result = await this.client.$queryRaw<{ id: string, hit_sum: number }[]>(getSearchTitleSql(searchTitle, limit));
     const postIds = result.map((item) => (item.id));
     const where: Prisma.PostWhereInput = {};
 
@@ -232,14 +232,14 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     return entities;
   }
 
-  public async findPostsByCreateAt(startDate: Date): Promise<BlogPostEntity[]> {
+  public async findPostsByCreateAt(startDate: Date, limit: number): Promise<BlogPostEntity[]> {
     const where: Prisma.PostWhereInput = {};
 
     if (startDate) {
       where.createdAt = { gt: startDate };
     }
 
-    const entities = await this.findPosts(where);
+    const entities = await this.findPosts(where, undefined, undefined, limit);
 
     return entities;
   }

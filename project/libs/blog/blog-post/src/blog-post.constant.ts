@@ -15,7 +15,8 @@ export const Default = {
   POST_COUNT: 25,
   CURRENT_PAGE: 1,
   SORT_TYPE: SortType.PublishDate,
-  SEACRH_TITLE_POST_COUNT: 20
+  SEACRH_TITLE_POST_COUNT: 20,
+  NEWS_LETTER_POST_COUNT: 10
 } as const;
 
 export const ImageOption = {

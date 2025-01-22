@@ -9,7 +9,7 @@ import { CreateSubscriberDto } from '@project/notify/email-subsriber';
 @Injectable()
 export class NotifyService {
   @Inject(rabbitConfig.KEY)
-  private readonly rabbiOptions: ConfigType<typeof rabbitConfig>;
+  private readonly rabbitOptions: ConfigType<typeof rabbitConfig>;
 
   constructor(
     private readonly rabbitClient: AmqpConnection
@@ -17,7 +17,7 @@ export class NotifyService {
 
   public async registerSubscriber(dto: CreateSubscriberDto) {
     const result = await this.rabbitClient.publish<CreateSubscriberDto>(
-      this.rabbiOptions.exchange,
+      this.rabbitOptions.exchange,
       RabbitRouting.AddSubscriber,
       { ...dto }
     );
