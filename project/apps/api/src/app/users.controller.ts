@@ -8,16 +8,16 @@ import { ApiBearerAuth, ApiConsumes, ApiParam, ApiResponse, ApiTags } from '@nes
 import { FileInterceptor } from '@nestjs/platform-express';
 
 import {
-  BearerAuth, RequestWithRequestId, RequestWithRequestIdAndBearerAuth,
-  RequestWithTokenPayload, RouteAlias, XHeader
+  ApiParamOption, BearerAuth, RequestWithRequestId, RequestWithRequestIdAndBearerAuth,
+  RequestWithTokenPayload, RouteAlias, USER_ID_PARAM, XHeader
 } from '@project/shared/core';
 import { AUTH_NAME, dtoToFormData, multerFileToFormData } from '@project/shared/helpers';
 import { MongoIdValidationPipe } from '@project/shared/pipes';
 import { AxiosExceptionFilter } from '@project/shared/exception-filters';
 import { apiConfig } from '@project/api/config';
 import {
-  AuthenticationApiResponse, AvatarOption, ChangePasswordDto, CreateUserDto, LoggedUserRdo, LoginUserDto,
-  parseFilePipeBuilder, TokenPayloadRdo, UserIdApiParam, UserRdo, UserTokenRdo
+  AuthenticationApiResponse, AvatarOption, ChangePasswordDto, CreateUserDto, LoggedUserRdo,
+  LoginUserDto, parseFilePipeBuilder, TokenPayloadRdo, UserRdo, UserTokenRdo
 } from '@project/account/authentication';
 
 import { CheckAuthGuard } from './guards/check-auth.guard';
@@ -142,10 +142,10 @@ export class UsersController {
   @ApiResponse(AuthenticationApiResponse.UserFound)
   @ApiResponse(AuthenticationApiResponse.UserNotFound)
   @ApiResponse(AuthenticationApiResponse.BadRequest)
-  @ApiParam(UserIdApiParam)
-  @Get(`:${UserIdApiParam.name}`)
+  @ApiParam(ApiParamOption.UserId)
+  @Get(USER_ID_PARAM)
   public async show(
-    @Param(UserIdApiParam.name, MongoIdValidationPipe) userId: string,
+    @Param(ApiParamOption.UserId.name, MongoIdValidationPipe) userId: string,
     @Req() { requestId }: RequestWithRequestId): Promise<UserRdo> {
     const url = `${this.apiOptions.accountServiceUrl}/${userId}`;
     const { data } = await this.httpService.axiosRef.get<UserRdo>(url, this.makeHeaders(requestId));

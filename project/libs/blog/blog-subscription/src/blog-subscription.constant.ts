@@ -1,20 +1,12 @@
 import { HttpStatus } from '@nestjs/common';
 
 import { UserSubscriptionsCountRdo } from './rdo/user-subscriptions-count.rdo';
-import { SubscriptionApiProperty } from './blog-subscription.constant.property';
 
 export const BlogSubscriptionMessage = {
   SubscriptionNotFound: 'Subscription not found.',
   SubscriptionExist: 'You already subscription on author.',
   Unauthorized: 'Unauthorized.'
 } as const;
-
-export const userIdApiParam = {
-  name: 'userId',
-  schema: SubscriptionApiProperty.UserId
-} as const;
-
-export const USER_ID_PARAM = `:${userIdApiParam.name}`;
 
 export const BlogSubscriptionApiResponse = {
   Unauthorized: {

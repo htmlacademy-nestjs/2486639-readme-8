@@ -3,11 +3,11 @@ import { ApiHeader, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { fillDto } from '@project/shared/helpers';
 import { MongoIdValidationPipe } from '@project/shared/pipes';
-import { ApiParamOption, BlogUserIdApiHeader, RequestWithUserId, RouteAlias } from '@project/shared/core';
+import { ApiParamOption, BlogUserIdApiHeader, RequestWithUserId, RouteAlias, USER_ID_PARAM } from '@project/shared/core';
 
 import { BlogSubscriptionService } from './blog-subscription.service';
 import { UserSubscriptionsCountRdo } from './rdo/user-subscriptions-count.rdo';
-import { USER_ID_PARAM, userIdApiParam, BlogSubscriptionApiResponse } from './blog-subscription.constant';
+import { BlogSubscriptionApiResponse } from './blog-subscription.constant';
 
 @ApiTags('blog-subscription')
 @ApiHeader(BlogUserIdApiHeader) // глобально вроде не добавить? и примеры почемуто не работают...
@@ -21,10 +21,10 @@ export class BlogSubscriptionController {
   @ApiResponse(BlogSubscriptionApiResponse.Unauthorized)
   @ApiResponse(BlogSubscriptionApiResponse.BadRequest)
   @ApiResponse(BlogSubscriptionApiResponse.SubscriptionExist)
-  @ApiParam(userIdApiParam)
+  @ApiParam(ApiParamOption.UserId)
   @Post(USER_ID_PARAM)
   public async create(
-    @Param(userIdApiParam.name, MongoIdValidationPipe) authorUserId: string,
+    @Param(ApiParamOption.UserId.name, MongoIdValidationPipe) authorUserId: string,
     @Req() { userId }: RequestWithUserId
   ): Promise<void> {
     await this.blogSubscriptionService.subscribe(authorUserId, userId);
@@ -34,11 +34,11 @@ export class BlogSubscriptionController {
   @ApiResponse(BlogSubscriptionApiResponse.Unauthorized)
   @ApiResponse(BlogSubscriptionApiResponse.BadRequest)
   @ApiResponse(BlogSubscriptionApiResponse.SubscriptionNotFound)
-  @ApiParam(userIdApiParam)
+  @ApiParam(ApiParamOption.UserId)
   @HttpCode(BlogSubscriptionApiResponse.SubscriptionDeleted.status)
   @Delete(USER_ID_PARAM)
   public async delete(
-    @Param(userIdApiParam.name, MongoIdValidationPipe) authorUserId: string,
+    @Param(ApiParamOption.UserId.name, MongoIdValidationPipe) authorUserId: string,
     @Req() { userId }: RequestWithUserId
   ): Promise<void> {
     await this.blogSubscriptionService.unsubscribe(authorUserId, userId);

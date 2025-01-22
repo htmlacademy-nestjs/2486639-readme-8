@@ -190,7 +190,7 @@ export class BlogPostController {
   @ApiResponse(BlogPostApiResponse.UserPostsCount)
   @ApiResponse(BlogPostApiResponse.BadRequest)
   @ApiParam(ApiParamOption.UserId)
-  @Get(`/${RouteAlias.GetUserPostsCount}/:${USER_ID_PARAM}`)
+  @Get(`/${RouteAlias.GetUserPostsCount}/${USER_ID_PARAM}`)
   public async getUserPostsCount(@Param(ApiParamOption.UserId.name, MongoIdValidationPipe) userId: string): Promise<UserPostsCountRdo> {
     const postsCount = await this.blogPostService.getUserPostsCount(userId);
 

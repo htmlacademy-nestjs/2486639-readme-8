@@ -1,13 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
-import { SubscriptionApiProperty } from '../blog-subscription.constant.property';
+
+import { ApiPropertyOption } from '@project/shared/core';
 
 export class UserSubscriptionsCountRdo {
-  @ApiProperty(SubscriptionApiProperty.UserId)
+  @ApiProperty(ApiPropertyOption.User.Id)
   @Expose()
   public userId: string;
 
-  @ApiProperty(SubscriptionApiProperty.SubscriptionsCount)
+  @ApiProperty({
+    description: 'The user subscriptions count',
+    example: 5
+  })
   @Expose()
   public subscriptionsCount: number;
 }
