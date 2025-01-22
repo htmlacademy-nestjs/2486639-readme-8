@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
-import { BlogPostService } from '@project/blog/blog-post';
+import { fillDto } from '@project/shared/helpers';
+import { BlogPostService, PostRdo } from '@project/blog/blog-post';
 
 import { NewsLetterRepository } from './news-letter.repository';
 import { NewsLetterEntity } from './news-letter.entity';
@@ -14,12 +15,12 @@ export class NewsLetterService {
 
   public async sendNewsLetter(): Promise<void> {
     const lastNewsLetter = await this.newsLetterRepository.getLastNewsLetter();
-    const posts = await this.blogPostSevice.findByCreateAt(lastNewsLetter.createdAt);
-    console.log('posts', posts);
-
-    const newsLetter = new NewsLetterEntity({ payload: 'empty' });
+    const postEntitis = await this.blogPostSevice.findPostsByCreateAt(lastNewsLetter?.createdAt);
+    const posts = fillDto(PostRdo, postEntitis)
+    const payload = JSON.stringify(posts);
+    const newsLetter = new NewsLetterEntity({ payload });
 
     await this.newsLetterRepository.save(newsLetter);
-    console.log('newsLetter', newsLetter);
+    console.log('newsLetter', newsLetter); //!
   }
 }

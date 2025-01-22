@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
+import { SortDirection } from '@project/shared/core';
 import { BaseMongoRepository } from '@project/shared/data-access';
 
 import { NewsLetterEntity } from './news-letter.entity';
@@ -19,7 +20,7 @@ export class NewsLetterRepository extends BaseMongoRepository<NewsLetterEntity, 
   }
 
   public async getLastNewsLetter(): Promise<NewsLetterEntity | null> {
-    const documents = await this.model.find().sort({ createAt: 'desc' }).limit(1).exec();
+    const documents = await this.model.find().sort({ createAt: SortDirection.Desc }).limit(1).exec();
 
     if (!documents.length) {
       return null;

@@ -297,10 +297,9 @@ export class BlogPostService {
     return posts;
   }
 
-  public async findByCreateAt(startDate: Date): Promise<BlogPostEntity[]> {
-    console.log('BlogPostService.findByCreateAt');
-    console.log('startDate', startDate);
+  public async findPostsByCreateAt(startDate: Date): Promise<BlogPostEntity[]> {
+    const posts = await this.blogPostRepository.findPostsByCreateAt(startDate);
 
-    return [];
+    return posts;
   }
 }

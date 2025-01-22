@@ -231,4 +231,16 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
 
     return entities;
   }
+
+  public async findPostsByCreateAt(startDate: Date): Promise<BlogPostEntity[]> {
+    const where: Prisma.PostWhereInput = {};
+
+    if (startDate) {
+      where.createdAt = { gt: startDate };
+    }
+
+    const entities = await this.findPosts(where);
+
+    return entities;
+  }
 }
