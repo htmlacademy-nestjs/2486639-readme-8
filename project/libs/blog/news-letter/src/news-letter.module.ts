@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
+import { BlogPostModule } from '@project/blog/blog-post';
+
 import { NewsLetterService } from './news-letter.service';
 import { NewsLetterController } from './news-letter.controller';
 import { NewsLetterRepository } from './news-letter.repository';
@@ -11,7 +13,8 @@ import { NewsLetterModel, NewsLetterSchema } from './news-letter.model';
   imports: [
     MongooseModule.forFeature([
       { name: NewsLetterModel.name, schema: NewsLetterSchema }
-    ])
+    ]),
+    BlogPostModule
   ],
   providers: [
     NewsLetterService,

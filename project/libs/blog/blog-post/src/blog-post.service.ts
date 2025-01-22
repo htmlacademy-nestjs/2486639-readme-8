@@ -296,4 +296,11 @@ export class BlogPostService {
 
     return posts;
   }
+
+  public async findByCreateAt(startDate: Date): Promise<BlogPostEntity[]> {
+    console.log('BlogPostService.findByCreateAt');
+    console.log('startDate', startDate);
+
+    return [];
+  }
 }
