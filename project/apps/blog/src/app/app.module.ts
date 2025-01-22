@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
 
-import { BlogConfigModule } from '@project/blog/config';
+import { BlogConfigModule, getMongooseOptions } from '@project/blog/config';
 import { BlogPostModule } from '@project/blog/blog-post'
 import { BlogPostCommentModule } from '@project/blog/blog-post-comment';
 import { BlogPostLikeModule } from '@project/blog/blog-post-like';
@@ -9,6 +10,7 @@ import { NewsLetterModule } from '@project/blog/news-letter';
 
 @Module({
   imports: [
+    MongooseModule.forRootAsync(getMongooseOptions()),
     BlogConfigModule,
     BlogPostModule,
     BlogPostCommentModule,
