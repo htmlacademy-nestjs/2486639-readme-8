@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 
+import { PrismaClientModule } from '@project/blog/models';
 import { BlogTagModule } from '@project/blog/blog-tag';
 import { BlogSubscriptionModule } from '@project/blog/blog-subscription';
 
@@ -10,6 +11,7 @@ import { BlogPostService } from './blog-post.service';
 
 @Module({
   imports: [
+    PrismaClientModule,
     BlogTagModule,
     BlogSubscriptionModule
   ],
