@@ -18,7 +18,7 @@ export class NewsLetterService {
   public async sendNewsLetter(): Promise<void> {
     const lastNewsLetter = await this.newsLetterRepository.getLastNewsLetter();
     const postEntities = await this.blogPostSevice.findPostsByCreateAt(lastNewsLetter?.createdAt);
-    const posts = fillDto(PostRdo, postEntities)
+    const posts = postEntities.map((postEntity) => fillDto(PostRdo, postEntity.toPOJO()));
     const payload = JSON.stringify(posts);
     const newsLetter = new NewsLetterEntity({ payload });
 
