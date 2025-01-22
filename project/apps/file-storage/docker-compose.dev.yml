@@ -22,7 +22,7 @@ services:
       timeout: 10s
       retries: 5
 
-  typeoteka.file-storage.mongo.ui:
+  readme.file-storage.mongo.ui:
     image: mongo-express:1.0-20
     restart: always
     container_name: readme.file-storage.mongo.ui

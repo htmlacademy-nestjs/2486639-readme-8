@@ -43,8 +43,46 @@ services:
     networks:
       - readme.blog
 
+  readme.blog.mongo:
+    image: mongo:4.4
+    restart: always
+    container_name: readme.blog.mongo
+
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGODB_DATABASE}
+
+    ports:
+      - ${MONGODB_PORT}:27017
+
+    volumes:
+      - readme.mongo.blog:/data/db
+
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/${MONGODB_DATABASE} --quiet
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
+  readme.blog.mongo.ui:
+    image: mongo-express:1.0-20
+    restart: always
+    container_name: readme.blog.mongo.ui
+
+    ports:
+      - 8083:8081
+
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGODB_USER}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGODB_PASSWORD}
+      ME_CONFIG_BASICAUTH_USERNAME: ${MONGODB_USER}
+      ME_CONFIG_BASICAUTH_PASSWORD: ${MONGODB_PASSWORD}
+      ME_CONFIG_MONGODB_URL: mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@readme.blog.mongo:27017/
+
 volumes:
   readme.postgres.blog:
+  readme.mongo.blog:
 
 networks:
   readme.blog:
