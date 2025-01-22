@@ -97,11 +97,3 @@ model Subscription {
   @@index([userId])
   @@map("subscriptions")
 }
-
-model NewsLetter {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now()) @map("created_at")
-
-  @@unique([createdAt])
-  @@map("news_letter")
-}
