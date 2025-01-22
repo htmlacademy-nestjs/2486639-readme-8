@@ -2,6 +2,7 @@ import { Controller } from '@nestjs/common';
 import { RabbitSubscribe } from '@golevelup/nestjs-rabbitmq';
 
 import { ConfigAlias, RabbitRouting } from '@project/shared/core';
+import { PostRdo } from '@project/blog/blog-post';
 import { MailService } from '@project/notify/mail';
 
 import { EmailSubscriberService } from './email-subscriber.service';
@@ -29,7 +30,7 @@ export class EmailSubscriberController {
     queue: process.env[ConfigAlias.RabbitQueueEnv], // а как забрать через config module?
     routingKey: RabbitRouting.AddNewsLetter
   })
-  public async create1(aa: any): Promise<void> {
+  public async sendAll(posts: PostRdo[]): Promise<void> {
     console.log('aa', aa);
 
   }
