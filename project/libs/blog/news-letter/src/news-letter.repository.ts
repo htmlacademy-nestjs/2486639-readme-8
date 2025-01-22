@@ -18,12 +18,13 @@ export class NewsLetterRepository extends BaseMongoRepository<NewsLetterEntity, 
     super(entityFactory, newsLetterModel);
   }
 
-  public async getLastNewsLetter(): Promise<NewsLetterEntity> {
-    const document = await this.model.aggregate<{ _id: string, createAt: Date }>([{ $group: { _id: 'id', createAt: { $max: '' } } }]).exec();
-    console.log(document);
-    console.log(document.length); //! первая
+  public async getLastNewsLetter(): Promise<NewsLetterEntity | null> {
+    const documents = await this.model.find().sort({ createAt: 'desc' }).limit(1).exec();
 
-    //return this.createEntityFromDocument(document);
-    return new NewsLetterEntity(); //!
+    if (!documents.length) {
+      return null;
+    }
+
+    return this.createEntityFromDocument(documents[0]);
   }
 }
