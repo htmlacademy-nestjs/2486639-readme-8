@@ -52,7 +52,9 @@ model Post {
   @@unique([repostedPostId, userId])
   @@index([type])
   @@index([publishDate])
+  @@index([createdAt])
   @@index([state])
+  @@index([repostedPostId])
   @@index([userId])
   @@map("posts")
 }
@@ -67,6 +69,7 @@ model Comment {
 
   @@unique([postId, userId])
   @@index([postId])
+  @@index([userId])
   @@map("comments")
 }
 
@@ -79,6 +82,7 @@ model Like {
 
   @@unique([postId, userId])
   @@index([postId])
+  @@index([userId])
   @@map("likes")
 }
 
@@ -89,6 +93,15 @@ model Subscription {
   createdAt    DateTime @default(now()) @map("created_at")
 
   @@unique([authorUserId, userId])
+  @@index([authorUserId])
   @@index([userId])
   @@map("subscriptions")
+}
+
+model NewsLetter {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([createdAt])
+  @@map("news_letter")
 }

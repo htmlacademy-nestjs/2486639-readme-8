@@ -193,6 +193,12 @@ tag2
         для .env
           cd readme/project/libs/blog/models/prisma
           (Windows) mklink /h .env ..\..\..\..\apps\blog\.env
+        для миграции
+          cd libs/blog/models/prisma
+          отредактировать файл schema.prisma / url=....
+          npx prisma migrate dev --schema ./schema.prisma --skip-generate --skip-seed
+          отредактировать файл schema.prisma / url=....
+          cd ../../../..
       !! к сдаче перепроверить генерацию в командах дописаны файлы пути до env
       !! если что вернуть или указать нужный файл в конфигурации
   30. заполнить данные в mongodb, и в разных сервисах
