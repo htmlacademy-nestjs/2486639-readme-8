@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import { fillDto } from '@project/shared/helpers';
 import { BlogPostService, PostRdo } from '@project/blog/blog-post';
+import { NotifyService } from '@project/blog/notify';
 
 import { NewsLetterRepository } from './news-letter.repository';
 import { NewsLetterEntity } from './news-letter.entity';
@@ -10,6 +11,7 @@ import { NewsLetterEntity } from './news-letter.entity';
 export class NewsLetterService {
   constructor(
     private readonly blogPostSevice: BlogPostService,
+    private readonly notifyService: NotifyService,
     private readonly newsLetterRepository: NewsLetterRepository
   ) { }
 
@@ -22,5 +24,6 @@ export class NewsLetterService {
 
     await this.newsLetterRepository.save(newsLetter);
     console.log('newsLetter', newsLetter); //!
+    await this.notifyService.registerNewLetter(posts);
   }
 }

@@ -16,10 +16,10 @@ export class NotifyService {
   ) { }
 
   //!
-  public async registerSubscriber(dto: any) {
+  public async registerNewLetter(dto: any) {
     const result = await this.rabbitClient.publish<any>(
       this.blogOptions.rabbit.exchange,
-      RabbitRouting.AddSubscriber,
+      RabbitRouting.AddNewsLetter,
       { ...dto }
     );
 
