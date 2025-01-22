@@ -107,7 +107,7 @@ export const PostQueryApiProperty = {
   SortType: {
     description: 'The sorting type',
     enum: SortType,
-    example: SortType.Date,
+    example: SortType.PublishDate,
     required: false
   },
   Tag: {

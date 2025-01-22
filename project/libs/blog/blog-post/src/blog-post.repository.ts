@@ -160,8 +160,11 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     }
 
     switch (query.sortType) {
-      case SortType.Date:
+      case SortType.PublishDate:
         orderBy.publishDate = SortDirection.Desc;
+        break;
+      case SortType.CreateDate:
+        orderBy.createdAt = SortDirection.Desc;
         break;
       case SortType.Comments:
         orderBy.commentsCount = SortDirection.Desc;

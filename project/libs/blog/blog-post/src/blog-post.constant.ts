@@ -14,7 +14,7 @@ export const Default = {
   NEW_POST_STATE: PostState.Published,
   POST_COUNT: 25,
   CURRENT_PAGE: 1,
-  SORT_TYPE: SortType.Date,
+  SORT_TYPE: SortType.PublishDate,
   SEACRH_TITLE_POST_COUNT: 20
 } as const;
 
