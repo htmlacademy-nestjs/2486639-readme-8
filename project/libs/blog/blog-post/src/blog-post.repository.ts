@@ -38,6 +38,27 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     return this.client.post.count({ where });
   }
 
+  private async findPosts(
+    where: Prisma.PostWhereInput,
+    orderBy: Prisma.PostOrderByWithRelationInput = undefined,
+    skip: number = undefined,
+    take: number = undefined
+  ): Promise<BlogPostEntity[]> {
+    const records = await this.client.post.findMany({ where, orderBy, skip, take, include: { tags: true } });
+    const entities = records.map(
+      (record) => {
+        const post: Post = {
+          ...record,
+          ...this.getTypeAndState(record)
+        };
+
+        return this.createEntityFromDocument(post);
+      }
+    );
+
+    return entities;
+  }
+
   private calculatePostsPage(totalCount: number, limit: number): number {
     return Math.ceil(totalCount / limit);
   }
@@ -150,21 +171,11 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
         break;
     }
 
-    const [records, postCount] = await Promise.all(
+    const [entities, postCount] = await Promise.all(
       [
-        this.client.post.findMany({ where, orderBy, skip, take, include: { tags: true } }),
+        this.findPosts(where, orderBy, skip, take),
         this.getPostCount(where)
       ]
-    );
-    const entities = records.map(
-      (record) => {
-        const post: Post = {
-          ...record,
-          ...this.getTypeAndState(record)
-        };
-
-        return this.createEntityFromDocument(post);
-      }
     );
 
     return {
@@ -209,18 +220,11 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
   public async findPostsByTitle(searchTitle: string): Promise<BlogPostEntity[]> {
     const result = await this.client.$queryRaw<{ id: string, hit_sum: number }[]>(getSearchTitleSql(searchTitle, Default.SEACRH_TITLE_POST_COUNT));
     const postIds = result.map((item) => (item.id));
+    const where: Prisma.PostWhereInput = {};
 
-    const records = await this.client.post.findMany({ where: { id: { in: postIds } }, include: { tags: true } });
-    const entities = records.map(
-      (record) => {
-        const post: Post = {
-          ...record,
-          ...this.getTypeAndState(record)
-        };
+    where.id = { in: postIds };
 
-        return this.createEntityFromDocument(post);
-      }
-    );
+    const entities = await this.findPosts(where);
 
     return entities;
   }

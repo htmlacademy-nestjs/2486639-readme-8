@@ -12,6 +12,7 @@
   5. удалить BaseMemoryRepository если не будет использоваться?
   6. тип из призмы для
     можно объеденить "const entities = records.map(" в findPostsByTitle(searchTitle: string) и в find(query: BlogPostQuery,
+  7. еще раз про промисы - private async getPostCount
 
 
   1. Реализовать маршруты:
