@@ -5,7 +5,10 @@ import {
 import { ApiBearerAuth, ApiConsumes, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 
-import { BearerAuth, RequestWithBearerAuth, RequestWithRequestId, RequestWithTokenPayload, RouteAlias } from '@project/shared/core';
+import {
+  ApiParamOption, BearerAuth, RequestWithBearerAuth, RequestWithRequestId,
+  RequestWithTokenPayload, RouteAlias, USER_ID_PARAM
+} from '@project/shared/core';
 import { fillDto } from '@project/shared/helpers';
 import { MongoIdValidationPipe } from '@project/shared/pipes';
 import { InjectBearerAuthInterceptor } from '@project/shared/interceptors';
@@ -22,7 +25,7 @@ import { LoggedUserRdo } from './rdo/logged-user.rdo';
 import { UserTokenRdo } from './rdo/user-token.rdo';
 import { TokenPayloadRdo } from './rdo/token-payload.rdo';
 import { UserRdo } from './rdo/user.rdo';
-import { UserIdApiParam, AuthenticationApiResponse, AvatarOption, parseFilePipeBuilder } from './authentication.constant';
+import { AuthenticationApiResponse, AvatarOption, parseFilePipeBuilder } from './authentication.constant';
 
 @ApiTags('authentication')
 @Controller('auth')
@@ -113,9 +116,9 @@ export class AuthenticationController {
   @ApiResponse(AuthenticationApiResponse.UserFound)
   @ApiResponse(AuthenticationApiResponse.UserNotFound)
   @ApiResponse(AuthenticationApiResponse.BadRequest)
-  @ApiParam(UserIdApiParam)
-  @Get(`:${UserIdApiParam.name}`)
-  public async show(@Param(UserIdApiParam.name, MongoIdValidationPipe) userId: string): Promise<UserRdo> {
+  @ApiParam(ApiParamOption.UserId)
+  @Get(USER_ID_PARAM)
+  public async show(@Param(ApiParamOption.UserId.name, MongoIdValidationPipe) userId: string): Promise<UserRdo> {
     const existUser = await this.authService.getUser(userId);
 
     return fillDto(UserRdo, existUser.toPOJO());

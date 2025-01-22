@@ -1,6 +1,7 @@
 import { HttpStatus, ParseFilePipeBuilder } from '@nestjs/common';
 
-import { UserApiProperty } from './authentication.constant.property';
+import { ApiPropertyOption } from '@project/shared/core';
+
 import { UserRdo } from './rdo/user.rdo';
 import { LoggedUserRdo } from './rdo/logged-user.rdo';
 import { UserTokenRdo } from './rdo/user-token.rdo';
@@ -32,7 +33,7 @@ export const UserValidation = {
     Type: { fileType: AvatarOption.MIME_TYPES.join('|') },
     MaxSize: { maxSize: AvatarOption.MAX_SIZE },
     Build: {
-      fileIsRequired: UserApiProperty.AvatarFile.required,
+      fileIsRequired: ApiPropertyOption.User.AvatarFile.required,
       errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY
     }
   }
@@ -43,11 +44,6 @@ export const parseFilePipeBuilder =
     .addFileTypeValidator(UserValidation.AvatarFile.Type)
     .addMaxSizeValidator(UserValidation.AvatarFile.MaxSize)
     .build(UserValidation.AvatarFile.Build);
-
-export const UserIdApiParam = {
-  name: 'userId',
-  schema: UserApiProperty.Id
-} as const;
 
 export const AuthenticationApiResponse = {
   UserCreated: {

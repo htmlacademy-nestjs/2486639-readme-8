@@ -6,9 +6,11 @@ import { ApiConsumes, ApiHeader, ApiParam, ApiResponse, ApiTags } from '@nestjs/
 import { FileInterceptor } from '@nestjs/platform-express';
 
 import { fillDto } from '@project/shared/helpers';
-import { BlogRequestIdApiHeader, BlogUserIdApiHeader, RequestWithRequestIdAndUserId, RequestWithUserId, RouteAlias } from '@project/shared/core';
+import {
+  ApiParamOption, BlogRequestIdApiHeader, BlogUserIdApiHeader, RequestWithRequestIdAndUserId,
+  RequestWithUserId, RouteAlias, USER_ID_PARAM
+} from '@project/shared/core';
 import { GuidValidationPipe, MongoIdValidationPipe } from '@project/shared/pipes';
-import { UserIdApiParam } from '@project/account/authentication';
 
 import { BlogPostService } from './blog-post.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -187,9 +189,9 @@ export class BlogPostController {
 
   @ApiResponse(BlogPostApiResponse.UserPostsCount)
   @ApiResponse(BlogPostApiResponse.BadRequest)
-  @ApiParam(UserIdApiParam)
-  @Get(`/${RouteAlias.GetUserPostsCount}/:${UserIdApiParam.name}`)
-  public async getUserPostsCount(@Param(UserIdApiParam.name, MongoIdValidationPipe) userId: string): Promise<UserPostsCountRdo> {
+  @ApiParam(ApiParamOption.UserId)
+  @Get(`/${RouteAlias.GetUserPostsCount}/:${USER_ID_PARAM}`)
+  public async getUserPostsCount(@Param(ApiParamOption.UserId.name, MongoIdValidationPipe) userId: string): Promise<UserPostsCountRdo> {
     const postsCount = await this.blogPostService.getUserPostsCount(userId);
 
     return fillDto(UserPostsCountRdo, { userId, postsCount });

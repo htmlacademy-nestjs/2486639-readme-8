@@ -3,8 +3,7 @@ import { ApiHeader, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { fillDto } from '@project/shared/helpers';
 import { MongoIdValidationPipe } from '@project/shared/pipes';
-import { BlogUserIdApiHeader, RequestWithUserId, RouteAlias } from '@project/shared/core';
-import { UserIdApiParam } from '@project/account/authentication';
+import { ApiParamOption, BlogUserIdApiHeader, RequestWithUserId, RouteAlias } from '@project/shared/core';
 
 import { BlogSubscriptionService } from './blog-subscription.service';
 import { UserSubscriptionsCountRdo } from './rdo/user-subscriptions-count.rdo';
@@ -47,9 +46,9 @@ export class BlogSubscriptionController {
 
   @ApiResponse(BlogSubscriptionApiResponse.UserSubscriptionsCount)
   @ApiResponse(BlogSubscriptionApiResponse.BadRequest)
-  @ApiParam(UserIdApiParam)
-  @Get(`/${RouteAlias.GetUserSubscriptionsCount}/:${UserIdApiParam.name}`)
-  public async getUserSubscriptionsCount(@Param(UserIdApiParam.name, MongoIdValidationPipe) userId: string): Promise<UserSubscriptionsCountRdo> {
+  @ApiParam(ApiParamOption.UserId)
+  @Get(`/${RouteAlias.GetUserSubscriptionsCount}/:${ApiParamOption.UserId.name}`)
+  public async getUserSubscriptionsCount(@Param(ApiParamOption.UserId.name, MongoIdValidationPipe) userId: string): Promise<UserSubscriptionsCountRdo> {
     const subscriptionsCount = await this.blogSubscriptionService.getUserSubscriptionsCount(userId);
 
     return fillDto(UserSubscriptionsCountRdo, { userId, subscriptionsCount });
