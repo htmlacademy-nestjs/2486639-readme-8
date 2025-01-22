@@ -1,1 +1,1 @@
-export * from './lib/blog-news-letter';
+export { NewsLetterModule } from './news-letter.module';

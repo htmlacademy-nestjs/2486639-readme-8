@@ -18,5 +18,7 @@ export enum RouteAlias {
   Subscriptions = 'subscriptions',
   GetUserSubscriptionsCount = 'get-user-subscriptions-count',
   //
+  RunNewsLetter = 'run-news-letter',
+  //
   Upload = 'upload'
 }
