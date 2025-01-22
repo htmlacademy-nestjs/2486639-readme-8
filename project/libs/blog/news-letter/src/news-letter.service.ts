@@ -1,20 +1,20 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { ConfigType } from '@nestjs/config';
+import { Injectable } from '@nestjs/common';
 
-import { blogConfig } from '@project/blog/config';
+import { NewsLetterRepository } from './news-letter.repository';
+import { NewsLetterEntity } from './news-letter.entity';
 
 @Injectable()
 export class NewsLetterService {
-  @Inject(blogConfig.KEY)
-  private readonly blogConfig: ConfigType<typeof blogConfig>;
-
-  /*
   constructor(
-    //private readonly newsLetterRepository: NewsLetterRepository
+    private readonly newsLetterRepository: NewsLetterRepository
   ) { }
-  */
 
   public async sendNewsLetter(): Promise<void> {
-    console.log('BlogPostService.sendNewsLetter');
+    const lastNewsLetter = await this.newsLetterRepository.getLastNewsLetter();
+    console.log(lastNewsLetter);
+
+    const newsLetter = new NewsLetterEntity({ payload: 'empty' });
+    await this.newsLetterRepository.save(newsLetter);
+    console.log(newsLetter);
   }
 }

@@ -17,4 +17,13 @@ export class NewsLetterRepository extends BaseMongoRepository<NewsLetterEntity, 
   ) {
     super(entityFactory, newsLetterModel);
   }
+
+  public async getLastNewsLetter(): Promise<NewsLetterEntity> {
+    const document = await this.model.aggregate<{ _id: string, createAt: Date }>([{ $group: { _id: 'id', createAt: { $max: '' } } }]).exec();
+    console.log(document);
+    console.log(document.length); //! первая
+
+    //return this.createEntityFromDocument(document);
+    return new NewsLetterEntity(); //!
+  }
 }

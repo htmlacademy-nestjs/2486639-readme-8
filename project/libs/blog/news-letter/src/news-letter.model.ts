@@ -12,7 +12,6 @@ import { NewsLetter } from '@project/shared/core';
 export class NewsLetterModel extends Document implements NewsLetter {
   @Prop({ required: true })
   public payload: string;
-
   public createdAt: Date;
   public updatedAt: Date;
 }

@@ -37,6 +37,13 @@ export abstract class BaseMongoRepository<
 
     await newEntity.save();
     entity.id = newEntity._id.toString();
+
+    // может отдельная настройка есть?
+    ['createdAt', 'updatedAt'].forEach((key) => {
+      if (Object.keys(entity).includes(key)) {
+        entity[key] = newEntity[key];
+      }
+    });
   }
 
   public async update(entity: T): Promise<void> {
