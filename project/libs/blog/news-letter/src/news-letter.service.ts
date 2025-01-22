@@ -17,13 +17,12 @@ export class NewsLetterService {
 
   public async sendNewsLetter(): Promise<void> {
     const lastNewsLetter = await this.newsLetterRepository.getLastNewsLetter();
-    const postEntitis = await this.blogPostSevice.findPostsByCreateAt(lastNewsLetter?.createdAt);
-    const posts = fillDto(PostRdo, postEntitis)
+    const postEntities = await this.blogPostSevice.findPostsByCreateAt(lastNewsLetter?.createdAt);
+    const posts = fillDto(PostRdo, postEntities)
     const payload = JSON.stringify(posts);
     const newsLetter = new NewsLetterEntity({ payload });
 
     await this.newsLetterRepository.save(newsLetter);
-    console.log('newsLetter', newsLetter); //!
     await this.notifyService.registerNewLetter(posts);
   }
 }

@@ -23,4 +23,14 @@ export class EmailSubscriberController {
     await this.subscriberService.addSubscriber(subscriber);
     await this.mailService.sendNotifyNewSubscriber(subscriber);
   }
+
+  @RabbitSubscribe({
+    exchange: process.env[ConfigAlias.RabbitExchangeEnv], // а как забрать через config module?
+    queue: process.env[ConfigAlias.RabbitQueueEnv], // а как забрать через config module?
+    routingKey: RabbitRouting.AddNewsLetter
+  })
+  public async create1(aa: any): Promise<void> {
+    console.log('aa', aa);
+
+  }
 }
