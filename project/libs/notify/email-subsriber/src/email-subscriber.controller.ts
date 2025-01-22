@@ -31,7 +31,7 @@ export class EmailSubscriberController {
     routingKey: RabbitRouting.AddNewsLetter
   })
   public async sendAll(posts: PostRdo[]): Promise<void> {
-    console.log('aa', aa);
+    console.log('posts', posts);
 
   }
 }
