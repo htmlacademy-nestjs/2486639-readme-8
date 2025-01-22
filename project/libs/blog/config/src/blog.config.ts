@@ -1,7 +1,10 @@
 import { registerAs } from '@nestjs/config';
 import Joi from 'joi';
 
-import { ConfigAlias, DEFAULT_MONGODB_PORT, DEFAULT_PORT, DEFAULT_POSTGRES_PORT, Environment, ENVIRONMENTS } from '@project/shared/core';
+import {
+  ConfigAlias, DEFAULT_MONGODB_PORT, DEFAULT_PORT, DEFAULT_POSTGRES_PORT,
+  DEFAULT_RABBIT_PORT, Environment, ENVIRONMENTS
+} from '@project/shared/core';
 import { getPort } from '@project/shared/helpers';
 
 export interface BlogConfig {
@@ -23,6 +26,13 @@ export interface BlogConfig {
     password: string;
     database: string;
     authBase: string;
+  },
+  rabbit: {
+    host: string;
+    port: number;
+    user: string;
+    password: string;
+    exchange: string;
   }
 }
 
@@ -45,6 +55,13 @@ const validationSchema = Joi.object({
     password: Joi.string().required().label(ConfigAlias.MongoDbPasswordEnv),
     database: Joi.string().required().label(ConfigAlias.MongoDbDatabaseEnv),
     authBase: Joi.string().required().label(ConfigAlias.MongoDbAuthBaseEnv)
+  }),
+  rabbit: Joi.object({
+    host: Joi.string().valid().hostname().required().label(ConfigAlias.RabbitHostEnv),
+    port: Joi.number().port().default(DEFAULT_RABBIT_PORT),
+    user: Joi.string().required().label(ConfigAlias.RabbitUserEnv),
+    password: Joi.string().required().label(ConfigAlias.RabbitPasswordEnv),
+    exchange: Joi.string().required().label(ConfigAlias.RabbitExchangeEnv)
   })
 });
 
@@ -76,6 +93,13 @@ function getConfig(): BlogConfig {
       password: process.env[ConfigAlias.MongoDbPasswordEnv],
       database: process.env[ConfigAlias.MongoDbDatabaseEnv],
       authBase: process.env[ConfigAlias.MongoDbAuthBaseEnv]
+    },
+    rabbit: {
+      host: process.env[ConfigAlias.RabbitHostEnv],
+      port: getPort(ConfigAlias.RabbitPortEnv, DEFAULT_RABBIT_PORT),
+      user: process.env[ConfigAlias.RabbitUserEnv],
+      password: process.env[ConfigAlias.RabbitPasswordEnv],
+      exchange: process.env[ConfigAlias.RabbitExchangeEnv]
     }
   };
 

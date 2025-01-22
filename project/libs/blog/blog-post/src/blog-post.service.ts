@@ -124,7 +124,7 @@ export class BlogPostService {
       type,
       userIds: (userId) ? [userId] : undefined
     };
-    const result = await this.blogPostRepository.find(query, showDraft);
+    const result = await this.blogPostRepository.find(query, showDraft, Default.POST_COUNT);
 
     return result;
   }
@@ -141,7 +141,7 @@ export class BlogPostService {
       type,
       userIds: [...userIds, currentUserId]
     };
-    const result = await this.blogPostRepository.find(query, false);
+    const result = await this.blogPostRepository.find(query, false, Default.POST_COUNT);
 
     return result;
   }

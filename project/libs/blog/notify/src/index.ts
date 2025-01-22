@@ -1,1 +1,3 @@
-export * from './lib/blog-notify';
+export { NotifyModule } from './notify.module';
+
+export { NotifyService } from './notify.service';
