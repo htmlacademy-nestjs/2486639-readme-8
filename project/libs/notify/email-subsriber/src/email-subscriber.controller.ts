@@ -3,7 +3,6 @@ import { RabbitSubscribe } from '@golevelup/nestjs-rabbitmq';
 
 import { ConfigAlias, RabbitRouting } from '@project/shared/core';
 import { PostRdo } from '@project/blog/blog-post';
-import { MailService } from '@project/notify/mail';
 
 import { EmailSubscriberService } from './email-subscriber.service';
 import { CreateSubscriberDto } from './dto/create-subscriber.dto';
@@ -11,8 +10,7 @@ import { CreateSubscriberDto } from './dto/create-subscriber.dto';
 @Controller()
 export class EmailSubscriberController {
   constructor(
-    private readonly subscriberService: EmailSubscriberService,
-    private readonly mailService: MailService
+    private readonly subscriberService: EmailSubscriberService
   ) { }
 
   @RabbitSubscribe({
@@ -22,7 +20,6 @@ export class EmailSubscriberController {
   })
   public async create(subscriber: CreateSubscriberDto): Promise<void> {
     await this.subscriberService.addSubscriber(subscriber);
-    await this.mailService.sendNotifyNewSubscriber(subscriber);
   }
 
   @RabbitSubscribe({
@@ -31,7 +28,6 @@ export class EmailSubscriberController {
     routingKey: RabbitRouting.AddNewsLetter
   })
   public async sendAll(posts: PostRdo[]): Promise<void> {
-    console.log('posts', posts);
-
+    await this.subscriberService.sendAll(posts);
   }
 }
