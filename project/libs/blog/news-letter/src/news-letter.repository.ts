@@ -20,7 +20,7 @@ export class NewsLetterRepository extends BaseMongoRepository<NewsLetterEntity, 
   }
 
   public async getLastNewsLetter(): Promise<NewsLetterEntity | null> {
-    const documents = await this.model.find().sort({ createAt: SortDirection.Desc }).limit(1).exec();
+    const documents = await this.model.find().sort({ createdAt: SortDirection.Desc }).limit(1).exec();
 
     if (!documents.length) {
       return null;
