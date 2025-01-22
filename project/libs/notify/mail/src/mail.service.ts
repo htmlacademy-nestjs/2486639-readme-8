@@ -35,8 +35,9 @@ export class MailService {
       from: this.notifyConfig.mailSmtp.from,
       subject: NEWS_LETTER_SUBJECT,
       //! может сразу "html:"? просто ссылки?
-      template: NEWS_LETTER_TEMPLATE,
-      context: { posts }
+      html: JSON.stringify(posts),
+      //template: NEWS_LETTER_TEMPLATE,
+      //context: { posts }
     };
 
     for (const recipient of recipients) {

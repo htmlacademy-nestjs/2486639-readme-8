@@ -19,7 +19,8 @@ export class NotifyService {
     const result = await this.rabbitClient.publish<PostRdo[]>(
       this.blogOptions.rabbit.exchange,
       RabbitRouting.AddNewsLetter,
-      posts
+      posts,
+      { headers: { aaa: 'dddd' } }//!X-Request-ID передать, если есть, проверить!
     );
 
     return result;

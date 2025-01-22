@@ -19,7 +19,8 @@ export class NotifyService {
     const result = await this.rabbitClient.publish<CreateSubscriberDto>(
       this.rabbitOptions.exchange,
       RabbitRouting.AddSubscriber,
-      { ...dto }
+      { ...dto },
+      { headers: { aaa: 'aaaa' } } //!X-Request-ID передать, если есть, проверить!
     );
 
     return result;
