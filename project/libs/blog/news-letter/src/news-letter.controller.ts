@@ -1,6 +1,6 @@
 
-import { Controller, Get } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { Controller, Get, HttpStatus } from "@nestjs/common";
+import { ApiResponse, ApiTags } from "@nestjs/swagger";
 
 import { RouteAlias } from "@project/shared/core";
 
@@ -13,7 +13,10 @@ export class NewsLetterController {
     private readonly newsLetterService: NewsLetterService
   ) { }
 
-  //@ApiResponse(FileUploaderApiResponse.FileUploaded)
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'send news letter.'
+  })
   @Get()
   public async sendNewsLetter(): Promise<void> {
     await this.newsLetterService.sendNewsLetter();
