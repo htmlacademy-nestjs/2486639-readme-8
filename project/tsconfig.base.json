@@ -26,7 +26,6 @@
         "libs/account/refresh-token/src/index.ts"
       ],
       "@project/api/config": ["libs/api/config/src/index.ts"],
-      "@project/blog/blog-band": ["libs/blog/blog-band/src/index.ts"],
       "@project/blog/blog-post": ["libs/blog/blog-post/src/index.ts"],
       "@project/blog/blog-post-comment": [
         "libs/blog/blog-post-comment/src/index.ts"
