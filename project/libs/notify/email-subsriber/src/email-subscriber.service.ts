@@ -9,22 +9,18 @@ import { EmailSubscriberRepository } from './email-subscriber.repository';
 
 @Injectable()
 export class EmailSubscriberService {
-  private readonly logContext = '[EmailSubscriberService.addSubscriber]';
-
   constructor(
     private readonly emailSubscriberRepository: EmailSubscriberRepository,
     private readonly mailService: MailService
   ) { }
 
   public async addSubscriber(subscriber: CreateSubscriberDto): Promise<void> {
-    const { email, requestId } = subscriber;
-
-    Logger.log(`RequestId: ${requestId}`, this.logContext);
-
+    const loggerContext = '[EmailSubscriberService.addSubscriber';
+    const { email } = subscriber;
     const existsSubscriber = await this.emailSubscriberRepository.findByEmail(email);
 
     if (existsSubscriber) {
-      Logger.log('Subscriber exists', this.logContext);
+      Logger.log('Subscriber exists', loggerContext);
 
       return;
     }
@@ -32,13 +28,16 @@ export class EmailSubscriberService {
     const emailSubscriber = new EmailSubscriberEntity(subscriber);
 
     await this.emailSubscriberRepository.save(emailSubscriber);
-    Logger.log('New subscriber saved', this.logContext);
+    Logger.log('New subscriber saved', loggerContext);
 
     await this.mailService.sendNotifyNewSubscriber(subscriber);
   }
 
   public async sendAll(posts: PostRdo[]): Promise<void> {
+    const loggerContext = '[EmailSubscriberService.sendAll';
     const subscribers = await this.emailSubscriberRepository.findAll();
+
+    Logger.log(`Subscribers count: ${subscribers.length}`, loggerContext);
 
     if (!subscribers.length) {
       return
