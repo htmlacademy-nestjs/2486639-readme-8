@@ -18,7 +18,6 @@ export enum ConfigAlias {
   ServeRootEnv = 'SERVE_ROOT',
 
   Application = 'application',
-  AppPort = `${Application}.${Port}`,
   AppUploadDirectoryPath = `${Application}.${UploadDirectoryPath}`,
   AppServeRoot = `${Application}.${ServeRoot}`,
 

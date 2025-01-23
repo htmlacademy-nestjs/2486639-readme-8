@@ -6,10 +6,10 @@
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { ConfigService } from '@nestjs/config';
 
-import { BearerAuth, BearerAuthOption, ConfigAlias } from '@project/shared/core';
+import { BearerAuth, BearerAuthOption } from '@project/shared/core';
 import { InjectRequestIdInterceptor } from '@project/shared/interceptors';
+import { ApplicationConfig, applicationConfig } from '@project/account/config';
 
 import { AppModule } from './app/app.module';
 
@@ -17,8 +17,8 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const globalPrefix = 'api';
   const swaggerPrefix = 'spec';
-  const configService = app.get(ConfigService);
-  const port = configService.get<number>(ConfigAlias.AppPort);
+  const applicationOption = app.get<ApplicationConfig>(applicationConfig.KEY);
+  const { port } = applicationOption;
 
   app.setGlobalPrefix(globalPrefix);
 

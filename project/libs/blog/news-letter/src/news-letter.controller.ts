@@ -1,5 +1,5 @@
 
-import { Controller, Get, HttpStatus, Req } from "@nestjs/common";
+import { Controller, Get, HttpStatus } from "@nestjs/common";
 import { ApiResponse, ApiTags } from "@nestjs/swagger";
 
 import { RouteAlias } from "@project/shared/core";
