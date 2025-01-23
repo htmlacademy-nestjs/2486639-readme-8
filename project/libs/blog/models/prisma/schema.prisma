@@ -12,6 +12,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  //url      = "postgres://admin:test@localhost:5433/readme-blog" // на windows при команде "npx nx run blog:db:migrate" не вводит название migrate
 }
 
 model Tag {
@@ -44,14 +45,16 @@ model Post {
   repostedPostId  String?   @map("reposted_post_id")
   tags            Tag[]
   repostedPosts   Post[]    @relation("repostedPosts")
-  repostedPost    Post?     @relation("repostedPosts", fields: [repostedPostId], references: [id])
+  repostedPost    Post?     @relation("repostedPosts", fields: [repostedPostId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   comments        Comment[]
   likes           Like[]
 
   @@unique([repostedPostId, userId])
   @@index([type])
   @@index([publishDate])
+  @@index([createdAt])
   @@index([state])
+  @@index([repostedPostId])
   @@index([userId])
   @@map("posts")
 }
@@ -66,6 +69,7 @@ model Comment {
 
   @@unique([postId, userId])
   @@index([postId])
+  @@index([userId])
   @@map("comments")
 }
 
@@ -78,6 +82,7 @@ model Like {
 
   @@unique([postId, userId])
   @@index([postId])
+  @@index([userId])
   @@map("likes")
 }
 
@@ -88,6 +93,7 @@ model Subscription {
   createdAt    DateTime @default(now()) @map("created_at")
 
   @@unique([authorUserId, userId])
+  @@index([authorUserId])
   @@index([userId])
   @@map("subscriptions")
 }

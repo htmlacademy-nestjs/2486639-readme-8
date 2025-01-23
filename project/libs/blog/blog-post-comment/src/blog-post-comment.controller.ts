@@ -1,10 +1,11 @@
-import { Body, Controller, Delete, Get, Param, Post, Query } from '@nestjs/common';
-import { ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, HttpCode, Param, Post, Query, Req } from '@nestjs/common';
+import { ApiHeader, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { fillDto } from '@project/shared/helpers';
 import { GuidValidationPipe } from '@project/shared/pipes';
+import { ApiParamOption, BlogUserIdApiHeader, POST_ID_PARAM, RequestWithUserId, RouteAlias } from '@project/shared/core';
 
-import { POST_ID_PARAM, BlogPostCommentApiResponse, PostIdApiParam } from './blog-post-comment.constant';
+import { BlogPostCommentApiResponse, CommentIdApiParam, COMMENT_ID_PARAM } from './blog-post-comment.constant';
 import { BlogPostCommentService } from './blog-post-comment.service';
 import { BlogPostCommentQuery } from './blog-post-comment.query';
 import { CreatePostCommentDto } from './dto/create-post-comment.dto';
@@ -12,7 +13,8 @@ import { PostCommentRdo } from './rdo/post-comment.rdo';
 import { PostCommentWithPaginationRdo } from './rdo/post-comment-with-pagination.rdo';
 
 @ApiTags('blog-post-comment')
-@Controller('post-comments')
+@ApiHeader(BlogUserIdApiHeader)
+@Controller(RouteAlias.PostComments)
 export class BlogPostCommentController {
   constructor(
     private readonly blogPostCommentService: BlogPostCommentService
@@ -21,12 +23,14 @@ export class BlogPostCommentController {
   @ApiResponse(BlogPostCommentApiResponse.PostCommentsFound)
   @ApiResponse(BlogPostCommentApiResponse.BadRequest)
   @ApiResponse(BlogPostCommentApiResponse.PostNotFound)
-  @ApiParam(PostIdApiParam)
+  @ApiParam(ApiParamOption.PostId)
   @Get(POST_ID_PARAM)
-  public async index(@Param(PostIdApiParam.name, GuidValidationPipe) postId: string, @Query() query: BlogPostCommentQuery) {
-    // необходимо определить пользователя
-    const currentUserId = '11223344';
-    const postCommentsWithPagination = await this.blogPostCommentService.getComments(postId, currentUserId, query);
+  public async index(
+    @Param(ApiParamOption.PostId.name, GuidValidationPipe) postId: string,
+    @Query() query: BlogPostCommentQuery,
+    @Req() { userId }: RequestWithUserId
+  ): Promise<PostCommentWithPaginationRdo> {
+    const postCommentsWithPagination = await this.blogPostCommentService.getComments(postId, userId, query);
     const result = {
       ...postCommentsWithPagination,
       entities: postCommentsWithPagination.entities.map((comment) => comment.toPOJO())
@@ -40,12 +44,14 @@ export class BlogPostCommentController {
   @ApiResponse(BlogPostCommentApiResponse.BadRequest)
   @ApiResponse(BlogPostCommentApiResponse.PostNotFound)
   @ApiResponse(BlogPostCommentApiResponse.CommentOnPostExist)
-  @ApiParam(PostIdApiParam)
+  @ApiParam(ApiParamOption.PostId)
   @Post(POST_ID_PARAM)
-  public async create(@Param(PostIdApiParam.name, GuidValidationPipe) postId: string, @Body() dto: CreatePostCommentDto) {
-    // необходимо определить пользователя
-    const currentUserId = '11223344';
-    const newComment = await this.blogPostCommentService.createComment(dto, postId, currentUserId);
+  public async create(
+    @Param(ApiParamOption.PostId.name, GuidValidationPipe) postId: string,
+    @Body() dto: CreatePostCommentDto,
+    @Req() { userId }: RequestWithUserId
+  ): Promise<PostCommentRdo> {
+    const newComment = await this.blogPostCommentService.createComment(dto, postId, userId);
 
     return fillDto(PostCommentRdo, newComment.toPOJO());
   }
@@ -55,12 +61,13 @@ export class BlogPostCommentController {
   @ApiResponse(BlogPostCommentApiResponse.BadRequest)
   @ApiResponse(BlogPostCommentApiResponse.PostNotFound)
   @ApiResponse(BlogPostCommentApiResponse.CommentNotFound)
-  @ApiParam(PostIdApiParam)
-  @Delete(POST_ID_PARAM)
-  public async delete(@Param(PostIdApiParam.name, GuidValidationPipe) postId: string) {
-    // необходимо определить пользователя
-    const currentUserId = '11223344'
-
-    await this.blogPostCommentService.deleteComment(postId, currentUserId);
+  @ApiParam(CommentIdApiParam)
+  @HttpCode(BlogPostCommentApiResponse.PostCommentDeleted.status)
+  @Delete(COMMENT_ID_PARAM)
+  public async delete(
+    @Param(CommentIdApiParam.name, GuidValidationPipe) commentId: string,
+    @Req() { userId }: RequestWithUserId
+  ): Promise<void> {
+    await this.blogPostCommentService.deleteComment(commentId, userId);
   }
 }

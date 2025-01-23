@@ -1,35 +1,74 @@
 # Get posts
 GET http://localhost:4100/api/posts HTTP/1.1
+
 ###
 
-# Get posts query
-GET http://localhost:4100/api/posts?userId=11223344&sortType=date&showDraft=trque&tag=tag2&page=1 HTTP/1.1
+# Get my posts
+GET http://localhost:4100/api/posts/my-posts HTTP/1.1
+X-User-Id: 1111222233334444
+
 ###
 
-GET http://localhost:4100/api/posts?sortType=likes&type=video&showDraft=true&tag=tag1&page=1 HTTP/1.1
+# Get my drafts
+GET http://localhost:4100/api/posts/my-drafts HTTP/1.1
+X-User-Id: 1111222233334444
+
+###
+
+# Get posts by userId, type and tag
+GET http://localhost:4100/api/posts?userId=658170cbb954e9f5b905ccf4&sortType=date&tag=tag2&page=1 HTTP/1.1
+
+###
+
+# Get posts by type and tag
+GET http://localhost:4100/api/posts?sortType=likes&type=video&tag=tag1&page=1 HTTP/1.1
+
 ###
 
 # Get post by ID
-GET http://localhost:4100/api/posts/eab06dc6-ba52-4169-a369-f2f825d44ebb HTTP/1.1
+GET http://localhost:4100/api/posts/9df2e663-2e65-45b4-a2af-ecc93d937350 HTTP/1.1
 
 ###
 
-# Get post by ID
-GET http://localhost:4100/api/posts/85ad346e-46e1-4191-be1b-b3d39e868930 HTTP/1.1
-
-###
-
-# Create a new post
+# Create a new post - Content-Type: application/json
 POST http://localhost:4100/api/posts HTTP/1.1
+X-User-Id: 1111222233334444
 Content-Type: application/json
 
 {
   "type": "video",
   "tags": ["taG1", "tag2", "tttt2", "tttt2", "tttt1", "tttt1"],
   "title": "asdasdsaasdasdsaasdasdsaasd",
-  "url": "http://localhost.ru/sadasd",
-  "text": "asdasdsaasdasdsaasdasdsaasdasdsaasdasdsaasdasdsaasdasdsaasdasdsaasdasdsaasdasdsaasdasdsaasdasdsaasdasdsa"
+  "url": "http://localhost.ru/sadasd"
+//  ,
+//  "text": "asdasdsaasdasdsaasdasdsaasdasdsaasdasdsaasdasdsaasdasdsaasdasdsaasdasdsaasdasdsaasdasdsaasdasdsaasdasdsa"
 }
+
+###
+
+# Create a new post - Content-Type: multipart/form-data
+POST http://localhost:4100/api/posts HTTP/1.1
+X-User-Id: 1111222233334444
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="type"
+
+photo
+--boundary
+Content-Disposition: form-data; name="tags"
+
+taG1
+--boundary
+Content-Disposition: form-data; name="tags"
+
+tag2
+--boundary
+Content-Disposition: form-data; name="imageFile"; filename="cat.jpg"
+Content-Type: image/jpeg
+
+< ../../../../../markup/img/cat.jpg
+--boundary--
 
 ###
 
@@ -57,6 +96,32 @@ Content-Type: application/json
 
 ###
 
+# Update post by ID - Content-Type: multipart/form-data
+PATCH http://localhost:4100/api/posts/ef38a576-cf48-4f2f-af5d-286def1aa2ed HTTP/1.1
+X-User-Id: 1111222233334444
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="type"
+
+photo
+--boundary
+Content-Disposition: form-data; name="tags"
+
+taG1
+--boundary
+Content-Disposition: form-data; name="tags"
+
+tag2
+--boundary
+Content-Disposition: form-data; name="imageFile"; filename="cat.jpg"
+Content-Type: image/jpeg
+
+< ../../../../../markup/img/cat.jpg
+--boundary--
+
+###
+
 PATCH http://localhost:4100/api/posts/9059dee5-7897-46d3-b8f6-e075a8b568c0 HTTP/1.1
 Content-Type: application/json
 
@@ -70,7 +135,14 @@ Content-Type: application/json
 
 ###
 
-# Delte post by ID
-DELETE http://localhost:4100/api/posts/04fbbb3a-68f6-4238-9247-2cd6686b01ed HTTP/1.1
+# Repost post by ID
+POST http://localhost:4100/api/posts/repost/09209f73-16a7-4a5f-b5dd-10ff6d51e92c HTTP/1.1
+X-User-Id: 1111222233334444
+
+###
+
+# Delete post by ID
+DELETE http://localhost:4100/api/posts/09209f73-16a7-4a5f-b5dd-10ff6d51e92c HTTP/1.1
+X-User-Id: 1111222233334444
 
 ###

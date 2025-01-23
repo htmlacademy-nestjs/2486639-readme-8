@@ -1,16 +1,17 @@
 import {
-  ConflictException, HttpException, HttpStatus, Inject, Injectable,
-  Logger, NotFoundException, UnauthorizedException
+  ConflictException, ForbiddenException, HttpException, HttpStatus, Inject,
+  Injectable, InternalServerErrorException, Logger, NotFoundException, UnauthorizedException
 } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 
-import { Token, User } from '@project/shared/core';
-import { createJWTPayload } from '@project/shared/helpers';
+import { RouteAlias, Token, User } from '@project/shared/core';
+import { createJWTPayload, makePath, parseAxiosError, uploadFile } from '@project/shared/helpers';
 import { BlogUserRepository, BlogUserEntity } from '@project/account/blog-user';
-import { jwtConfig } from '@project/account/config';
+import { applicationConfig, jwtConfig } from '@project/account/config';
 import { NotifyService } from '@project/account/notify';
 import { RefreshTokenService } from '@project/account/refresh-token';
+import { FILE_KEY, UploadedFileRdo } from '@project/file-storage/file-uploader';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { AuthenticationUserMessage } from './authentication.constant';
@@ -26,23 +27,50 @@ export class AuthenticationService {
     private readonly notifyService: NotifyService,
     @Inject(jwtConfig.KEY)
     private readonly jwtOptions: ConfigType<typeof jwtConfig>,
+    @Inject(applicationConfig.KEY)
+    private readonly applicationOptions: ConfigType<typeof applicationConfig>,
     private readonly refreshTokenService: RefreshTokenService
   ) { }
 
-  public async registerUser(dto: CreateUserDto): Promise<BlogUserEntity> {
+  public async registerUser(
+    authorizationHeader: string,
+    dto: CreateUserDto,
+    requestId: string,
+    avatarFile?: Express.Multer.File
+  ): Promise<BlogUserEntity> {
+    if (authorizationHeader) {
+      throw new ForbiddenException(AuthenticationUserMessage.RequireLogout);
+    }
+
     const { email, name, password } = dto;
-
-    const blogUser = {
-      email,
-      name,
-      avatar: '',
-      passwordHash: ''
-    };
-
     const existUser = await this.blogUserRepository.findByEmail(email);
 
     if (existUser) {
       throw new ConflictException(AuthenticationUserMessage.Exists);
+    }
+
+    const blogUser = {
+      email,
+      name,
+      avatarPath: '',
+      passwordHash: ''
+    };
+
+    if (avatarFile) {
+      try {
+        const fileRdo = await uploadFile<UploadedFileRdo>(
+          `${this.applicationOptions.fileStorageServiceUrl}/${RouteAlias.Upload}`,
+          avatarFile,
+          FILE_KEY,
+          requestId
+        );
+
+        blogUser.avatarPath = makePath(fileRdo.subDirectory, fileRdo.hashName);
+      } catch (error) {
+        Logger.error(parseAxiosError(error), 'AuthenticationService.RegisterUser.FileUploadError');
+
+        throw new InternalServerErrorException('File upload error!');
+      }
     }
 
     const userEntity = new BlogUserEntity(blogUser);
@@ -50,36 +78,16 @@ export class AuthenticationService {
     await userEntity.setPassword(password);
     await this.blogUserRepository.save(userEntity);
 
-    await this.notifyService.registerSubscriber({ email, name });
+    await this.notifyService.registerSubscriber({ email, name }, requestId);
 
     return userEntity;
   }
 
-  public async verifyUser(dto: LoginUserDto): Promise<BlogUserEntity> {
-    const { email, password } = dto;
-    const existUser = await this.blogUserRepository.findByEmail(email);
+  public async changeUserPassword(userId: string, newPassword: string): Promise<void> {
+    const userEntity = await this.blogUserRepository.findById(userId);
 
-    if (!existUser) {
-      throw new NotFoundException(AuthenticationUserMessage.NotFound);
-    }
-
-    const isCorrectPassword = await existUser.comparePassword(password);
-
-    if (!isCorrectPassword) {
-      throw new UnauthorizedException(AuthenticationUserMessage.WrongPassword);
-    }
-
-    return existUser;
-  }
-
-  public async getUser(id: string): Promise<BlogUserEntity> {
-    const user = await this.blogUserRepository.findById(id);
-
-    if (!user) {
-      throw new NotFoundException(AuthenticationUserMessage.NotFound);
-    }
-
-    return user;
+    await userEntity.setPassword(newPassword);
+    await this.blogUserRepository.update(userEntity);
   }
 
   public async createUserToken(user: User): Promise<Token> {
@@ -103,11 +111,44 @@ export class AuthenticationService {
     }
   }
 
+  public async logout(authorizationHeader: string): Promise<void> {
+    if (!authorizationHeader) {
+      return;
+    }
+
+    Logger.log('AuthenticationService.logout');
+    // доделать позже проверить, что это refreh token... удалить его ...refreshTokenService.deleteRefreshSession...
+  }
+
+
+  public async getUser(id: string): Promise<BlogUserEntity> {
+    const user = await this.blogUserRepository.findById(id);
+
+    if (!user) {
+      throw new NotFoundException(AuthenticationUserMessage.NotFound);
+    }
+
+    return user;
+  }
+
   public async getUserByEmail(email: string) {
     const existUser = await this.blogUserRepository.findByEmail(email);
 
     if (!existUser) {
       throw new NotFoundException(`User with email ${email} not found`);
+    }
+
+    return existUser;
+  }
+
+  public async verifyUser(dto: LoginUserDto): Promise<BlogUserEntity> {
+    const { email, password } = dto;
+    const existUser = await this.getUserByEmail(email);
+
+    const isCorrectPassword = await existUser.comparePassword(password);
+
+    if (!isCorrectPassword) {
+      throw new UnauthorizedException(AuthenticationUserMessage.WrongPassword);
     }
 
     return existUser;

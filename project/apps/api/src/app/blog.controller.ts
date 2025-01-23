@@ -1,16 +1,18 @@
-import { Body, Controller, Inject, Post, UseFilters, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Inject, Post, Req, UseFilters, UseGuards } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
+import { ApiTags } from '@nestjs/swagger';
 import { HttpService } from '@nestjs/axios';
 
 import { apiConfig } from '@project/api/config';
+import { RequestWithRequestIdAndUserId, RouteAlias, XHeader } from '@project/shared/core';
+import { AxiosExceptionFilter } from '@project/shared/exception-filters';
 
-import { AxiosExceptionFilter } from './filters/axios-exception.filter';
 import { CheckAuthGuard } from './guards/check-auth.guard';
 
+@ApiTags('blog')
 @Controller('blog')
 @UseFilters(AxiosExceptionFilter)
 export class BlogController {
-
   constructor(
     private readonly httpService: HttpService,
     @Inject(apiConfig.KEY)
@@ -18,13 +20,12 @@ export class BlogController {
   ) { }
 
   @UseGuards(CheckAuthGuard)
-  @UseInterceptors(UseInterceptors)
   @Post('/')
-  //! временно
+  //! временно, пока нет dto
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public async create(@Body() dto: any) {
-    const url = `${this.apiOptions.blogPostServiceUrl}/`;
-    const { data } = await this.httpService.axiosRef.post(url, dto);
+  public async create(@Body() dto: any, @Req() { userId, requestId }: RequestWithRequestIdAndUserId) {
+    const url = `${this.apiOptions.blogPostServiceUrl}/${RouteAlias.Posts}`;
+    const { data } = await this.httpService.axiosRef.post(url, dto, { headers: { [XHeader.RequestId]: requestId, [XHeader.UserId]: userId } });
 
     return data;
   }

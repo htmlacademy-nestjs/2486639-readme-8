@@ -18,10 +18,3 @@ export class EmailSubscriberModel extends Document implements Subscriber {
 }
 
 export const EmailSubscriberSchema = SchemaFactory.createForClass(EmailSubscriberModel);
-
-//! если не понадобится, то удалить
-/*
-EmailSubscriberSchema.virtual('id').get(function () {
-  return this._id.toString();
-});
-*/

@@ -1,5 +1,6 @@
 export enum SortType {
-  Date = 'date',
+  PublishDate = 'publishDate',
+  CreateDate = 'createDate',
   Likes = 'likes',
   Comments = 'comments'
 }

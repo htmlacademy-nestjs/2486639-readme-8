@@ -19,8 +19,10 @@ export class UpdatePostDto {
   public type?: PostType;
 
   @ApiProperty({
-    ...PostApiProperty.Tags,
-    required: false
+    description: PostApiProperty.Tags.description + ' - warning! not correct send string[]!',
+    name: 'tags[0]', // не корректная передача string[] через form-data
+    required: false,
+    example: ['tag1']
   })
   @IsOptional()
   @IsArray()
@@ -59,44 +61,43 @@ export class UpdatePostDto {
   @ApiProperty(PostApiProperty.Url)
   @IsOptional()
   @IsString()
-  //@IsUrl({ 'require_tld': false }) //! пропускает любые строки
-  @IsUrl() //! не пропускает localhost
+  @IsUrl()  // по умолчанию require_tld - true и не пропускает localhost, а require_tld - false пропускает любые строки
   public url?: string;
 
-  @ApiProperty(PostApiProperty.PreviewText)
+  @ApiProperty({ ...PostApiProperty.PreviewText, example: '' })
   @IsOptional()
   @IsString()
   @MinLength(PostValidation.PreviewText.MinLength)
   @MaxLength(PostValidation.PreviewText.MaxLength)
   public previewText?: string;
 
-  @ApiProperty(PostApiProperty.Text)
+  @ApiProperty({ ...PostApiProperty.Text, example: '' })
   @IsOptional()
   @IsString()
   @MinLength(PostValidation.Text.MinLength)
   @MaxLength(PostValidation.Text.MaxLength)
   public text?: string;
 
-  @ApiProperty(PostApiProperty.QuoteText)
+  @ApiProperty({ ...PostApiProperty.QuoteText, example: '' })
   @IsOptional()
   @IsString()
   @MinLength(PostValidation.QuoteText.MinLength)
   @MaxLength(PostValidation.QuoteText.MaxLength)
   public quoteText?: string;
 
-  @ApiProperty(PostApiProperty.QuoteAuthor)
+  @ApiProperty({ ...PostApiProperty.QuoteAuthor, example: '' })
   @IsOptional()
   @IsString()
   @MinLength(PostValidation.QuoteAuthor.MinLength)
   @MaxLength(PostValidation.QuoteAuthor.MaxLength)
   public quoteAuthor?: string;
 
-  @ApiProperty(PostApiProperty.ImagePath)
+  @ApiProperty(PostApiProperty.ImageFile)
   @IsOptional()
   @IsString()
-  public imagePath?: string;
+  public imageFile?: string;
 
-  @ApiProperty(PostApiProperty.LinkDescription)
+  @ApiProperty({ ...PostApiProperty.LinkDescription, example: '' })
   @IsOptional()
   @IsString()
   @MaxLength(PostValidation.LinkDescription.MaxLength)

@@ -1,4 +1,3 @@
-import 'multer';
 import { BadRequestException, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { ensureDir } from 'fs-extra';
@@ -45,7 +44,7 @@ export class FileUploaderService {
     try {
       const uploadDirectoryPath = this.getUploadDirectoryPath();
       const subDirectory = this.getSubUploadDirectoryPath();
-      const fileExtension = extension(file.mimetype) as string; //string | false из за того что тоставил типы //! проверить
+      const fileExtension = extension(file.mimetype) as string; //string | false из за того что тоставил типы - проверить
       const fileName = `${randomUUID()}.${fileExtension}`;
       const path = this.getDestinationFilePath(fileName);
 
@@ -81,6 +80,7 @@ export class FileUploaderService {
     });
 
     await this.fileUploaderRepository.save(fileEntity);
+    Logger.log(fileEntity.toPOJO(), '[FileUploaderService.saveFile]');
 
     return fileEntity;
   }

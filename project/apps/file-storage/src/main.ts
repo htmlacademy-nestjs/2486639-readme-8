@@ -7,16 +7,17 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
-import { ConfigAlias } from '@project/shared/core';
-import { ConfigService } from '@nestjs/config';
+import { InjectRequestIdInterceptor } from '@project/shared/interceptors';
+import { fileStorageConfig, FileStorageConfig } from '@project/file-storage/config';
 
 import { AppModule } from './app/app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const globalPrefix = 'api';
-  const configService = app.get(ConfigService);
-  const port = configService.get<number>(ConfigAlias.AppPort);
+  const swaggerPrefix = 'spec';
+  const fileStorageOption = app.get<FileStorageConfig>(fileStorageConfig.KEY);
+  const { port } = fileStorageOption;
 
   app.setGlobalPrefix(globalPrefix);
 
@@ -28,13 +29,15 @@ async function bootstrap() {
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, documentBuilder);
 
-  SwaggerModule.setup('spec', app, documentFactory);
+  SwaggerModule.setup(swaggerPrefix, app, documentFactory);
   //
 
+  app.useGlobalInterceptors(new InjectRequestIdInterceptor());
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
   await app.listen(port);
   Logger.log(`🚀 Application is running on: http://localhost:${port}/${globalPrefix}`);
+  Logger.log(`Swagger on: http://localhost:${port}/${swaggerPrefix}`);
 }
 
 bootstrap();

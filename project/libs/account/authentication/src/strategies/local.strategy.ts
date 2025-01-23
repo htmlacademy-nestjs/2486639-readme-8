@@ -26,6 +26,8 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
       throw new BadRequestException(getValidationErrorString(error));
     }
 
-    return this.authService.verifyUser({ email, password })
+    const userEntity = await this.authService.verifyUser({ email, password });
+
+    return userEntity;
   }
 }

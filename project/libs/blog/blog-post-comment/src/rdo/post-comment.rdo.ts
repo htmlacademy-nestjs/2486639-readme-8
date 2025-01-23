@@ -4,6 +4,10 @@ import { Expose } from 'class-transformer';
 import { PostCommentApiProperty } from '../blog-post-comment.constant.property';
 
 export class PostCommentRdo {
+  @ApiProperty(PostCommentApiProperty.Id)
+  @Expose()
+  public id: string;
+
   @ApiProperty(PostCommentApiProperty.Message)
   @Expose()
   public message: string;

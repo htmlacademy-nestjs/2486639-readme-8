@@ -6,17 +6,19 @@
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { ConfigService } from '@nestjs/config';
 
-import { BearerAuth, BearerAuthOption, ConfigAlias } from '@project/shared/core';
+import { BearerAuth, BearerAuthOption } from '@project/shared/core';
+import { InjectBearerAuthInterceptor, RequestIdInterceptor } from '@project/shared/interceptors';
+import { apiConfig, ApiConfig } from '@project/api/config';
 
 import { AppModule } from './app/app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const globalPrefix = 'api';
-  const configService = app.get(ConfigService);
-  const port = configService.get<number>(ConfigAlias.AppPort);
+  const swaggerPrefix = 'spec';
+  const apiOption = app.get<ApiConfig>(apiConfig.KEY);
+  const { port, accountServiceUrl, blogPostServiceUrl, fileStorageServiceUrl } = apiOption;
 
   app.setGlobalPrefix(globalPrefix);
 
@@ -30,19 +32,23 @@ async function bootstrap() {
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, documentBuilder);
 
-  SwaggerModule.setup('spec', app, documentFactory);
+  SwaggerModule.setup(swaggerPrefix, app, documentFactory);
   //
 
-  // Микросервисы и маршруты
-  Logger.log(`Account Service on: ${configService.get<number>(ConfigAlias.AppAccountServiceUrl)}`);
-  Logger.log(`BlogPost Service on: ${configService.get<number>(ConfigAlias.AppBlogPostServiceUrl)}`);
-  Logger.log(`FileStorage Service on: ${configService.get<number>(ConfigAlias.AppFileStorageServiceUrl)}`);
-  //
-
+  app.useGlobalInterceptors(
+    new RequestIdInterceptor(),
+    new InjectBearerAuthInterceptor()
+  );
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
   await app.listen(port);
+  // Микросервисы
+  Logger.log(`Account Service on: ${accountServiceUrl}`);
+  Logger.log(`BlogPost Service on: ${blogPostServiceUrl}`);
+  Logger.log(`FileStorage Service on: ${fileStorageServiceUrl}`);
+  //
   Logger.log(`🚀 Application is running on: http://localhost:${port}/${globalPrefix}`);
+  Logger.log(`Swagger on: http://localhost:${port}/${swaggerPrefix}`);
 }
 
 bootstrap();

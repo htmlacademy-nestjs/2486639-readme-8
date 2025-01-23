@@ -1,9 +1,9 @@
-import 'multer';
-import { Express } from 'express';
 import { Controller, Get, Param, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import 'multer'; // Express.Multer.File
 
+import { RouteAlias } from '@project/shared/core';
 import { MongoIdValidationPipe } from '@project/shared/pipes';
 import { fillDto } from '@project/shared/helpers';
 
@@ -22,9 +22,9 @@ export class FileUploaderController {
   @ApiResponse(FileUploaderApiResponse.BadRequest)
   @ApiConsumes('multipart/form-data')
   @ApiBody(FileUploaderFileApiBody)
-  @Post('/upload')
+  @Post(`/${RouteAlias.Upload}`)
   @UseInterceptors(FileInterceptor(FILE_KEY))
-  public async uploadFile(@UploadedFile() file: Express.Multer.File) {
+  public async uploadFile(@UploadedFile(FILE_KEY) file: Express.Multer.File): Promise<UploadedFileRdo> {
     const fileEntity = await this.fileUploaderService.saveFile(file);
 
     return fillDto(UploadedFileRdo, fileEntity.toPOJO());
@@ -35,7 +35,7 @@ export class FileUploaderController {
   @ApiResponse(FileUploaderApiResponse.BadRequest)
   @ApiParam(FileIdApiParam)
   @Get(`:${FileIdApiParam.name}`)
-  public async show(@Param(FileIdApiParam.name, MongoIdValidationPipe) fileId: string) {
+  public async show(@Param(FileIdApiParam.name, MongoIdValidationPipe) fileId: string): Promise<UploadedFileRdo> {
     const existFile = await this.fileUploaderService.getFile(fileId);
 
     return fillDto(UploadedFileRdo, existFile);

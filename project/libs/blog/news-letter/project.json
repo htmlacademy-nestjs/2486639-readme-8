@@ -1,0 +1,9 @@
+{
+  "name": "blog-news-letter",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/blog/news-letter/src",
+  "projectType": "library",
+  "tags": [],
+  "// targets": "to see all targets run: nx show project blog-news-letter --web",
+  "targets": {}
+}

@@ -5,32 +5,18 @@
 
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { ConfigService } from '@nestjs/config';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
-import { ConfigAlias } from '@project/shared/core';
+import { notifyConfig, NotifyConfig } from '@project/notify/config';
 
 import { AppModule } from './app/app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const globalPrefix = 'api';
-  const configService = app.get(ConfigService);
-  const port = configService.get<number>(ConfigAlias.AppPort);
+  const notifyOption = app.get<NotifyConfig>(notifyConfig.KEY);
+  const { port } = notifyOption;
 
   app.setGlobalPrefix(globalPrefix);
-
-  //Swagger
-  const documentBuilder = new DocumentBuilder()
-    .setTitle('Notify API')
-    .setDescription('The Notify API description')
-    .setVersion('1.0')
-    .build();
-  const documentFactory = () => SwaggerModule.createDocument(app, documentBuilder);
-
-  SwaggerModule.setup('spec', app, documentFactory);
-  //
-
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
   await app.listen(port);

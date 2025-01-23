@@ -3,25 +3,30 @@ POST http://localhost:4200/api/files/upload HTTP/1.1
 Content-Type: multipart/form-data; boundary=boundary
 
 --boundary
-Content-Disposition: form-data; name="file"; filename="file-uploader.http"
+Content-Disposition: form-data; name="file"; filename="file-uploader.factory.ts"
 
 < ./file-uploader.factory.ts
 //< ./file-uploader.http
 //  "message": "Unexpected field",
 //  "error": "Bad Request",
 //  "statusCode": 400
-//! ?
+//! почемуто не отправляет текущий файл?
 
 --boundary--
 
 ###
 
 # Get file by ID
-GET http://localhost:4200/api/files/677d4806b345345e4489056d HTTP/1.1
+GET http://localhost:4200/api/files/678613bf45eade9f07639eed HTTP/1.1
 
 ###
 
 # Get stativ file
 GET http://localhost:4200/static/1.txt HTTP/1.1
+
+
+###
+# Get stativ file
+GET http://localhost:4200/static/2025/01/8a055224-4247-4c6e-aaba-8b03e38a43be.bin HTTP/1.1
 
 ###

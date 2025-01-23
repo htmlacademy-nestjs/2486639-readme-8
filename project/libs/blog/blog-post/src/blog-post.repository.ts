@@ -4,13 +4,13 @@ import { Prisma } from '@prisma/client';
 import { PrismaClientService } from '@project/blog/models';
 import { BasePostgresRepository } from '@project/shared/data-access';
 import { PaginationResult, Post, PostState, PostType, SortDirection, SortType, Tag } from '@project/shared/core';
-
 import { BlogTagService } from '@project/blog/blog-tag';
 
 import { BlogPostEntity } from './blog-post.entity';
 import { BlogPostFactory } from './blog-post.factory';
-import { BlogPostQuery } from './blog-post.query';
-import { BlogPostMessage, Default } from './blog-post.constant';
+import { BlogPostQuery } from './query/blog-post.query';
+import { BlogPostMessage } from './blog-post.constant';
+import { getSearchTitleSql } from './blog-post.sql';
 
 @Injectable()
 export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, Post> {
@@ -34,8 +34,29 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     return tags.map(({ id }) => ({ id }));
   }
 
-  private async getPostCount(where: Prisma.PostWhereInput): Promise<number> {
+  private getPostCount(where: Prisma.PostWhereInput): Promise<number> {
     return this.client.post.count({ where });
+  }
+
+  private async findPosts(
+    where: Prisma.PostWhereInput,
+    orderBy: Prisma.PostOrderByWithRelationInput = undefined,
+    skip: number = undefined,
+    take: number = undefined
+  ): Promise<BlogPostEntity[]> {
+    const records = await this.client.post.findMany({ where, orderBy, skip, take, include: { tags: true } });
+    const entities = records.map(
+      (record) => {
+        const post: Post = {
+          ...record,
+          ...this.getTypeAndState(record)
+        };
+
+        return this.createEntityFromDocument(post);
+      }
+    );
+
+    return entities;
   }
 
   private calculatePostsPage(totalCount: number, limit: number): number {
@@ -80,7 +101,6 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
         repostedPost,
         tags
       }
-      //, include: { repostedPost: true } //! возможно нужно при репосте
     });
 
     entity.id = record.id;
@@ -110,22 +130,21 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     await this.client.post.delete({ where: { id } })
   }
 
-  public async find(query: BlogPostQuery): Promise<PaginationResult<BlogPostEntity>> {
+  public async find(query: BlogPostQuery, showDraft: boolean, take: number): Promise<PaginationResult<BlogPostEntity>> {
     const currentPage = query.page;
-    const take = Default.POST_COUNT;
     const skip = (currentPage - 1) * take;
     const where: Prisma.PostWhereInput = {};
     const orderBy: Prisma.PostOrderByWithRelationInput = {};
 
-    if (query.userId) {
-      where.userId = query.userId;
+    if (query.userIds) {
+      where.userId = { in: query.userIds };
     }
 
     if (query.type) {
       where.type = query.type;
     }
 
-    if (query.showDraft) {
+    if (showDraft) {
       where.state = PostState.Draft;
     } else {
       where.state = PostState.Published;
@@ -140,8 +159,11 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     }
 
     switch (query.sortType) {
-      case SortType.Date:
+      case SortType.PublishDate:
         orderBy.publishDate = SortDirection.Desc;
+        break;
+      case SortType.CreateDate:
+        orderBy.createdAt = SortDirection.Desc;
         break;
       case SortType.Comments:
         orderBy.commentsCount = SortDirection.Desc;
@@ -151,21 +173,11 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
         break;
     }
 
-    const [records, postCount] = await Promise.all(
+    const [entities, postCount] = await Promise.all(
       [
-        this.client.post.findMany({ where, orderBy, skip, take, include: { tags: true } }),
+        this.findPosts(where, orderBy, skip, take),
         this.getPostCount(where)
       ]
-    );
-    const entities = records.map(
-      (record) => {
-        const post: Post = {
-          ...record,
-          ...this.getTypeAndState(record)
-        };
-
-        return this.createEntityFromDocument(post);
-      }
     );
 
     return {
@@ -193,5 +205,41 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
       where: { id },
       data: { likesCount: likesCount + step }
     });
+  }
+
+  public async getUserPostsCount(userId: string): Promise<number> {
+    const postsCount = await this.client.post.count({ where: { userId } });
+
+    return postsCount;
+  }
+
+  public async existsRepost(postId: string, userId: string): Promise<boolean> {
+    const count = await this.client.post.count({ where: { repostedPostId: postId, userId } });
+
+    return count > 0;
+  }
+
+  public async findPostsByTitle(searchTitle: string, limit: number): Promise<BlogPostEntity[]> {
+    const result = await this.client.$queryRaw<{ id: string, hit_sum: number }[]>(getSearchTitleSql(searchTitle, limit));
+    const postIds = result.map((item) => (item.id));
+    const where: Prisma.PostWhereInput = {};
+
+    where.id = { in: postIds };
+
+    const entities = await this.findPosts(where);
+
+    return entities;
+  }
+
+  public async findPostsByCreateAt(startDate: Date, limit: number): Promise<BlogPostEntity[]> {
+    const where: Prisma.PostWhereInput = {};
+
+    if (startDate) {
+      where.createdAt = { gt: startDate };
+    }
+
+    const entities = await this.findPosts(where, undefined, undefined, limit);
+
+    return entities;
   }
 }

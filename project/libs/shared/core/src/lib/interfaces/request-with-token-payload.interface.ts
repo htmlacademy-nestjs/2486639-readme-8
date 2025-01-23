@@ -1,5 +1,6 @@
+import { RequestProperty } from '../constants/request-property';
 import { TokenPayload } from './token-payload.interface';
 
 export interface RequestWithTokenPayload {
-  user?: TokenPayload
+  [RequestProperty.User]?: TokenPayload
 }

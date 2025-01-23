@@ -1,8 +1,8 @@
 import { Controller } from '@nestjs/common';
-import { RabbitSubscribe } from '@golevelup/nestjs-rabbitmq';
+import { RabbitHeader, RabbitPayload, RabbitSubscribe } from '@golevelup/nestjs-rabbitmq';
 
-import { ConfigAlias, RabbitRouting } from '@project/shared/core';
-import { MailService } from '@project/notify/mail';
+import { ConfigAlias, RabbitRouting, XHeader } from '@project/shared/core';
+import { PostRdo } from '@project/blog/blog-post';
 
 import { EmailSubscriberService } from './email-subscriber.service';
 import { CreateSubscriberDto } from './dto/create-subscriber.dto';
@@ -10,17 +10,24 @@ import { CreateSubscriberDto } from './dto/create-subscriber.dto';
 @Controller()
 export class EmailSubscriberController {
   constructor(
-    private readonly subscriberService: EmailSubscriberService,
-    private readonly mailService: MailService
+    private readonly subscriberService: EmailSubscriberService
   ) { }
 
   @RabbitSubscribe({
-    exchange: process.env[ConfigAlias.RabbitExchangeEnv], //! 'readme.notify', а как забрать через config module?
-    queue: process.env[ConfigAlias.RabbitQueueEnv], //! 'readme.notify.income', а как забрать через config module?
+    exchange: process.env[ConfigAlias.RabbitExchangeEnv], // а как забрать через config module?
+    queue: process.env[ConfigAlias.RabbitQueueSubscriberEnv], // а как забрать через config module?
     routingKey: RabbitRouting.AddSubscriber
   })
-  public async create(subscriber: CreateSubscriberDto) {
-    this.subscriberService.addSubscriber(subscriber);
-    this.mailService.sendNotifyNewSubscriber(subscriber);
+  public async create(@RabbitHeader(XHeader.RequestId) requestId: string, @RabbitPayload() subscriber: CreateSubscriberDto): Promise<void> {
+    await this.subscriberService.addSubscriber(subscriber, requestId);
+  }
+
+  @RabbitSubscribe({
+    exchange: process.env[ConfigAlias.RabbitExchangeEnv], // а как забрать через config module?
+    queue: process.env[ConfigAlias.RabbitQueueNewsLetterEnv], // а как забрать через config module?
+    routingKey: RabbitRouting.AddNewsLetter
+  })
+  public async sendAll(posts: PostRdo[]): Promise<void> {
+    await this.subscriberService.sendAll(posts);
   }
 }

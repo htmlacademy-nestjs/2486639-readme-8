@@ -23,8 +23,7 @@ export function validatePostData(dto: CreatePostDto | UpdatePostDto): string {
     const notNeedMessages: string[] = [];
 
     keys.forEach((key) => {
-      //const shouldBeKey = fields.includes(key); //! Argument of type 'PostField' is not assignable to parameter of type 'never'
-      const shouldBeKey = [...fields].includes(key);
+      const shouldBeKey = [...fields].includes(key); // без [] Argument of type 'PostField' is not assignable to parameter of type 'never'
       const existDtoKey = !!dto[key];
 
       if (shouldBeKey && !existDtoKey) {

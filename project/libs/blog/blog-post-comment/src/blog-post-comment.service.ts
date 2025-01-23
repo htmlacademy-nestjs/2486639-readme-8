@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
 
 import { PaginationResult } from '@project/shared/core';
 import { BlogPostService } from '@project/blog/blog-post';
@@ -7,7 +7,7 @@ import { BlogPostCommentEntity } from './blog-post-comment.entity';
 import { BlogPostCommentRepository } from './blog-post-comment.repository';
 import { BlogPostCommentQuery } from './blog-post-comment.query';
 import { CreatePostCommentDto } from './dto/create-post-comment.dto';
-import { BlogPostCommentApiResponse, BlogPostCommentMessage } from './blog-post-comment.constant';
+import { BlogPostCommentMessage } from './blog-post-comment.constant';
 
 @Injectable()
 export class BlogPostCommentService {
@@ -18,7 +18,7 @@ export class BlogPostCommentService {
 
   private checkAuthorization(currentUserId: string): void {
     if (!currentUserId) {
-      throw new UnauthorizedException(BlogPostCommentApiResponse.Unauthorized);
+      throw new UnauthorizedException(BlogPostCommentMessage.Unauthorized);
     }
   }
 
@@ -46,9 +46,9 @@ export class BlogPostCommentService {
     this.checkAuthorization(currentUserId);
     await this.canCommentPost(postId);
 
-    const foundCommentId = await this.blogPostCommentRepository.findCommentId(postId, currentUserId);
+    const existsComment = await this.blogPostCommentRepository.existsComment(postId, currentUserId);
 
-    if (foundCommentId) {
+    if (existsComment) {
       throw new ConflictException(BlogPostCommentMessage.CommentExist);
     }
 
@@ -61,17 +61,14 @@ export class BlogPostCommentService {
     return commentEntity;
   }
 
-  public async deleteComment(postId: string, currentUserId: string): Promise<void> {
+  public async deleteComment(commentId: string, currentUserId: string): Promise<void> {
     this.checkAuthorization(currentUserId);
+
+    const commentEntity = await this.blogPostCommentRepository.findById(commentId);
+    const { postId } = commentEntity;
+
     await this.canCommentPost(postId);
-
-    const foundCommentId = await this.blogPostCommentRepository.findCommentId(postId, currentUserId);
-
-    if (!foundCommentId) {
-      throw new NotFoundException(BlogPostCommentMessage.CommentNotFound);
-    }
-
-    await this.blogPostCommentRepository.deleteById(foundCommentId);
+    await this.blogPostCommentRepository.deleteById(commentId);
     await this.blogPostSevice.decrementCommentsCount(postId);
   }
 }

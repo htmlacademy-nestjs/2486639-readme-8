@@ -2,7 +2,7 @@ import { ConflictException, Injectable, NotFoundException, UnauthorizedException
 
 import { BlogSubscriptionEntity } from './blog-subscription.entity';
 import { BlogSubscriptionRepository } from './blog-subscription.repository';
-//!import { BlogSubscriptionApiResponse, BlogSubscriptionMessage } from './blog-subscription.constant';
+import { BlogSubscriptionMessage } from './blog-subscription.constant';
 
 @Injectable()
 export class BlogSubscriptionService {
@@ -10,9 +10,9 @@ export class BlogSubscriptionService {
     private readonly blogSubscriptionRepository: BlogSubscriptionRepository
   ) { }
 
-  private checkAuthorization(currentUserId: string) {
+  private checkAuthorization(currentUserId: string): void {
     if (!currentUserId) {
-      throw new UnauthorizedException();//!BlogSubscriptionApiResponse.Unauthorized);
+      throw new UnauthorizedException(BlogSubscriptionMessage.Unauthorized);
     }
   }
 
@@ -22,7 +22,7 @@ export class BlogSubscriptionService {
     const foundLikeId = await this.blogSubscriptionRepository.findSubscriptionId(authorUserId, currentUserId);
 
     if (foundLikeId) {
-      throw new ConflictException();//!BlogSubscriptionMessage.LikeExist);
+      throw new ConflictException(!BlogSubscriptionMessage.SubscriptionExist);
     }
 
     const likeEntity = new BlogSubscriptionEntity({ authorUserId, userId: currentUserId });
@@ -36,9 +36,21 @@ export class BlogSubscriptionService {
     const foundLikeId = await this.blogSubscriptionRepository.findSubscriptionId(authorUserId, currentUserId);
 
     if (!foundLikeId) {
-      throw new NotFoundException();//!BlogSubscriptionMessage.LikeNotFound);
+      throw new NotFoundException(BlogSubscriptionMessage.SubscriptionNotFound);
     }
 
     await this.blogSubscriptionRepository.deleteById(foundLikeId);
+  }
+
+  public async getUserSubscriptionsCount(userId: string): Promise<number> {
+    const subscriptionsCount = await this.blogSubscriptionRepository.getUserSubscriptionsCount(userId);
+
+    return subscriptionsCount;
+  }
+
+  public async getUserSubscriptions(userId: string): Promise<string[]> {
+    const subscriptions = await this.blogSubscriptionRepository.getUserSubscriptions(userId);
+
+    return subscriptions;
   }
 }

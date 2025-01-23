@@ -13,25 +13,38 @@ export class BlogPostFactory implements EntityFactory<BlogPostEntity> {
     return new BlogPostEntity(entityPlainData);
   }
 
-  public static createFromCreatePostDto(dto: CreatePostDto, tags: BlogTagEntity[], userId: string): BlogPostEntity {
-    const entity = new BlogPostEntity();
-    //const entity = new BlogPostEntity({ state: Default.NEW_POST_STATE, userId, type: dto.type, tags: [] });
-    //! если вызвать с мининумом, то  entity.id уже будет undefined
-    entity.id = undefined; //! пустая строка из базового класса и id не гененируется
+  public static createFromDtoOrEntity(
+    data: CreatePostDto | BlogPostEntity,
+    imagePath: string,
+    tags: BlogTagEntity[],
+    userId: string
+  ): BlogPostEntity {
+    const post: Post = {
+      type: data.type,
+      state: Default.NEW_POST_STATE,
+      userId,
+      title: data.title,
+      url: data.url,
+      previewText: data.previewText,
+      text: data.text,
+      quoteText: data.quoteText,
+      quoteAuthor: data.quoteAuthor,
+      imagePath,
+      linkDescription: data.linkDescription
+    };
+    const entity = new BlogPostEntity(post);
 
-    entity.type = dto.type;
-    entity.state = Default.NEW_POST_STATE;
     entity.tags = tags;
-    entity.title = dto.title;
-    entity.url = dto.url;
-    entity.previewText = dto.previewText;
-    entity.text = dto.text;
-    entity.quoteText = dto.quoteText;
-    entity.quoteAuthor = dto.quoteAuthor;
-    entity.imagePath = dto.imagePath;
-    entity.linkDescription = dto.linkDescription;
-    entity.userId = userId;
 
     return entity;
+  }
+
+  public static createFromPostEntity(postEntity: BlogPostEntity, userId: string): BlogPostEntity {
+    const { imagePath, tags } = postEntity;
+    const repostedPostEntity = BlogPostFactory.createFromDtoOrEntity(postEntity, imagePath, tags, userId);
+
+    repostedPostEntity.repostedPost = postEntity;
+
+    return repostedPostEntity;
   }
 }

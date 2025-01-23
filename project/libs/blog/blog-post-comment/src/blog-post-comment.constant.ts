@@ -2,6 +2,7 @@ import { HttpStatus } from '@nestjs/common';
 
 import { PostCommentRdo } from './rdo/post-comment.rdo';
 import { PostCommentApiProperty } from './blog-post-comment.constant.property';
+import { PostCommentWithPaginationRdo } from './rdo/post-comment-with-pagination.rdo';
 
 export const Default = {
   CURRENT_PAGE: 1,
@@ -14,22 +15,23 @@ export const PostCommentMessageValidation = {
 } as const;
 
 export const BlogPostCommentMessage = {
+  Unauthorized: 'Unauthorized.',
   PostNotFound: 'Post not found.',
   CommentNotFound: 'Comment not found.',
   CommentExist: 'You already commented the post.'
 } as const;
 
-export const PostIdApiParam = {
-  name: 'postId',
-  schema: PostCommentApiProperty.PostId
+export const CommentIdApiParam = {
+  name: 'commentId',
+  schema: PostCommentApiProperty.Id
 } as const;
 
-export const POST_ID_PARAM = `:${PostIdApiParam.name}`;
+export const COMMENT_ID_PARAM = `:${CommentIdApiParam.name}`;
 
 export const BlogPostCommentApiResponse = {
   Unauthorized: {
     status: HttpStatus.UNAUTHORIZED,
-    description: 'Unauthorized.'
+    description: BlogPostCommentMessage.Unauthorized
   },
   BadRequest: {
     status: HttpStatus.BAD_REQUEST,
@@ -41,7 +43,7 @@ export const BlogPostCommentApiResponse = {
     description: 'The new comment has been successfully created.'
   },
   PostCommentsFound: {
-    type: PostCommentRdo,
+    type: PostCommentWithPaginationRdo,
     isArray: true,
     status: HttpStatus.OK,
     description: 'Post comments found.'

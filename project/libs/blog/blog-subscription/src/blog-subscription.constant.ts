@@ -1,29 +1,17 @@
 import { HttpStatus } from '@nestjs/common';
 
+import { UserSubscriptionsCountRdo } from './rdo/user-subscriptions-count.rdo';
+
 export const BlogSubscriptionMessage = {
-  PostNotFound: 'Post not found.',
-  LikeNotFound: 'Like not found.',
-  LikeExist: 'You already liked the post.'
+  SubscriptionNotFound: 'Subscription not found.',
+  SubscriptionExist: 'You already subscription on author.',
+  Unauthorized: 'Unauthorized.'
 } as const;
-
-export const PostCommentApiProperty = {
-  PostId: {
-    description: 'The unique post ID',
-    example: '2f31b19b-97eb-4305-877a-0b9be7faca8f'
-  }
-} as const;
-
-export const authorUserIdApiParam = {
-  name: 'authorUserId',
-  schema: PostCommentApiProperty.PostId
-} as const;
-
-export const AUTHOR_USER_ID_PARAM = `:${authorUserIdApiParam.name}`;
 
 export const BlogSubscriptionApiResponse = {
   Unauthorized: {
     status: HttpStatus.UNAUTHORIZED,
-    description: 'Unauthorized.'
+    description: BlogSubscriptionMessage.Unauthorized
   },
   BadRequest: {
     status: HttpStatus.BAD_REQUEST,
@@ -31,22 +19,23 @@ export const BlogSubscriptionApiResponse = {
   },
   SubscriptionCreated: {
     status: HttpStatus.CREATED,
-    description: 'The like has been successfully created.'
+    description: 'The subscription has been successfully created.'
   },
   SubscriptionDeleted: {
     status: HttpStatus.NO_CONTENT,
-    description: 'The like has been successfully deleted.'
+    description: 'The subscription has been successfully deleted.'
   },
-  PostNotFound: {
+  SubscriptionNotFound: {
     status: HttpStatus.NOT_FOUND,
-    description: BlogSubscriptionMessage.PostNotFound
+    description: BlogSubscriptionMessage.SubscriptionNotFound
   },
-  LikeNotFound: {
-    status: HttpStatus.NOT_FOUND,
-    description: BlogSubscriptionMessage.LikeNotFound
-  },
-  LikeOnPostExist: {
+  SubscriptionExist: {
     status: HttpStatus.CONFLICT,
-    description: BlogSubscriptionMessage.LikeExist
+    description: BlogSubscriptionMessage.SubscriptionExist
+  },
+  UserSubscriptionsCount: {
+    type: UserSubscriptionsCountRdo,
+    status: HttpStatus.OK,
+    description: 'User subscriptions count.'
   }
 } as const;

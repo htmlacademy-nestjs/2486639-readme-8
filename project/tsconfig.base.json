@@ -26,7 +26,6 @@
         "libs/account/refresh-token/src/index.ts"
       ],
       "@project/api/config": ["libs/api/config/src/index.ts"],
-      "@project/blog/blog-band": ["libs/blog/blog-band/src/index.ts"],
       "@project/blog/blog-post": ["libs/blog/blog-post/src/index.ts"],
       "@project/blog/blog-post-comment": [
         "libs/blog/blog-post-comment/src/index.ts"
@@ -38,6 +37,8 @@
       "@project/blog/blog-tag": ["libs/blog/blog-tag/src/index.ts"],
       "@project/blog/config": ["libs/blog/config/src/index.ts"],
       "@project/blog/models": ["libs/blog/models/src/index.ts"],
+      "@project/blog/news-letter": ["libs/blog/news-letter/src/index.ts"],
+      "@project/blog/notify": ["libs/blog/notify/src/index.ts"],
       "@project/file-storage/config": ["libs/file-storage/config/src/index.ts"],
       "@project/file-storage/file-uploader": [
         "libs/file-storage/file-uploader/src/index.ts"
@@ -49,6 +50,9 @@
       "@project/notify/mail": ["libs/notify/mail/src/index.ts"],
       "@project/shared/core": ["libs/shared/core/src/index.ts"],
       "@project/shared/data-access": ["libs/shared/data-access/src/index.ts"],
+      "@project/shared/exception-filters": [
+        "libs/shared/exception-filters/src/index.ts"
+      ],
       "@project/shared/helpers": ["libs/shared/helpers/src/index.ts"],
       "@project/shared/interceptors": ["libs/shared/interceptors/src/index.ts"],
       "@project/shared/pipes": ["libs/shared/pipes/src/index.ts"]

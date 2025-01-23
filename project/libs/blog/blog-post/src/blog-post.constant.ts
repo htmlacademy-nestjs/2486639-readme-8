@@ -1,9 +1,11 @@
-import { HttpStatus } from '@nestjs/common';
+import { HttpStatus, ParseFilePipeBuilder } from '@nestjs/common';
 
 import { PostState, PostType, SortType } from '@project/shared/core';
 
-import { PostWithPaginationRdo } from './rdo/post-with-pagination.rdo';
+import { PostRdo } from './rdo/post.rdo';
 import { DetailPostRdo } from './rdo/detail-post.rdo';
+import { PostWithPaginationRdo } from './rdo/post-with-pagination.rdo';
+import { UserPostsCountRdo } from './rdo/user-posts-count.rdo';
 import { PostApiProperty } from './blog-post.constant.property';
 
 export const ONLY_DATE_FORMAT = 'YYYY-MM-DD';
@@ -12,7 +14,15 @@ export const Default = {
   NEW_POST_STATE: PostState.Published,
   POST_COUNT: 25,
   CURRENT_PAGE: 1,
-  SORT_TYPE: SortType.Date
+  SORT_TYPE: SortType.PublishDate,
+  SEACRH_TITLE_POST_COUNT: 20,
+  NEWS_LETTER_POST_COUNT: 10
+} as const;
+
+export const ImageOption = {
+  KEY: 'imageFile',
+  MAX_SIZE: 1204 * 1024,
+  MIME_TYPES: ['image/jpg', 'image/jpeg', 'image/png']
 } as const;
 
 export const PostValidation = {
@@ -45,7 +55,21 @@ export const PostValidation = {
   LinkDescription: {
     MaxLength: 300
   },
+  ImageFile: {
+    Type: { fileType: ImageOption.MIME_TYPES.join('|') },
+    MaxSize: { maxSize: ImageOption.MAX_SIZE },
+    Build: {
+      fileIsRequired: PostApiProperty.ImageFile.required,
+      errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY
+    }
+  }
 } as const;
+
+export const parseFilePipeBuilder =
+  new ParseFilePipeBuilder()
+    .addFileTypeValidator(PostValidation.ImageFile.Type)
+    .addMaxSizeValidator(PostValidation.ImageFile.MaxSize)
+    .build(PostValidation.ImageFile.Build);
 
 export enum PostField {
   Title = 'title',
@@ -54,7 +78,7 @@ export enum PostField {
   Text = 'text',
   QuoteText = 'quoteText',
   QuoteAuthor = 'quoteAuthor',
-  ImagePath = 'imagePath',
+  ImageFile = 'imageFile',
   LinkDescription = 'linkDescription'
 };
 
@@ -63,31 +87,20 @@ export const PostFieldsByType = {
   [PostType.Text]: [PostField.Title, PostField.PreviewText, PostField.Text],
   [PostType.Link]: [PostField.Url, PostField.LinkDescription],
   [PostType.Quote]: [PostField.QuoteText, PostField.QuoteAuthor],
-  [PostType.Photo]: [PostField.ImagePath]
+  [PostType.Photo]: [PostField.ImageFile]
 } as const;
-
-export const blogPostApiBodyDescription = Object.keys(PostFieldsByType).map(
-  (key: string) => (
-    `For type "${key}" required ${PostFieldsByType[key].map(
-      (item: string) => (`"${item}"`)
-    ).join(', ')}`
-  )
-).join('.\n');
 
 export const BlogPostMessage = {
   NotFound: 'Post not found.',
-  NotAllow: 'Post is not yours.'
-} as const;
-
-export const PostIdApiParam = {
-  name: 'postId',
-  schema: PostApiProperty.Id
+  NotAllow: 'Post is not yours.',
+  RepostExist: 'You already reposted this post.',
+  Unauthorized: 'Unauthorized.'
 } as const;
 
 export const BlogPostApiResponse = {
   Unauthorized: {
     status: HttpStatus.UNAUTHORIZED,
-    description: 'Unauthorized.'
+    description: BlogPostMessage.Unauthorized
   },
   NotAllow: {
     status: HttpStatus.FORBIDDEN,
@@ -107,6 +120,15 @@ export const BlogPostApiResponse = {
     status: HttpStatus.OK,
     description: 'The post has been successfully updated.'
   },
+  PostReposted: {
+    type: DetailPostRdo,
+    status: HttpStatus.CREATED,
+    description: 'The post has been successfully reposted.'
+  },
+  AlreadyReposted: {
+    status: HttpStatus.CONFLICT,
+    description: BlogPostMessage.RepostExist
+  },
   PostDeleted: {
     status: HttpStatus.NO_CONTENT,
     description: 'The post has been successfully deleted.'
@@ -117,12 +139,23 @@ export const BlogPostApiResponse = {
     description: 'Post found.'
   },
   PostsFound: {
-    type: PostWithPaginationRdo, //! наверное будет тип с пагинацией
+    type: PostWithPaginationRdo,
+    status: HttpStatus.OK,
+    description: 'Posts found.'
+  },
+  SearchPosts: {
+    type: PostRdo,
+    isArray: true,
     status: HttpStatus.OK,
     description: 'Posts found.'
   },
   PostNotFound: {
     status: HttpStatus.NOT_FOUND,
     description: BlogPostMessage.NotFound
+  },
+  UserPostsCount: {
+    type: UserPostsCountRdo,
+    status: HttpStatus.OK,
+    description: 'User posts count.'
   }
 } as const;

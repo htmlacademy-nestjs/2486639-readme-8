@@ -18,7 +18,6 @@ export enum ConfigAlias {
   ServeRootEnv = 'SERVE_ROOT',
 
   Application = 'application',
-  AppPort = `${Application}.${Port}`,
   AppUploadDirectoryPath = `${Application}.${UploadDirectoryPath}`,
   AppServeRoot = `${Application}.${ServeRoot}`,
 
@@ -44,6 +43,7 @@ export enum ConfigAlias {
   PostgresUserEnv = `${PostgresEnv}_${UserEnv}`,
   PostgresPasswordEnv = `${PostgresEnv}_${PasswordEnv}`,
   PostgresDatabaseEnv = `${PostgresEnv}_${DatabaseEnv}`,
+  PostgresDatabaseUrlEnv = 'DATABASE_URL',
 
   AppPostgres = `${Application}.postgres`,
   AppPostgresHost = `${AppPostgres}.${Host}`,
@@ -51,6 +51,7 @@ export enum ConfigAlias {
   AppPostgresUser = `${AppPostgres}.${User}`,
   AppPostgresPassword = `${AppPostgres}.${Password}`,
   AppPostgresDatabase = `${AppPostgres}.${Database}`,
+  AppPostgresDatabaseUrl = `${AppPostgres}.databaseUrl`,
 
   RabbitEnv = 'RABBIT',
   RabbitHostEnv = `${RabbitEnv}_${HostEnv}`,
@@ -58,7 +59,8 @@ export enum ConfigAlias {
   RabbitUserEnv = `${RabbitEnv}_${UserEnv}`,
   RabbitPasswordEnv = `${RabbitEnv}_${PasswordEnv}`,
   RabbitExchangeEnv = `${RabbitEnv}_EXCHANGE`,
-  RabbitQueueEnv = `${RabbitEnv}_QUEUE`,
+  RabbitQueueSubscriberEnv = `${RabbitEnv}_QUEUE_SUBSCRIBER`,
+  RabbitQueueNewsLetterEnv = `${RabbitEnv}_QUEUE_NEWS_LETTER`,
 
   AppRabbit = `${Application}.rabbit`,
   AppRabbitHost = `${AppRabbit}.${Host}`,
@@ -66,7 +68,6 @@ export enum ConfigAlias {
   AppRabbitUser = `${AppRabbit}.${User}`,
   AppRabbitPassword = `${AppRabbit}.${Password}`,
   AppRabbitExchange = `${AppRabbit}.exchange`,
-  AppRabbitQueue = `${AppRabbit}.queue`,
 
   MailSmtpEnv = 'MAIL_SMTP',
   MailSmtpHostEnv = `${MailSmtpEnv}_${HostEnv}`,
@@ -100,9 +101,6 @@ export enum ConfigAlias {
   AccountServiceUrlEnv = `ACCOUNT_${ServiceUrlEnv}`,
   BlogPostServiceUrlEnv = `BLOG_POST_${ServiceUrlEnv}`,
   FileStorageServiceUrlEnv = `FILE_STORAGE_${ServiceUrlEnv}`,
-
-  AppAccountServiceUrl = `${Application}.account${ServiceUrl}`,
-  AppBlogPostServiceUrl = `${Application}.blogPost${ServiceUrl}`,
-  AppFileStorageServiceUrl = `${Application}.fileStorage${ServiceUrl}`,
   //...
+  ApiBlogPostUrlEnv = `API_BLOG_POST_URL`
 }

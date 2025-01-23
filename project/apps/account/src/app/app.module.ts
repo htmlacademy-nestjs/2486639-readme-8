@@ -8,9 +8,7 @@ import { AccountConfigModule, getMongooseOptions } from '@project/account/config
   imports: [
     AuthenticationModule,
     AccountConfigModule,
-    MongooseModule.forRootAsync(
-      getMongooseOptions()
-    )
+    MongooseModule.forRootAsync(getMongooseOptions())
   ],
   controllers: [],
   providers: []

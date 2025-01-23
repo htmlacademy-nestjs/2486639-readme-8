@@ -1,0 +1,4 @@
+# send news letter
+GET http://localhost:4100/api/run-news-letter HTTP/1.1
+
+###
