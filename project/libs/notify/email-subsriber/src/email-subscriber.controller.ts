@@ -1,8 +1,7 @@
-import { Controller, UseInterceptors } from '@nestjs/common';
-import { RabbitSubscribe } from '@golevelup/nestjs-rabbitmq';
+import { Controller } from '@nestjs/common';
+import { RabbitHeader, RabbitPayload, RabbitSubscribe } from '@golevelup/nestjs-rabbitmq';
 
-import { ConfigAlias, RabbitRouting } from '@project/shared/core';
-import { InjectRequestIdInterceptor } from '@project/shared/interceptors';
+import { ConfigAlias, RabbitRouting, XHeader } from '@project/shared/core';
 import { PostRdo } from '@project/blog/blog-post';
 
 import { EmailSubscriberService } from './email-subscriber.service';
@@ -19,9 +18,8 @@ export class EmailSubscriberController {
     queue: process.env[ConfigAlias.RabbitQueueSubscriberEnv], // а как забрать через config module?
     routingKey: RabbitRouting.AddSubscriber
   })
-  @UseInterceptors(InjectRequestIdInterceptor) // Не сработывает
-  public async create(subscriber: CreateSubscriberDto): Promise<void> {
-    await this.subscriberService.addSubscriber(subscriber);
+  public async create(@RabbitHeader(XHeader.RequestId) requestId: string, @RabbitPayload() subscriber: CreateSubscriberDto): Promise<void> {
+    await this.subscriberService.addSubscriber(subscriber, requestId);
   }
 
   @RabbitSubscribe({

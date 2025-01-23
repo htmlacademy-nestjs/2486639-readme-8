@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 
+import { RequestProperty } from '@project/shared/core';
 import { MailService } from '@project/notify/mail';
 import { PostRdo } from '@project/blog/blog-post';
 
@@ -14,8 +15,11 @@ export class EmailSubscriberService {
     private readonly mailService: MailService
   ) { }
 
-  public async addSubscriber(subscriber: CreateSubscriberDto): Promise<void> {
+  public async addSubscriber(subscriber: CreateSubscriberDto, requestId: string): Promise<void> {
     const loggerContext = 'EmailSubscriberService.addSubscriber';
+
+    Logger.log(`${RequestProperty.RequestId}: ${requestId || 'empty'}`, loggerContext);
+
     const { email } = subscriber;
     const existsSubscriber = await this.emailSubscriberRepository.findByEmail(email);
 
