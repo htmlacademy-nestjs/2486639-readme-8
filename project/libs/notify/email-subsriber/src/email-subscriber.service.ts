@@ -38,18 +38,12 @@ export class EmailSubscriberService {
   }
 
   public async sendAll(posts: PostRdo[]): Promise<void> {
-    const documents = await this.emailSubscriberRepository.findAll();
+    const subscribers = await this.emailSubscriberRepository.findAll();
 
-    if (!documents.length) {
+    if (!subscribers.length) {
       return
     }
 
-    const recipients = documents.map((document) => (document.email));
-
-    //!
-    console.log('recipients', recipients);
-    console.log('posts', posts);
-
-    await this.mailService.sendNotifyNewsLetter(recipients, posts);
+    await this.mailService.sendNotifyNewsLetter(subscribers, posts);
   }
 }

@@ -18,30 +18,32 @@ export class MailService {
   ) { }
 
   public async sendNotifyNewSubscriber(subscriber: Subscriber): Promise<void> {
-    await this.mailerService.sendMail({
+    const { name, email } = subscriber;
+    const sendMailOption: ISendMailOptions = {
       from: this.notifyConfig.mailSmtp.from,
-      to: subscriber.email,
+      to: email,
       subject: ADD_SUBSCRIBER_SUBJECT,
       template: ADD_SUBCRIBER_TEMPLATE,
-      context: {
-        name: subscriber.name,
-        email: subscriber.email
-      }
-    });
-  }
-
-  public async sendNotifyNewsLetter(recipients: string[], posts: PostRdo[]): Promise<void> {
-    const sendMailOptions: ISendMailOptions = {
-      from: this.notifyConfig.mailSmtp.from,
-      subject: NEWS_LETTER_SUBJECT,
-      //! может сразу "html:"? просто ссылки?
-      html: JSON.stringify(posts),
-      //template: NEWS_LETTER_TEMPLATE,
-      //context: { posts }
+      context: { name, email }
     };
 
-    for (const recipient of recipients) {
-      await this.mailerService.sendMail({ ...sendMailOptions, to: recipient });
+    await this.mailerService.sendMail(sendMailOption);
+  }
+
+  public async sendNotifyNewsLetter(subscribers: Subscriber[], posts: PostRdo[]): Promise<void> {
+    const urls = posts.map(({ id }) => ({ title: id, url: `http://localhost:4000/blog/${id}` }));//! env
+
+    for (const subscriber of subscribers) {
+      const { name, email } = subscriber;
+      const sendMailOption: ISendMailOptions = {
+        from: this.notifyConfig.mailSmtp.from,
+        to: email,
+        subject: NEWS_LETTER_SUBJECT,
+        template: NEWS_LETTER_TEMPLATE,
+        context: { name, urls }
+      };
+
+      await this.mailerService.sendMail(sendMailOption);
     }
   }
 }
