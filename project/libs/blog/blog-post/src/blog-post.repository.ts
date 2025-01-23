@@ -34,7 +34,7 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     return tags.map(({ id }) => ({ id }));
   }
 
-  private async getPostCount(where: Prisma.PostWhereInput): Promise<number> {
+  private getPostCount(where: Prisma.PostWhereInput): Promise<number> {
     return this.client.post.count({ where });
   }
 
