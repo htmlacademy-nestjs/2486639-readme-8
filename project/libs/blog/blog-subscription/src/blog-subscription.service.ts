@@ -36,7 +36,7 @@ export class BlogSubscriptionService {
     const foundLikeId = await this.blogSubscriptionRepository.findSubscriptionId(authorUserId, currentUserId);
 
     if (!foundLikeId) {
-      throw new NotFoundException();//!BlogSubscriptionMessage.LikeNotFound);
+      throw new NotFoundException(BlogSubscriptionMessage.SubscriptionNotFound);
     }
 
     await this.blogSubscriptionRepository.deleteById(foundLikeId);
