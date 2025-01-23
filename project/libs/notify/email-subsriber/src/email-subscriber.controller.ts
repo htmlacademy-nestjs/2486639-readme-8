@@ -1,7 +1,8 @@
-import { Controller } from '@nestjs/common';
+import { Controller, UseInterceptors } from '@nestjs/common';
 import { RabbitSubscribe } from '@golevelup/nestjs-rabbitmq';
 
 import { ConfigAlias, RabbitRouting } from '@project/shared/core';
+import { InjectRequestIdInterceptor } from '@project/shared/interceptors';
 import { PostRdo } from '@project/blog/blog-post';
 
 import { EmailSubscriberService } from './email-subscriber.service';
@@ -13,6 +14,7 @@ export class EmailSubscriberController {
     private readonly subscriberService: EmailSubscriberService
   ) { }
 
+  @UseInterceptors(InjectRequestIdInterceptor)
   @RabbitSubscribe({
     exchange: process.env[ConfigAlias.RabbitExchangeEnv], // а как забрать через config module?
     queue: process.env[ConfigAlias.RabbitQueueEnv], // а как забрать через config module?

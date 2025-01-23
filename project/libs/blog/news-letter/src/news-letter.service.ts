@@ -15,7 +15,7 @@ export class NewsLetterService {
     private readonly newsLetterRepository: NewsLetterRepository
   ) { }
 
-  public async sendNewsLetter(requestId: string): Promise<void> {
+  public async sendNewsLetter(): Promise<void> {
     const lastNewsLetter = await this.newsLetterRepository.getLastNewsLetter();
     const postEntities = await this.blogPostSevice.findPostsByCreateAt(lastNewsLetter?.createdAt);
 
@@ -28,6 +28,6 @@ export class NewsLetterService {
     const newsLetter = new NewsLetterEntity({ payload });
 
     await this.newsLetterRepository.save(newsLetter);
-    await this.notifyService.registerNewLetter(posts, requestId);
+    await this.notifyService.registerNewLetter(posts);
   }
 }

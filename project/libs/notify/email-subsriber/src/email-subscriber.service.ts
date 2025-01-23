@@ -34,10 +34,9 @@ export class EmailSubscriberService {
   }
 
   public async sendAll(posts: PostRdo[]): Promise<void> {
-    const loggerContext = '[EmailSubscriberService.sendAll';
     const subscribers = await this.emailSubscriberRepository.findAll();
 
-    Logger.log(`Subscribers count: ${subscribers.length}`, loggerContext);
+    Logger.log(`Subscribers count: ${subscribers.length}`, '[EmailSubscriberService.sendAll');
 
     if (!subscribers.length) {
       return

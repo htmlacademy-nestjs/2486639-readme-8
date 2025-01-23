@@ -8,7 +8,6 @@ import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 
 import { ConfigAlias } from '@project/shared/core';
-import { InjectRequestIdInterceptor } from '@project/shared/interceptors';
 
 import { AppModule } from './app/app.module';
 
@@ -19,7 +18,6 @@ async function bootstrap() {
   const port = configService.get<number>(ConfigAlias.AppPort);
 
   app.setGlobalPrefix(globalPrefix);
-  app.useGlobalInterceptors(new InjectRequestIdInterceptor());
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
   await app.listen(port);
