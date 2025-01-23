@@ -19,8 +19,9 @@ export class MailService {
 
   public async sendNotifyNewSubscriber(subscriber: Subscriber): Promise<void> {
     const { name, email } = subscriber;
+    const { mailSmtp: { from } } = this.notifyConfig;
     const sendMailOption: ISendMailOptions = {
-      from: this.notifyConfig.mailSmtp.from,
+      from,
       to: email,
       subject: ADD_SUBSCRIBER_SUBJECT,
       template: ADD_SUBCRIBER_TEMPLATE,
@@ -31,12 +32,13 @@ export class MailService {
   }
 
   public async sendNotifyNewsLetter(subscribers: Subscriber[], posts: PostRdo[]): Promise<void> {
-    const urls = posts.map(({ id }) => ({ title: id, url: `http://localhost:4000/blog/${id}` }));//! env
+    const { apiBlogPostUrl, mailSmtp: { from } } = this.notifyConfig;
+    const urls = posts.map(({ id }) => ({ title: id, url: `${apiBlogPostUrl}/${id}` }));
 
     for (const subscriber of subscribers) {
       const { name, email } = subscriber;
       const sendMailOption: ISendMailOptions = {
-        from: this.notifyConfig.mailSmtp.from,
+        from,
         to: email,
         subject: NEWS_LETTER_SUBJECT,
         template: NEWS_LETTER_TEMPLATE,

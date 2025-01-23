@@ -10,6 +10,7 @@ import { getPort } from '@project/shared/helpers';
 export interface NotifyConfig {
   environment: string;
   port: number;
+  apiBlogPostUrl: string;
   mongoDb: {
     host: string;
     port: number;
@@ -38,6 +39,7 @@ export interface NotifyConfig {
 const validationSchema = Joi.object({
   environment: Joi.string().valid(...ENVIRONMENTS).required().label(ConfigAlias.NodeEnv),
   port: Joi.number().port().default(DEFAULT_PORT),
+  apiBlogPostUrl: Joi.string().required().label(ConfigAlias.ApiBlogPostUrlEnv),
   mongoDb: Joi.object({
     host: Joi.string().valid().hostname().required().label(ConfigAlias.MongoDbHostEnv),
     port: Joi.number().port().default(DEFAULT_MONGODB_PORT),
@@ -75,6 +77,7 @@ function getConfig(): NotifyConfig {
   const config: NotifyConfig = {
     environment: process.env[ConfigAlias.NodeEnv] as Environment,
     port: getPort(ConfigAlias.PortEnv, DEFAULT_PORT),
+    apiBlogPostUrl: process.env[ConfigAlias.ApiBlogPostUrlEnv],
     mongoDb: {
       host: process.env[ConfigAlias.MongoDbHostEnv],
       port: getPort(ConfigAlias.MongoDbPortEnv, DEFAULT_MONGODB_PORT),

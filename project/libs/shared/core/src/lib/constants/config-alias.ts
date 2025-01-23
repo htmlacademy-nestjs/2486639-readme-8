@@ -103,8 +103,9 @@ export enum ConfigAlias {
   BlogPostServiceUrlEnv = `BLOG_POST_${ServiceUrlEnv}`,
   FileStorageServiceUrlEnv = `FILE_STORAGE_${ServiceUrlEnv}`,
 
-  AppAccountServiceUrl = `${Application}.account${ServiceUrl}`,
+  AppAccountServiceUrl = `${Application}.account${ServiceUrl}`, //! проверить используются ли, там помоему типизированное обращение
   AppBlogPostServiceUrl = `${Application}.blogPost${ServiceUrl}`,
   AppFileStorageServiceUrl = `${Application}.fileStorage${ServiceUrl}`,
   //...
+  ApiBlogPostUrlEnv = `API_BLOG_POST_URL`
 }
