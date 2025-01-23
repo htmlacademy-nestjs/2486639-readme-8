@@ -60,7 +60,8 @@ export enum ConfigAlias {
   RabbitUserEnv = `${RabbitEnv}_${UserEnv}`,
   RabbitPasswordEnv = `${RabbitEnv}_${PasswordEnv}`,
   RabbitExchangeEnv = `${RabbitEnv}_EXCHANGE`,
-  RabbitQueueEnv = `${RabbitEnv}_QUEUE`,
+  RabbitQueueSubscriberEnv = `${RabbitEnv}_QUEUE_SUBSCRIBER`,
+  RabbitQueueNewsLetterEnv = `${RabbitEnv}_QUEUE_NEWS_LETTER`,
 
   AppRabbit = `${Application}.rabbit`,
   AppRabbitHost = `${AppRabbit}.${Host}`,
@@ -68,7 +69,6 @@ export enum ConfigAlias {
   AppRabbitUser = `${AppRabbit}.${User}`,
   AppRabbitPassword = `${AppRabbit}.${Password}`,
   AppRabbitExchange = `${AppRabbit}.exchange`,
-  AppRabbitQueue = `${AppRabbit}.queue`,
 
   MailSmtpEnv = 'MAIL_SMTP',
   MailSmtpHostEnv = `${MailSmtpEnv}_${HostEnv}`,

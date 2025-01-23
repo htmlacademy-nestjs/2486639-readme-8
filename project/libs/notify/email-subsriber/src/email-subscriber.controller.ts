@@ -14,19 +14,19 @@ export class EmailSubscriberController {
     private readonly subscriberService: EmailSubscriberService
   ) { }
 
-  @UseInterceptors(InjectRequestIdInterceptor)
   @RabbitSubscribe({
     exchange: process.env[ConfigAlias.RabbitExchangeEnv], // а как забрать через config module?
-    queue: process.env[ConfigAlias.RabbitQueueEnv], // а как забрать через config module?
+    queue: process.env[ConfigAlias.RabbitQueueSubscriberEnv], // а как забрать через config module?
     routingKey: RabbitRouting.AddSubscriber
   })
+  @UseInterceptors(InjectRequestIdInterceptor) // Не сработывает
   public async create(subscriber: CreateSubscriberDto): Promise<void> {
     await this.subscriberService.addSubscriber(subscriber);
   }
 
   @RabbitSubscribe({
     exchange: process.env[ConfigAlias.RabbitExchangeEnv], // а как забрать через config module?
-    queue: process.env[ConfigAlias.RabbitQueueEnv], // а как забрать через config module?
+    queue: process.env[ConfigAlias.RabbitQueueNewsLetterEnv], // а как забрать через config module?
     routingKey: RabbitRouting.AddNewsLetter
   })
   public async sendAll(posts: PostRdo[]): Promise<void> {

@@ -15,7 +15,7 @@ export class EmailSubscriberService {
   ) { }
 
   public async addSubscriber(subscriber: CreateSubscriberDto): Promise<void> {
-    const loggerContext = '[EmailSubscriberService.addSubscriber';
+    const loggerContext = 'EmailSubscriberService.addSubscriber';
     const { email } = subscriber;
     const existsSubscriber = await this.emailSubscriberRepository.findByEmail(email);
 
@@ -36,7 +36,7 @@ export class EmailSubscriberService {
   public async sendAll(posts: PostRdo[]): Promise<void> {
     const subscribers = await this.emailSubscriberRepository.findAll();
 
-    Logger.log(`Subscribers count: ${subscribers.length}`, '[EmailSubscriberService.sendAll');
+    Logger.log(`Subscribers count: ${subscribers.length}`, 'EmailSubscriberService.sendAll');
 
     if (!subscribers.length) {
       return

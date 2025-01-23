@@ -25,7 +25,8 @@ export interface NotifyConfig {
     user: string;
     password: string;
     exchange: string;
-    queue: string;
+    queueSubscriber: string;
+    queueNewsLetter: string;
   },
   mailSmtp: {
     host: string;
@@ -54,7 +55,8 @@ const validationSchema = Joi.object({
     user: Joi.string().required().label(ConfigAlias.RabbitUserEnv),
     password: Joi.string().required().label(ConfigAlias.RabbitPasswordEnv),
     exchange: Joi.string().required().label(ConfigAlias.RabbitExchangeEnv),
-    queue: Joi.string().required().label(ConfigAlias.RabbitQueueEnv)
+    queueSubscriber: Joi.string().required().label(ConfigAlias.RabbitQueueSubscriberEnv),
+    queueNewsLetter: Joi.string().required().label(ConfigAlias.RabbitQueueNewsLetterEnv)
   }),
   mailSmtp: Joi.object({
     host: Joi.string().valid().hostname().required().label(ConfigAlias.MailSmtpHostEnv),
@@ -92,7 +94,8 @@ function getConfig(): NotifyConfig {
       user: process.env[ConfigAlias.RabbitUserEnv],
       password: process.env[ConfigAlias.RabbitPasswordEnv],
       exchange: process.env[ConfigAlias.RabbitExchangeEnv],
-      queue: process.env[ConfigAlias.RabbitQueueEnv]
+      queueSubscriber: process.env[ConfigAlias.RabbitQueueSubscriberEnv],
+      queueNewsLetter: process.env[ConfigAlias.RabbitQueueNewsLetterEnv]
     },
     mailSmtp: {
       host: process.env[ConfigAlias.MailSmtpHostEnv],
