@@ -6,7 +6,7 @@ import { ApiBearerAuth, ApiConsumes, ApiParam, ApiResponse, ApiTags } from '@nes
 import { FileInterceptor } from '@nestjs/platform-express';
 
 import {
-  ApiParamOption, BearerAuth, RequestWithBearerAuth, RequestWithRequestId,
+  ApiParamOption, BearerAuth, RequestWithBearerAuth, RequestWithRequestIdAndBearerAuth,
   RequestWithTokenPayload, RouteAlias, USER_ID_PARAM
 } from '@project/shared/core';
 import { fillDto } from '@project/shared/helpers';
@@ -45,7 +45,7 @@ export class AuthenticationController {
   @Post(RouteAlias.Register)
   public async register(
     @Body() dto: CreateUserDto,
-    @Req() { bearerAuth, requestId }: RequestWithBearerAuth & RequestWithRequestId,
+    @Req() { requestId, bearerAuth }: RequestWithRequestIdAndBearerAuth,
     @UploadedFile(parseFilePipeBuilder) avatarFile?: Express.Multer.File
   ): Promise<UserRdo> {
     // headers: Authorization - т.к. только анонимный пользователь может регистрироваться
