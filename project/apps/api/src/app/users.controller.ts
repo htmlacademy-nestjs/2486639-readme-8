@@ -22,6 +22,7 @@ import {
 import { UserPostsCountRdo } from '@project/blog/blog-post';
 import { UserSubscriptionsCountRdo } from '@project/blog/blog-subscription';
 
+import { UserInfoService } from './user-info.service';
 import { CheckAuthGuard } from './guards/check-auth.guard';
 import { DetailUserRdo } from './rdo/detail-user.rdo';
 
@@ -32,7 +33,8 @@ export class UsersController {
   constructor(
     private readonly httpService: HttpService,
     @Inject(apiConfig.KEY)
-    private readonly apiOptions: ConfigType<typeof apiConfig>
+    private readonly apiOptions: ConfigType<typeof apiConfig>,
+    private userInfoService: UserInfoService
   ) { }
 
   @ApiResponse(AuthenticationApiResponse.UserCreated)
@@ -133,9 +135,9 @@ export class UsersController {
   @Get(USER_ID_PARAM)
   public async show(
     @Param(ApiParamOption.UserId.name, MongoIdValidationPipe) userId: string,
-    @Req() { requestId }: RequestWithRequestId): Promise<UserRdo> {
-    const url = `${this.apiOptions.accountServiceUrl}/${userId}`;
-    const { data } = await this.httpService.axiosRef.get<UserRdo>(url, makeHeaders(requestId));
+    @Req() { requestId }: RequestWithRequestId
+  ): Promise<UserRdo> {
+    const data = await this.userInfoService.getUserInfo(userId, requestId);
 
     return data;
   }
@@ -147,15 +149,12 @@ export class UsersController {
   @Get(`${USER_ID_PARAM}/detail`)
   public async getInfo(
     @Param(ApiParamOption.UserId.name, MongoIdValidationPipe) userId: string,
-    @Req() { requestId }: RequestWithRequestId): Promise<DetailUserRdo> {
+    @Req() { requestId }: RequestWithRequestId
+  ): Promise<DetailUserRdo> {
+    const { id, registrationDate } = await this.userInfoService.getUserInfo(userId, requestId);
     const headers = makeHeaders(requestId);
-
-    const getUserUrl = `${this.apiOptions.accountServiceUrl}/${userId}`;
-    const { data: { id, registrationDate } } = await this.httpService.axiosRef.get<UserRdo>(getUserUrl, headers);
-
     const getPostsCountUrl = `${this.apiOptions.blogPostServiceUrl}/${RouteAlias.Posts}/${RouteAlias.GetUserPostsCount}/${userId}`;
     const { data: { postsCount } } = await this.httpService.axiosRef.get<UserPostsCountRdo>(getPostsCountUrl, headers);
-
     const getSubscriptionsCountUrl = `${this.apiOptions.blogPostServiceUrl}/${RouteAlias.Subscriptions}/${RouteAlias.GetUserSubscriptionsCount}/${userId}`;
     const { data: { subscriptionsCount } } = await this.httpService.axiosRef.get<UserSubscriptionsCountRdo>(getSubscriptionsCountUrl, headers);
 
