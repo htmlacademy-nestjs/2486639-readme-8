@@ -70,10 +70,7 @@ export class UsersController {
   @ApiResponse(AuthenticationApiResponse.BadRequest)
   @ApiResponse(AuthenticationApiResponse.Unauthorized)
   @Post(RouteAlias.Login)
-  public async login(
-    @Body() dto: LoginUserDto, // для swagger
-    @Req() { requestId }: RequestWithRequestId
-  ): Promise<LoggedUserRdo> {
+  public async login(@Body() dto: LoginUserDto, @Req() { requestId }: RequestWithRequestId): Promise<LoggedUserRdo> {
     const url = `${this.apiOptions.accountServiceUrl}/${RouteAlias.Login}`;
     const { data } = await this.httpService.axiosRef.post<LoggedUserRdo>(url, dto, makeHeaders(requestId));
 
@@ -120,10 +117,7 @@ export class UsersController {
   @ApiBearerAuth(BearerAuth.AccessToken)
   @HttpCode(AuthenticationApiResponse.ChangePasswordSuccess.status)
   @Post(RouteAlias.ChangePassword)
-  public async changePassword(
-    @Body() dto: ChangePasswordDto,
-    @Req() { requestId, bearerAuth }: RequestWithRequestIdAndBearerAuth
-  ): Promise<void> {
+  public async changePassword(@Body() dto: ChangePasswordDto, @Req() { requestId, bearerAuth }: RequestWithRequestIdAndBearerAuth): Promise<void> {
     const url = `${this.apiOptions.accountServiceUrl}/${RouteAlias.ChangePassword}`;
 
     await this.httpService.axiosRef.post(url, dto, makeHeaders(requestId, bearerAuth));
