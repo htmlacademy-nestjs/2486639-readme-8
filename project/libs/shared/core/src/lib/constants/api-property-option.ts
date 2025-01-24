@@ -26,6 +26,11 @@ export const ApiPropertyOption = {
       type: 'string',
       format: 'binary'
     },
+    registrationDate: {
+      description: 'The user registration date',
+      type: 'string',
+      example: '2025-01-20'
+    },
     AccessToken: {
       description: 'The user access JWT token',
       example: 'asdasdsdfetyhetyhythgfnghnlkcsdkfajowfjlsdkmcv'
