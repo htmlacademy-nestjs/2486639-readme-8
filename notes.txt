@@ -12,6 +12,7 @@
   5. дополнить при получении списка комментариев
   6. дополнить после добавления комментария
   7. при получении детальной информации о пользователе, дополнить количестве подписок на него и количестве его постов
+  8. гет файл + схема
 
 
 Заметки:
@@ -196,6 +197,7 @@ tag2
        и в запрос на проверку токена нечего передать...
        можно дополнительно сгененерировать RequestId
          или сделать generateRequestIdGuard подключив глобально app.useGlobalGuards
+      зачем добавляем в api / app.module.ts? providers: [InjectRequestIdGuard, CheckAuthGuard], без этого все работает
   40. удалил InjectUserIdInterceptor, а userId добавляю сразу в CheckAuthGuard
        может поменять имя?
   41. validatePostData(dto: CreatePostDto | UpdatePostDto) - сделать Guard и валидировать ранее...
@@ -203,3 +205,6 @@ tag2
        чтобы убрать <.headers['authorization']>
        если сложно, то для api-gate можно сделать перехват ошибки axios запроса
   42. подключение к монге по месту в модуле
+  43. ServeStaticModule как ответить 404 когда нет файла?
+  44. JwtAuthGuard / LocalStrategy / JwtAccessStrategy - как добавить логирование ошибок проверки ключей? чтобы для начала вывести RequestId
+  45. configService: ConfigService типизировать!
