@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Transform } from 'class-transformer';
 import dayjs from 'dayjs';
 
-import { PostType } from '@project/shared/core';
+import { ApiPropertyOption, PostType } from '@project/shared/core';
 
 import { PostApiProperty } from '../blog-post.constant.property';
 import { ONLY_DATE_FORMAT } from '../blog-post.constant';
@@ -58,7 +58,7 @@ export class PostRdo {
   @Expose()
   public linkDescription: string;
 
-  @ApiProperty(PostApiProperty.UserId)
+  @ApiProperty(ApiPropertyOption.User.Id)
   @Expose()
   public userId: string;
 

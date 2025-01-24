@@ -8,10 +8,7 @@ export class UserSubscriptionsCountRdo {
   @Expose()
   public userId: string;
 
-  @ApiProperty({
-    description: 'The user subscriptions count',
-    example: 5
-  })
+  @ApiProperty(ApiPropertyOption.Post.SubscriptionsCount)
   @Expose()
   public subscriptionsCount: number;
 }

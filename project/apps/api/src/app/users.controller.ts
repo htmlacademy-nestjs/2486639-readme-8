@@ -151,7 +151,7 @@ export class UsersController {
     const headers = makeHeaders(requestId);
 
     const getUserUrl = `${this.apiOptions.accountServiceUrl}/${userId}`;
-    const { data: { registrationDate } } = await this.httpService.axiosRef.get<UserRdo>(getUserUrl, headers);
+    const { data: { id, registrationDate } } = await this.httpService.axiosRef.get<UserRdo>(getUserUrl, headers);
 
     const getPostsCountUrl = `${this.apiOptions.blogPostServiceUrl}/${RouteAlias.Posts}/${RouteAlias.GetUserPostsCount}/${userId}`;
     const { data: { postsCount } } = await this.httpService.axiosRef.get<UserPostsCountRdo>(getPostsCountUrl, headers);
@@ -160,7 +160,7 @@ export class UsersController {
     const { data: { subscriptionsCount } } = await this.httpService.axiosRef.get<UserSubscriptionsCountRdo>(getSubscriptionsCountUrl, headers);
 
     return {
-      userId,
+      id,
       registrationDate,
       postsCount,
       subscriptionsCount

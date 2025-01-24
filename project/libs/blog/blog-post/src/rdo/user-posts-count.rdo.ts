@@ -1,14 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 
-import { PostApiProperty } from '../blog-post.constant.property';
+import { ApiPropertyOption } from '@project/shared/core';
 
 export class UserPostsCountRdo {
-  @ApiProperty(PostApiProperty.UserId)
+  @ApiProperty(ApiPropertyOption.User.Id)
   @Expose()
   public userId: string;
 
-  @ApiProperty(PostApiProperty.PostsCount)
+  @ApiProperty(ApiPropertyOption.Post.PostsCount)
   @Expose()
   public postsCount: number;
 }

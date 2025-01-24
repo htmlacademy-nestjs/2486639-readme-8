@@ -16,10 +16,6 @@ export const PostApiProperty = {
     description: 'The post publish date',
     example: '2024-07-09'
   },
-  UserId: {
-    description: 'The post user id',
-    example: '658170cbb954e9f5b905ccf4'
-  },
   // для формирования "for types:..." можно применить PostFieldsByType, но данные поля по типам, а тут нужно типы по полям
   Title: {
     description: 'The post title for types: video and text',
@@ -93,10 +89,6 @@ export const PostApiProperty = {
   Tags: {
     description: 'The post tags',
     example: ['tag1', 'tag2']
-  },
-  PostsCount: {
-    description: 'The user posts count',
-    example: 5
   }
 } as const;
 

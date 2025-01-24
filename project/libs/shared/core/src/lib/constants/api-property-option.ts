@@ -44,6 +44,14 @@ export const ApiPropertyOption = {
     Id: {
       description: 'The unique post ID',
       example: '2f31b19b-97eb-4305-877a-0b9be7faca8f'
+    },
+    PostsCount: {
+      description: 'The user posts count',
+      example: 5
+    },
+    SubscriptionsCount: {
+      description: 'The user subscriptions count',
+      example: 5
     }
   }
 } as const;

@@ -6,24 +6,17 @@ import { ApiPropertyOption } from '@project/shared/core';
 export class DetailUserRdo {
   @ApiProperty(ApiPropertyOption.User.Id)
   @Expose()
-  public userId: string;
+  public id: string;
 
-  // @ApiProperty(ApiPropertyOption.User.registrationDate) //!
+  @ApiProperty(ApiPropertyOption.User.registrationDate)
   @Expose()
   public registrationDate: string;
 
-  // @ApiProperty(PostApiProperty.PostsCount)//!
-  @ApiProperty({
-    description: 'The user posts count',
-    example: 5
-  })
+  @ApiProperty(ApiPropertyOption.Post.PostsCount)
   @Expose()
   public postsCount: number;
 
-  @ApiProperty({
-    description: 'The user subscriptions count',
-    example: 5
-  })
+  @ApiProperty(ApiPropertyOption.Post.SubscriptionsCount)
   @Expose()
   public subscriptionsCount: number;
 }
