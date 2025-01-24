@@ -29,7 +29,7 @@ export class AxiosExceptionFilter implements ExceptionFilter {
       }
     }
 
-    Logger.error(parseAxiosError(error), 'AxiosExceptionFilter');
+    Logger.error(parseAxiosError(error), AxiosExceptionFilter.name);
 
     response
       .status(errorResponse.statusCode)
