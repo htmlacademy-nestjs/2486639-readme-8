@@ -12,7 +12,7 @@ export class RequestIdInterceptor implements NestInterceptor {
     const request = context.switchToHttp().getRequest<Request>();
 
     request[RequestProperty.RequestId] = requestId;
-    Logger.log(`[RequestIdInterceptor: ${request.method}: ${request.url}]: ${RequestProperty.RequestId} is ${requestId}`);
+    Logger.log(`${request.method}: ${request.url}: ${RequestProperty.RequestId} is ${requestId || 'empty'}`, RequestIdInterceptor.name);
 
     return next.handle();
   }

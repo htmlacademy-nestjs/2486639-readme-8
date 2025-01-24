@@ -16,15 +16,13 @@ export class EmailSubscriberService {
   ) { }
 
   public async addSubscriber(subscriber: CreateSubscriberDto, requestId: string): Promise<void> {
-    const loggerContext = 'EmailSubscriberService.addSubscriber';
-
-    Logger.log(`${XHeader.RequestId}: ${requestId || 'empty'}`, loggerContext);
+    Logger.log(`AddSubscriber: ${XHeader.RequestId}: ${requestId || 'empty'}`, EmailSubscriberService.name);
 
     const { email } = subscriber;
     const existsSubscriber = await this.emailSubscriberRepository.findByEmail(email);
 
     if (existsSubscriber) {
-      Logger.log('Subscriber exists', loggerContext);
+      Logger.log('AddSubscriber: subscriber exists', EmailSubscriberService.name);
 
       return;
     }
@@ -32,7 +30,7 @@ export class EmailSubscriberService {
     const emailSubscriber = new EmailSubscriberEntity(subscriber);
 
     await this.emailSubscriberRepository.save(emailSubscriber);
-    Logger.log('New subscriber saved', loggerContext);
+    Logger.log(`AddSubscriber: new subscriber ${email} saved`, EmailSubscriberService.name);
 
     await this.mailService.sendNotifyNewSubscriber(subscriber);
   }
@@ -40,7 +38,7 @@ export class EmailSubscriberService {
   public async sendAll(posts: PostRdo[]): Promise<void> {
     const subscribers = await this.emailSubscriberRepository.findAll();
 
-    Logger.log(`Subscribers count: ${subscribers.length}`, 'EmailSubscriberService.sendAll');
+    Logger.log(`SendAll: subscribers count: ${subscribers.length}`, EmailSubscriberService.name);
 
     if (!subscribers.length) {
       return
