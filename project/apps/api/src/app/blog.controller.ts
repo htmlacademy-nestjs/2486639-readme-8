@@ -4,7 +4,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { HttpService } from '@nestjs/axios';
 
 import { apiConfig } from '@project/api/config';
-import { RequestWithRequestIdAndUserId, RouteAlias, XHeader } from '@project/shared/core';
+import { RequestWithRequestIdAndUserId, RouteAlias } from '@project/shared/core';
 import { makeHeaders } from '@project/shared/helpers';
 import { AxiosExceptionFilter } from '@project/shared/exception-filters';
 

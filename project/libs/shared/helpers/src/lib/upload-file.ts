@@ -1,8 +1,6 @@
 import 'multer'; // Express.Multer.File
 import axios from 'axios';
 
-import { XHeader } from '@project/shared/core';
-
 import { multerFileToFormData } from './form-data';
 import { makeHeaders } from './headers';
 
