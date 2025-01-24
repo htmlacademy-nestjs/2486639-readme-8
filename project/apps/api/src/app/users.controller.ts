@@ -19,8 +19,11 @@ import {
   AuthenticationApiResponse, AvatarOption, ChangePasswordDto, CreateUserDto, LoggedUserRdo,
   LoginUserDto, parseFilePipeBuilder, TokenPayloadRdo, UserRdo, UserTokenRdo
 } from '@project/account/authentication';
+import { UserPostsCountRdo } from '@project/blog/blog-post';
+import { UserSubscriptionsCountRdo } from '@project/blog/blog-subscription';
 
 import { CheckAuthGuard } from './guards/check-auth.guard';
+import { DetailUserRdo } from './rdo/detail-user.rdo';
 
 @ApiTags('users')
 @Controller('users')
@@ -135,5 +138,32 @@ export class UsersController {
     const { data } = await this.httpService.axiosRef.get<UserRdo>(url, makeHeaders(requestId));
 
     return data;
+  }
+
+  @ApiResponse({ ...AuthenticationApiResponse.UserFound, type: DetailUserRdo })
+  @ApiResponse(AuthenticationApiResponse.UserNotFound)
+  @ApiResponse(AuthenticationApiResponse.BadRequest)
+  @ApiParam(ApiParamOption.UserId)
+  @Get(`${USER_ID_PARAM}/detail`)
+  public async getInfo(
+    @Param(ApiParamOption.UserId.name, MongoIdValidationPipe) userId: string,
+    @Req() { requestId }: RequestWithRequestId): Promise<DetailUserRdo> {
+    const headers = makeHeaders(requestId);
+
+    const getUserUrl = `${this.apiOptions.accountServiceUrl}/${userId}`;
+    const { data: { registrationDate } } = await this.httpService.axiosRef.get<UserRdo>(getUserUrl, headers);
+
+    const getPostsCountUrl = `${this.apiOptions.blogPostServiceUrl}/${RouteAlias.Posts}/${RouteAlias.GetUserPostsCount}/${userId}`;
+    const { data: { postsCount } } = await this.httpService.axiosRef.get<UserPostsCountRdo>(getPostsCountUrl, headers);
+
+    const getSubscriptionsCountUrl = `${this.apiOptions.blogPostServiceUrl}/${RouteAlias.Subscriptions}/${RouteAlias.GetUserSubscriptionsCount}/${userId}`;
+    const { data: { subscriptionsCount } } = await this.httpService.axiosRef.get<UserSubscriptionsCountRdo>(getSubscriptionsCountUrl, headers);
+
+    return {
+      userId,
+      registrationDate,
+      postsCount,
+      subscriptionsCount
+    };
   }
 }
