@@ -1,10 +1,9 @@
+import { Controller, Get, HttpStatus } from '@nestjs/common';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { Controller, Get, HttpStatus } from "@nestjs/common";
-import { ApiResponse, ApiTags } from "@nestjs/swagger";
+import { RouteAlias } from '@project/shared/core';
 
-import { RouteAlias } from "@project/shared/core";
-
-import { NewsLetterService } from "./news-letter.service";
+import { NewsLetterService } from './news-letter.service';
 
 @ApiTags(RouteAlias.RunNewsLetter)
 @Controller(RouteAlias.RunNewsLetter)
