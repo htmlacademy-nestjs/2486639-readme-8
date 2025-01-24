@@ -2,13 +2,13 @@ import { Controller, Delete, HttpCode, Param, Post, Req } from '@nestjs/common';
 import { ApiHeader, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { GuidValidationPipe } from '@project/shared/pipes';
-import { ApiParamOption, BlogUserIdApiHeader, POST_ID_PARAM, RequestWithUserId, RouteAlias } from '@project/shared/core';
+import { ApiHeaderOption, ApiParamOption, POST_ID_PARAM, RequestWithUserId, RouteAlias } from '@project/shared/core';
 
 import { BlogPostLikeApiResponse } from './blog-post-like.constant';
 import { BlogPostLikeService } from './blog-post-like.service';
 
 @ApiTags('blog-post-like')
-@ApiHeader(BlogUserIdApiHeader)
+@ApiHeader(ApiHeaderOption.UserId)
 @Controller(RouteAlias.PostLikes)
 export class BlogPostLikeController {
   constructor(

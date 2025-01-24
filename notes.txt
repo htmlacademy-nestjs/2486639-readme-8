@@ -1,6 +1,3 @@
-вынести отдельно - private makeHeaders
-проверить - RequestWithRequestIdAndUserId = RequestWithRequestId & RequestWithUserId
-
 Реализовать маршруты - api-gate:
   1. объеденить все Swagger?
   2. дополнять список публикаци информацией о пользователе:

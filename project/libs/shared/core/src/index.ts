@@ -1,6 +1,8 @@
 export { Entity } from './lib/base/entity';
 
-export * from './lib/constants/api-property';
+export { ApiHeaderOption } from './lib/constants/api-header-option';
+export * from './lib/constants/api-param-option';
+export { ApiPropertyOption } from './lib/constants/api-property-option';
 export * from './lib/constants/bearer-auth';
 export { ConfigAlias } from './lib/constants/config-alias';
 export * from './lib/constants/default-port';
@@ -8,7 +10,6 @@ export { PageQueryApiProperty } from './lib/constants/page-query-api-property';
 export { PaginationApiProperty } from './lib/constants/pagination-api-property';
 export { RequestProperty } from './lib/constants/request-property';
 export * from './lib/constants/route-alias';
-export * from './lib/constants/x-header';
 
 export { EntityFactory } from './lib/interfaces/entity-factory.interface';
 export { File } from './lib/interfaces/file.interface';
@@ -41,3 +42,4 @@ export { Subscriber } from './lib/types/subscriber.interface';
 export { Tag } from './lib/types/tag.interface';
 export { Subscription } from './lib/types/subscription.interface';
 export { User } from './lib/types/user.interface';
+export { XHeader } from './lib/types/x-header.enum';

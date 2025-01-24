@@ -2,7 +2,8 @@ import { Inject, Injectable } from '@nestjs/common';
 import { AmqpConnection } from '@golevelup/nestjs-rabbitmq';
 import { ConfigType } from '@nestjs/config';
 
-import { RabbitRouting, XHeader } from '@project/shared/core';
+import { RabbitRouting } from '@project/shared/core';
+import { makeHeaders } from '@project/shared/helpers';
 import { rabbitConfig } from '@project/account/config';
 import { CreateSubscriberDto } from '@project/notify/email-subsriber';
 
@@ -20,7 +21,7 @@ export class NotifyService {
       this.rabbitOptions.exchange,
       RabbitRouting.AddSubscriber,
       dto,
-      { headers: { [XHeader.RequestId]: requestId } }
+      makeHeaders(requestId)
     );
 
     return result;

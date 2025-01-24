@@ -7,8 +7,8 @@ import { FileInterceptor } from '@nestjs/platform-express';
 
 import { fillDto } from '@project/shared/helpers';
 import {
-  ApiParamOption, BlogRequestIdApiHeader, BlogUserIdApiHeader, RequestWithRequestIdAndUserId,
-  RequestWithUserId, RouteAlias, USER_ID_PARAM, POST_ID_PARAM
+  ApiParamOption, RequestWithRequestIdAndUserId, RequestWithUserId,
+  RouteAlias, USER_ID_PARAM, POST_ID_PARAM, ApiHeaderOption
 } from '@project/shared/core';
 import { GuidValidationPipe, MongoIdValidationPipe } from '@project/shared/pipes';
 
@@ -26,7 +26,7 @@ import { SearchBlogPostQuery } from './query/search-blog-post.query';
 import { BlogPostApiResponse, ImageOption, parseFilePipeBuilder } from './blog-post.constant';
 
 @ApiTags('blog-post')
-@ApiHeader(BlogUserIdApiHeader) // глобально вроде не добавить? и примеры почемуто не работают...
+@ApiHeader(ApiHeaderOption.UserId) // глобально вроде не добавить? и примеры почемуто не работают...
 @Controller(RouteAlias.Posts)
 export class BlogPostController {
   constructor(
@@ -125,7 +125,7 @@ export class BlogPostController {
   @ApiResponse(BlogPostApiResponse.Unauthorized)
   @ApiResponse(BlogPostApiResponse.BadRequest)
   @ApiConsumes('multipart/form-data')
-  @ApiHeader(BlogRequestIdApiHeader)
+  @ApiHeader(ApiHeaderOption.RequestId)
   @UseInterceptors(FileInterceptor(ImageOption.KEY))
   @Post()
   public async create(
@@ -144,7 +144,7 @@ export class BlogPostController {
   @ApiResponse(BlogPostApiResponse.NotAllow)
   @ApiParam(ApiParamOption.PostId)
   @ApiConsumes('multipart/form-data')
-  @ApiHeader(BlogRequestIdApiHeader)
+  @ApiHeader(ApiHeaderOption.RequestId)
   @UseInterceptors(FileInterceptor(ImageOption.KEY))
   @Patch(POST_ID_PARAM)
   public async update(
