@@ -96,7 +96,7 @@ export class UsersController {
   @ApiBearerAuth(BearerAuth.RefreshToken)
   @HttpCode(AuthenticationApiResponse.RefreshTokens.status)
   @Post(RouteAlias.Refresh)
-  public async refreshToken({ requestId, bearerAuth }: RequestWithRequestIdAndBearerAuth): Promise<UserTokenRdo> {
+  public async refreshToken(@Req() { requestId, bearerAuth }: RequestWithRequestIdAndBearerAuth): Promise<UserTokenRdo> {
     const url = `${this.apiOptions.accountServiceUrl}/refresh`;
     const { data } = await this.httpService.axiosRef.post<UserTokenRdo>(url, null, makeHeaders(requestId, bearerAuth));
 
@@ -122,7 +122,7 @@ export class UsersController {
   @Post(RouteAlias.ChangePassword)
   public async changePassword(
     @Body() dto: ChangePasswordDto,
-    { requestId, bearerAuth }: RequestWithRequestIdAndBearerAuth
+    @Req() { requestId, bearerAuth }: RequestWithRequestIdAndBearerAuth
   ): Promise<void> {
     const url = `${this.apiOptions.accountServiceUrl}/${RouteAlias.ChangePassword}`;
 
