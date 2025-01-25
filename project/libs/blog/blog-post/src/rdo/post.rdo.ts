@@ -15,7 +15,7 @@ export class PostRdo {
 
   @ApiProperty(ApiPropertyOption.Post.Tags)
   @Expose()
-  @Transform(({ value }) => value.map((item: { title: string; }) => item.title))
+  @Transform(({ value }) => value.map((item: { title: string }) => item.title))
   public tags: string[];
 
   @ApiProperty(ApiPropertyOption.Post.PublishDate)

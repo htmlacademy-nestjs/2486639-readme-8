@@ -2,7 +2,10 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Transform } from 'class-transformer';
 import dayjs from 'dayjs';
 
-import { ApiPropertyOption, DateFormat, PostState, PostType } from '@project/shared/core';
+import { PostType } from '../types/post-type.enum';
+import { PostState } from '../types/post-state.enum';
+import { ApiPropertyOption } from '../constants/api-property-option';
+import { DateFormat } from '../constants/date-format';
 
 export class DetailPostRdo {
   @ApiProperty(ApiPropertyOption.Post.Id)
@@ -15,7 +18,7 @@ export class DetailPostRdo {
 
   @ApiProperty(ApiPropertyOption.Post.Tags)
   @Expose()
-  @Transform(({ value }) => value.map((item: { title: string; }) => item.title))
+  @Transform(({ value }) => value.map((item: { title: string }) => item.title))
   public tags: string[];
 
   @ApiProperty({
@@ -29,10 +32,6 @@ export class DetailPostRdo {
   @Transform(({ value }) => dayjs(value).format(DateFormat.ONLY_DATE))
   @Expose()
   public publishDate: string;
-
-  @ApiProperty(ApiPropertyOption.User.Id)
-  @Expose()
-  public userId: string;
 
   @ApiProperty(ApiPropertyOption.Post.Title)
   @Expose()
@@ -88,5 +87,4 @@ export class DetailPostRdo {
   @Expose()
   @Transform(({ obj }) => (obj.repostedPost?.userId))
   public repostedPostUserId: string;
-
 }

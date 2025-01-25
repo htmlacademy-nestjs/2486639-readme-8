@@ -7,8 +7,8 @@ import { FileInterceptor } from '@nestjs/platform-express';
 
 import { fillDto } from '@project/shared/helpers';
 import {
-  ApiParamOption, RequestWithRequestIdAndUserId, RequestWithUserId,
-  RouteAlias, USER_ID_PARAM, POST_ID_PARAM, ApiHeaderOption
+  ApiParamOption, RequestWithRequestIdAndUserId, RequestWithUserId, RouteAlias,
+  USER_ID_PARAM, POST_ID_PARAM, ApiHeaderOption, DetailPostWithUserIdRdo
 } from '@project/shared/core';
 import { GuidValidationPipe, MongoIdValidationPipe } from '@project/shared/pipes';
 
@@ -16,7 +16,6 @@ import { BlogPostService } from './blog-post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PostRdo } from './rdo/post.rdo';
-import { DetailPostRdo } from './rdo/detail-post.rdo';
 import { PostWithPaginationRdo } from './rdo/post-with-pagination.rdo';
 import { UserPostsCountRdo } from './rdo/user-posts-count.rdo';
 import { PageQuery } from './query/page.query';
@@ -115,10 +114,10 @@ export class BlogPostController {
   public async show(
     @Param(ApiParamOption.PostId.name, GuidValidationPipe) postId: string,
     @Req() { userId }: RequestWithUserId
-  ): Promise<DetailPostRdo> {
+  ): Promise<DetailPostWithUserIdRdo> {
     const existPost = await this.blogPostService.getPost(postId, userId);
 
-    return fillDto(DetailPostRdo, existPost.toPOJO());
+    return fillDto(DetailPostWithUserIdRdo, existPost.toPOJO());
   }
 
   @ApiResponse(BlogPostApiResponse.PostCreated)
@@ -132,10 +131,10 @@ export class BlogPostController {
     @Body() dto: CreatePostDto,
     @Req() { requestId, userId }: RequestWithRequestIdAndUserId,
     @UploadedFile(parseFilePipeBuilder) imageFile?: Express.Multer.File
-  ): Promise<DetailPostRdo> {
+  ): Promise<DetailPostWithUserIdRdo> {
     const newPost = await this.blogPostService.createPost(dto, imageFile, userId, requestId);
 
-    return fillDto(DetailPostRdo, newPost.toPOJO());
+    return fillDto(DetailPostWithUserIdRdo, newPost.toPOJO());
   }
 
   @ApiResponse(BlogPostApiResponse.PostUpdated)
@@ -152,10 +151,10 @@ export class BlogPostController {
     @Body() dto: UpdatePostDto,
     @Req() { requestId, userId }: RequestWithRequestIdAndUserId,
     @UploadedFile(parseFilePipeBuilder) imageFile?: Express.Multer.File
-  ): Promise<DetailPostRdo> {
+  ): Promise<DetailPostWithUserIdRdo> {
     const updatedPost = await this.blogPostService.updatePost(postId, dto, imageFile, userId, requestId);
 
-    return fillDto(DetailPostRdo, updatedPost.toPOJO());
+    return fillDto(DetailPostWithUserIdRdo, updatedPost.toPOJO());
   }
 
   @ApiResponse(BlogPostApiResponse.PostReposted)
@@ -167,10 +166,10 @@ export class BlogPostController {
   public async repost(
     @Param(ApiParamOption.PostId.name, GuidValidationPipe) postId: string,
     @Req() { userId }: RequestWithUserId
-  ): Promise<DetailPostRdo> {
+  ): Promise<DetailPostWithUserIdRdo> {
     const repostedPost = await this.blogPostService.repostPost(postId, userId);
 
-    return fillDto(DetailPostRdo, repostedPost.toPOJO());
+    return fillDto(DetailPostWithUserIdRdo, repostedPost.toPOJO());
   }
 
   @ApiResponse(BlogPostApiResponse.PostDeleted)

@@ -1,9 +1,8 @@
 import { HttpStatus, ParseFilePipeBuilder } from '@nestjs/common';
 
-import { ApiPropertyOption, PostState, PostType, SortType } from '@project/shared/core';
+import { ApiPropertyOption, DetailPostWithUserIdRdo, PostState, PostType, SortType } from '@project/shared/core';
 
 import { PostRdo } from './rdo/post.rdo';
-import { DetailPostRdo } from './rdo/detail-post.rdo';
 import { PostWithPaginationRdo } from './rdo/post-with-pagination.rdo';
 import { UserPostsCountRdo } from './rdo/user-posts-count.rdo';
 
@@ -126,17 +125,17 @@ export const BlogPostApiResponse = {
     description: 'Bad request.'
   },
   PostCreated: {
-    type: DetailPostRdo,
+    type: DetailPostWithUserIdRdo,
     status: HttpStatus.CREATED,
     description: 'The new post has been successfully created.'
   },
   PostUpdated: {
-    type: DetailPostRdo,
+    type: DetailPostWithUserIdRdo,
     status: HttpStatus.OK,
     description: 'The post has been successfully updated.'
   },
   PostReposted: {
-    type: DetailPostRdo,
+    type: DetailPostWithUserIdRdo,
     status: HttpStatus.CREATED,
     description: 'The post has been successfully reposted.'
   },
@@ -149,7 +148,7 @@ export const BlogPostApiResponse = {
     description: 'The post has been successfully deleted.'
   },
   PostFound: {
-    type: DetailPostRdo,
+    type: DetailPostWithUserIdRdo,
     status: HttpStatus.OK,
     description: 'Post found.'
   },
