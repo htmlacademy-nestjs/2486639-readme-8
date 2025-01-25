@@ -3,10 +3,10 @@ import { ArrayMaxSize, IsArray, IsDateString, IsEnum, IsOptional, IsString, IsUr
 import { Transform } from 'class-transformer';
 import dayjs from 'dayjs';
 
-import { PostState, PostType } from '@project/shared/core';
+import { DateFormat, PostState, PostType } from '@project/shared/core';
 
 import { PostApiProperty } from '../blog-post.constant.property';
-import { ONLY_DATE_FORMAT, PostValidation } from '../blog-post.constant';
+import { PostValidation } from '../blog-post.constant';
 
 export class UpdatePostDto {
   @ApiProperty({
@@ -48,7 +48,7 @@ export class UpdatePostDto {
   })
   @IsOptional()
   @IsDateString({ strict: true })
-  @Transform(({ value }) => dayjs(value).format(ONLY_DATE_FORMAT))
+  @Transform(({ value }) => dayjs(value).format(DateFormat.ONLY_DATE))
   public publishDate?: string;
 
   @ApiProperty(PostApiProperty.Title)

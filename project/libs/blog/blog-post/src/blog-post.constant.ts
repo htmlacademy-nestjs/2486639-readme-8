@@ -8,8 +8,6 @@ import { PostWithPaginationRdo } from './rdo/post-with-pagination.rdo';
 import { UserPostsCountRdo } from './rdo/user-posts-count.rdo';
 import { PostApiProperty } from './blog-post.constant.property';
 
-export const ONLY_DATE_FORMAT = 'YYYY-MM-DD';
-
 export const Default = {
   NEW_POST_STATE: PostState.Published,
   POST_COUNT: 25,
