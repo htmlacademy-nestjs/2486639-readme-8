@@ -5,6 +5,7 @@ import { ApiConfigModule } from '@project/api/config';
 
 import { UserInfoService } from './user-info.service';
 import { UsersController } from './users.controller';
+import { BlogPostController } from './blog-post.controller';
 import { BlogController } from './blog.controller';
 
 const HTTP_CLIENT_MAX_REDIRECTS = 5;
@@ -20,6 +21,7 @@ const HTTP_CLIENT_TIMEOUT = 3000;
   ],
   controllers: [
     UsersController,
+    BlogPostController,
     BlogController
   ],
   providers: [UserInfoService]

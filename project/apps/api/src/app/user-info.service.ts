@@ -16,8 +16,8 @@ export class UserInfoService {
   ) { }
 
   public async getUserInfo(id: string, requestId: string): Promise<UserRdo> {
-    const getUserUrl = `${this.apiOptions.accountServiceUrl}/${id}`;
-    const { data } = await this.httpService.axiosRef.get<UserRdo>(getUserUrl, makeHeaders(requestId));
+    const url = `${this.apiOptions.accountServiceUrl}/${id}`;
+    const { data } = await this.httpService.axiosRef.get<UserRdo>(url, makeHeaders(requestId));
 
     return data;
   }
