@@ -24,16 +24,15 @@ export class UserService {
   }
 
   public async getDetailUser(id: string, requestId: string): Promise<DetailUserRdo> {
-    const { id: userId, registrationDate } = await this.getUser(id, requestId);
+    const user = await this.getUser(id, requestId);
     const headers = makeHeaders(requestId);
-    const getPostsCountUrl = `${this.apiOptions.blogPostServiceUrl}/${RouteAlias.Posts}/${RouteAlias.GetUserPostsCount}/${userId}`;
+    const getPostsCountUrl = `${this.apiOptions.blogPostServiceUrl}/${RouteAlias.Posts}/${RouteAlias.GetUserPostsCount}/${id}`;
     const { data: { postsCount } } = await this.httpService.axiosRef.get<UserPostsCountRdo>(getPostsCountUrl, headers);
-    const getSubscriptionsCountUrl = `${this.apiOptions.blogPostServiceUrl}/${RouteAlias.Subscriptions}/${RouteAlias.GetUserSubscriptionsCount}/${userId}`;
+    const getSubscriptionsCountUrl = `${this.apiOptions.blogPostServiceUrl}/${RouteAlias.Subscriptions}/${RouteAlias.GetUserSubscriptionsCount}/${id}`;
     const { data: { subscriptionsCount } } = await this.httpService.axiosRef.get<UserSubscriptionsCountRdo>(getSubscriptionsCountUrl, headers);
 
     return {
-      id,
-      registrationDate,
+      ...user,
       postsCount,
       subscriptionsCount
     };

@@ -5,10 +5,10 @@ import { HttpService } from '@nestjs/axios';
 
 import { apiConfig } from '@project/api/config';
 import {
-  ApiParamOption, BearerAuth, DetailPostWithUserRdo, POST_ID_PARAM,
+  ApiParamOption, BearerAuth, DetailPostWithUserIdRdo, DetailPostWithUserRdo, POST_ID_PARAM,
   RequestWithRequestId, RequestWithRequestIdAndUserId, RouteAlias
 } from '@project/shared/core';
-import { getQueryString, makeHeaders } from '@project/shared/helpers';
+import { fillDto, getQueryString, makeHeaders } from '@project/shared/helpers';
 import { AxiosExceptionFilter } from '@project/shared/exception-filters';
 import { GuidValidationPipe } from '@project/shared/pipes';
 import {
@@ -17,6 +17,7 @@ import {
 } from '@project/blog/blog-post';
 
 import { CheckAuthGuard } from './guards/check-auth.guard';
+import { UserService } from './user.service';
 
 @ApiTags('blog-post')
 @Controller('blog-posts')
@@ -25,7 +26,8 @@ export class BlogPostController {
   constructor(
     private readonly httpService: HttpService,
     @Inject(apiConfig.KEY)
-    private readonly apiOptions: ConfigType<typeof apiConfig>
+    private readonly apiOptions: ConfigType<typeof apiConfig>,
+    private userService: UserService
   ) { }
 
   @ApiResponse(BlogPostApiResponse.PostsFound)
@@ -78,7 +80,7 @@ export class BlogPostController {
     return data;
   }
 
-  @ApiResponse(BlogPostApiResponse.PostFound)
+  @ApiResponse({ ...BlogPostApiResponse.PostFound, type: DetailPostWithUserRdo })
   @ApiResponse(BlogPostApiResponse.PostNotFound)
   @ApiParam(ApiParamOption.PostId)
   @Get(POST_ID_PARAM)
@@ -87,8 +89,9 @@ export class BlogPostController {
     @Req() { requestId, userId }: RequestWithRequestIdAndUserId
   ): Promise<DetailPostWithUserRdo> {
     const url = `${this.apiOptions.blogPostServiceUrl}/${RouteAlias.Posts}/${postId}`;
-    const { data } = await this.httpService.axiosRef.get<DetailPostWithUserRdo>(url, makeHeaders(requestId, null, userId));
+    const { data: post } = await this.httpService.axiosRef.get<DetailPostWithUserIdRdo>(url, makeHeaders(requestId, null, userId));
+    const user = await this.userService.getUser(post.userId, requestId);
 
-    return { ...data, user: { id: '111', name: 'aaa', email: 'ssss', avatarPath: '/sads/as', registrationDate: '2025-01-01' } }; //! временно
+    return fillDto(DetailPostWithUserRdo, { ...post, user });
   }
 }

@@ -106,7 +106,7 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     entity.id = record.id;
     entity.publishDate = record.publishDate;
     entity.likesCount = record.likesCount;
-    entity.commentsCount = record.commentsCount; //! возможно нужны еще данные...  или есть какой ключ чтобы бы переселект
+    entity.commentsCount = record.commentsCount;
   }
 
   public async update(entity: BlogPostEntity): Promise<void> {
