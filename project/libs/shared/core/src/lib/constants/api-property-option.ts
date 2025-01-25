@@ -143,6 +143,10 @@ export const ApiPropertyOption = {
     SubscriptionsCount: {
       description: 'The user subscriptions count',
       example: 5
+    },
+    Entities: {
+      description: 'The posts',
+      isArray: true
     }
   }
 } as const;

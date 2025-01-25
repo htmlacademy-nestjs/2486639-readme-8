@@ -8,6 +8,4 @@ export { BaseBlogPostQuery } from './query/base-blog-post.query';
 export { SearchBlogPostQuery } from './query/search-blog-post.query';
 export { TitleQuery } from './query/title.query';
 
-export { PostRdo } from './rdo/post.rdo';
-export { PostWithPaginationRdo } from './rdo/post-with-pagination.rdo';
 export { UserPostsCountRdo } from './rdo/user-posts-count.rdo';

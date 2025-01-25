@@ -8,15 +8,15 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { fillDto } from '@project/shared/helpers';
 import {
   ApiParamOption, RequestWithRequestIdAndUserId, RequestWithUserId, RouteAlias,
-  USER_ID_PARAM, POST_ID_PARAM, ApiHeaderOption, DetailPostWithUserIdRdo, PageQuery
+  USER_ID_PARAM, POST_ID_PARAM, ApiHeaderOption, DetailPostWithUserIdRdo, PageQuery,
+  PostWithUserIdAndPaginationRdo,
+  PostWithUserIdRdo
 } from '@project/shared/core';
 import { GuidValidationPipe, MongoIdValidationPipe } from '@project/shared/pipes';
 
 import { BlogPostService } from './blog-post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { PostRdo } from './rdo/post.rdo';
-import { PostWithPaginationRdo } from './rdo/post-with-pagination.rdo';
 import { UserPostsCountRdo } from './rdo/user-posts-count.rdo';
 import { TitleQuery } from './query/title.query';
 import { BaseBlogPostQuery } from './query/base-blog-post.query';
@@ -36,20 +36,20 @@ export class BlogPostController {
     checkAuthorization = false,
     currentUserId?: string,
     showDraft = false
-  ): Promise<PostWithPaginationRdo> {
+  ): Promise<PostWithUserIdAndPaginationRdo> {
     const postsWithPagination = await this.blogPostService.getAllPosts(query, currentUserId, checkAuthorization, showDraft);
     const result = {
       ...postsWithPagination,
       entities: postsWithPagination.entities.map((post) => post.toPOJO())
     }
 
-    return fillDto(PostWithPaginationRdo, result);
+    return fillDto(PostWithUserIdAndPaginationRdo, result);
   }
 
   @ApiResponse(BlogPostApiResponse.PostsFound)
   @ApiResponse(BlogPostApiResponse.BadRequest)
   @Get('/')
-  public async index(@Query() query: SearchBlogPostQuery): Promise<PostWithPaginationRdo> {
+  public async index(@Query() query: SearchBlogPostQuery): Promise<PostWithUserIdAndPaginationRdo> {
     const posts = await this.getPostsWithPagination(query);
 
     return posts;
@@ -58,10 +58,10 @@ export class BlogPostController {
   @ApiResponse(BlogPostApiResponse.SearchPosts)
   @ApiResponse(BlogPostApiResponse.BadRequest)
   @Get(`/${RouteAlias.Search}`)
-  public async find(@Query() { title }: TitleQuery): Promise<PostRdo[]> {
+  public async find(@Query() { title }: TitleQuery): Promise<PostWithUserIdRdo[]> {
     const postEntities = await this.blogPostService.findPostsByTitle(title);
 
-    return postEntities.map((postEntity) => fillDto(PostRdo, postEntity.toPOJO()));
+    return postEntities.map((postEntity) => fillDto(PostWithUserIdRdo, postEntity.toPOJO()));
   }
 
   @ApiResponse(BlogPostApiResponse.PostsFound)
@@ -70,7 +70,7 @@ export class BlogPostController {
   public async getMyPosts(
     @Query() { page }: PageQuery,
     @Req() { userId }: RequestWithUserId
-  ): Promise<PostWithPaginationRdo> {
+  ): Promise<PostWithUserIdAndPaginationRdo> {
     const query: SearchBlogPostQuery = { userId, page };
     const posts = await this.getPostsWithPagination(query, true, userId);
 
@@ -83,7 +83,7 @@ export class BlogPostController {
   public async getMyDrafts(
     @Query() { page }: PageQuery,
     @Req() { userId }: RequestWithUserId
-  ): Promise<PostWithPaginationRdo> {
+  ): Promise<PostWithUserIdAndPaginationRdo> {
     const query: SearchBlogPostQuery = { userId, page };
     const posts = await this.getPostsWithPagination(query, true, userId, true);
 
@@ -96,14 +96,14 @@ export class BlogPostController {
   public async getMyFeed(
     @Query() query: BaseBlogPostQuery,
     @Req() { userId }: RequestWithUserId
-  ): Promise<PostWithPaginationRdo> {
+  ): Promise<PostWithUserIdAndPaginationRdo> {
     const postsWithPagination = await this.blogPostService.getFeed(query, userId);
     const result = {
       ...postsWithPagination,
       entities: postsWithPagination.entities.map((post) => post.toPOJO())
     }
 
-    return fillDto(PostWithPaginationRdo, result);
+    return fillDto(PostWithUserIdAndPaginationRdo, result);
   }
 
   @ApiResponse(BlogPostApiResponse.PostFound)
