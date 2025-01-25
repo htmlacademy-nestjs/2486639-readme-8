@@ -1,12 +1,11 @@
 import { HttpStatus, ParseFilePipeBuilder } from '@nestjs/common';
 
-import { PostState, PostType, SortType } from '@project/shared/core';
+import { ApiPropertyOption, PostState, PostType, SortType } from '@project/shared/core';
 
 import { PostRdo } from './rdo/post.rdo';
 import { DetailPostRdo } from './rdo/detail-post.rdo';
 import { PostWithPaginationRdo } from './rdo/post-with-pagination.rdo';
 import { UserPostsCountRdo } from './rdo/user-posts-count.rdo';
-import { PostApiProperty } from './blog-post.constant.property';
 
 export const Default = {
   NEW_POST_STATE: PostState.Published,
@@ -57,7 +56,7 @@ export const PostValidation = {
     Type: { fileType: ImageOption.MIME_TYPES.join('|') },
     MaxSize: { maxSize: ImageOption.MAX_SIZE },
     Build: {
-      fileIsRequired: PostApiProperty.ImageFile.required,
+      fileIsRequired: ApiPropertyOption.Post.ImageFile.required,
       errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY
     }
   }

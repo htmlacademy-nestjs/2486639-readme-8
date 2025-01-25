@@ -3,14 +3,13 @@ import { ArrayMaxSize, IsArray, IsDateString, IsEnum, IsOptional, IsString, IsUr
 import { Transform } from 'class-transformer';
 import dayjs from 'dayjs';
 
-import { DateFormat, PostState, PostType } from '@project/shared/core';
+import { ApiPropertyOption, DateFormat, PostState, PostType } from '@project/shared/core';
 
-import { PostApiProperty } from '../blog-post.constant.property';
 import { PostValidation } from '../blog-post.constant';
 
 export class UpdatePostDto {
   @ApiProperty({
-    ...PostApiProperty.Type,
+    ...ApiPropertyOption.Post.Type,
     required: false
   })
   @IsOptional()
@@ -19,7 +18,7 @@ export class UpdatePostDto {
   public type?: PostType;
 
   @ApiProperty({
-    description: PostApiProperty.Tags.description + ' - warning! not correct send string[]!',
+    description: ApiPropertyOption.Post.Tags.description + ' - warning! not correct send string[]!',
     name: 'tags[0]', // не корректная передача string[] через form-data
     required: false,
     example: ['tag1']
@@ -34,7 +33,7 @@ export class UpdatePostDto {
   public tags?: string[];
 
   @ApiProperty({
-    ...PostApiProperty.State,
+    ...ApiPropertyOption.Post.State,
     required: false
   })
   @IsOptional()
@@ -43,7 +42,7 @@ export class UpdatePostDto {
   public state?: PostState;
 
   @ApiProperty({
-    ...PostApiProperty.PublishDate,
+    ...ApiPropertyOption.Post.PublishDate,
     required: false
   })
   @IsOptional()
@@ -51,53 +50,53 @@ export class UpdatePostDto {
   @Transform(({ value }) => dayjs(value).format(DateFormat.ONLY_DATE))
   public publishDate?: string;
 
-  @ApiProperty(PostApiProperty.Title)
+  @ApiProperty(ApiPropertyOption.Post.Title)
   @IsOptional()
   @IsString()
   @MinLength(PostValidation.Title.MinLength)
   @MaxLength(PostValidation.Title.MaxLength)
   public title?: string;
 
-  @ApiProperty(PostApiProperty.Url)
+  @ApiProperty(ApiPropertyOption.Post.Url)
   @IsOptional()
   @IsString()
   @IsUrl()  // по умолчанию require_tld - true и не пропускает localhost, а require_tld - false пропускает любые строки
   public url?: string;
 
-  @ApiProperty({ ...PostApiProperty.PreviewText, example: '' })
+  @ApiProperty({ ...ApiPropertyOption.Post.PreviewText, example: '' })
   @IsOptional()
   @IsString()
   @MinLength(PostValidation.PreviewText.MinLength)
   @MaxLength(PostValidation.PreviewText.MaxLength)
   public previewText?: string;
 
-  @ApiProperty({ ...PostApiProperty.Text, example: '' })
+  @ApiProperty({ ...ApiPropertyOption.Post.Text, example: '' })
   @IsOptional()
   @IsString()
   @MinLength(PostValidation.Text.MinLength)
   @MaxLength(PostValidation.Text.MaxLength)
   public text?: string;
 
-  @ApiProperty({ ...PostApiProperty.QuoteText, example: '' })
+  @ApiProperty({ ...ApiPropertyOption.Post.QuoteText, example: '' })
   @IsOptional()
   @IsString()
   @MinLength(PostValidation.QuoteText.MinLength)
   @MaxLength(PostValidation.QuoteText.MaxLength)
   public quoteText?: string;
 
-  @ApiProperty({ ...PostApiProperty.QuoteAuthor, example: '' })
+  @ApiProperty({ ...ApiPropertyOption.Post.QuoteAuthor, example: '' })
   @IsOptional()
   @IsString()
   @MinLength(PostValidation.QuoteAuthor.MinLength)
   @MaxLength(PostValidation.QuoteAuthor.MaxLength)
   public quoteAuthor?: string;
 
-  @ApiProperty(PostApiProperty.ImageFile)
+  @ApiProperty(ApiPropertyOption.Post.ImageFile)
   @IsOptional()
   @IsString()
   public imageFile?: string;
 
-  @ApiProperty({ ...PostApiProperty.LinkDescription, example: '' })
+  @ApiProperty({ ...ApiPropertyOption.Post.LinkDescription, example: '' })
   @IsOptional()
   @IsString()
   @MaxLength(PostValidation.LinkDescription.MaxLength)

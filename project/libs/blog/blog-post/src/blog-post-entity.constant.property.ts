@@ -1,7 +1,6 @@
 import { ApiPropertyOption } from '@project/shared/core';
 
 import { PostRdo } from './rdo/post.rdo';
-import { PostApiProperty } from './blog-post.constant.property';
 
 export const EntityApiProperty = {
   Entities: {
@@ -9,21 +8,21 @@ export const EntityApiProperty = {
     isArray: true,
     type: PostRdo,
     example: [{
-      id: PostApiProperty.Id.example,
-      type: PostApiProperty.Type.example,
-      tags: PostApiProperty.Tags.example,
-      publishDate: PostApiProperty.PublishDate.example,
-      title: PostApiProperty.Title.example,
-      url: PostApiProperty.Url.example,
-      previewText: PostApiProperty.PreviewText.example,
-      text: PostApiProperty.Text.example,
-      quoteText: PostApiProperty.QuoteText.example,
-      quoteAuthor: PostApiProperty.QuoteAuthor.example,
-      imagePath: PostApiProperty.ImagePath.example,
-      linkDescription: PostApiProperty.LinkDescription.example,
+      id: ApiPropertyOption.Post.Id.example,
+      type: ApiPropertyOption.Post.Type.example,
+      tags: ApiPropertyOption.Post.Tags.example,
+      publishDate: ApiPropertyOption.Post.PublishDate.example,
+      title: ApiPropertyOption.Post.Title.example,
+      url: ApiPropertyOption.Post.Url.example,
+      previewText: ApiPropertyOption.Post.PreviewText.example,
+      text: ApiPropertyOption.Post.Text.example,
+      quoteText: ApiPropertyOption.Post.QuoteText.example,
+      quoteAuthor: ApiPropertyOption.Post.QuoteAuthor.example,
+      imagePath: ApiPropertyOption.Post.ImagePath.example,
+      linkDescription: ApiPropertyOption.Post.LinkDescription.example,
       userId: ApiPropertyOption.User.Id.example,
-      likesCount: PostApiProperty.LikesCount.example,
-      commentsCount: PostApiProperty.CommentsCount.example
+      likesCount: ApiPropertyOption.Post.LikesCount.example,
+      commentsCount: ApiPropertyOption.Post.CommentsCount.example
     }]
   }
 } as const;

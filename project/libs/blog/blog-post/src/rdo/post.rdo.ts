@@ -4,56 +4,54 @@ import dayjs from 'dayjs';
 
 import { ApiPropertyOption, DateFormat, PostType } from '@project/shared/core';
 
-import { PostApiProperty } from '../blog-post.constant.property';
-
 export class PostRdo {
-  @ApiProperty(PostApiProperty.Id)
+  @ApiProperty(ApiPropertyOption.Post.Id)
   @Expose()
   public id: string;
 
-  @ApiProperty(PostApiProperty.Type)
+  @ApiProperty(ApiPropertyOption.Post.Type)
   @Expose()
   public type: PostType;
 
-  @ApiProperty(PostApiProperty.Tags)
+  @ApiProperty(ApiPropertyOption.Post.Tags)
   @Expose()
   @Transform(({ value }) => value.map((item: { title: string; }) => item.title))
   public tags: string[];
 
-  @ApiProperty(PostApiProperty.PublishDate)
+  @ApiProperty(ApiPropertyOption.Post.PublishDate)
   @Transform(({ value }) => dayjs(value).format(DateFormat.ONLY_DATE))
   @Expose()
   public publishDate: string;
 
-  @ApiProperty(PostApiProperty.Title)
+  @ApiProperty(ApiPropertyOption.Post.Title)
   @Expose()
   public title: string;
 
-  @ApiProperty(PostApiProperty.Url)
+  @ApiProperty(ApiPropertyOption.Post.Url)
   @Expose()
   public url: string;
 
-  @ApiProperty(PostApiProperty.PreviewText)
+  @ApiProperty(ApiPropertyOption.Post.PreviewText)
   @Expose()
   public previewText: string;
 
-  @ApiProperty(PostApiProperty.Text)
+  @ApiProperty(ApiPropertyOption.Post.Text)
   @Expose()
   public text: string;
 
-  @ApiProperty(PostApiProperty.QuoteText)
+  @ApiProperty(ApiPropertyOption.Post.QuoteText)
   @Expose()
   public quoteText: string;
 
-  @ApiProperty(PostApiProperty.QuoteAuthor)
+  @ApiProperty(ApiPropertyOption.Post.QuoteAuthor)
   @Expose()
   public quoteAuthor: string;
 
-  @ApiProperty(PostApiProperty.ImagePath)
+  @ApiProperty(ApiPropertyOption.Post.ImagePath)
   @Expose()
   public imagePath: string;
 
-  @ApiProperty(PostApiProperty.LinkDescription)
+  @ApiProperty(ApiPropertyOption.Post.LinkDescription)
   @Expose()
   public linkDescription: string;
 
@@ -61,11 +59,11 @@ export class PostRdo {
   @Expose()
   public userId: string;
 
-  @ApiProperty(PostApiProperty.LikesCount)
+  @ApiProperty(ApiPropertyOption.Post.LikesCount)
   @Expose()
   public likesCount: number;
 
-  @ApiProperty(PostApiProperty.CommentsCount)
+  @ApiProperty(ApiPropertyOption.Post.CommentsCount)
   @Expose()
   public commentsCount: number;
 }
