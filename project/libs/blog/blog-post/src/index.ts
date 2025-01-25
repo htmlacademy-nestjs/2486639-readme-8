@@ -9,6 +9,7 @@ export { SearchBlogPostQuery } from './query/search-blog-post.query';
 export { PageQuery } from './query/page.query';
 export { TitleQuery } from './query/title.query';
 
+export { DetailPostRdo } from './rdo/detail-post.rdo';
 export { PostRdo } from './rdo/post.rdo';
 export { PostWithPaginationRdo } from './rdo/post-with-pagination.rdo';
 export { UserPostsCountRdo } from './rdo/user-posts-count.rdo';

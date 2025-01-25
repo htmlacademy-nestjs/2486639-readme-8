@@ -1,15 +1,19 @@
-import { Controller, Get, Inject, Query, Req, UseFilters, UseGuards } from '@nestjs/common';
+import { Controller, Get, Inject, Param, Query, Req, UseFilters, UseGuards } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
-import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { HttpService } from '@nestjs/axios';
 
 import { apiConfig } from '@project/api/config';
-import { BearerAuth, RequestWithRequestId, RequestWithRequestIdAndUserId, RouteAlias } from '@project/shared/core';
+import {
+  ApiParamOption, BearerAuth, POST_ID_PARAM,
+  RequestWithRequestId, RequestWithRequestIdAndUserId, RouteAlias
+} from '@project/shared/core';
 import { getQueryString, makeHeaders } from '@project/shared/helpers';
 import { AxiosExceptionFilter } from '@project/shared/exception-filters';
+import { GuidValidationPipe } from '@project/shared/pipes';
 import {
-  BaseBlogPostQuery, BlogPostApiResponse, PageQuery, PostRdo, PostWithPaginationRdo,
-  SearchBlogPostQuery, TitleQuery
+  BaseBlogPostQuery, BlogPostApiResponse, DetailPostRdo, PageQuery, PostRdo,
+   PostWithPaginationRdo,SearchBlogPostQuery, TitleQuery
 } from '@project/blog/blog-post';
 
 import { CheckAuthGuard } from './guards/check-auth.guard';
@@ -70,6 +74,20 @@ export class BlogPostController {
   ): Promise<PostWithPaginationRdo> {
     const url = `${this.apiOptions.blogPostServiceUrl}/${RouteAlias.Posts}/${RouteAlias.MyFeed}${getQueryString(query)}`;
     const { data } = await this.httpService.axiosRef.get<PostWithPaginationRdo>(url, makeHeaders(requestId, null, userId));
+
+    return data;
+  }
+
+  @ApiResponse(BlogPostApiResponse.PostFound)
+  @ApiResponse(BlogPostApiResponse.PostNotFound)
+  @ApiParam(ApiParamOption.PostId)
+  @Get(POST_ID_PARAM)
+  public async show(
+    @Param(ApiParamOption.PostId.name, GuidValidationPipe) postId: string,
+    @Req() { requestId, userId }: RequestWithRequestIdAndUserId
+  ): Promise<DetailPostRdo> {
+    const url = `${this.apiOptions.blogPostServiceUrl}/${RouteAlias.Posts}/${postId}`;
+    const { data } = await this.httpService.axiosRef.get<DetailPostRdo>(url, makeHeaders(requestId, null, userId));
 
     return data;
   }
