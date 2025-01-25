@@ -1,13 +1,16 @@
-import { Body, Controller, Get, Inject, Post, Query, Req, UseFilters, UseGuards } from '@nestjs/common';
+import { Controller, Get, Inject, Query, Req, UseFilters, UseGuards } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { HttpService } from '@nestjs/axios';
 
 import { apiConfig } from '@project/api/config';
-import { RequestWithRequestId, RequestWithRequestIdAndUserId, RouteAlias } from '@project/shared/core';
+import { BearerAuth, RequestWithRequestId, RequestWithRequestIdAndUserId, RouteAlias } from '@project/shared/core';
 import { getQueryString, makeHeaders } from '@project/shared/helpers';
 import { AxiosExceptionFilter } from '@project/shared/exception-filters';
-import { BlogPostApiResponse, PostRdo, PostWithPaginationRdo, SearchBlogPostQuery, TitleQuery } from '@project/blog/blog-post';
+import {
+  BaseBlogPostQuery, BlogPostApiResponse, PageQuery, PostRdo, PostWithPaginationRdo,
+  SearchBlogPostQuery, TitleQuery
+} from '@project/blog/blog-post';
 
 import { CheckAuthGuard } from './guards/check-auth.guard';
 
@@ -41,13 +44,32 @@ export class BlogPostController {
     return data;
   }
 
+  @ApiResponse(BlogPostApiResponse.PostsFound)
+  @ApiResponse(BlogPostApiResponse.Unauthorized)
+  @ApiBearerAuth(BearerAuth.AccessToken)
   @UseGuards(CheckAuthGuard)
-  @Post('/')
-  //! временно, пока нет dto
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public async create(@Body() dto: any, @Req() { requestId, userId }: RequestWithRequestIdAndUserId) {
-    const url = `${this.apiOptions.blogPostServiceUrl}/${RouteAlias.Posts}`;
-    const { data } = await this.httpService.axiosRef.post(url, dto, makeHeaders(requestId, null, userId));
+  @Get(`/${RouteAlias.MyPosts}`)
+  public async getMyPosts(
+    @Query() pageQuery: PageQuery,
+    @Req() { requestId, userId }: RequestWithRequestIdAndUserId
+  ): Promise<PostWithPaginationRdo> {
+    const url = `${this.apiOptions.blogPostServiceUrl}/${RouteAlias.Posts}/${RouteAlias.MyPosts}${getQueryString(pageQuery)}`;
+    const { data } = await this.httpService.axiosRef.get<PostWithPaginationRdo>(url, makeHeaders(requestId, null, userId));
+
+    return data;
+  }
+
+  @ApiResponse(BlogPostApiResponse.PostsFound)
+  @ApiResponse(BlogPostApiResponse.Unauthorized)
+  @ApiBearerAuth(BearerAuth.AccessToken)
+  @UseGuards(CheckAuthGuard)
+  @Get(`/${RouteAlias.MyFeed}`)
+  public async getMyFeed(
+    @Query() query: BaseBlogPostQuery,
+    @Req() { requestId, userId }: RequestWithRequestIdAndUserId
+  ): Promise<PostWithPaginationRdo> {
+    const url = `${this.apiOptions.blogPostServiceUrl}/${RouteAlias.Posts}/${RouteAlias.MyFeed}${getQueryString(query)}`;
+    const { data } = await this.httpService.axiosRef.get<PostWithPaginationRdo>(url, makeHeaders(requestId, null, userId));
 
     return data;
   }
