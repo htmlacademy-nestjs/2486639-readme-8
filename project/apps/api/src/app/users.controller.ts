@@ -9,7 +9,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 
 import {
   ApiParamOption, BearerAuth, RequestWithRequestId, RequestWithRequestIdAndBearerAuth,
-  RequestWithTokenPayload, RouteAlias, USER_ID_PARAM
+  DetailUserRdo, RequestWithTokenPayload, RouteAlias, USER_ID_PARAM, UserRdo
 } from '@project/shared/core';
 import { dtoToFormData, makeHeaders, multerFileToFormData } from '@project/shared/helpers';
 import { MongoIdValidationPipe } from '@project/shared/pipes';
@@ -17,14 +17,13 @@ import { AxiosExceptionFilter } from '@project/shared/exception-filters';
 import { apiConfig } from '@project/api/config';
 import {
   AuthenticationApiResponse, AvatarOption, ChangePasswordDto, CreateUserDto, LoggedUserRdo,
-  LoginUserDto, parseFilePipeBuilder, TokenPayloadRdo, UserRdo, UserTokenRdo
+  LoginUserDto, parseFilePipeBuilder, TokenPayloadRdo, UserTokenRdo
 } from '@project/account/authentication';
 import { UserPostsCountRdo } from '@project/blog/blog-post';
 import { UserSubscriptionsCountRdo } from '@project/blog/blog-subscription';
 
 import { UserInfoService } from './user-info.service';
 import { CheckAuthGuard } from './guards/check-auth.guard';
-import { DetailUserRdo } from './rdo/detail-user.rdo';
 
 @ApiTags('users')
 @Controller('users')

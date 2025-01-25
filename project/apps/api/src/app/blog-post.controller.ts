@@ -5,15 +5,15 @@ import { HttpService } from '@nestjs/axios';
 
 import { apiConfig } from '@project/api/config';
 import {
-  ApiParamOption, BearerAuth, POST_ID_PARAM,
+  ApiParamOption, BearerAuth, DetailPostWithUserRdo, POST_ID_PARAM,
   RequestWithRequestId, RequestWithRequestIdAndUserId, RouteAlias
 } from '@project/shared/core';
 import { getQueryString, makeHeaders } from '@project/shared/helpers';
 import { AxiosExceptionFilter } from '@project/shared/exception-filters';
 import { GuidValidationPipe } from '@project/shared/pipes';
 import {
-  BaseBlogPostQuery, BlogPostApiResponse, DetailPostRdo, PageQuery, PostRdo,
-   PostWithPaginationRdo,SearchBlogPostQuery, TitleQuery
+  BaseBlogPostQuery, BlogPostApiResponse, PageQuery, PostRdo,
+  PostWithPaginationRdo, SearchBlogPostQuery, TitleQuery
 } from '@project/blog/blog-post';
 
 import { CheckAuthGuard } from './guards/check-auth.guard';
@@ -85,10 +85,10 @@ export class BlogPostController {
   public async show(
     @Param(ApiParamOption.PostId.name, GuidValidationPipe) postId: string,
     @Req() { requestId, userId }: RequestWithRequestIdAndUserId
-  ): Promise<DetailPostRdo> {
+  ): Promise<DetailPostWithUserRdo> {
     const url = `${this.apiOptions.blogPostServiceUrl}/${RouteAlias.Posts}/${postId}`;
-    const { data } = await this.httpService.axiosRef.get<DetailPostRdo>(url, makeHeaders(requestId, null, userId));
+    const { data } = await this.httpService.axiosRef.get<DetailPostWithUserRdo>(url, makeHeaders(requestId, null, userId));
 
-    return data;
+    return { ...data, user: { id: '111', name: 'aaa', email: 'ssss', avatarPath: '/sads/as', registrationDate: '2025-01-01' } }; //! временно
   }
 }

@@ -7,7 +7,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 
 import {
   ApiParamOption, BearerAuth, RequestWithBearerAuth, RequestWithRequestIdAndBearerAuth,
-  RequestWithTokenPayload, RouteAlias, USER_ID_PARAM
+  RequestWithTokenPayload, RouteAlias, USER_ID_PARAM, UserRdo
 } from '@project/shared/core';
 import { fillDto } from '@project/shared/helpers';
 import { MongoIdValidationPipe } from '@project/shared/pipes';
@@ -24,7 +24,6 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LoggedUserRdo } from './rdo/logged-user.rdo';
 import { UserTokenRdo } from './rdo/user-token.rdo';
 import { TokenPayloadRdo } from './rdo/token-payload.rdo';
-import { UserRdo } from './rdo/user.rdo';
 import { AuthenticationApiResponse, AvatarOption, parseFilePipeBuilder } from './authentication.constant';
 
 @ApiTags('authentication')

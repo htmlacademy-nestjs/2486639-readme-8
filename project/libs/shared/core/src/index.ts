@@ -27,7 +27,10 @@ export { StoredFile } from './lib/interfaces/stored-file.interface';
 export { TokenPayload } from './lib/interfaces/token-payload.interface';
 export { Token } from './lib/interfaces/token.interface';
 
+export { DetailPostWithUserRdo } from './lib/rdo/detail-post-with-user.rdo';
 export { DetailPostWithUserIdRdo } from './lib/rdo/detail-post-with-user-id.rdo';
+export { DetailUserRdo } from './lib/rdo/detail-user.rdo';
+export { UserRdo } from './lib/rdo/user.rdo';
 
 export { AuthUser } from './lib/types/auth-user.interface';
 export { Comment } from './lib/types/comment.interface';
