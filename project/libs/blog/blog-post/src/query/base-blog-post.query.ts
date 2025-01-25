@@ -1,10 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsOptional, IsString, Matches, MaxLength, MinLength } from 'class-validator';
 
-import { ApiPropertyOption, PostType, SortType } from '@project/shared/core';
+import { ApiPropertyOption, PageQuery, PostType, SortType } from '@project/shared/core';
 
 import { Default, PostValidation, PostQueryApiProperty } from '../blog-post.constant';
-import { PageQuery } from './page.query';
 
 export class BaseBlogPostQuery extends PageQuery {
   @ApiProperty(PostQueryApiProperty.SortType)

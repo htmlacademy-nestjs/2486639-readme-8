@@ -8,7 +8,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { fillDto } from '@project/shared/helpers';
 import {
   ApiParamOption, RequestWithRequestIdAndUserId, RequestWithUserId, RouteAlias,
-  USER_ID_PARAM, POST_ID_PARAM, ApiHeaderOption, DetailPostWithUserIdRdo
+  USER_ID_PARAM, POST_ID_PARAM, ApiHeaderOption, DetailPostWithUserIdRdo, PageQuery
 } from '@project/shared/core';
 import { GuidValidationPipe, MongoIdValidationPipe } from '@project/shared/pipes';
 
@@ -18,7 +18,6 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { PostRdo } from './rdo/post.rdo';
 import { PostWithPaginationRdo } from './rdo/post-with-pagination.rdo';
 import { UserPostsCountRdo } from './rdo/user-posts-count.rdo';
-import { PageQuery } from './query/page.query';
 import { TitleQuery } from './query/title.query';
 import { BaseBlogPostQuery } from './query/base-blog-post.query';
 import { SearchBlogPostQuery } from './query/search-blog-post.query';
