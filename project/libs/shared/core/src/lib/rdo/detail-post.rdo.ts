@@ -18,7 +18,17 @@ export class DetailPostRdo {
 
   @ApiProperty(ApiPropertyOption.Post.Tags)
   @Expose()
-  @Transform(({ value }) => value.map((item: { title: string }) => item.title))
+  @Transform(
+    // когда запрос в blog, то преобразует entity[]
+    // а когда запрос из api, то преобразует string[]
+    ({ value }) => value.map(
+      (item: { title: string } | string) => {
+        if (typeof item === 'string') {
+          return item;
+        }
+
+        return item.title;
+      }))
   public tags: string[];
 
   @ApiProperty({
