@@ -3,11 +3,10 @@ import { ApiHeader, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { fillDto } from '@project/shared/helpers';
 import { GuidValidationPipe } from '@project/shared/pipes';
-import { ApiHeaderOption, ApiParamOption, POST_ID_PARAM, RequestWithUserId, RouteAlias } from '@project/shared/core';
+import { ApiHeaderOption, ApiParamOption, PageQuery, POST_ID_PARAM, RequestWithUserId, RouteAlias } from '@project/shared/core';
 
 import { BlogPostCommentApiResponse, CommentIdApiParam, COMMENT_ID_PARAM } from './blog-post-comment.constant';
 import { BlogPostCommentService } from './blog-post-comment.service';
-import { BlogPostCommentQuery } from './blog-post-comment.query';
 import { CreatePostCommentDto } from './dto/create-post-comment.dto';
 import { PostCommentRdo } from './rdo/post-comment.rdo';
 import { PostCommentWithPaginationRdo } from './rdo/post-comment-with-pagination.rdo';
@@ -27,10 +26,10 @@ export class BlogPostCommentController {
   @Get(POST_ID_PARAM)
   public async index(
     @Param(ApiParamOption.PostId.name, GuidValidationPipe) postId: string,
-    @Query() query: BlogPostCommentQuery,
+    @Query() { page }: PageQuery,
     @Req() { userId }: RequestWithUserId
   ): Promise<PostCommentWithPaginationRdo> {
-    const postCommentsWithPagination = await this.blogPostCommentService.getComments(postId, userId, query);
+    const postCommentsWithPagination = await this.blogPostCommentService.getComments(postId, userId, page);
     const result = {
       ...postCommentsWithPagination,
       entities: postCommentsWithPagination.entities.map((comment) => comment.toPOJO())

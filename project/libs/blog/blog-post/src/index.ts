@@ -6,7 +6,6 @@ export { BlogPostApiResponse } from './blog-post.constant';
 
 export { BaseBlogPostQuery } from './query/base-blog-post.query';
 export { SearchBlogPostQuery } from './query/search-blog-post.query';
-export { PageQuery } from './query/page.query';
 export { TitleQuery } from './query/title.query';
 
 export { PostRdo } from './rdo/post.rdo';

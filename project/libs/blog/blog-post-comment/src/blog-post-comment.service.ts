@@ -5,7 +5,6 @@ import { BlogPostService } from '@project/blog/blog-post';
 
 import { BlogPostCommentEntity } from './blog-post-comment.entity';
 import { BlogPostCommentRepository } from './blog-post-comment.repository';
-import { BlogPostCommentQuery } from './blog-post-comment.query';
 import { CreatePostCommentDto } from './dto/create-post-comment.dto';
 import { BlogPostCommentMessage } from './blog-post-comment.constant';
 
@@ -34,10 +33,10 @@ export class BlogPostCommentService {
     this.blogPostSevice.canCommentPost(foundPost);
   }
 
-  public async getComments(postId: string, currentUserId: string, query: BlogPostCommentQuery): Promise<PaginationResult<BlogPostCommentEntity>> {
+  public async getComments(postId: string, currentUserId: string, page: number): Promise<PaginationResult<BlogPostCommentEntity>> {
     await this.canViewPost(postId, currentUserId);
 
-    const commentEntities = await this.blogPostCommentRepository.findByPostId(postId, query);
+    const commentEntities = await this.blogPostCommentRepository.findByPostId(postId, page);
 
     return commentEntities;
   }

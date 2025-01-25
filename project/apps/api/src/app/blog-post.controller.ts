@@ -5,14 +5,14 @@ import { HttpService } from '@nestjs/axios';
 
 import { apiConfig } from '@project/api/config';
 import {
-  ApiParamOption, BearerAuth, DetailPostWithUserIdRdo, DetailPostWithUserRdo, POST_ID_PARAM,
-  RequestWithRequestId, RequestWithRequestIdAndUserId, RouteAlias
+  ApiParamOption, BearerAuth, DetailPostWithUserIdRdo, DetailPostWithUserRdo, PageQuery,
+  POST_ID_PARAM, RequestWithRequestId, RequestWithRequestIdAndUserId, RouteAlias
 } from '@project/shared/core';
 import { fillDto, getQueryString, makeHeaders } from '@project/shared/helpers';
 import { AxiosExceptionFilter } from '@project/shared/exception-filters';
 import { GuidValidationPipe } from '@project/shared/pipes';
 import {
-  BaseBlogPostQuery, BlogPostApiResponse, PageQuery, PostRdo,
+  BaseBlogPostQuery, BlogPostApiResponse, PostRdo,
   PostWithPaginationRdo, SearchBlogPostQuery, TitleQuery
 } from '@project/blog/blog-post';
 
