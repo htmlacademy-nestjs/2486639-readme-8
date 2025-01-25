@@ -5,6 +5,7 @@ export { BlogPostService } from './blog-post.service';
 export { BlogPostApiResponse } from './blog-post.constant';
 
 export { SearchBlogPostQuery } from './query/search-blog-post.query';
+export { TitleQuery } from './query/title.query';
 
 export { PostRdo } from './rdo/post.rdo';
 export { PostWithPaginationRdo } from './rdo/post-with-pagination.rdo';

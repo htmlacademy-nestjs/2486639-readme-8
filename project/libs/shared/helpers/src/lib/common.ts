@@ -47,3 +47,18 @@ export function makePath(directory: string, filename: string): string {
 
   return `/${path}/${filename}`;
 }
+
+export function getQueryString(query: object): string {
+  if (!query || !Object.keys(query).length) {
+    return '';
+  }
+
+  const queryParams: string[] = [];
+
+  queryParams.push('?');
+  for (const [key, value] of Object.entries(query)) {
+    queryParams.push(`${key}=${value}`);
+  }
+
+  return queryParams.join('&');
+}

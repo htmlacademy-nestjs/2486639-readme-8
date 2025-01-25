@@ -209,6 +209,7 @@ tag2
   46. Api скачка файла, как весь route перенаправить?, т.е. передать на file-storage, route=*, гуард или интерцептор или что то еще?
   47. как добратся до Request, например из вспомогательного модуля HttpModule - class HttpModule extends AxiosHttpModule implements OnModuleInit
         чтобы в заголовки запроса через axios автоматом подставлять X-Request-ID
+        и убрать <@Req() { requestId }: RequestWithRequestId>
         везде получаум request через context.switchToHttp().getRequest<Request>();
         https://stackoverflow.com/questions/72269617/set-global-module-level-interceptor-in-nestjs-axios-httpmodule
           axios.interceptors.request.use((config: AxiosRequestConfig) => {

@@ -5,11 +5,11 @@ import { HttpService } from '@nestjs/axios';
 
 import { apiConfig } from '@project/api/config';
 import { RequestWithRequestId, RequestWithRequestIdAndUserId, RouteAlias } from '@project/shared/core';
-import { makeHeaders } from '@project/shared/helpers';
+import { getQueryString, makeHeaders } from '@project/shared/helpers';
 import { AxiosExceptionFilter } from '@project/shared/exception-filters';
+import { BlogPostApiResponse, PostRdo, PostWithPaginationRdo, SearchBlogPostQuery, TitleQuery } from '@project/blog/blog-post';
 
 import { CheckAuthGuard } from './guards/check-auth.guard';
-import { BlogPostApiResponse, PostWithPaginationRdo, SearchBlogPostQuery } from '@project/blog/blog-post';
 
 @ApiTags('blog-post')
 @Controller('blog-posts')
@@ -24,12 +24,19 @@ export class BlogPostController {
   @ApiResponse(BlogPostApiResponse.PostsFound)
   @ApiResponse(BlogPostApiResponse.BadRequest)
   @Get('/')
-  public async index(@Query() query: SearchBlogPostQuery, @Req() { requestId }: RequestWithRequestId, @Req() request: Request): Promise<PostWithPaginationRdo> {
-    console.log(query); //!
-    console.log(request)
-
-    const url = `${this.apiOptions.blogPostServiceUrl}/${RouteAlias.Posts}`; //! query -> ?...string
+  public async index(@Query() query: SearchBlogPostQuery, @Req() { requestId }: RequestWithRequestId): Promise<PostWithPaginationRdo> {
+    const url = `${this.apiOptions.blogPostServiceUrl}/${RouteAlias.Posts}${getQueryString(query)}`;
     const { data } = await this.httpService.axiosRef.get<PostWithPaginationRdo>(url, makeHeaders(requestId));
+
+    return data;
+  }
+
+  @ApiResponse(BlogPostApiResponse.SearchPosts)
+  @ApiResponse(BlogPostApiResponse.BadRequest)
+  @Get(`/${RouteAlias.Search}`)
+  public async find(@Query() titleQuery: TitleQuery, @Req() { requestId }: RequestWithRequestId): Promise<PostRdo[]> {
+    const url = `${this.apiOptions.blogPostServiceUrl}/${RouteAlias.Posts}/${RouteAlias.Search}${getQueryString(titleQuery)}`;
+    const { data } = await this.httpService.axiosRef.get<PostRdo[]>(url, makeHeaders(requestId));
 
     return data;
   }
