@@ -17,7 +17,6 @@ export class RefreshTokenModel extends Document implements JwtToken {
   @Prop({ required: true })
   public expiresIn: Date;
 
-  @Prop()
   public createdAt: Date;
 }
 

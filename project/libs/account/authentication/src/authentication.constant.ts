@@ -7,6 +7,8 @@ import { LoggedUserRdo } from './rdo/logged-user.rdo';
 import { UserTokenRdo } from './rdo/user-token.rdo';
 import { TokenPayloadRdo } from './rdo/token-payload.rdo';
 
+export const ONLY_DATE_FORMAT = 'YYYY-MM-DD';
+
 export const AuthenticationUserMessage = {
   Exists: 'User with this email already exists.',
   NotFound: 'User not found.',

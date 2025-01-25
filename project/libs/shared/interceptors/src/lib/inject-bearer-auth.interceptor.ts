@@ -12,7 +12,7 @@ export class InjectBearerAuthInterceptor implements NestInterceptor {
     const authorization = request.headers[AUTH_NAME];
 
     request[RequestProperty.BearerAuth] = authorization;
-    Logger.log(`[InjectBearerAuthInterceptor: ${request.method}: ${request.url}]: ${RequestProperty.BearerAuth}: ${(authorization) ? 'exists' : 'empty'}`);
+    Logger.log(`${request.method}: ${request.url}: ${RequestProperty.BearerAuth}: ${(authorization) ? 'exists' : 'empty'}`, InjectBearerAuthInterceptor.name);
 
     return next.handle();
   }

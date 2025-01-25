@@ -58,7 +58,7 @@ export class BlogPostService {
 
       return makePath(fileRdo.subDirectory, fileRdo.hashName);
     } catch (error) {
-      Logger.error(parseAxiosError(error), 'BlogPostService.uploadImageFile.FileUploadError');
+      Logger.error(`UploadImageFile: ${parseAxiosError(error)}`, BlogPostService.name);
 
       throw new InternalServerErrorException('File upload error!');
     }

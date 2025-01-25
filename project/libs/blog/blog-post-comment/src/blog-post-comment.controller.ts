@@ -3,7 +3,7 @@ import { ApiHeader, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { fillDto } from '@project/shared/helpers';
 import { GuidValidationPipe } from '@project/shared/pipes';
-import { ApiParamOption, BlogUserIdApiHeader, POST_ID_PARAM, RequestWithUserId, RouteAlias } from '@project/shared/core';
+import { ApiHeaderOption, ApiParamOption, POST_ID_PARAM, RequestWithUserId, RouteAlias } from '@project/shared/core';
 
 import { BlogPostCommentApiResponse, CommentIdApiParam, COMMENT_ID_PARAM } from './blog-post-comment.constant';
 import { BlogPostCommentService } from './blog-post-comment.service';
@@ -13,7 +13,7 @@ import { PostCommentRdo } from './rdo/post-comment.rdo';
 import { PostCommentWithPaginationRdo } from './rdo/post-comment-with-pagination.rdo';
 
 @ApiTags('blog-post-comment')
-@ApiHeader(BlogUserIdApiHeader)
+@ApiHeader(ApiHeaderOption.UserId)
 @Controller(RouteAlias.PostComments)
 export class BlogPostCommentController {
   constructor(

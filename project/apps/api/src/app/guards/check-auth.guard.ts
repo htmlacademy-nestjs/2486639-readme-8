@@ -2,7 +2,7 @@ import { CanActivate, ExecutionContext, Inject, Injectable, Logger } from '@nest
 import { ConfigType } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
 
-import { getAuthorizationHeader } from '@project/shared/helpers';
+import { AUTH_NAME, makeHeaders } from '@project/shared/helpers';
 import { apiConfig } from '@project/api/config';
 import { RequestProperty } from '@project/shared/core';
 import { TokenPayloadRdo } from '@project/account/authentication';
@@ -18,12 +18,14 @@ export class CheckAuthGuard implements CanActivate {
   public async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<Request>();
     const url = `${this.apiOptions.accountServiceUrl}/check`;
-    const { data } = await this.httpService.axiosRef.post<TokenPayloadRdo>(url, {}, { headers: getAuthorizationHeader(request) });
+    const requestId = request[RequestProperty.RequestId];
+    const authorization = request.headers[AUTH_NAME]
+    const { data } = await this.httpService.axiosRef.post<TokenPayloadRdo>(url, {}, makeHeaders(requestId, authorization));
     const userId = data.sub;
 
     request[RequestProperty.User] = data; // для UsersController.checkToken
     request[RequestProperty.UserId] = userId; // для всех
-    Logger.log(`[CheckAuthGuard: ${request.method}: ${request.url}]: ${RequestProperty.UserId} is ${userId}`);
+    Logger.log(`${request.method}: ${request.url}: ${RequestProperty.UserId} is ${userId || 'empty'}`, CheckAuthGuard.name);
 
     return true;
   }

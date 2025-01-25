@@ -80,7 +80,7 @@ export class FileUploaderService {
     });
 
     await this.fileUploaderRepository.save(fileEntity);
-    Logger.log(fileEntity.toPOJO(), '[FileUploaderService.saveFile]');
+    this.logger.log(`New file saved: ${fileEntity.path}`);
 
     return fileEntity;
   }
@@ -89,7 +89,11 @@ export class FileUploaderService {
     const existFile = await this.fileUploaderRepository.findById(fileId);
 
     if (!existFile) {
-      throw new NotFoundException(`File with ${fileId} not found.`);
+      const message = `File with ${fileId} not found.`;
+
+      this.logger.log(message);
+
+      throw new NotFoundException(message);
     }
 
     return existFile;

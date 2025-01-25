@@ -1,3 +1,5 @@
+import { ApiPropertyOption } from '@project/shared/core';
+
 import { PostRdo } from './rdo/post.rdo';
 import { PostApiProperty } from './blog-post.constant.property';
 
@@ -19,7 +21,7 @@ export const EntityApiProperty = {
       quoteAuthor: PostApiProperty.QuoteAuthor.example,
       imagePath: PostApiProperty.ImagePath.example,
       linkDescription: PostApiProperty.LinkDescription.example,
-      userId: PostApiProperty.UserId.example,
+      userId: ApiPropertyOption.User.Id.example,
       likesCount: PostApiProperty.LikesCount.example,
       commentsCount: PostApiProperty.CommentsCount.example
     }]

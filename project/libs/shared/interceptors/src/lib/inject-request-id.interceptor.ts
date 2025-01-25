@@ -11,7 +11,7 @@ export class InjectRequestIdInterceptor implements NestInterceptor {
     const requestId = request.headers[XHeader.RequestId];
 
     request[RequestProperty.RequestId] = requestId; // можно доделать валидацию по MongoIdValidationPipe
-    Logger.log(`[InjectRequestIdInterceptor: ${request.method}: ${request.url}]: ${RequestProperty.RequestId}: ${requestId || 'empty'}`);
+    Logger.log(`${request.method}: ${request.url}: ${RequestProperty.RequestId}: ${requestId || 'empty'}`, InjectRequestIdInterceptor.name);
 
     return next.handle();
   }

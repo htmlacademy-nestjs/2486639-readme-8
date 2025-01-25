@@ -26,6 +26,11 @@ export const ApiPropertyOption = {
       type: 'string',
       format: 'binary'
     },
+    registrationDate: {
+      description: 'The user registration date',
+      type: 'string',
+      example: '2025-01-20'
+    },
     AccessToken: {
       description: 'The user access JWT token',
       example: 'asdasdsdfetyhetyhythgfnghnlkcsdkfajowfjlsdkmcv'
@@ -39,20 +44,14 @@ export const ApiPropertyOption = {
     Id: {
       description: 'The unique post ID',
       example: '2f31b19b-97eb-4305-877a-0b9be7faca8f'
+    },
+    PostsCount: {
+      description: 'The user posts count',
+      example: 5
+    },
+    SubscriptionsCount: {
+      description: 'The user subscriptions count',
+      example: 5
     }
   }
 } as const;
-
-export const ApiParamOption = {
-  UserId: {
-    name: 'userId',
-    schema: ApiPropertyOption.User.Id
-  },
-  PostId: {
-    name: 'postId',
-    schema: ApiPropertyOption.Post.Id
-  }
-} as const;
-
-export const USER_ID_PARAM = `:${ApiParamOption.UserId.name}`;
-export const POST_ID_PARAM = `:${ApiParamOption.PostId.name}`;

@@ -16,7 +16,7 @@ export class AnyExceptionFilter implements ExceptionFilter {
 
     // для отладки
     console.log(exception);
-    //Logger.error(exception, 'AnyExceptionFilter');
+    //Logger.error(exception, AnyExceptionFilter.name);
 
     response
       .status(errorResponse.statusCode)

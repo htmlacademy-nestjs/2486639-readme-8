@@ -3,7 +3,7 @@ import { HttpModule } from '@nestjs/axios';
 
 import { ApiConfigModule } from '@project/api/config';
 
-import { CheckAuthGuard } from './guards/check-auth.guard';
+import { UserInfoService } from './user-info.service';
 import { UsersController } from './users.controller';
 import { BlogController } from './blog.controller';
 
@@ -22,6 +22,6 @@ const HTTP_CLIENT_TIMEOUT = 3000;
     UsersController,
     BlogController
   ],
-  providers: [CheckAuthGuard]
+  providers: [UserInfoService]
 })
 export class AppModule { }

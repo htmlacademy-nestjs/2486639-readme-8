@@ -2,7 +2,7 @@ import {
   Body, Controller, Delete, Get, HttpCode, Param,
   Post, Req, UploadedFile, UseGuards, UseInterceptors
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiConsumes, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 import {
@@ -58,12 +58,10 @@ export class AuthenticationController {
   @ApiResponse(AuthenticationApiResponse.LoggedError)
   @ApiResponse(AuthenticationApiResponse.BadRequest)
   @ApiResponse(AuthenticationApiResponse.Unauthorized)
+  @ApiBody({ type: LoginUserDto })
   @UseGuards(LocalAuthGuard)
   @Post(RouteAlias.Login)
-  public async login(
-    @Body() _dto: LoginUserDto, // для swagger
-    @Req() { user }: RequestWithBlogUserEntity
-  ): Promise<LoggedUserRdo> {
+  public async login(@Req() { user }: RequestWithBlogUserEntity): Promise<LoggedUserRdo> {
     const userToken = await this.authService.createUserToken(user);
 
     return fillDto(LoggedUserRdo, { ...user.toPOJO(), ...userToken });

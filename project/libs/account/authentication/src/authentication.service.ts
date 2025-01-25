@@ -67,7 +67,7 @@ export class AuthenticationService {
 
         blogUser.avatarPath = makePath(fileRdo.subDirectory, fileRdo.hashName);
       } catch (error) {
-        Logger.error(parseAxiosError(error), 'AuthenticationService.RegisterUser.FileUploadError');
+        this.logger.error(`RegisterUser.FileUploadError: ${parseAxiosError(error)}`);
 
         throw new InternalServerErrorException('File upload error!');
       }
@@ -105,7 +105,7 @@ export class AuthenticationService {
 
       return { accessToken, refreshToken };
     } catch (error) {
-      this.logger.error(`[Token generation error]: ${error.message}`);
+      this.logger.error(`Token generation error: ${error.message}`);
 
       throw new HttpException('Ошибка при создании токена.', HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -116,7 +116,7 @@ export class AuthenticationService {
       return;
     }
 
-    Logger.log('AuthenticationService.logout');
+    this.logger.log('AuthenticationService.logout');
     // доделать позже проверить, что это refreh token... удалить его ...refreshTokenService.deleteRefreshSession...
   }
 

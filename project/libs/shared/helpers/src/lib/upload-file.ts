@@ -1,9 +1,8 @@
 import 'multer'; // Express.Multer.File
 import axios from 'axios';
 
-import { XHeader } from '@project/shared/core';
-
 import { multerFileToFormData } from './form-data';
+import { makeHeaders } from './headers';
 
 const HTTP_CLIENT_MAX_REDIRECTS = 5;
 const HTTP_CLIENT_TIMEOUT = 3000;
@@ -20,16 +19,10 @@ export async function uploadFile<T>(
 
   multerFileToFormData(file, fileFormData, name);
 
-  const headers = {};
-
-  if (requestId) {
-    headers[XHeader.RequestId] = requestId;
-  }
-
   const { data: fileUploadData } = await axios.post<T>(
     fileUploadUrl,
     fileFormData,
-    { timeout, maxRedirects, headers });
+    { timeout, maxRedirects, ...makeHeaders(requestId) });
 
   return fileUploadData;
 }

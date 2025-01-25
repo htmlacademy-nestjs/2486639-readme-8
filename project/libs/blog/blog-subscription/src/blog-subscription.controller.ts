@@ -3,14 +3,14 @@ import { ApiHeader, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { fillDto } from '@project/shared/helpers';
 import { MongoIdValidationPipe } from '@project/shared/pipes';
-import { ApiParamOption, BlogUserIdApiHeader, RequestWithUserId, RouteAlias, USER_ID_PARAM } from '@project/shared/core';
+import { ApiHeaderOption, ApiParamOption, RequestWithUserId, RouteAlias, USER_ID_PARAM } from '@project/shared/core';
 
 import { BlogSubscriptionService } from './blog-subscription.service';
 import { UserSubscriptionsCountRdo } from './rdo/user-subscriptions-count.rdo';
 import { BlogSubscriptionApiResponse } from './blog-subscription.constant';
 
 @ApiTags('blog-subscription')
-@ApiHeader(BlogUserIdApiHeader) // глобально вроде не добавить? и примеры почемуто не работают...
+@ApiHeader(ApiHeaderOption.UserId) // глобально вроде не добавить? и примеры почемуто не работают...
 @Controller(RouteAlias.Subscriptions)
 export class BlogSubscriptionController {
   constructor(
