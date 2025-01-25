@@ -1,9 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ArrayMaxSize, IsArray, IsDateString, IsEnum, IsOptional, IsString, IsUrl, Matches, MaxLength, MinLength } from 'class-validator';
 import { Transform } from 'class-transformer';
-import dayjs from 'dayjs';
 
-import { ApiPropertyOption, DateFormat, PostState, PostType } from '@project/shared/core';
+import { ApiPropertyOption, PostState, PostType, transformDate } from '@project/shared/core';
 
 import { PostValidation } from '../blog-post.constant';
 
@@ -47,7 +46,7 @@ export class UpdatePostDto {
   })
   @IsOptional()
   @IsDateString({ strict: true })
-  @Transform(({ value }) => dayjs(value).format(DateFormat.ONLY_DATE))
+  @Transform(transformDate)
   public publishDate?: string;
 
   @ApiProperty(ApiPropertyOption.Post.Title)

@@ -1,11 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Transform } from 'class-transformer';
-import dayjs from 'dayjs';
 
+import { transformDate, transformTags } from '../utils/transform';
 import { PostType } from '../types/post-type.enum';
 import { PostState } from '../types/post-state.enum';
 import { ApiPropertyOption } from '../constants/api-property-option';
-import { DateFormat } from '../constants/date-format';
 
 export class DetailPostRdo {
   @ApiProperty(ApiPropertyOption.Post.Id)
@@ -18,17 +17,7 @@ export class DetailPostRdo {
 
   @ApiProperty(ApiPropertyOption.Post.Tags)
   @Expose()
-  @Transform(
-    // когда запрос в blog, то преобразует entity[]
-    // а когда запрос из api, то преобразует string[]
-    ({ value }) => value.map(
-      (item: { title: string } | string) => {
-        if (typeof item === 'string') {
-          return item;
-        }
-
-        return item.title;
-      }))
+  @Transform(transformTags)
   public tags: string[];
 
   @ApiProperty({
@@ -39,7 +28,7 @@ export class DetailPostRdo {
   public state: PostState;
 
   @ApiProperty(ApiPropertyOption.Post.PublishDate)
-  @Transform(({ value }) => dayjs(value).format(DateFormat.ONLY_DATE))
+  @Transform(transformDate)
   @Expose()
   public publishDate: string;
 

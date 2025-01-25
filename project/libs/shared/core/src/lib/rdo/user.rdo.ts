@@ -1,9 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Transform } from 'class-transformer';
-import dayjs from 'dayjs';
 
 import { ApiPropertyOption } from '../constants/api-property-option';
-import { DateFormat } from '../constants/date-format';
+import { transformDate } from '../utils/transform';
 
 export class UserRdo {
   @ApiProperty(ApiPropertyOption.User.Id)
@@ -23,7 +22,7 @@ export class UserRdo {
   public avatarPath: string;
 
   @ApiProperty(ApiPropertyOption.User.registrationDate)
-  @Transform(({ value }) => dayjs(value).format(DateFormat.ONLY_DATE))
+  @Transform(transformDate)
   @Expose({ name: 'createdAt' })
   public registrationDate: string;
 }
