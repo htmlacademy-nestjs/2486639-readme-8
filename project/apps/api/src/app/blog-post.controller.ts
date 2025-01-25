@@ -6,15 +6,13 @@ import { HttpService } from '@nestjs/axios';
 import { apiConfig } from '@project/api/config';
 import {
   ApiParamOption, BearerAuth, DetailPostWithUserIdRdo, DetailPostWithUserRdo, PageQuery,
-  POST_ID_PARAM, RequestWithRequestId, RequestWithRequestIdAndUserId, RouteAlias
+  POST_ID_PARAM, PostWithUserIdAndPaginationRdo, PostWithUserIdRdo, RequestWithRequestId,
+  RequestWithRequestIdAndUserId, RouteAlias
 } from '@project/shared/core';
 import { fillDto, getQueryString, makeHeaders } from '@project/shared/helpers';
 import { AxiosExceptionFilter } from '@project/shared/exception-filters';
 import { GuidValidationPipe } from '@project/shared/pipes';
-import {
-  BaseBlogPostQuery, BlogPostApiResponse, PostRdo,
-  PostWithPaginationRdo, SearchBlogPostQuery, TitleQuery
-} from '@project/blog/blog-post';
+import { BaseBlogPostQuery, BlogPostApiResponse, SearchBlogPostQuery, TitleQuery } from '@project/blog/blog-post';
 
 import { CheckAuthGuard } from './guards/check-auth.guard';
 import { UserService } from './user.service';
@@ -33,9 +31,9 @@ export class BlogPostController {
   @ApiResponse(BlogPostApiResponse.PostsFound)
   @ApiResponse(BlogPostApiResponse.BadRequest)
   @Get('/')
-  public async index(@Query() query: SearchBlogPostQuery, @Req() { requestId }: RequestWithRequestId): Promise<PostWithPaginationRdo> {
+  public async index(@Query() query: SearchBlogPostQuery, @Req() { requestId }: RequestWithRequestId): Promise<PostWithUserIdAndPaginationRdo> {
     const url = `${this.apiOptions.blogPostServiceUrl}/${RouteAlias.Posts}${getQueryString(query)}`;
-    const { data } = await this.httpService.axiosRef.get<PostWithPaginationRdo>(url, makeHeaders(requestId));
+    const { data } = await this.httpService.axiosRef.get<PostWithUserIdAndPaginationRdo>(url, makeHeaders(requestId));
 
     return data;
   }
@@ -43,9 +41,9 @@ export class BlogPostController {
   @ApiResponse(BlogPostApiResponse.SearchPosts)
   @ApiResponse(BlogPostApiResponse.BadRequest)
   @Get(`/${RouteAlias.Search}`)
-  public async find(@Query() titleQuery: TitleQuery, @Req() { requestId }: RequestWithRequestId): Promise<PostRdo[]> {
+  public async find(@Query() titleQuery: TitleQuery, @Req() { requestId }: RequestWithRequestId): Promise<PostWithUserIdRdo[]> {
     const url = `${this.apiOptions.blogPostServiceUrl}/${RouteAlias.Posts}/${RouteAlias.Search}${getQueryString(titleQuery)}`;
-    const { data } = await this.httpService.axiosRef.get<PostRdo[]>(url, makeHeaders(requestId));
+    const { data } = await this.httpService.axiosRef.get<PostWithUserIdRdo[]>(url, makeHeaders(requestId));
 
     return data;
   }
@@ -58,9 +56,9 @@ export class BlogPostController {
   public async getMyPosts(
     @Query() pageQuery: PageQuery,
     @Req() { requestId, userId }: RequestWithRequestIdAndUserId
-  ): Promise<PostWithPaginationRdo> {
+  ): Promise<PostWithUserIdAndPaginationRdo> {
     const url = `${this.apiOptions.blogPostServiceUrl}/${RouteAlias.Posts}/${RouteAlias.MyPosts}${getQueryString(pageQuery)}`;
-    const { data } = await this.httpService.axiosRef.get<PostWithPaginationRdo>(url, makeHeaders(requestId, null, userId));
+    const { data } = await this.httpService.axiosRef.get<PostWithUserIdAndPaginationRdo>(url, makeHeaders(requestId, null, userId));
 
     return data;
   }
@@ -73,9 +71,9 @@ export class BlogPostController {
   public async getMyFeed(
     @Query() query: BaseBlogPostQuery,
     @Req() { requestId, userId }: RequestWithRequestIdAndUserId
-  ): Promise<PostWithPaginationRdo> {
+  ): Promise<PostWithUserIdAndPaginationRdo> {
     const url = `${this.apiOptions.blogPostServiceUrl}/${RouteAlias.Posts}/${RouteAlias.MyFeed}${getQueryString(query)}`;
-    const { data } = await this.httpService.axiosRef.get<PostWithPaginationRdo>(url, makeHeaders(requestId, null, userId));
+    const { data } = await this.httpService.axiosRef.get<PostWithUserIdAndPaginationRdo>(url, makeHeaders(requestId, null, userId));
 
     return data;
   }
