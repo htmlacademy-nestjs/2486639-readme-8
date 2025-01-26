@@ -4,7 +4,7 @@ import { ensureDir } from 'fs-extra';
 import { extension } from 'mime-types';
 import dayjs from 'dayjs';
 import { writeFile } from 'node:fs/promises';
-import { join } from 'node:path';
+import { join } from 'path/posix';
 import { randomUUID } from 'node:crypto';
 
 import { fileStorageConfig } from '@project/file-storage/config';

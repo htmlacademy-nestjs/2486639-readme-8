@@ -4,9 +4,10 @@ import {
 } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { join } from 'path/posix';
 
 import { RouteAlias, Token, User } from '@project/shared/core';
-import { createJWTPayload, makePath, parseAxiosError, uploadFile } from '@project/shared/helpers';
+import { createJWTPayload, parseAxiosError, uploadFile } from '@project/shared/helpers';
 import { BlogUserRepository, BlogUserEntity } from '@project/account/blog-user';
 import { applicationConfig, jwtConfig } from '@project/account/config';
 import { NotifyService } from '@project/account/notify';
@@ -59,13 +60,14 @@ export class AuthenticationService {
     if (avatarFile) {
       try {
         const fileRdo = await uploadFile<UploadedFileRdo>(
-          `${this.applicationOptions.fileStorageServiceUrl}/${RouteAlias.Upload}`,
+          join(this.applicationOptions.fileStorageServiceUrl, RouteAlias.Upload),
           avatarFile,
           FILE_KEY,
           requestId
         );
+        const { subDirectory, hashName } = fileRdo
 
-        blogUser.avatarPath = makePath(fileRdo.subDirectory, fileRdo.hashName);
+        blogUser.avatarPath = join(subDirectory, hashName);
       } catch (error) {
         this.logger.error(`RegisterUser.FileUploadError: ${parseAxiosError(error)}`);
 

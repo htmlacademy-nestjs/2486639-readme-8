@@ -6,6 +6,7 @@ import { PostWithUserIdRdo, Subscriber } from '@project/shared/core';
 import { notifyConfig } from '@project/notify/config';
 
 import { ADD_SUBCRIBER_TEMPLATE, ADD_SUBSCRIBER_SUBJECT, NEWS_LETTER_SUBJECT, NEWS_LETTER_TEMPLATE } from './mail.constant';
+import { join } from 'path/posix';
 
 @Injectable()
 export class MailService {
@@ -32,7 +33,7 @@ export class MailService {
 
   public async sendNotifyNewsLetter(subscribers: Subscriber[], posts: PostWithUserIdRdo[]): Promise<void> {
     const { apiBlogPostUrl, mailSmtp: { from } } = this.notifyConfig;
-    const urls = posts.map(({ id }) => ({ title: id, url: `${apiBlogPostUrl}/${id}` }));
+    const urls = posts.map(({ id }) => ({ title: id, url: join(apiBlogPostUrl, id) }));
 
     for (const subscriber of subscribers) {
       const { name, email } = subscriber;

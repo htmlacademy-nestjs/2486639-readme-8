@@ -4,6 +4,7 @@ import {
 } from '@nestjs/common';
 import { ApiConsumes, ApiHeader, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { join } from 'path/posix';
 
 import { fillDto } from '@project/shared/helpers';
 import {
@@ -161,7 +162,7 @@ export class BlogPostController {
   @ApiResponse(BlogPostApiResponse.PostNotFound)
   @ApiResponse(BlogPostApiResponse.AlreadyReposted)
   @ApiParam(ApiParamOption.PostId)
-  @Post(`/${RouteAlias.Repost}/${POST_ID_PARAM}`)
+  @Post(join(RouteAlias.Repost, POST_ID_PARAM))
   public async repost(
     @Param(ApiParamOption.PostId.name, GuidValidationPipe) postId: string,
     @Req() { userId }: RequestWithUserId
@@ -188,7 +189,7 @@ export class BlogPostController {
   @ApiResponse(BlogPostApiResponse.UserPostsCount)
   @ApiResponse(BlogPostApiResponse.BadRequest)
   @ApiParam(ApiParamOption.UserId)
-  @Get(`${RouteAlias.GetUserPostsCount}/${USER_ID_PARAM}`)
+  @Get(join(RouteAlias.GetUserPostsCount, USER_ID_PARAM))
   public async getUserPostsCount(@Param(ApiParamOption.UserId.name, MongoIdValidationPipe) userId: string): Promise<UserPostsCountRdo> {
     const postsCount = await this.blogPostService.getUserPostsCount(userId);
 

@@ -3,9 +3,10 @@ import {
   InternalServerErrorException, Logger, NotFoundException, UnauthorizedException
 } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
+import { join } from 'path/posix';
 
 import { PaginationResult, PostState, RouteAlias } from '@project/shared/core';
-import { makePath, parseAxiosError, uploadFile } from '@project/shared/helpers';
+import { parseAxiosError, uploadFile } from '@project/shared/helpers';
 import { BlogTagService } from '@project/blog/blog-tag';
 import { blogConfig } from '@project/blog/config';
 import { FILE_KEY, UploadedFileRdo } from '@project/file-storage/file-uploader';
@@ -50,13 +51,13 @@ export class BlogPostService {
 
     try {
       const fileRdo = await uploadFile<UploadedFileRdo>(
-        `${this.blogOptions.fileStorageServiceUrl}/${RouteAlias.Upload}`,
+        join(this.blogOptions.fileStorageServiceUrl, RouteAlias.Upload),
         imageFile,
         FILE_KEY,
         requestId
       );
 
-      return makePath(fileRdo.subDirectory, fileRdo.hashName);
+      return join(fileRdo.subDirectory, fileRdo.hashName);
     } catch (error) {
       Logger.error(`UploadImageFile: ${parseAxiosError(error)}`, BlogPostService.name);
 

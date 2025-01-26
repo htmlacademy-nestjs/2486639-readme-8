@@ -1,5 +1,6 @@
 import { Controller, Delete, Get, HttpCode, Param, Post, Req } from '@nestjs/common';
 import { ApiHeader, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { join } from 'path/posix';
 
 import { fillDto } from '@project/shared/helpers';
 import { MongoIdValidationPipe } from '@project/shared/pipes';
@@ -47,7 +48,7 @@ export class BlogSubscriptionController {
   @ApiResponse(BlogSubscriptionApiResponse.UserSubscriptionsCount)
   @ApiResponse(BlogSubscriptionApiResponse.BadRequest)
   @ApiParam(ApiParamOption.UserId)
-  @Get(`/${RouteAlias.GetUserSubscriptionsCount}/:${ApiParamOption.UserId.name}`)
+  @Get(join(RouteAlias.GetUserSubscriptionsCount, USER_ID_PARAM))
   public async getUserSubscriptionsCount(@Param(ApiParamOption.UserId.name, MongoIdValidationPipe) userId: string): Promise<UserSubscriptionsCountRdo> {
     const subscriptionsCount = await this.blogSubscriptionService.getUserSubscriptionsCount(userId);
 

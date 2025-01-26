@@ -22,7 +22,7 @@ export class FileUploaderController {
   @ApiResponse(FileUploaderApiResponse.BadRequest)
   @ApiConsumes('multipart/form-data')
   @ApiBody(FileUploaderFileApiBody)
-  @Post(`/${RouteAlias.Upload}`)
+  @Post(RouteAlias.Upload)
   @UseInterceptors(FileInterceptor(FILE_KEY))
   public async uploadFile(@UploadedFile(FILE_KEY) file: Express.Multer.File): Promise<UploadedFileRdo> {
     const fileEntity = await this.fileUploaderService.saveFile(file);
