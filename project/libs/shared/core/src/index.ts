@@ -29,6 +29,10 @@ export { Token } from './lib/interfaces/token.interface';
 
 export { PageQuery } from './lib/query/page.query';
 
+export { CommentWithUserAndPaginationRdo } from './lib/rdo/comment-with-user-and-pagination.rdo';
+export { CommentWithUserIdAndPaginationRdo } from './lib/rdo/comment-with-user-id-and-pagination.rdo';
+export { CommentWithUserIdRdo } from './lib/rdo/comment-with-user-id.rdo';
+export { CommentWithUserRdo } from './lib/rdo/comment-with-user.rdo';
 export { DetailPostWithUserRdo } from './lib/rdo/detail-post-with-user.rdo';
 export { DetailPostWithUserIdRdo } from './lib/rdo/detail-post-with-user-id.rdo';
 export { DetailUserRdo } from './lib/rdo/detail-user.rdo';
