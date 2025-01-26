@@ -24,8 +24,8 @@ import {
 import { CheckAuthGuard } from './guards/check-auth.guard';
 import { BlogService } from './blog.service';
 
-@ApiTags('blog-post')
-@Controller('blog-posts')
+@ApiTags('blog')
+@Controller(`blog/${RouteAlias.Posts}`)
 @UseFilters(AxiosExceptionFilter)
 export class BlogPostController {
   constructor(
@@ -37,7 +37,7 @@ export class BlogPostController {
 
   @ApiResponse({ ...BlogPostApiResponse.PostsFound, type: PostWithUserAndPaginationRdo })
   @ApiResponse(BlogPostApiResponse.BadRequest)
-  @Get('/')
+  @Get('')
   public async index(@Query() query: SearchBlogPostQuery, @Req() { requestId }: RequestWithRequestId): Promise<PostWithUserAndPaginationRdo> {
     const url = `${this.apiOptions.blogPostServiceUrl}/${RouteAlias.Posts}${getQueryString(query)}`;
     const { data } = await this.httpService.axiosRef.get<PostWithUserIdAndPaginationRdo>(url, makeHeaders(requestId));
@@ -48,7 +48,7 @@ export class BlogPostController {
 
   @ApiResponse({ ...BlogPostApiResponse.SearchPosts, type: PostWithUserRdo })
   @ApiResponse(BlogPostApiResponse.BadRequest)
-  @Get(`/${RouteAlias.Search}`)
+  @Get(RouteAlias.Search)
   public async find(@Query() titleQuery: TitleQuery, @Req() { requestId }: RequestWithRequestId): Promise<PostWithUserRdo[]> {
     const url = `${this.apiOptions.blogPostServiceUrl}/${RouteAlias.Posts}/${RouteAlias.Search}${getQueryString(titleQuery)}`;
     const { data: posts } = await this.httpService.axiosRef.get<PostWithUserIdRdo[]>(url, makeHeaders(requestId));
@@ -61,7 +61,7 @@ export class BlogPostController {
   @ApiResponse(BlogPostApiResponse.Unauthorized)
   @ApiBearerAuth(BearerAuth.AccessToken)
   @UseGuards(CheckAuthGuard)
-  @Get(`/${RouteAlias.MyPosts}`)
+  @Get(RouteAlias.MyPosts)
   public async getMyPosts(
     @Query() pageQuery: PageQuery,
     @Req() { requestId, userId }: RequestWithRequestIdAndUserId
@@ -77,7 +77,7 @@ export class BlogPostController {
   @ApiResponse(BlogPostApiResponse.Unauthorized)
   @ApiBearerAuth(BearerAuth.AccessToken)
   @UseGuards(CheckAuthGuard)
-  @Get(`/${RouteAlias.MyFeed}`)
+  @Get(RouteAlias.MyFeed)
   public async getMyFeed(
     @Query() query: BaseBlogPostQuery,
     @Req() { requestId, userId }: RequestWithRequestIdAndUserId

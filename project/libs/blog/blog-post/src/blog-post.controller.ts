@@ -48,7 +48,7 @@ export class BlogPostController {
 
   @ApiResponse(BlogPostApiResponse.PostsFound)
   @ApiResponse(BlogPostApiResponse.BadRequest)
-  @Get('/')
+  @Get('')
   public async index(@Query() query: SearchBlogPostQuery): Promise<PostWithUserIdAndPaginationRdo> {
     const posts = await this.getPostsWithPagination(query);
 
@@ -57,7 +57,7 @@ export class BlogPostController {
 
   @ApiResponse(BlogPostApiResponse.SearchPosts)
   @ApiResponse(BlogPostApiResponse.BadRequest)
-  @Get(`/${RouteAlias.Search}`)
+  @Get(RouteAlias.Search)
   public async find(@Query() { title }: TitleQuery): Promise<PostWithUserIdRdo[]> {
     const postEntities = await this.blogPostService.findPostsByTitle(title);
 
@@ -66,7 +66,7 @@ export class BlogPostController {
 
   @ApiResponse(BlogPostApiResponse.PostsFound)
   @ApiResponse(BlogPostApiResponse.Unauthorized)
-  @Get(`/${RouteAlias.MyPosts}`)
+  @Get(RouteAlias.MyPosts)
   public async getMyPosts(
     @Query() { page }: PageQuery,
     @Req() { userId }: RequestWithUserId
@@ -79,7 +79,7 @@ export class BlogPostController {
 
   @ApiResponse(BlogPostApiResponse.PostsFound)
   @ApiResponse(BlogPostApiResponse.Unauthorized)
-  @Get(`/${RouteAlias.MyDtafts}`)
+  @Get(RouteAlias.MyDtafts)
   public async getMyDrafts(
     @Query() { page }: PageQuery,
     @Req() { userId }: RequestWithUserId
@@ -92,7 +92,7 @@ export class BlogPostController {
 
   @ApiResponse(BlogPostApiResponse.PostsFound)
   @ApiResponse(BlogPostApiResponse.Unauthorized)
-  @Get(`/${RouteAlias.MyFeed}`)
+  @Get(RouteAlias.MyFeed)
   public async getMyFeed(
     @Query() query: BaseBlogPostQuery,
     @Req() { userId }: RequestWithUserId
@@ -188,7 +188,7 @@ export class BlogPostController {
   @ApiResponse(BlogPostApiResponse.UserPostsCount)
   @ApiResponse(BlogPostApiResponse.BadRequest)
   @ApiParam(ApiParamOption.UserId)
-  @Get(`/${RouteAlias.GetUserPostsCount}/${USER_ID_PARAM}`)
+  @Get(`${RouteAlias.GetUserPostsCount}/${USER_ID_PARAM}`)
   public async getUserPostsCount(@Param(ApiParamOption.UserId.name, MongoIdValidationPipe) userId: string): Promise<UserPostsCountRdo> {
     const postsCount = await this.blogPostService.getUserPostsCount(userId);
 
