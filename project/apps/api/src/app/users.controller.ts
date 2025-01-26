@@ -56,9 +56,9 @@ export class UsersController {
       multerFileToFormData(avatarFile, formData, AvatarOption.KEY);
     }
 
-    const registerUrl = `${this.apiOptions.accountServiceUrl}/${RouteAlias.Register}`;
+    const url = `${this.apiOptions.accountServiceUrl}/${RouteAlias.Register}`;
     const { data: registerData } = await this.httpService.axiosRef.post<UserRdo>(
-      registerUrl,
+      url,
       formData,
       // headers: Authorization - т.к. только анонимный пользователь может регистрироваться
       makeHeaders(requestId, bearerAuth)

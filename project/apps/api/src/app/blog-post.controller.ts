@@ -1,18 +1,25 @@
-import { Controller, Get, Inject, Param, Query, Req, UseFilters, UseGuards } from '@nestjs/common';
+import {
+  Body, Controller, Get, Inject, Param, Post, Query, Req,
+  UploadedFile, UseFilters, UseGuards, UseInterceptors
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { ConfigType } from '@nestjs/config';
-import { ApiBearerAuth, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiConsumes, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { HttpService } from '@nestjs/axios';
 
 import { apiConfig } from '@project/api/config';
 import {
-  ApiParamOption, BearerAuth, DetailPostWithUserIdRdo, DetailPostWithUserRdo, PageQuery,
-  POST_ID_PARAM, PostWithUserAndPaginationRdo, PostWithUserIdAndPaginationRdo, PostWithUserIdRdo, PostWithUserRdo, RequestWithRequestId,
-  RequestWithRequestIdAndUserId, RouteAlias
+  RequestWithRequestIdAndUserId, RouteAlias, PostWithUserRdo, PageQuery, ApiParamOption,
+  BearerAuth, DetailPostWithUserIdRdo, DetailPostWithUserRdo, PostWithUserIdRdo, POST_ID_PARAM,
+  PostWithUserAndPaginationRdo, PostWithUserIdAndPaginationRdo, RequestWithRequestId
 } from '@project/shared/core';
-import { fillDto, getQueryString, makeHeaders } from '@project/shared/helpers';
+import { dtoToFormData, fillDto, getQueryString, makeHeaders, multerFileToFormData } from '@project/shared/helpers';
 import { AxiosExceptionFilter } from '@project/shared/exception-filters';
 import { GuidValidationPipe } from '@project/shared/pipes';
-import { BaseBlogPostQuery, BlogPostApiResponse, SearchBlogPostQuery, TitleQuery } from '@project/blog/blog-post';
+import {
+  BaseBlogPostQuery, BlogPostApiResponse, CreatePostDto, ImageOption,
+  parseFilePipeBuilder, SearchBlogPostQuery, TitleQuery
+} from '@project/blog/blog-post';
 
 import { CheckAuthGuard } from './guards/check-auth.guard';
 import { UserService } from './user.service';
@@ -96,4 +103,93 @@ export class BlogPostController {
 
     return fillDto(DetailPostWithUserRdo, { ...post, user });
   }
+
+  @ApiResponse({ ...BlogPostApiResponse.PostCreated, type: DetailPostWithUserRdo })
+  @ApiResponse(BlogPostApiResponse.Unauthorized)
+  @ApiResponse(BlogPostApiResponse.BadRequest)
+  @ApiConsumes('multipart/form-data')
+  @ApiBearerAuth(BearerAuth.AccessToken)
+  @UseGuards(CheckAuthGuard)
+  @UseInterceptors(FileInterceptor(ImageOption.KEY))
+  @Post()
+  public async create(
+    @Body() dto: CreatePostDto,
+    @Req() { requestId, userId }: RequestWithRequestIdAndUserId,
+    @UploadedFile(parseFilePipeBuilder) imageFile?: Express.Multer.File
+  ): Promise<DetailPostWithUserRdo> {
+    const url = `${this.apiOptions.blogPostServiceUrl}/${RouteAlias.Posts}`;
+    const formData = new FormData();
+
+    dtoToFormData(dto, formData);
+
+    if (imageFile) {
+      multerFileToFormData(imageFile, formData, ImageOption.KEY);
+    }
+
+    const { data: post } = await this.httpService.axiosRef.post<DetailPostWithUserIdRdo>(url, formData, makeHeaders(requestId, null, userId));
+    const user = await this.userService.getUser(post.userId, requestId);
+
+    return fillDto(DetailPostWithUserRdo, { ...post, user });
+  }
+
+  /*
+  @ApiResponse(BlogPostApiResponse.PostUpdated)
+  @ApiResponse(BlogPostApiResponse.Unauthorized)
+  @ApiResponse(BlogPostApiResponse.PostNotFound)
+  @ApiResponse(BlogPostApiResponse.NotAllow)
+  @ApiParam(ApiParamOption.PostId)
+  @ApiConsumes('multipart/form-data')
+  @ApiHeader(ApiHeaderOption.RequestId)
+  @UseInterceptors(FileInterceptor(ImageOption.KEY))
+  @Patch(POST_ID_PARAM)
+  public async update(
+    @Param(ApiParamOption.PostId.name, GuidValidationPipe) postId: string,
+    @Body() dto: UpdatePostDto,
+    @Req() { requestId, userId }: RequestWithRequestIdAndUserId,
+    @UploadedFile(parseFilePipeBuilder) imageFile?: Express.Multer.File
+  ): Promise<DetailPostWithUserIdRdo> {
+    const updatedPost = await this.blogPostService.updatePost(postId, dto, imageFile, userId, requestId);
+
+    return fillDto(DetailPostWithUserIdRdo, updatedPost.toPOJO());
+  }
+
+  @ApiResponse(BlogPostApiResponse.PostReposted)
+  @ApiResponse(BlogPostApiResponse.Unauthorized)
+  @ApiResponse(BlogPostApiResponse.PostNotFound)
+  @ApiResponse(BlogPostApiResponse.AlreadyReposted)
+  @ApiParam(ApiParamOption.PostId)
+  @Post(`/${RouteAlias.Repost}/${POST_ID_PARAM}`)
+  public async repost(
+    @Param(ApiParamOption.PostId.name, GuidValidationPipe) postId: string,
+    @Req() { userId }: RequestWithUserId
+  ): Promise<DetailPostWithUserIdRdo> {
+    const repostedPost = await this.blogPostService.repostPost(postId, userId);
+
+    return fillDto(DetailPostWithUserIdRdo, repostedPost.toPOJO());
+  }
+
+  @ApiResponse(BlogPostApiResponse.PostDeleted)
+  @ApiResponse(BlogPostApiResponse.Unauthorized)
+  @ApiResponse(BlogPostApiResponse.PostNotFound)
+  @ApiResponse(BlogPostApiResponse.NotAllow)
+  @ApiParam(ApiParamOption.PostId)
+  @HttpCode(BlogPostApiResponse.PostDeleted.status)
+  @Delete(POST_ID_PARAM)
+  public async delete(
+    @Param(ApiParamOption.PostId.name, GuidValidationPipe) postId: string,
+    @Req() { userId }: RequestWithUserId
+  ): Promise<void> {
+    await this.blogPostService.deletePost(postId, userId);
+  }
+
+  @ApiResponse(BlogPostApiResponse.UserPostsCount)
+  @ApiResponse(BlogPostApiResponse.BadRequest)
+  @ApiParam(ApiParamOption.UserId)
+  @Get(`/${RouteAlias.GetUserPostsCount}/${USER_ID_PARAM}`)
+  public async getUserPostsCount(@Param(ApiParamOption.UserId.name, MongoIdValidationPipe) userId: string): Promise<UserPostsCountRdo> {
+    const postsCount = await this.blogPostService.getUserPostsCount(userId);
+
+    return fillDto(UserPostsCountRdo, { userId, postsCount });
+  }
+  */
 }
