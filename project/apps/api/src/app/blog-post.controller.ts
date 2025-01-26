@@ -7,7 +7,6 @@ import { ConfigType } from '@nestjs/config';
 import { ApiBearerAuth, ApiConsumes, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { HttpService } from '@nestjs/axios';
 
-import { apiConfig } from '@project/api/config';
 import {
   RequestWithRequestIdAndUserId, RouteAlias, PostWithUserRdo, PageQuery, ApiParamOption,
   BearerAuth, DetailPostWithUserIdRdo, DetailPostWithUserRdo, PostWithUserIdRdo, POST_ID_PARAM,
@@ -16,13 +15,13 @@ import {
 import { getQueryString, makeHeaders } from '@project/shared/helpers';
 import { AxiosExceptionFilter } from '@project/shared/exception-filters';
 import { GuidValidationPipe } from '@project/shared/pipes';
+import { apiConfig } from '@project/api/config';
 import {
   BaseBlogPostQuery, BlogPostApiResponse, CreatePostDto, ImageOption,
   parseFilePipeBuilder, SearchBlogPostQuery, TitleQuery, UpdatePostDto
 } from '@project/blog/blog-post';
 
 import { CheckAuthGuard } from './guards/check-auth.guard';
-import { UserService } from './user.service';
 import { BlogService } from './blog.service';
 
 @ApiTags('blog-post')
@@ -33,7 +32,6 @@ export class BlogPostController {
     private readonly httpService: HttpService,
     @Inject(apiConfig.KEY)
     private readonly apiOptions: ConfigType<typeof apiConfig>,
-    private userService: UserService,
     private blogService: BlogService
   ) { }
 
