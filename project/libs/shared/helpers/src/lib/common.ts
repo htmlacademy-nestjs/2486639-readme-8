@@ -53,7 +53,7 @@ export function getQueryString(query: object): string {
   return queryParams.join('&');
 }
 
-export function makeUrl(mainUrl: string, mainRoute: string, route = '', query: object = null) {
+export function makeUrl(mainUrl: string, mainRoute = '', route = '', query: object = null) {
   const queryString = (query && Object.keys(query).length) ? `?${getQueryString(query)}` : '';
 
   return join(mainUrl, mainRoute, route) + queryString;

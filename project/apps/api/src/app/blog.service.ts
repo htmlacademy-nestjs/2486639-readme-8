@@ -1,12 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
+import { join } from 'path/posix';
 
 import {
   DetailPostWithUserIdRdo, DetailPostWithUserRdo, PostWithUserIdRdo, RouteAlias,
   PostWithUserAndPaginationRdo, PostWithUserIdAndPaginationRdo, PostWithUserRdo, UserRdo
 } from '@project/shared/core';
-import { dtoToFormData, fillDto, makeHeaders, multerFileToFormData } from '@project/shared/helpers';
+import { dtoToFormData, fillDto, makeHeaders, makeUrl, multerFileToFormData } from '@project/shared/helpers';
 import { apiConfig } from '@project/api/config';
 import { CreatePostDto, ImageOption, UpdatePostDto } from '@project/blog/blog-post';
 
@@ -21,6 +22,10 @@ export class BlogService {
     private userService: UserService
   ) { }
 
+  public getUrl(route = '', query: object = null): string {
+    return makeUrl(this.apiOptions.blogPostServiceUrl, RouteAlias.Posts, route, query);
+  }
+
   public async fillUserOnPost(post: DetailPostWithUserIdRdo, requestId: string): Promise<DetailPostWithUserRdo> {
     const user = await this.userService.getUser(post.userId, requestId);
 
@@ -34,7 +39,7 @@ export class BlogService {
     userId: string,
     imageFile?: Express.Multer.File
   ): Promise<DetailPostWithUserRdo> {
-    const url = `${this.apiOptions.blogPostServiceUrl}/${RouteAlias.Posts}`;
+    const url = this.getUrl();
     const formData = new FormData();
     const headers = makeHeaders(requestId, null, userId);
 
@@ -47,7 +52,7 @@ export class BlogService {
     const { data: post } =
       (!postId)
         ? await this.httpService.axiosRef.post<DetailPostWithUserIdRdo>(url, formData, headers)
-        : await this.httpService.axiosRef.patch<DetailPostWithUserIdRdo>(`${url}/${postId}`, formData, headers);
+        : await this.httpService.axiosRef.patch<DetailPostWithUserIdRdo>(join(url, postId), formData, headers);
     const postWithUser = this.fillUserOnPost(post, requestId);
 
     return postWithUser;

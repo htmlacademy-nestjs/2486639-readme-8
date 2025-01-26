@@ -1,8 +1,7 @@
 import {
-  Body, Controller, Delete, Get, HttpCode, Inject, Param, Post,
+  Body, Controller, Delete, Get, HttpCode, Param, Post,
   Req, UploadedFile, UseFilters, UseGuards, UseInterceptors
 } from '@nestjs/common';
-import { ConfigType } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
 import { ApiBearerAuth, ApiConsumes, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -14,7 +13,6 @@ import {
 import { dtoToFormData, makeHeaders, multerFileToFormData } from '@project/shared/helpers';
 import { MongoIdValidationPipe } from '@project/shared/pipes';
 import { AxiosExceptionFilter } from '@project/shared/exception-filters';
-import { apiConfig } from '@project/api/config';
 import {
   AuthenticationApiResponse, AvatarOption, ChangePasswordDto, CreateUserDto, LoggedUserRdo,
   LoginUserDto, parseFilePipeBuilder, TokenPayloadRdo, UserTokenRdo
@@ -29,8 +27,6 @@ import { CheckAuthGuard } from './guards/check-auth.guard';
 export class UsersController {
   constructor(
     private readonly httpService: HttpService,
-    @Inject(apiConfig.KEY)
-    private readonly apiOptions: ConfigType<typeof apiConfig>,
     private userService: UserService
   ) { }
 
@@ -47,7 +43,6 @@ export class UsersController {
     @Req() { requestId, bearerAuth }: RequestWithRequestIdAndBearerAuth,
     @UploadedFile(parseFilePipeBuilder) avatarFile?: Express.Multer.File
   ): Promise<UserRdo> {
-    // headers: Authorization - т.к. только анонимный пользователь может регистрироваться
     const formData = new FormData();
 
     dtoToFormData(dto, formData);
@@ -56,12 +51,13 @@ export class UsersController {
       multerFileToFormData(avatarFile, formData, AvatarOption.KEY);
     }
 
-    const url = `${this.apiOptions.accountServiceUrl}/${RouteAlias.Register}`;
+    const url = this.userService.getUrl(RouteAlias.Register);
+    // headers: Authorization - т.к. только анонимный пользователь может регистрироваться
+    const headers = makeHeaders(requestId, bearerAuth);
     const { data: registerData } = await this.httpService.axiosRef.post<UserRdo>(
       url,
       formData,
-      // headers: Authorization - т.к. только анонимный пользователь может регистрироваться
-      makeHeaders(requestId, bearerAuth)
+      headers
     );
 
     return registerData;
@@ -73,8 +69,9 @@ export class UsersController {
   @ApiResponse(AuthenticationApiResponse.Unauthorized)
   @Post(RouteAlias.Login)
   public async login(@Body() dto: LoginUserDto, @Req() { requestId }: RequestWithRequestId): Promise<LoggedUserRdo> {
-    const url = `${this.apiOptions.accountServiceUrl}/${RouteAlias.Login}`;
-    const { data } = await this.httpService.axiosRef.post<LoggedUserRdo>(url, dto, makeHeaders(requestId));
+    const url = this.userService.getUrl(RouteAlias.Login);
+    const headers = makeHeaders(requestId);
+    const { data } = await this.httpService.axiosRef.post<LoggedUserRdo>(url, dto, headers);
 
     return data;
   }
@@ -84,9 +81,10 @@ export class UsersController {
   @HttpCode(AuthenticationApiResponse.LogoutSuccess.status)
   @Delete(RouteAlias.Logout)
   public async logout(@Req() { requestId, bearerAuth }: RequestWithRequestIdAndBearerAuth): Promise<void> {
-    const url = `${this.apiOptions.accountServiceUrl}/${RouteAlias.Logout}`;
+    const url = this.userService.getUrl(RouteAlias.Logout);
+    const headers = makeHeaders(requestId, bearerAuth);
 
-    await this.httpService.axiosRef.delete(url, makeHeaders(requestId, bearerAuth));
+    await this.httpService.axiosRef.delete(url, headers);
   }
 
   @ApiResponse(AuthenticationApiResponse.RefreshTokens)
@@ -96,8 +94,9 @@ export class UsersController {
   @HttpCode(AuthenticationApiResponse.RefreshTokens.status)
   @Post(RouteAlias.Refresh)
   public async refreshToken(@Req() { requestId, bearerAuth }: RequestWithRequestIdAndBearerAuth): Promise<UserTokenRdo> {
-    const url = `${this.apiOptions.accountServiceUrl}/refresh`;
-    const { data } = await this.httpService.axiosRef.post<UserTokenRdo>(url, null, makeHeaders(requestId, bearerAuth));
+    const url = this.userService.getUrl(RouteAlias.Refresh);
+    const headers = makeHeaders(requestId, bearerAuth);
+    const { data } = await this.httpService.axiosRef.post<UserTokenRdo>(url, null, headers);
 
     return data;
   }
@@ -120,9 +119,10 @@ export class UsersController {
   @HttpCode(AuthenticationApiResponse.ChangePasswordSuccess.status)
   @Post(RouteAlias.ChangePassword)
   public async changePassword(@Body() dto: ChangePasswordDto, @Req() { requestId, bearerAuth }: RequestWithRequestIdAndBearerAuth): Promise<void> {
-    const url = `${this.apiOptions.accountServiceUrl}/${RouteAlias.ChangePassword}`;
+    const url = this.userService.getUrl(RouteAlias.ChangePassword);
+    const headers = makeHeaders(requestId, bearerAuth);
 
-    await this.httpService.axiosRef.post(url, dto, makeHeaders(requestId, bearerAuth));
+    await this.httpService.axiosRef.post(url, dto, headers);
   }
 
   @ApiResponse(AuthenticationApiResponse.UserFound)
