@@ -1,5 +1,5 @@
 import {
-  Body, Controller, Get, Inject, Param, Patch, Post, Query, Req,
+  Body, Controller, Delete, Get, HttpCode, Inject, Param, Patch, Post, Query, Req,
   UploadedFile, UseFilters, UseGuards, UseInterceptors
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -13,7 +13,7 @@ import {
   BearerAuth, DetailPostWithUserIdRdo, DetailPostWithUserRdo, PostWithUserIdRdo, POST_ID_PARAM,
   PostWithUserAndPaginationRdo, PostWithUserIdAndPaginationRdo, RequestWithRequestId
 } from '@project/shared/core';
-import { fillDto, getQueryString, makeHeaders } from '@project/shared/helpers';
+import { getQueryString, makeHeaders } from '@project/shared/helpers';
 import { AxiosExceptionFilter } from '@project/shared/exception-filters';
 import { GuidValidationPipe } from '@project/shared/pipes';
 import {
@@ -43,7 +43,7 @@ export class BlogPostController {
   public async index(@Query() query: SearchBlogPostQuery, @Req() { requestId }: RequestWithRequestId): Promise<PostWithUserAndPaginationRdo> {
     const url = `${this.apiOptions.blogPostServiceUrl}/${RouteAlias.Posts}${getQueryString(query)}`;
     const { data } = await this.httpService.axiosRef.get<PostWithUserIdAndPaginationRdo>(url, makeHeaders(requestId));
-    const newData = await this.userService.fillUser(data, requestId);
+    const newData = await this.blogService.fillUserOnPostPagination(data, requestId);
 
     return newData;
   }
@@ -54,7 +54,7 @@ export class BlogPostController {
   public async find(@Query() titleQuery: TitleQuery, @Req() { requestId }: RequestWithRequestId): Promise<PostWithUserRdo[]> {
     const url = `${this.apiOptions.blogPostServiceUrl}/${RouteAlias.Posts}/${RouteAlias.Search}${getQueryString(titleQuery)}`;
     const { data: posts } = await this.httpService.axiosRef.get<PostWithUserIdRdo[]>(url, makeHeaders(requestId));
-    const items = await this.userService.replaceUserIdOnUser(posts, requestId);
+    const items = await this.blogService.fillUserOnPostArray(posts, requestId);
 
     return items;
   }
@@ -70,7 +70,7 @@ export class BlogPostController {
   ): Promise<PostWithUserAndPaginationRdo> {
     const url = `${this.apiOptions.blogPostServiceUrl}/${RouteAlias.Posts}/${RouteAlias.MyPosts}${getQueryString(pageQuery)}`;
     const { data } = await this.httpService.axiosRef.get<PostWithUserIdAndPaginationRdo>(url, makeHeaders(requestId, null, userId));
-    const newData = await this.userService.fillUser(data, requestId);
+    const newData = await this.blogService.fillUserOnPostPagination(data, requestId);
 
     return newData;
   }
@@ -86,7 +86,7 @@ export class BlogPostController {
   ): Promise<PostWithUserAndPaginationRdo> {
     const url = `${this.apiOptions.blogPostServiceUrl}/${RouteAlias.Posts}/${RouteAlias.MyFeed}${getQueryString(query)}`;
     const { data } = await this.httpService.axiosRef.get<PostWithUserIdAndPaginationRdo>(url, makeHeaders(requestId, null, userId));
-    const newData = await this.userService.fillUser(data, requestId);
+    const newData = await this.blogService.fillUserOnPostPagination(data, requestId);
 
     return newData;
   }
@@ -101,9 +101,9 @@ export class BlogPostController {
   ): Promise<DetailPostWithUserRdo> {
     const url = `${this.apiOptions.blogPostServiceUrl}/${RouteAlias.Posts}/${postId}`;
     const { data: post } = await this.httpService.axiosRef.get<DetailPostWithUserIdRdo>(url, makeHeaders(requestId, null, userId));
-    const user = await this.userService.getUser(post.userId, requestId);
+    const postWithUser = this.blogService.fillUserOnPost(post, requestId);
 
-    return fillDto(DetailPostWithUserRdo, { ...post, user });
+    return postWithUser;
   }
 
   @ApiResponse({ ...BlogPostApiResponse.PostCreated, type: DetailPostWithUserRdo })
@@ -145,21 +145,23 @@ export class BlogPostController {
     return post;
   }
 
-
-  /*
-  @ApiResponse(BlogPostApiResponse.PostReposted)
+  @ApiResponse({ ...BlogPostApiResponse.PostReposted, type: DetailPostWithUserRdo })
   @ApiResponse(BlogPostApiResponse.Unauthorized)
   @ApiResponse(BlogPostApiResponse.PostNotFound)
   @ApiResponse(BlogPostApiResponse.AlreadyReposted)
   @ApiParam(ApiParamOption.PostId)
+  @ApiBearerAuth(BearerAuth.AccessToken)
+  @UseGuards(CheckAuthGuard)
   @Post(`/${RouteAlias.Repost}/${POST_ID_PARAM}`)
   public async repost(
     @Param(ApiParamOption.PostId.name, GuidValidationPipe) postId: string,
-    @Req() { userId }: RequestWithUserId
-  ): Promise<DetailPostWithUserIdRdo> {
-    const repostedPost = await this.blogPostService.repostPost(postId, userId);
+    @Req() { requestId, userId }: RequestWithRequestIdAndUserId
+  ): Promise<DetailPostWithUserRdo> {
+    const url = `${this.apiOptions.blogPostServiceUrl}/${RouteAlias.Posts}/${RouteAlias.Repost}/${postId}`;
+    const { data: post } = await this.httpService.axiosRef.post<DetailPostWithUserIdRdo>(url, null, makeHeaders(requestId, null, userId))
+    const postWithUser = this.blogService.fillUserOnPost(post, requestId);
 
-    return fillDto(DetailPostWithUserIdRdo, repostedPost.toPOJO());
+    return postWithUser;
   }
 
   @ApiResponse(BlogPostApiResponse.PostDeleted)
@@ -167,23 +169,16 @@ export class BlogPostController {
   @ApiResponse(BlogPostApiResponse.PostNotFound)
   @ApiResponse(BlogPostApiResponse.NotAllow)
   @ApiParam(ApiParamOption.PostId)
+  @ApiBearerAuth(BearerAuth.AccessToken)
+  @UseGuards(CheckAuthGuard)
   @HttpCode(BlogPostApiResponse.PostDeleted.status)
   @Delete(POST_ID_PARAM)
   public async delete(
     @Param(ApiParamOption.PostId.name, GuidValidationPipe) postId: string,
-    @Req() { userId }: RequestWithUserId
+    @Req() { requestId, userId }: RequestWithRequestIdAndUserId
   ): Promise<void> {
-    await this.blogPostService.deletePost(postId, userId);
-  }
+    const url = `${this.apiOptions.blogPostServiceUrl}/${RouteAlias.Posts}/${postId}`;
 
-  @ApiResponse(BlogPostApiResponse.UserPostsCount)
-  @ApiResponse(BlogPostApiResponse.BadRequest)
-  @ApiParam(ApiParamOption.UserId)
-  @Get(`/${RouteAlias.GetUserPostsCount}/${USER_ID_PARAM}`)
-  public async getUserPostsCount(@Param(ApiParamOption.UserId.name, MongoIdValidationPipe) userId: string): Promise<UserPostsCountRdo> {
-    const postsCount = await this.blogPostService.getUserPostsCount(userId);
-
-    return fillDto(UserPostsCountRdo, { userId, postsCount });
+    await this.httpService.axiosRef.delete(url, makeHeaders(requestId, null, userId))
   }
-  */
 }
