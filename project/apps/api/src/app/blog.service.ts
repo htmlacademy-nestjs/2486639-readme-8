@@ -22,8 +22,20 @@ export class BlogService {
     private userService: UserService
   ) { }
 
-  public getUrl(route = '', query: object = null): string {
+  public getPostsUrl(route = '', query: object = null): string {
     return makeUrl(this.apiOptions.blogPostServiceUrl, RouteAlias.Posts, route, query);
+  }
+
+  public getCommentsUrl(route = '', query: object = null): string {
+    return makeUrl(this.apiOptions.blogPostServiceUrl, RouteAlias.PostComments, route, query);
+  }
+
+  public getLikesUrl(route = '', query: object = null): string {
+    return makeUrl(this.apiOptions.blogPostServiceUrl, RouteAlias.PostLikes, route, query);
+  }
+
+  public getSubscriptionsUrl(route = '', query: object = null): string {
+    return makeUrl(this.apiOptions.blogPostServiceUrl, RouteAlias.Subscriptions, route, query);
   }
 
   public async fillUserOnPost(post: DetailPostWithUserIdRdo, requestId: string): Promise<DetailPostWithUserRdo> {
@@ -39,7 +51,7 @@ export class BlogService {
     userId: string,
     imageFile?: Express.Multer.File
   ): Promise<DetailPostWithUserRdo> {
-    const url = this.getUrl();
+    const url = this.getPostsUrl();
     const formData = new FormData();
     const headers = makeHeaders(requestId, null, userId);
 

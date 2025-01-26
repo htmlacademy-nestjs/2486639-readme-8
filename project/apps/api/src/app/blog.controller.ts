@@ -1,22 +1,25 @@
-import { Body, Controller, Delete, Get, HttpCode, Inject, Param, Post, Query, Req, UseFilters, UseGuards } from '@nestjs/common';
-import { ConfigType } from '@nestjs/config';
+import {
+  Body, Controller, Delete, Get, HttpCode, Param,
+  Post, Query, Req, UseFilters, UseGuards
+} from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { ApiBearerAuth, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { join } from 'path/posix';
 
 import {
   ApiParamOption, BearerAuth, COMMENT_ID_PARAM, CommentWithUserAndPaginationRdo, RouteAlias,
   CommentWithUserRdo, PageQuery, POST_ID_PARAM, RequestWithRequestId, UserRdo, USER_ID_PARAM,
   CommentWithUserIdRdo, CommentWithUserIdAndPaginationRdo, RequestWithRequestIdAndUserId
 } from '@project/shared/core';
-import { fillDto, getQueryString, makeHeaders } from '@project/shared/helpers';
+import { fillDto, makeHeaders } from '@project/shared/helpers';
 import { GuidValidationPipe, MongoIdValidationPipe } from '@project/shared/pipes';
 import { AxiosExceptionFilter } from '@project/shared/exception-filters';
-import { apiConfig } from '@project/api/config';
 import { BlogPostCommentApiResponse, CreatePostCommentDto } from '@project/blog/blog-post-comment';
 import { BlogPostLikeApiResponse } from '@project/blog/blog-post-like';
 import { BlogSubscriptionApiResponse } from '@project/blog/blog-subscription';
 
 import { CheckAuthGuard } from './guards/check-auth.guard';
+import { BlogService } from './blog.service';
 import { UserService } from './user.service';
 
 @ApiTags('blog')
@@ -25,8 +28,7 @@ import { UserService } from './user.service';
 export class BlogController {
   constructor(
     private readonly httpService: HttpService,
-    @Inject(apiConfig.KEY)
-    private readonly apiOptions: ConfigType<typeof apiConfig>,
+    private readonly blogService: BlogService,
     private readonly userService: UserService
   ) { }
 
@@ -35,14 +37,15 @@ export class BlogController {
   @ApiResponse(BlogPostCommentApiResponse.BadRequest)
   @ApiResponse(BlogPostCommentApiResponse.PostNotFound)
   @ApiParam(ApiParamOption.PostId)
-  @Get(`comments/${POST_ID_PARAM}`)
+  @Get(join('comments', POST_ID_PARAM))
   public async getComments(
     @Param(ApiParamOption.PostId.name, GuidValidationPipe) postId: string,
     @Query() pageQuery: PageQuery,
     @Req() { requestId }: RequestWithRequestId
   ): Promise<CommentWithUserAndPaginationRdo> {
-    const url = `${this.apiOptions.blogPostServiceUrl}/${RouteAlias.PostComments}/${postId}${getQueryString(pageQuery)}`;
-    const { data } = await this.httpService.axiosRef.get<CommentWithUserIdAndPaginationRdo>(url, makeHeaders(requestId));
+    const url = this.blogService.getCommentsUrl(postId, pageQuery);
+    const headers = makeHeaders(requestId);
+    const { data } = await this.httpService.axiosRef.get<CommentWithUserIdAndPaginationRdo>(url, headers);
     const { entities, currentPage, itemsPerPage, totalItems, totalPages } = data;
     const comments: CommentWithUserRdo[] = [];
     const users = new Map<string, UserRdo>();
@@ -68,14 +71,15 @@ export class BlogController {
   @ApiParam(ApiParamOption.PostId)
   @ApiBearerAuth(BearerAuth.AccessToken)
   @UseGuards(CheckAuthGuard)
-  @Post(`comments/${POST_ID_PARAM}`)
+  @Post(join('comments', POST_ID_PARAM))
   public async createComment(
     @Param(ApiParamOption.PostId.name, GuidValidationPipe) postId: string,
     @Body() dto: CreatePostCommentDto,
     @Req() { requestId, userId }: RequestWithRequestIdAndUserId
   ): Promise<CommentWithUserRdo> {
-    const url = `${this.apiOptions.blogPostServiceUrl}/${RouteAlias.PostComments}/${postId}`;
-    const { data: comment } = await this.httpService.axiosRef.post<CommentWithUserIdRdo>(url, dto, makeHeaders(requestId, null, userId));
+    const url = this.blogService.getCommentsUrl(postId);
+    const headers = makeHeaders(requestId, null, userId);
+    const { data: comment } = await this.httpService.axiosRef.post<CommentWithUserIdRdo>(url, dto, headers);
     const user = this.userService.getUser(comment.userId, requestId);
 
     return fillDto(CommentWithUserRdo, { ...comment, user });
@@ -90,14 +94,15 @@ export class BlogController {
   @ApiBearerAuth(BearerAuth.AccessToken)
   @UseGuards(CheckAuthGuard)
   @HttpCode(BlogPostCommentApiResponse.PostCommentDeleted.status)
-  @Delete(`comments/${COMMENT_ID_PARAM}`)
+  @Delete(join('comments', COMMENT_ID_PARAM))
   public async deleteComment(
     @Param(ApiParamOption.CommentId.name, GuidValidationPipe) commentId: string,
     @Req() { requestId, userId }: RequestWithRequestIdAndUserId
   ): Promise<void> {
-    const url = `${this.apiOptions.blogPostServiceUrl}/${RouteAlias.PostComments}/${commentId}`;
+    const url = this.blogService.getCommentsUrl(commentId);
+    const headers = makeHeaders(requestId, null, userId);
 
-    await this.httpService.axiosRef.delete(url, makeHeaders(requestId, null, userId));
+    await this.httpService.axiosRef.delete(url, headers);
   }
 
   // Лайки
@@ -109,14 +114,15 @@ export class BlogController {
   @ApiParam(ApiParamOption.PostId)
   @ApiBearerAuth(BearerAuth.AccessToken)
   @UseGuards(CheckAuthGuard)
-  @Post(`likes/${POST_ID_PARAM}`)
+  @Post(join('likes', POST_ID_PARAM))
   public async createLike(
     @Param(ApiParamOption.PostId.name, GuidValidationPipe) postId: string,
     @Req() { requestId, userId }: RequestWithRequestIdAndUserId
   ): Promise<void> {
-    const url = `${this.apiOptions.blogPostServiceUrl}/${RouteAlias.PostLikes}/${postId}`;
+    const url = this.blogService.getLikesUrl(postId);
+    const headers = makeHeaders(requestId, null, userId);
 
-    await this.httpService.axiosRef.post(url, makeHeaders(requestId, null, userId));
+    await this.httpService.axiosRef.post(url, headers);
   }
 
   @ApiResponse(BlogPostLikeApiResponse.PostLikeDeleted)
@@ -128,14 +134,15 @@ export class BlogController {
   @ApiBearerAuth(BearerAuth.AccessToken)
   @UseGuards(CheckAuthGuard)
   @HttpCode(BlogPostLikeApiResponse.PostLikeDeleted.status)
-  @Delete(`likes/${POST_ID_PARAM}`)
+  @Delete(join('likes', POST_ID_PARAM))
   public async deleteLike(
     @Param(ApiParamOption.PostId.name, GuidValidationPipe) postId: string,
     @Req() { requestId, userId }: RequestWithRequestIdAndUserId
   ): Promise<void> {
-    const url = `${this.apiOptions.blogPostServiceUrl}/${RouteAlias.PostLikes}/${postId}`;
+    const url = this.blogService.getLikesUrl(postId);
+    const headers = makeHeaders(requestId, null, userId);
 
-    await this.httpService.axiosRef.delete(url, makeHeaders(requestId, null, userId));
+    await this.httpService.axiosRef.delete(url, headers);
   }
 
   // Подписки
@@ -146,14 +153,15 @@ export class BlogController {
   @ApiParam(ApiParamOption.UserId)
   @ApiBearerAuth(BearerAuth.AccessToken)
   @UseGuards(CheckAuthGuard)
-  @Post(`${RouteAlias.Subscriptions}/${USER_ID_PARAM}`)
+  @Post(join(RouteAlias.Subscriptions, USER_ID_PARAM))
   public async create(
     @Param(ApiParamOption.UserId.name, MongoIdValidationPipe) authorUserId: string,
     @Req() { requestId, userId }: RequestWithRequestIdAndUserId
   ): Promise<void> {
-    const url = `${this.apiOptions.blogPostServiceUrl}/${RouteAlias.Subscriptions}/${authorUserId}`;
+    const url = this.blogService.getSubscriptionsUrl(authorUserId);
+    const headers = makeHeaders(requestId, null, userId);
 
-    await this.httpService.axiosRef.post(url, makeHeaders(requestId, null, userId));
+    await this.httpService.axiosRef.post(url, headers);
   }
 
   @ApiResponse(BlogSubscriptionApiResponse.SubscriptionDeleted)
@@ -164,13 +172,14 @@ export class BlogController {
   @ApiBearerAuth(BearerAuth.AccessToken)
   @UseGuards(CheckAuthGuard)
   @HttpCode(BlogSubscriptionApiResponse.SubscriptionDeleted.status)
-  @Delete(`${RouteAlias.Subscriptions}/${USER_ID_PARAM}`)
+  @Delete(join(RouteAlias.Subscriptions, USER_ID_PARAM))
   public async delete(
     @Param(ApiParamOption.UserId.name, MongoIdValidationPipe) authorUserId: string,
     @Req() { requestId, userId }: RequestWithRequestIdAndUserId
   ): Promise<void> {
-    const url = `${this.apiOptions.blogPostServiceUrl}/${RouteAlias.Subscriptions}/${authorUserId}`;
+    const url = this.blogService.getSubscriptionsUrl(authorUserId);
+    const headers = makeHeaders(requestId, null, userId);
 
-    await this.httpService.axiosRef.delete(url, makeHeaders(requestId, null, userId));
+    await this.httpService.axiosRef.delete(url, headers);
   }
 }
