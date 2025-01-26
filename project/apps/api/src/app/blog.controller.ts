@@ -5,7 +5,8 @@ import { ApiBearerAuth, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import {
   ApiParamOption, BearerAuth, COMMENT_ID_PARAM, CommentWithUserAndPaginationRdo, RouteAlias,
-  CommentWithUserRdo, PageQuery, POST_ID_PARAM, RequestWithRequestId, RequestWithRequestIdAndUserId
+  CommentWithUserRdo, PageQuery, POST_ID_PARAM, RequestWithRequestId, UserRdo,
+  CommentWithUserIdRdo, CommentWithUserIdAndPaginationRdo, RequestWithRequestIdAndUserId
 } from '@project/shared/core';
 import { fillDto, getQueryString, makeHeaders } from '@project/shared/helpers';
 import { GuidValidationPipe } from '@project/shared/pipes';
@@ -14,6 +15,7 @@ import { apiConfig } from '@project/api/config';
 import { BlogPostCommentApiResponse, CreatePostCommentDto } from '@project/blog/blog-post-comment';
 
 import { CheckAuthGuard } from './guards/check-auth.guard';
+import { UserService } from './user.service';
 
 @ApiTags('blog')
 @Controller('blog')
@@ -22,7 +24,8 @@ export class BlogController {
   constructor(
     private readonly httpService: HttpService,
     @Inject(apiConfig.KEY)
-    private readonly apiOptions: ConfigType<typeof apiConfig>
+    private readonly apiOptions: ConfigType<typeof apiConfig>,
+    private readonly userService: UserService
   ) { }
 
   // Комметарии
@@ -37,8 +40,22 @@ export class BlogController {
     @Req() { requestId }: RequestWithRequestId
   ): Promise<CommentWithUserAndPaginationRdo> {
     const url = `${this.apiOptions.blogPostServiceUrl}/${RouteAlias.PostComments}/${postId}${getQueryString(pageQuery)}`;
-    //!
-    return fillDto(CommentWithUserAndPaginationRdo, {});
+    const { data } = await this.httpService.axiosRef.get<CommentWithUserIdAndPaginationRdo>(url, makeHeaders(requestId));
+    const { entities, currentPage, itemsPerPage, totalItems, totalPages } = data;
+    const comments: CommentWithUserRdo[] = [];
+    const users = new Map<string, UserRdo>();
+
+    for (const entity of entities) {
+      const { userId } = entity;
+
+      if (!users.has(userId)) {
+        users.set(userId, await this.userService.getUser(userId, requestId));
+      }
+
+      comments.push(fillDto(CommentWithUserRdo, { ...entity, user: users.get(userId) }));
+    }
+
+    return fillDto(CommentWithUserAndPaginationRdo, { entities: comments, currentPage, itemsPerPage, totalItems, totalPages });
   }
 
   @ApiResponse(BlogPostCommentApiResponse.PostCommentCreated)
@@ -56,8 +73,10 @@ export class BlogController {
     @Req() { requestId, userId }: RequestWithRequestIdAndUserId
   ): Promise<CommentWithUserRdo> {
     const url = `${this.apiOptions.blogPostServiceUrl}/${RouteAlias.PostComments}/${postId}`;
-    //!
-    return fillDto(CommentWithUserRdo, {});
+    const { data: comment } = await this.httpService.axiosRef.post<CommentWithUserIdRdo>(url, dto, makeHeaders(requestId, null, userId));
+    const user = this.userService.getUser(comment.userId, requestId);
+
+    return fillDto(CommentWithUserRdo, { ...comment, user });
   }
 
   @ApiResponse(BlogPostCommentApiResponse.PostCommentDeleted)
@@ -76,7 +95,7 @@ export class BlogController {
   ): Promise<void> {
     const url = `${this.apiOptions.blogPostServiceUrl}/${RouteAlias.PostComments}/${commentId}`;
 
-    await this.httpService.axiosRef.delete(url, makeHeaders(requestId, null, userId))
+    await this.httpService.axiosRef.delete(url, makeHeaders(requestId, null, userId));
   }
 
   // Лайки

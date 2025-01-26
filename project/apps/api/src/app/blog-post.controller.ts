@@ -156,7 +156,7 @@ export class BlogPostController {
     @Req() { requestId, userId }: RequestWithRequestIdAndUserId
   ): Promise<DetailPostWithUserRdo> {
     const url = `${this.apiOptions.blogPostServiceUrl}/${RouteAlias.Posts}/${RouteAlias.Repost}/${postId}`;
-    const { data: post } = await this.httpService.axiosRef.post<DetailPostWithUserIdRdo>(url, null, makeHeaders(requestId, null, userId))
+    const { data: post } = await this.httpService.axiosRef.post<DetailPostWithUserIdRdo>(url, null, makeHeaders(requestId, null, userId));
     const postWithUser = this.blogService.fillUserOnPost(post, requestId);
 
     return postWithUser;
@@ -177,6 +177,6 @@ export class BlogPostController {
   ): Promise<void> {
     const url = `${this.apiOptions.blogPostServiceUrl}/${RouteAlias.Posts}/${postId}`;
 
-    await this.httpService.axiosRef.delete(url, makeHeaders(requestId, null, userId))
+    await this.httpService.axiosRef.delete(url, makeHeaders(requestId, null, userId));
   }
 }
