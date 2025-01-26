@@ -1,8 +1,6 @@
 import { HttpStatus } from '@nestjs/common';
 
-import { PostCommentRdo } from './rdo/post-comment.rdo';
-import { PostCommentApiProperty } from './blog-post-comment.constant.property';
-import { PostCommentWithPaginationRdo } from './rdo/post-comment-with-pagination.rdo';
+import { CommentWithUserIdAndPaginationRdo, CommentWithUserIdRdo } from '@project/shared/core';
 
 export const Default = {
   CURRENT_PAGE: 1,
@@ -21,13 +19,6 @@ export const BlogPostCommentMessage = {
   CommentExist: 'You already commented the post.'
 } as const;
 
-export const CommentIdApiParam = {
-  name: 'commentId',
-  schema: PostCommentApiProperty.Id
-} as const;
-
-export const COMMENT_ID_PARAM = `:${CommentIdApiParam.name}`;
-
 export const BlogPostCommentApiResponse = {
   Unauthorized: {
     status: HttpStatus.UNAUTHORIZED,
@@ -38,12 +29,12 @@ export const BlogPostCommentApiResponse = {
     description: 'Bad request.'
   },
   PostCommentCreated: {
-    type: PostCommentRdo,
+    type: CommentWithUserIdRdo,
     status: HttpStatus.CREATED,
     description: 'The new comment has been successfully created.'
   },
   PostCommentsFound: {
-    type: PostCommentWithPaginationRdo,
+    type: CommentWithUserIdAndPaginationRdo,
     isArray: true,
     status: HttpStatus.OK,
     description: 'Post comments found.'

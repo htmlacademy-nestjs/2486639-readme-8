@@ -7,7 +7,7 @@ import { ApiPropertyOption } from '../constants/api-property-option';
 
 export class CommentWithUserAndPaginationRdo extends PaginationRdo {
   @ApiProperty({
-    ...ApiPropertyOption.Post.Entities,
+    ...ApiPropertyOption.Comment.Entities,
     type: CommentWithUserRdo
   })
   @Type(() => CommentWithUserRdo)

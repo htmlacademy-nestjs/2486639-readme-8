@@ -1,11 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, MaxLength, MinLength } from 'class-validator';
 
+import { ApiPropertyOption } from '@project/shared/core';
+
 import { PostCommentMessageValidation } from '../blog-post-comment.constant';
-import { PostCommentApiProperty } from '../blog-post-comment.constant.property';
 
 export class CreatePostCommentDto {
-  @ApiProperty(PostCommentApiProperty.Message)
+  @ApiProperty(ApiPropertyOption.Comment.Message)
   @IsString()
   @MinLength(PostCommentMessageValidation.MinLength)
   @MaxLength(PostCommentMessageValidation.MaxLength)

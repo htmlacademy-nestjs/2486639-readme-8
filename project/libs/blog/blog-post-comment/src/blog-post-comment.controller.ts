@@ -3,13 +3,14 @@ import { ApiHeader, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { fillDto } from '@project/shared/helpers';
 import { GuidValidationPipe } from '@project/shared/pipes';
-import { ApiHeaderOption, ApiParamOption, PageQuery, POST_ID_PARAM, RequestWithUserId, RouteAlias } from '@project/shared/core';
+import {
+  ApiHeaderOption, ApiParamOption, CommentWithUserIdRdo, RequestWithUserId, PageQuery,
+  CommentWithUserIdAndPaginationRdo, POST_ID_PARAM, RouteAlias, COMMENT_ID_PARAM
+} from '@project/shared/core';
 
-import { BlogPostCommentApiResponse, CommentIdApiParam, COMMENT_ID_PARAM } from './blog-post-comment.constant';
+import { BlogPostCommentApiResponse } from './blog-post-comment.constant';
 import { BlogPostCommentService } from './blog-post-comment.service';
 import { CreatePostCommentDto } from './dto/create-post-comment.dto';
-import { PostCommentRdo } from './rdo/post-comment.rdo';
-import { PostCommentWithPaginationRdo } from './rdo/post-comment-with-pagination.rdo';
 
 @ApiTags('blog-post-comment')
 @ApiHeader(ApiHeaderOption.UserId)
@@ -28,14 +29,14 @@ export class BlogPostCommentController {
     @Param(ApiParamOption.PostId.name, GuidValidationPipe) postId: string,
     @Query() { page }: PageQuery,
     @Req() { userId }: RequestWithUserId
-  ): Promise<PostCommentWithPaginationRdo> {
+  ): Promise<CommentWithUserIdAndPaginationRdo> {
     const postCommentsWithPagination = await this.blogPostCommentService.getComments(postId, userId, page);
     const result = {
       ...postCommentsWithPagination,
       entities: postCommentsWithPagination.entities.map((comment) => comment.toPOJO())
     }
 
-    return fillDto(PostCommentWithPaginationRdo, result);
+    return fillDto(CommentWithUserIdAndPaginationRdo, result);
   }
 
   @ApiResponse(BlogPostCommentApiResponse.PostCommentCreated)
@@ -49,10 +50,10 @@ export class BlogPostCommentController {
     @Param(ApiParamOption.PostId.name, GuidValidationPipe) postId: string,
     @Body() dto: CreatePostCommentDto,
     @Req() { userId }: RequestWithUserId
-  ): Promise<PostCommentRdo> {
+  ): Promise<CommentWithUserIdRdo> {
     const newComment = await this.blogPostCommentService.createComment(dto, postId, userId);
 
-    return fillDto(PostCommentRdo, newComment.toPOJO());
+    return fillDto(CommentWithUserIdRdo, newComment.toPOJO());
   }
 
   @ApiResponse(BlogPostCommentApiResponse.PostCommentDeleted)
@@ -60,11 +61,11 @@ export class BlogPostCommentController {
   @ApiResponse(BlogPostCommentApiResponse.BadRequest)
   @ApiResponse(BlogPostCommentApiResponse.PostNotFound)
   @ApiResponse(BlogPostCommentApiResponse.CommentNotFound)
-  @ApiParam(CommentIdApiParam)
+  @ApiParam(ApiParamOption.CommentId)
   @HttpCode(BlogPostCommentApiResponse.PostCommentDeleted.status)
   @Delete(COMMENT_ID_PARAM)
   public async delete(
-    @Param(CommentIdApiParam.name, GuidValidationPipe) commentId: string,
+    @Param(ApiParamOption.CommentId.name, GuidValidationPipe) commentId: string,
     @Req() { userId }: RequestWithUserId
   ): Promise<void> {
     await this.blogPostCommentService.deleteComment(commentId, userId);
