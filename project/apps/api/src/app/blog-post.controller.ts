@@ -1,5 +1,5 @@
 import {
-  Body, Controller, Get, Inject, Param, Post, Query, Req,
+  Body, Controller, Get, Inject, Param, Patch, Post, Query, Req,
   UploadedFile, UseFilters, UseGuards, UseInterceptors
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -13,16 +13,17 @@ import {
   BearerAuth, DetailPostWithUserIdRdo, DetailPostWithUserRdo, PostWithUserIdRdo, POST_ID_PARAM,
   PostWithUserAndPaginationRdo, PostWithUserIdAndPaginationRdo, RequestWithRequestId
 } from '@project/shared/core';
-import { dtoToFormData, fillDto, getQueryString, makeHeaders, multerFileToFormData } from '@project/shared/helpers';
+import { fillDto, getQueryString, makeHeaders } from '@project/shared/helpers';
 import { AxiosExceptionFilter } from '@project/shared/exception-filters';
 import { GuidValidationPipe } from '@project/shared/pipes';
 import {
   BaseBlogPostQuery, BlogPostApiResponse, CreatePostDto, ImageOption,
-  parseFilePipeBuilder, SearchBlogPostQuery, TitleQuery
+  parseFilePipeBuilder, SearchBlogPostQuery, TitleQuery, UpdatePostDto
 } from '@project/blog/blog-post';
 
 import { CheckAuthGuard } from './guards/check-auth.guard';
 import { UserService } from './user.service';
+import { BlogService } from './blog.service';
 
 @ApiTags('blog-post')
 @Controller('blog-posts')
@@ -32,7 +33,8 @@ export class BlogPostController {
     private readonly httpService: HttpService,
     @Inject(apiConfig.KEY)
     private readonly apiOptions: ConfigType<typeof apiConfig>,
-    private userService: UserService
+    private userService: UserService,
+    private blogService: BlogService
   ) { }
 
   @ApiResponse({ ...BlogPostApiResponse.PostsFound, type: PostWithUserAndPaginationRdo })
@@ -117,29 +119,19 @@ export class BlogPostController {
     @Req() { requestId, userId }: RequestWithRequestIdAndUserId,
     @UploadedFile(parseFilePipeBuilder) imageFile?: Express.Multer.File
   ): Promise<DetailPostWithUserRdo> {
-    const url = `${this.apiOptions.blogPostServiceUrl}/${RouteAlias.Posts}`;
-    const formData = new FormData();
+    const post = await this.blogService.createOrUpdate(null, dto, requestId, userId, imageFile);
 
-    dtoToFormData(dto, formData);
-
-    if (imageFile) {
-      multerFileToFormData(imageFile, formData, ImageOption.KEY);
-    }
-
-    const { data: post } = await this.httpService.axiosRef.post<DetailPostWithUserIdRdo>(url, formData, makeHeaders(requestId, null, userId));
-    const user = await this.userService.getUser(post.userId, requestId);
-
-    return fillDto(DetailPostWithUserRdo, { ...post, user });
+    return post;
   }
 
-  /*
-  @ApiResponse(BlogPostApiResponse.PostUpdated)
+  @ApiResponse({ ...BlogPostApiResponse.PostUpdated, type: DetailPostWithUserRdo })
   @ApiResponse(BlogPostApiResponse.Unauthorized)
   @ApiResponse(BlogPostApiResponse.PostNotFound)
   @ApiResponse(BlogPostApiResponse.NotAllow)
   @ApiParam(ApiParamOption.PostId)
   @ApiConsumes('multipart/form-data')
-  @ApiHeader(ApiHeaderOption.RequestId)
+  @ApiBearerAuth(BearerAuth.AccessToken)
+  @UseGuards(CheckAuthGuard)
   @UseInterceptors(FileInterceptor(ImageOption.KEY))
   @Patch(POST_ID_PARAM)
   public async update(
@@ -147,12 +139,14 @@ export class BlogPostController {
     @Body() dto: UpdatePostDto,
     @Req() { requestId, userId }: RequestWithRequestIdAndUserId,
     @UploadedFile(parseFilePipeBuilder) imageFile?: Express.Multer.File
-  ): Promise<DetailPostWithUserIdRdo> {
-    const updatedPost = await this.blogPostService.updatePost(postId, dto, imageFile, userId, requestId);
+  ): Promise<DetailPostWithUserRdo> {
+    const post = await this.blogService.createOrUpdate(postId, dto, requestId, userId, imageFile);
 
-    return fillDto(DetailPostWithUserIdRdo, updatedPost.toPOJO());
+    return post;
   }
 
+
+  /*
   @ApiResponse(BlogPostApiResponse.PostReposted)
   @ApiResponse(BlogPostApiResponse.Unauthorized)
   @ApiResponse(BlogPostApiResponse.PostNotFound)

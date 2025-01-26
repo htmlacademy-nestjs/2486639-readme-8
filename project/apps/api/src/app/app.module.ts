@@ -4,6 +4,7 @@ import { HttpModule } from '@nestjs/axios';
 import { ApiConfigModule } from '@project/api/config';
 
 import { UserService } from './user.service';
+import { BlogService } from './blog.service';
 import { UsersController } from './users.controller';
 import { BlogPostController } from './blog-post.controller';
 import { BlogController } from './blog.controller';
@@ -24,6 +25,9 @@ const HTTP_CLIENT_TIMEOUT = 3000;
     BlogPostController,
     BlogController
   ],
-  providers: [UserService]
+  providers: [
+    UserService,
+    BlogService
+  ]
 })
 export class AppModule { }
