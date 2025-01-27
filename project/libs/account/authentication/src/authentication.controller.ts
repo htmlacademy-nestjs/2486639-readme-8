@@ -106,8 +106,8 @@ export class AuthenticationController {
   @HttpCode(AuthenticationApiResponse.ChangePasswordSuccess.status)
   @UseGuards(JwtAuthGuard)
   @Post(RouteAlias.ChangePassword)
-  public async changePassword(@Body() dto: ChangePasswordDto, @Req() { user }: RequestWithTokenPayload): Promise<void> {
-    await this.authService.changeUserPassword(user.sub, dto.password);
+  public async changePassword(@Body() dto: ChangePasswordDto, @Req() { user: { email } }: RequestWithTokenPayload): Promise<void> {
+    await this.authService.changeUserPassword(email, dto.oldPassword, dto.newPassword);
   }
 
   @ApiResponse(AuthenticationApiResponse.UserFound)

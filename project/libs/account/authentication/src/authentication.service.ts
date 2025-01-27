@@ -85,8 +85,8 @@ export class AuthenticationService {
     return userEntity;
   }
 
-  public async changeUserPassword(userId: string, newPassword: string): Promise<void> {
-    const userEntity = await this.blogUserRepository.findById(userId);
+  public async changeUserPassword(email: string, oldPassword: string, newPassword: string): Promise<void> {
+    const userEntity = await this.verifyUser({ email, password: oldPassword });
 
     await userEntity.setPassword(newPassword);
     await this.blogUserRepository.update(userEntity);

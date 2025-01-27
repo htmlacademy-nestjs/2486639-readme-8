@@ -19,6 +19,14 @@ export const ApiPropertyOption = {
       description: 'The user password',
       example: 'password'
     },
+    OldPassword: {
+      description: 'The user old password',
+      example: 'password'
+    },
+    NewPassword: {
+      description: 'The user new password',
+      example: 'password'
+    },
     AvatarPath: {
       description: 'The user avatar path',
       example: '/img/avatar.jpg'
