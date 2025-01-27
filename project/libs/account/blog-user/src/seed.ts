@@ -5,10 +5,13 @@ import { genSalt, hash } from 'bcrypt';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { ConfigAlias } from '../../../shared/core/src/lib/constants/config-alias';
 // eslint-disable-next-line @nx/enforce-module-boundaries
-import { AuthUser } from '../../../shared/core/src/lib/types/auth-user.interface';
+import { User } from '../../../shared/core/src/lib/types/user.interface';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { getMongoConnectionString } from '../../../shared/helpers/src/lib/common';
 import { SALT_ROUNDS, ACCOUNTS_COLLECTION } from '../../../account/blog-user/src/blog-user.constant';
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import { MOCK_USERS } from '../../../../mocks/users';
+
 
 const UserSchema = new Mongoose.Schema(
   {
@@ -22,8 +25,8 @@ const UserSchema = new Mongoose.Schema(
 );
 
 const UserEntity =
-  (mongoose.models.User as Mongoose.Model<AuthUser>) ||
-  mongoose.model<AuthUser>(ACCOUNTS_COLLECTION, UserSchema);
+  (mongoose.models.User as Mongoose.Model<User>) ||
+  mongoose.model<User>(ACCOUNTS_COLLECTION, UserSchema);
 
 async function bootstrap() {
   const mongodbOption = {
@@ -39,17 +42,20 @@ async function bootstrap() {
   const mongoose = await Mongoose.connect(mongoDbUrl);
   const salt = await genSalt(SALT_ROUNDS);
 
-  const passwordHash = await hash('password', salt);
-  const newUserEntity = await new UserEntity(
-    {
-      _id: '67971df996da19e7f31a2d5f',
-      email: 'email1',
-      name: 'name',
-      avatarPath: 'avatarPath',
-      passwordHash
-    }
-  ).save();
-  console.log(newUserEntity);
+  for (const mockUser of MOCK_USERS) {
+    const { id: _id, email, name, password, avatarPath } = mockUser;
+    const passwordHash = await hash(password, salt);
+    const newUserEntity = await new UserEntity(
+      {
+        _id,
+        email,
+        name,
+        avatarPath,
+        passwordHash
+      }
+    ).save();
+    console.log(newUserEntity);
+  }
 
   await mongoose.disconnect?.();
 }
