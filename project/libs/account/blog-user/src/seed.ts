@@ -5,13 +5,12 @@ import { genSalt, hash } from 'bcrypt';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { ConfigAlias } from '../../../shared/core/src/lib/constants/config-alias';
 // eslint-disable-next-line @nx/enforce-module-boundaries
-import { User } from '../../../shared/core/src/lib/types/user.interface';
+import { AuthUser } from '../../../shared/core/src/lib/types/auth-user.interface';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { getMongoConnectionString } from '../../../shared/helpers/src/lib/common';
 import { SALT_ROUNDS, ACCOUNTS_COLLECTION } from '../../../account/blog-user/src/blog-user.constant';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { MOCK_USERS } from '../../../../mocks/users';
-
 
 const UserSchema = new Mongoose.Schema(
   {
@@ -25,8 +24,8 @@ const UserSchema = new Mongoose.Schema(
 );
 
 const UserEntity =
-  (mongoose.models.User as Mongoose.Model<User>) ||
-  mongoose.model<User>(ACCOUNTS_COLLECTION, UserSchema);
+  (mongoose.models.User as Mongoose.Model<AuthUser>) ||
+  mongoose.model<AuthUser>(ACCOUNTS_COLLECTION, UserSchema);
 
 async function bootstrap() {
   const mongodbOption = {
@@ -45,19 +44,11 @@ async function bootstrap() {
   for (const mockUser of MOCK_USERS) {
     const { id: _id, email, name, password, avatarPath } = mockUser;
     const passwordHash = await hash(password, salt);
-    const newUserEntity = await new UserEntity(
-      {
-        _id,
-        email,
-        name,
-        avatarPath,
-        passwordHash
-      }
-    ).save();
-    console.log(newUserEntity);
+    await new UserEntity({ _id, email, name, avatarPath, passwordHash }).save();
   }
 
   await mongoose.disconnect?.();
+  console.info('🤘️ Database was filled');
 }
 
 bootstrap();
