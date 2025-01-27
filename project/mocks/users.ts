@@ -24,4 +24,4 @@ export const MOCK_USERS: MockUser[] = [
     avatarPath: '',
     password: 'password'
   }
-];
+] as const;

@@ -162,7 +162,7 @@ export const ApiPropertyOption = {
   Comment: {
     Id: {
       description: 'Comment id',
-      example: '2f31b19b-97eb-4305-877a-0b9be7faca8f'
+      example: '2f31b19b-97eb-4305-888a-0b9be7faca8f'
     },
     Message: {
       description: 'Comment message',
