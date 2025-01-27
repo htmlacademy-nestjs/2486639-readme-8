@@ -141,8 +141,10 @@ export const ApiPropertyOption = {
       example: '658170cbb954e9f5b905ccf4'
     },
     Tags: {
-      description: 'The post tags',
-      example: ['tag1', 'tag2']
+      description: 'The post tags - warning! not correct send string[] on swagger!',
+      example: ['tag1'],// ['tag1', 'tag2'], из swagger-а не коректно передает пример, у значений убирает [] и ""
+      name: 'tags[]', // не корректная передача string[] через form-data
+      required: false
     },
     PostsCount: {
       description: 'The user posts count',

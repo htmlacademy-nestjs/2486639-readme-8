@@ -4,9 +4,10 @@ import { Transform } from 'class-transformer';
 
 import { ApiPropertyOption, PostState, PostType, transformDate } from '@project/shared/core';
 
+import { BasePostDto } from './base-post.dto';
 import { PostValidation } from '../blog-post.constant';
 
-export class UpdatePostDto {
+export class UpdatePostDto extends BasePostDto {
   @ApiProperty({
     ...ApiPropertyOption.Post.Type,
     required: false
@@ -16,12 +17,7 @@ export class UpdatePostDto {
   @IsEnum(PostType)
   public type?: PostType;
 
-  @ApiProperty({
-    description: ApiPropertyOption.Post.Tags.description + ' - warning! not correct send string[]!',
-    name: 'tags[0]', // не корректная передача string[] через form-data
-    required: false,
-    example: ['tag1']
-  })
+  @ApiProperty(ApiPropertyOption.Post.Tags)
   @IsOptional()
   @IsArray()
   @ArrayMaxSize(PostValidation.Tags.MaxCount)

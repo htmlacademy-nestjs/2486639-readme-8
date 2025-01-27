@@ -14,12 +14,7 @@ export class CreatePostDto {
   @IsEnum(PostType)
   public type: PostType;
 
-  @ApiProperty({
-    description: ApiPropertyOption.Post.Tags.description + ' - warning! not correct send string[]!',
-    name: 'tags[0]', // не корректная передача string[] через form-data
-    required: false,
-    example: ['tag1']
-  })
+  @ApiProperty(ApiPropertyOption.Post.Tags)
   @IsOptional()
   @IsArray()
   @ArrayMaxSize(PostValidation.Tags.MaxCount)
