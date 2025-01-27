@@ -59,7 +59,6 @@ export class BlogPostCommentController {
   @ApiResponse(BlogPostCommentApiResponse.PostCommentDeleted)
   @ApiResponse(BlogPostCommentApiResponse.Unauthorized)
   @ApiResponse(BlogPostCommentApiResponse.BadRequest)
-  @ApiResponse(BlogPostCommentApiResponse.PostNotFound)
   @ApiResponse(BlogPostCommentApiResponse.CommentNotFound)
   @ApiParam(ApiParamOption.CommentId)
   @HttpCode(BlogPostCommentApiResponse.PostCommentDeleted.status)

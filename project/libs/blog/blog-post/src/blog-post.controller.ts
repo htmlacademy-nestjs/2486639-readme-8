@@ -35,10 +35,10 @@ export class BlogPostController {
   private async getPostsWithPagination(
     query: SearchBlogPostQuery,
     checkAuthorization = false,
-    currentUserId?: string,
+    userId?: string,
     showDraft = false
   ): Promise<PostWithUserIdAndPaginationRdo> {
-    const postsWithPagination = await this.blogPostService.getAllPosts(query, currentUserId, checkAuthorization, showDraft);
+    const postsWithPagination = await this.blogPostService.getAllPosts(query, userId, checkAuthorization, showDraft);
     const result = {
       ...postsWithPagination,
       entities: postsWithPagination.entities.map((post) => post.toPOJO())

@@ -13,8 +13,8 @@ export class BlogPostLikeService {
     private readonly blogPostLikeRepository: BlogPostLikeRepository
   ) { }
 
-  private checkAuthorization(currentUserId: string): void {
-    if (!currentUserId) {
+  private checkAuthorization(userId: string): void {
+    if (!userId) {
       throw new UnauthorizedException(BlogPostLikeMessage.Unauthorized);
     }
   }
@@ -25,27 +25,27 @@ export class BlogPostLikeService {
     this.blogPostSevice.canLikePost(foundPost);
   }
 
-  public async like(postId: string, currentUserId: string): Promise<void> {
-    this.checkAuthorization(currentUserId);
+  public async like(postId: string, userId: string): Promise<void> {
+    this.checkAuthorization(userId);
     await this.canLikePost(postId);
 
-    const foundLikeId = await this.blogPostLikeRepository.findLikeId(postId, currentUserId);
+    const foundLikeId = await this.blogPostLikeRepository.findLikeId(postId, userId);
 
     if (foundLikeId) {
       throw new ConflictException(BlogPostLikeMessage.LikeExist);
     }
 
-    const likeEntity = new BlogPostLikeEntity({ postId, userId: currentUserId });
+    const likeEntity = new BlogPostLikeEntity({ postId, userId: userId });
 
     await this.blogPostLikeRepository.save(likeEntity);
     await this.blogPostSevice.incrementLikesCount(postId);
   }
 
-  public async unlike(postId: string, currentUserId: string): Promise<void> {
-    this.checkAuthorization(currentUserId);
+  public async unlike(postId: string, userId: string): Promise<void> {
+    this.checkAuthorization(userId);
     await this.canLikePost(postId);
 
-    const foundLikeId = await this.blogPostLikeRepository.findLikeId(postId, currentUserId);
+    const foundLikeId = await this.blogPostLikeRepository.findLikeId(postId, userId);
 
     if (!foundLikeId) {
       throw new NotFoundException(BlogPostLikeMessage.LikeNotFound);

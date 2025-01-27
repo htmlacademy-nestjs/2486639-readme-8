@@ -69,14 +69,14 @@ export class BlogPostService {
     return post.state === PostState.Published;
   }
 
-  private checkAuthorization(currentUserId: string): void {
-    if (!currentUserId) {
+  private checkAuthorization(userId: string): void {
+    if (!userId) {
       throw new UnauthorizedException(BlogPostMessage.Unauthorized);
     }
   }
 
-  private canChangePost(post: BlogPostEntity, currentUserId: string): void {
-    if (post.userId !== currentUserId) {
+  private canChangePost(post: BlogPostEntity, userId: string): void {
+    if (post.userId !== userId) {
       throw new ForbiddenException(BlogPostMessage.NotAllow);
     }
   }
@@ -87,8 +87,8 @@ export class BlogPostService {
     }
   }
 
-  public canViewPost(post: BlogPostEntity, currentUserId: string): void {
-    if (post.userId !== currentUserId) {
+  public canViewPost(post: BlogPostEntity, userId: string): void {
+    if (post.userId !== userId) {
       this.throwIfPostNotPublished(post);
     }
   }
@@ -130,27 +130,27 @@ export class BlogPostService {
     return result;
   }
 
-  public async getFeed(baseQuery: BaseBlogPostQuery, currentUserId: string): Promise<PaginationResult<BlogPostEntity>> {
-    this.checkAuthorization(currentUserId);
+  public async getFeed(baseQuery: BaseBlogPostQuery, userId: string): Promise<PaginationResult<BlogPostEntity>> {
+    this.checkAuthorization(userId);
 
-    const userIds = await this.blogSubscriptionService.getUserSubscriptions(currentUserId);
+    const userIds = await this.blogSubscriptionService.getUserSubscriptions(userId);
     const { page, sortType, tag, type } = baseQuery;
     const query: BlogPostQuery = {
       page,
       sortType,
       tag,
       type,
-      userIds: [...userIds, currentUserId]
+      userIds: [...userIds, userId]
     };
     const result = await this.blogPostRepository.find(query, false, Default.POST_COUNT);
 
     return result;
   }
 
-  public async getPost(postId: string, currentUserId: string): Promise<BlogPostEntity> {
+  public async getPost(postId: string, userId: string): Promise<BlogPostEntity> {
     const post = await this.blogPostRepository.findById(postId, true);
     // проверяем кто просмтаривает... автор или нет? опубликованные доступны всем, черновики только автору
-    this.canViewPost(post, currentUserId);
+    this.canViewPost(post, userId);
 
     return post;
   }
@@ -158,15 +158,15 @@ export class BlogPostService {
   public async createPost(
     dto: CreatePostDto,
     imageFile: Express.Multer.File,
-    currentUserId: string,
+    userId: string,
     requestId: string
   ): Promise<BlogPostEntity> {
-    this.checkAuthorization(currentUserId);
+    this.checkAuthorization(userId);
     this.validatePostData(dto, imageFile);
 
     const tags = await this.blogTagService.getByTitles(dto.tags);
     const imagePath = await this.uploadImageFile(imageFile, requestId);
-    const newPost = BlogPostFactory.createFromDtoOrEntity(dto, imagePath, tags, currentUserId);
+    const newPost = BlogPostFactory.createFromDtoOrEntity(dto, imagePath, tags, userId);
 
     await this.blogPostRepository.save(newPost);
 
@@ -177,15 +177,15 @@ export class BlogPostService {
     postId: string,
     dto: UpdatePostDto,
     imageFile: Express.Multer.File,
-    currentUserId: string,
+    userId: string,
     requestId: string
   ): Promise<BlogPostEntity> {
-    this.checkAuthorization(currentUserId);
+    this.checkAuthorization(userId);
     this.validatePostData(dto, imageFile);
 
     const existsPost = await this.blogPostRepository.findById(postId, true);
 
-    this.canChangePost(existsPost, currentUserId);
+    this.canChangePost(existsPost, userId);
 
     let isSameTags = true;
     let hasChanges = false;
@@ -241,32 +241,32 @@ export class BlogPostService {
     return existsPost;
   }
 
-  public async repostPost(postId: string, currentUserId: string): Promise<BlogPostEntity> {
-    this.checkAuthorization(currentUserId);
+  public async repostPost(postId: string, userId: string): Promise<BlogPostEntity> {
+    this.checkAuthorization(userId);
 
     const existsPost = await this.blogPostRepository.findById(postId, true);
 
-    this.canViewPost(existsPost, currentUserId);
+    this.canViewPost(existsPost, userId);
 
-    const existsRepost = await this.blogPostRepository.existsRepost(postId, currentUserId);
+    const existsRepost = await this.blogPostRepository.existsRepost(postId, userId);
 
     if (existsRepost) {
       throw new ConflictException(BlogPostMessage.RepostExist);
     }
 
-    const repostedPost = BlogPostFactory.createFromPostEntity(existsPost, currentUserId);
+    const repostedPost = BlogPostFactory.createFromPostEntity(existsPost, userId);
 
     await this.blogPostRepository.save(repostedPost);
 
     return repostedPost;
   }
 
-  public async deletePost(postId: string, currentUserId: string): Promise<void> {
-    this.checkAuthorization(currentUserId);
+  public async deletePost(postId: string, userId: string): Promise<void> {
+    this.checkAuthorization(userId);
 
     const existsPost = await this.blogPostRepository.findById(postId);
 
-    this.canChangePost(existsPost, currentUserId);
+    this.canChangePost(existsPost, userId);
     await this.blogPostRepository.deleteById(postId);
   }
 
