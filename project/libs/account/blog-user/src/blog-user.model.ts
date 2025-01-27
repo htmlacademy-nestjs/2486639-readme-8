@@ -3,8 +3,10 @@ import { Document } from 'mongoose';
 
 import { AuthUser } from '@project/shared/core';
 
+import { ACCOUNTS_COLLECTION } from './blog-user.constant';
+
 @Schema({
-  collection: 'accounts',
+  collection: ACCOUNTS_COLLECTION,
   timestamps: true
 })
 export class BlogUserModel extends Document implements AuthUser {
