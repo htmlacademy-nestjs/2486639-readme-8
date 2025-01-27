@@ -1,4 +1,5 @@
 import mongoose, * as Mongoose from 'mongoose';
+import { genSalt, hash } from 'bcrypt';
 
 // отключил правила импорта для скрипта наполения данными
 // eslint-disable-next-line @nx/enforce-module-boundaries
@@ -25,7 +26,6 @@ const UserEntity =
   mongoose.model<AuthUser>(ACCOUNTS_COLLECTION, UserSchema);
 
 async function bootstrap() {
-  const salt = process.env[ConfigAlias.JwtAccessTokenSecretEnv];
   const mongodbOption = {
     host: process.env[ConfigAlias.MongoDbHostEnv],
     port: process.env[ConfigAlias.MongoDbPortEnv],
@@ -36,18 +36,17 @@ async function bootstrap() {
   };
   const mongoDbUrl = getMongoConnectionString(mongodbOption);
 
-  console.log('salt:', salt);
-  console.log('SALT_ROUNDS:', SALT_ROUNDS);
-  console.log('mongoDbUrl:', mongoDbUrl);
-
   const mongoose = await Mongoose.connect(mongoDbUrl);
+  const salt = await genSalt(SALT_ROUNDS);
+
+  const passwordHash = await hash('password', salt);
   const newUserEntity = await new UserEntity(
     {
       _id: '67971df996da19e7f31a2d5f',
       email: 'email1',
       name: 'name',
       avatarPath: 'avatarPath',
-      passwordHash: 'passwordHash'
+      passwordHash
     }
   ).save();
   console.log(newUserEntity);
