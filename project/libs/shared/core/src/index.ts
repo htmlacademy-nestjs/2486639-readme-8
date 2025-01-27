@@ -1,14 +1,16 @@
 export { Entity } from './lib/base/entity';
 
-export * from './lib/constants/api-property';
+export { ApiHeaderOption } from './lib/constants/api-header-option';
+export * from './lib/constants/api-param-option';
+export { ApiPropertyOption } from './lib/constants/api-property-option';
 export * from './lib/constants/bearer-auth';
 export { ConfigAlias } from './lib/constants/config-alias';
+export { DateFormat } from './lib/constants/date-format';
 export * from './lib/constants/default-port';
 export { PageQueryApiProperty } from './lib/constants/page-query-api-property';
 export { PaginationApiProperty } from './lib/constants/pagination-api-property';
 export { RequestProperty } from './lib/constants/request-property';
 export * from './lib/constants/route-alias';
-export * from './lib/constants/x-header';
 
 export { EntityFactory } from './lib/interfaces/entity-factory.interface';
 export { File } from './lib/interfaces/file.interface';
@@ -24,6 +26,21 @@ export { StorableEntity } from './lib/interfaces/storable-entity.interface';
 export { StoredFile } from './lib/interfaces/stored-file.interface';
 export { TokenPayload } from './lib/interfaces/token-payload.interface';
 export { Token } from './lib/interfaces/token.interface';
+
+export { PageQuery } from './lib/query/page.query';
+
+export { CommentWithUserAndPaginationRdo } from './lib/rdo/comment-with-user-and-pagination.rdo';
+export { CommentWithUserIdAndPaginationRdo } from './lib/rdo/comment-with-user-id-and-pagination.rdo';
+export { CommentWithUserIdRdo } from './lib/rdo/comment-with-user-id.rdo';
+export { CommentWithUserRdo } from './lib/rdo/comment-with-user.rdo';
+export { DetailPostWithUserRdo } from './lib/rdo/detail-post-with-user.rdo';
+export { DetailPostWithUserIdRdo } from './lib/rdo/detail-post-with-user-id.rdo';
+export { DetailUserRdo } from './lib/rdo/detail-user.rdo';
+export { PostWithUserAndPaginationRdo } from './lib/rdo/post-with-user-and-pagination.rdo';
+export { PostWithUserIdAndPaginationRdo } from './lib/rdo/post-with-user-id-and-pagination.rdo';
+export { PostWithUserIdRdo } from './lib/rdo/post-with-user-id.rdo';
+export { PostWithUserRdo } from './lib/rdo/post-with-user.rdo';
+export { UserRdo } from './lib/rdo/user.rdo';
 
 export { AuthUser } from './lib/types/auth-user.interface';
 export { Comment } from './lib/types/comment.interface';
@@ -41,3 +58,6 @@ export { Subscriber } from './lib/types/subscriber.interface';
 export { Tag } from './lib/types/tag.interface';
 export { Subscription } from './lib/types/subscription.interface';
 export { User } from './lib/types/user.interface';
+export { XHeader } from './lib/types/x-header.enum';
+
+export * from './lib/utils/transform';

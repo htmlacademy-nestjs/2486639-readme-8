@@ -8,10 +8,11 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 import { BearerAuth, BearerAuthOption } from '@project/shared/core';
-import { InjectBearerAuthInterceptor, RequestIdInterceptor } from '@project/shared/interceptors';
+import { InjectBearerAuthInterceptor } from '@project/shared/interceptors';
 import { apiConfig, ApiConfig } from '@project/api/config';
 
 import { AppModule } from './app/app.module';
+import { InjectRequestIdGuard } from './app/guards/inject-request-id.guard';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -35,10 +36,8 @@ async function bootstrap() {
   SwaggerModule.setup(swaggerPrefix, app, documentFactory);
   //
 
-  app.useGlobalInterceptors(
-    new RequestIdInterceptor(),
-    new InjectBearerAuthInterceptor()
-  );
+  app.useGlobalGuards(new InjectRequestIdGuard());
+  app.useGlobalInterceptors(new InjectBearerAuthInterceptor());
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
   await app.listen(port);

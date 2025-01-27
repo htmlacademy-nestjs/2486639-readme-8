@@ -7,7 +7,6 @@ import { Comment, PaginationResult, SortDirection } from '@project/shared/core';
 
 import { BlogPostCommentEntity } from './blog-post-comment.entity';
 import { BlogPostCommentFactory } from './blog-post-comment.factory';
-import { BlogPostCommentQuery } from './blog-post-comment.query';
 import { BlogPostCommentMessage, Default } from './blog-post-comment.constant';
 
 @Injectable()
@@ -33,8 +32,7 @@ export class BlogPostCommentRepository extends BasePostgresRepository<BlogPostCo
     return count > 0;
   }
 
-  public async findByPostId(postId: string, query: BlogPostCommentQuery): Promise<PaginationResult<BlogPostCommentEntity>> {
-    const currentPage = query.page;
+  public async findByPostId(postId: string, currentPage: number): Promise<PaginationResult<BlogPostCommentEntity>> {
     const take = Default.COMMENT_COUNT;
     const skip = (currentPage - 1) * take;
     const where: Prisma.CommentWhereInput = {};

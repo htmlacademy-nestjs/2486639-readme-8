@@ -4,9 +4,10 @@ import {
 } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { join } from 'path/posix';
 
 import { RouteAlias, Token, User } from '@project/shared/core';
-import { createJWTPayload, makePath, parseAxiosError, uploadFile } from '@project/shared/helpers';
+import { createJWTPayload, parseAxiosError, uploadFile } from '@project/shared/helpers';
 import { BlogUserRepository, BlogUserEntity } from '@project/account/blog-user';
 import { applicationConfig, jwtConfig } from '@project/account/config';
 import { NotifyService } from '@project/account/notify';
@@ -59,15 +60,16 @@ export class AuthenticationService {
     if (avatarFile) {
       try {
         const fileRdo = await uploadFile<UploadedFileRdo>(
-          `${this.applicationOptions.fileStorageServiceUrl}/${RouteAlias.Upload}`,
+          join(this.applicationOptions.fileStorageServiceUrl, RouteAlias.Upload),
           avatarFile,
           FILE_KEY,
           requestId
         );
+        const { subDirectory, hashName } = fileRdo
 
-        blogUser.avatarPath = makePath(fileRdo.subDirectory, fileRdo.hashName);
+        blogUser.avatarPath = join(subDirectory, hashName);
       } catch (error) {
-        Logger.error(parseAxiosError(error), 'AuthenticationService.RegisterUser.FileUploadError');
+        this.logger.error(`RegisterUser.FileUploadError: ${parseAxiosError(error)}`);
 
         throw new InternalServerErrorException('File upload error!');
       }
@@ -83,8 +85,8 @@ export class AuthenticationService {
     return userEntity;
   }
 
-  public async changeUserPassword(userId: string, newPassword: string): Promise<void> {
-    const userEntity = await this.blogUserRepository.findById(userId);
+  public async changeUserPassword(email: string, oldPassword: string, newPassword: string): Promise<void> {
+    const userEntity = await this.verifyUser({ email, password: oldPassword });
 
     await userEntity.setPassword(newPassword);
     await this.blogUserRepository.update(userEntity);
@@ -105,7 +107,7 @@ export class AuthenticationService {
 
       return { accessToken, refreshToken };
     } catch (error) {
-      this.logger.error(`[Token generation error]: ${error.message}`);
+      this.logger.error(`Token generation error: ${error.message}`);
 
       throw new HttpException('Ошибка при создании токена.', HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -116,7 +118,7 @@ export class AuthenticationService {
       return;
     }
 
-    Logger.log('AuthenticationService.logout');
+    this.logger.log('AuthenticationService.logout');
     // доделать позже проверить, что это refreh token... удалить его ...refreshTokenService.deleteRefreshSession...
   }
 

@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 
+import { PostWithUserIdRdo } from '@project/shared/core';
 import { fillDto } from '@project/shared/helpers';
-import { BlogPostService, PostRdo } from '@project/blog/blog-post';
+import { BlogPostService } from '@project/blog/blog-post';
 import { NotifyService } from '@project/blog/notify';
 
 import { NewsLetterRepository } from './news-letter.repository';
@@ -23,7 +24,7 @@ export class NewsLetterService {
       return;
     }
 
-    const posts = postEntities.map((postEntity) => fillDto(PostRdo, postEntity.toPOJO()));
+    const posts = postEntities.map((postEntity) => fillDto(PostWithUserIdRdo, postEntity.toPOJO()));
     const payload = JSON.stringify(posts);
     const newsLetter = new NewsLetterEntity({ payload });
 

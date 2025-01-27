@@ -1,17 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Expose, Type } from 'class-transformer';
+import { Expose } from 'class-transformer';
 
-import { PaginationApiProperty } from '@project/shared/core';
+import { PaginationApiProperty } from '../constants/pagination-api-property';
 
-import { PostRdo } from './post.rdo';
-import { EntityApiProperty } from '../blog-post-entity.constant.property';
-
-export class PostWithPaginationRdo {
-  @ApiProperty(EntityApiProperty.Entities)
-  @Type(() => PostRdo)
-  @Expose()
-  public entities: PostRdo[];
-
+export class PaginationRdo {
   @ApiProperty(PaginationApiProperty.TotalPages)
   @Expose()
   public totalPages: number;

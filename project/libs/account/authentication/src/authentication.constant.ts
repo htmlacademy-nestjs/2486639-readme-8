@@ -1,8 +1,7 @@
 import { HttpStatus, ParseFilePipeBuilder } from '@nestjs/common';
 
-import { ApiPropertyOption } from '@project/shared/core';
+import { ApiPropertyOption, UserRdo } from '@project/shared/core';
 
-import { UserRdo } from './rdo/user.rdo';
 import { LoggedUserRdo } from './rdo/logged-user.rdo';
 import { UserTokenRdo } from './rdo/user-token.rdo';
 import { TokenPayloadRdo } from './rdo/token-payload.rdo';

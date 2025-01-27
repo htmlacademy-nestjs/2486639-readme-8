@@ -39,6 +39,14 @@
           "buildTarget": "account:build:production"
         }
       }
+    },
+    "db:seed": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx ts-node seed.ts",
+        "cwd": "libs/account/blog-user/src",
+        "envFile": "./apps/account/.env"
+      }
     }
   }
 }

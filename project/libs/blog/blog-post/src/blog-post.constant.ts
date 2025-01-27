@@ -1,19 +1,15 @@
 import { HttpStatus, ParseFilePipeBuilder } from '@nestjs/common';
 
-import { PostState, PostType, SortType } from '@project/shared/core';
+import {
+  ApiPropertyOption, DetailPostWithUserIdRdo, PostState, PostType,
+  PostWithUserIdAndPaginationRdo, PostWithUserIdRdo, SortType
+} from '@project/shared/core';
 
-import { PostRdo } from './rdo/post.rdo';
-import { DetailPostRdo } from './rdo/detail-post.rdo';
-import { PostWithPaginationRdo } from './rdo/post-with-pagination.rdo';
 import { UserPostsCountRdo } from './rdo/user-posts-count.rdo';
-import { PostApiProperty } from './blog-post.constant.property';
-
-export const ONLY_DATE_FORMAT = 'YYYY-MM-DD';
 
 export const Default = {
   NEW_POST_STATE: PostState.Published,
   POST_COUNT: 25,
-  CURRENT_PAGE: 1,
   SORT_TYPE: SortType.PublishDate,
   SEACRH_TITLE_POST_COUNT: 20,
   NEWS_LETTER_POST_COUNT: 10
@@ -59,7 +55,7 @@ export const PostValidation = {
     Type: { fileType: ImageOption.MIME_TYPES.join('|') },
     MaxSize: { maxSize: ImageOption.MAX_SIZE },
     Build: {
-      fileIsRequired: PostApiProperty.ImageFile.required,
+      fileIsRequired: ApiPropertyOption.Post.ImageFile.required,
       errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY
     }
   }
@@ -70,6 +66,24 @@ export const parseFilePipeBuilder =
     .addFileTypeValidator(PostValidation.ImageFile.Type)
     .addMaxSizeValidator(PostValidation.ImageFile.MaxSize)
     .build(PostValidation.ImageFile.Build);
+
+export const PostQueryApiProperty = {
+  SortType: {
+    description: 'The sorting type',
+    enum: SortType,
+    example: SortType.PublishDate,
+    required: false
+  },
+  Tag: {
+    description: 'The post tag',
+    example: 'tag1',
+    required: false
+  },
+  Title: {
+    description: 'The title for search posts',
+    example: 'title1 title2'
+  }
+} as const;
 
 export enum PostField {
   Title = 'title',
@@ -111,17 +125,17 @@ export const BlogPostApiResponse = {
     description: 'Bad request.'
   },
   PostCreated: {
-    type: DetailPostRdo,
+    type: DetailPostWithUserIdRdo,
     status: HttpStatus.CREATED,
     description: 'The new post has been successfully created.'
   },
   PostUpdated: {
-    type: DetailPostRdo,
+    type: DetailPostWithUserIdRdo,
     status: HttpStatus.OK,
     description: 'The post has been successfully updated.'
   },
   PostReposted: {
-    type: DetailPostRdo,
+    type: DetailPostWithUserIdRdo,
     status: HttpStatus.CREATED,
     description: 'The post has been successfully reposted.'
   },
@@ -134,17 +148,17 @@ export const BlogPostApiResponse = {
     description: 'The post has been successfully deleted.'
   },
   PostFound: {
-    type: DetailPostRdo,
+    type: DetailPostWithUserIdRdo,
     status: HttpStatus.OK,
     description: 'Post found.'
   },
   PostsFound: {
-    type: PostWithPaginationRdo,
+    type: PostWithUserIdAndPaginationRdo,
     status: HttpStatus.OK,
     description: 'Posts found.'
   },
   SearchPosts: {
-    type: PostRdo,
+    type: PostWithUserIdRdo,
     isArray: true,
     status: HttpStatus.OK,
     description: 'Posts found.'

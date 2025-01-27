@@ -1,6 +1,13 @@
 export function dtoToFormData<T>(dto: T, formData: FormData): void {
   for (const [key, value] of Object.entries(dto)) {
-    formData.append(key, value);
+    // если массив, то все значения добавляем отдельно
+    if (Array.isArray(value)) {
+      value.forEach((item) => {
+        formData.append(key, item);
+      });
+    } else {
+      formData.append(key, value);
+    }
   }
 }
 

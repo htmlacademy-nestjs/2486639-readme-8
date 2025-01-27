@@ -10,13 +10,14 @@ export function validatePostData(dto: CreatePostDto | UpdatePostDto): string {
   if (!type) {
     keys.forEach((key) => {
       if (dto[key]) {
-        messages.push(key);
-      }
-
-      if (messages.length) {
-        messages.unshift('For empty post type not need:');
+        messages.push(`${key},`);
       }
     })
+
+    if (messages.length) {
+      messages.push(messages.pop().replace(',', ''));
+      messages.unshift('For empty post type not need:');
+    }
   } else {
     const fields = PostFieldsByType[type];
     const needMessages: string[] = [];

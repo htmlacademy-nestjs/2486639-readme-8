@@ -1,8 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 
-import { RequestProperty } from '@project/shared/core';
+import { PostWithUserIdRdo, XHeader } from '@project/shared/core';
 import { MailService } from '@project/notify/mail';
-import { PostRdo } from '@project/blog/blog-post';
 
 import { EmailSubscriberEntity } from './email-subscriber.entity';
 import { CreateSubscriberDto } from './dto/create-subscriber.dto';
@@ -16,15 +15,13 @@ export class EmailSubscriberService {
   ) { }
 
   public async addSubscriber(subscriber: CreateSubscriberDto, requestId: string): Promise<void> {
-    const loggerContext = 'EmailSubscriberService.addSubscriber';
-
-    Logger.log(`${RequestProperty.RequestId}: ${requestId || 'empty'}`, loggerContext);
+    Logger.log(`AddSubscriber: ${XHeader.RequestId}: ${requestId || 'empty'}`, EmailSubscriberService.name);
 
     const { email } = subscriber;
     const existsSubscriber = await this.emailSubscriberRepository.findByEmail(email);
 
     if (existsSubscriber) {
-      Logger.log('Subscriber exists', loggerContext);
+      Logger.log('AddSubscriber: subscriber exists', EmailSubscriberService.name);
 
       return;
     }
@@ -32,15 +29,15 @@ export class EmailSubscriberService {
     const emailSubscriber = new EmailSubscriberEntity(subscriber);
 
     await this.emailSubscriberRepository.save(emailSubscriber);
-    Logger.log('New subscriber saved', loggerContext);
+    Logger.log(`AddSubscriber: new subscriber ${email} saved`, EmailSubscriberService.name);
 
     await this.mailService.sendNotifyNewSubscriber(subscriber);
   }
 
-  public async sendAll(posts: PostRdo[]): Promise<void> {
+  public async sendAll(posts: PostWithUserIdRdo[]): Promise<void> {
     const subscribers = await this.emailSubscriberRepository.findAll();
 
-    Logger.log(`Subscribers count: ${subscribers.length}`, 'EmailSubscriberService.sendAll');
+    Logger.log(`SendAll: subscribers count: ${subscribers.length}`, EmailSubscriberService.name);
 
     if (!subscribers.length) {
       return

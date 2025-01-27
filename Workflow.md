@@ -25,6 +25,10 @@ npx nx run blog:db:generate
 # инициализировать БД postgres - blog
 npx nx run blog:db:migrate
 
+# наполнение тестовыми данными
+npx nx run account:db:seed
+npx nx run blog:db:seed
+
 # запуск сервисов
 npx nx run account:serve
 npx nx run blog:serve

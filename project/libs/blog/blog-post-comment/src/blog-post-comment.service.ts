@@ -5,7 +5,6 @@ import { BlogPostService } from '@project/blog/blog-post';
 
 import { BlogPostCommentEntity } from './blog-post-comment.entity';
 import { BlogPostCommentRepository } from './blog-post-comment.repository';
-import { BlogPostCommentQuery } from './blog-post-comment.query';
 import { CreatePostCommentDto } from './dto/create-post-comment.dto';
 import { BlogPostCommentMessage } from './blog-post-comment.constant';
 
@@ -16,16 +15,16 @@ export class BlogPostCommentService {
     private readonly blogPostCommentRepository: BlogPostCommentRepository
   ) { }
 
-  private checkAuthorization(currentUserId: string): void {
-    if (!currentUserId) {
+  private checkAuthorization(userId: string): void {
+    if (!userId) {
       throw new UnauthorizedException(BlogPostCommentMessage.Unauthorized);
     }
   }
 
-  private async canViewPost(postId: string, currentUserId: string): Promise<void> {
+  private async canViewPost(postId: string, userId: string): Promise<void> {
     const foundPost = await this.blogPostSevice.findById(postId);
 
-    this.blogPostSevice.canViewPost(foundPost, currentUserId);
+    this.blogPostSevice.canViewPost(foundPost, userId);
   }
 
   private async canCommentPost(postId: string): Promise<void> {
@@ -34,26 +33,26 @@ export class BlogPostCommentService {
     this.blogPostSevice.canCommentPost(foundPost);
   }
 
-  public async getComments(postId: string, currentUserId: string, query: BlogPostCommentQuery): Promise<PaginationResult<BlogPostCommentEntity>> {
-    await this.canViewPost(postId, currentUserId);
+  public async getComments(postId: string, userId: string, page: number): Promise<PaginationResult<BlogPostCommentEntity>> {
+    await this.canViewPost(postId, userId);
 
-    const commentEntities = await this.blogPostCommentRepository.findByPostId(postId, query);
+    const commentEntities = await this.blogPostCommentRepository.findByPostId(postId, page);
 
     return commentEntities;
   }
 
-  public async createComment(dto: CreatePostCommentDto, postId: string, currentUserId: string): Promise<BlogPostCommentEntity> {
-    this.checkAuthorization(currentUserId);
+  public async createComment(dto: CreatePostCommentDto, postId: string, userId: string): Promise<BlogPostCommentEntity> {
+    this.checkAuthorization(userId);
     await this.canCommentPost(postId);
 
-    const existsComment = await this.blogPostCommentRepository.existsComment(postId, currentUserId);
+    const existsComment = await this.blogPostCommentRepository.existsComment(postId, userId);
 
     if (existsComment) {
       throw new ConflictException(BlogPostCommentMessage.CommentExist);
     }
 
     const { message } = dto;
-    const commentEntity = new BlogPostCommentEntity({ message, postId, userId: currentUserId });
+    const commentEntity = new BlogPostCommentEntity({ message, postId, userId: userId });
 
     await this.blogPostCommentRepository.save(commentEntity);
     await this.blogPostSevice.incrementCommentsCount(postId);
@@ -61,8 +60,8 @@ export class BlogPostCommentService {
     return commentEntity;
   }
 
-  public async deleteComment(commentId: string, currentUserId: string): Promise<void> {
-    this.checkAuthorization(currentUserId);
+  public async deleteComment(commentId: string, userId: string): Promise<void> {
+    this.checkAuthorization(userId);
 
     const commentEntity = await this.blogPostCommentRepository.findById(commentId);
     const { postId } = commentEntity;

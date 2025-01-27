@@ -1,25 +1,24 @@
 import {
-  Body, Controller, Delete, Get, HttpCode, Inject, Param, Post,
+  Body, Controller, Delete, Get, HttpCode, Param, Post,
   Req, UploadedFile, UseFilters, UseGuards, UseInterceptors
 } from '@nestjs/common';
-import { ConfigType } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
 import { ApiBearerAuth, ApiConsumes, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 import {
   ApiParamOption, BearerAuth, RequestWithRequestId, RequestWithRequestIdAndBearerAuth,
-  RequestWithTokenPayload, RouteAlias, USER_ID_PARAM, XHeader
+  DetailUserRdo, RequestWithTokenPayload, RouteAlias, USER_ID_PARAM, UserRdo
 } from '@project/shared/core';
-import { AUTH_NAME, dtoToFormData, multerFileToFormData } from '@project/shared/helpers';
+import { dtoToFormData, makeHeaders, multerFileToFormData } from '@project/shared/helpers';
 import { MongoIdValidationPipe } from '@project/shared/pipes';
 import { AxiosExceptionFilter } from '@project/shared/exception-filters';
-import { apiConfig } from '@project/api/config';
 import {
   AuthenticationApiResponse, AvatarOption, ChangePasswordDto, CreateUserDto, LoggedUserRdo,
-  LoginUserDto, parseFilePipeBuilder, TokenPayloadRdo, UserRdo, UserTokenRdo
+  LoginUserDto, parseFilePipeBuilder, TokenPayloadRdo, UserTokenRdo
 } from '@project/account/authentication';
 
+import { UserService } from './user.service';
 import { CheckAuthGuard } from './guards/check-auth.guard';
 
 @ApiTags('users')
@@ -28,25 +27,14 @@ import { CheckAuthGuard } from './guards/check-auth.guard';
 export class UsersController {
   constructor(
     private readonly httpService: HttpService,
-    @Inject(apiConfig.KEY)
-    private readonly apiOptions: ConfigType<typeof apiConfig>
+    private userService: UserService
   ) { }
-
-  private makeHeaders(requestId: string, authorization?: string): { headers: { [XHeader.RequestId]: string, [AUTH_NAME]?: string } } {
-    const headers = { [XHeader.RequestId]: requestId };
-
-    if (authorization) {
-      headers[AUTH_NAME] = authorization;
-    }
-
-    return { headers };
-  }
 
   @ApiResponse(AuthenticationApiResponse.UserCreated)
   @ApiResponse(AuthenticationApiResponse.UserExist)
   @ApiResponse(AuthenticationApiResponse.BadRequest)
   @ApiResponse(AuthenticationApiResponse.NotAllow)
-  @ApiBearerAuth(BearerAuth.AccessToken) // для тестирования - анонимный пользователь может регистрироваться
+  @ApiBearerAuth(BearerAuth.AccessToken)
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor(AvatarOption.KEY))
   @Post(RouteAlias.Register)
@@ -55,7 +43,7 @@ export class UsersController {
     @Req() { requestId, bearerAuth }: RequestWithRequestIdAndBearerAuth,
     @UploadedFile(parseFilePipeBuilder) avatarFile?: Express.Multer.File
   ): Promise<UserRdo> {
-    // headers: Authorization - т.к. только анонимный пользователь может регистрироваться
+    // можно сразу проверить есть ли bearerAuth, и выкинуть ошибку, что требуется logout, пока передаю в account, там есть проверка
     const formData = new FormData();
 
     dtoToFormData(dto, formData);
@@ -64,12 +52,13 @@ export class UsersController {
       multerFileToFormData(avatarFile, formData, AvatarOption.KEY);
     }
 
-    const registerUrl = `${this.apiOptions.accountServiceUrl}/${RouteAlias.Register}`;
+    const url = this.userService.getUrl(RouteAlias.Register);
+    // headers: Authorization - т.к. только анонимный пользователь может регистрироваться
+    const headers = makeHeaders(requestId, bearerAuth);
     const { data: registerData } = await this.httpService.axiosRef.post<UserRdo>(
-      registerUrl,
+      url,
       formData,
-      // headers: Authorization - т.к. только анонимный пользователь может регистрироваться
-      this.makeHeaders(requestId, bearerAuth)
+      headers
     );
 
     return registerData;
@@ -80,12 +69,10 @@ export class UsersController {
   @ApiResponse(AuthenticationApiResponse.BadRequest)
   @ApiResponse(AuthenticationApiResponse.Unauthorized)
   @Post(RouteAlias.Login)
-  public async login(
-    @Body() dto: LoginUserDto, // для swagger
-    @Req() { requestId }: RequestWithRequestId
-  ): Promise<LoggedUserRdo> {
-    const url = `${this.apiOptions.accountServiceUrl}/${RouteAlias.Login}`;
-    const { data } = await this.httpService.axiosRef.post<LoggedUserRdo>(url, dto, this.makeHeaders(requestId));
+  public async login(@Body() dto: LoginUserDto, @Req() { requestId }: RequestWithRequestId): Promise<LoggedUserRdo> {
+    const url = this.userService.getUrl(RouteAlias.Login);
+    const headers = makeHeaders(requestId);
+    const { data } = await this.httpService.axiosRef.post<LoggedUserRdo>(url, dto, headers);
 
     return data;
   }
@@ -95,9 +82,10 @@ export class UsersController {
   @HttpCode(AuthenticationApiResponse.LogoutSuccess.status)
   @Delete(RouteAlias.Logout)
   public async logout(@Req() { requestId, bearerAuth }: RequestWithRequestIdAndBearerAuth): Promise<void> {
-    const url = `${this.apiOptions.accountServiceUrl}/${RouteAlias.Logout}`;
+    const url = this.userService.getUrl(RouteAlias.Logout);
+    const headers = makeHeaders(requestId, bearerAuth);
 
-    await this.httpService.axiosRef.delete(url, this.makeHeaders(requestId, bearerAuth));
+    await this.httpService.axiosRef.delete(url, headers);
   }
 
   @ApiResponse(AuthenticationApiResponse.RefreshTokens)
@@ -106,9 +94,10 @@ export class UsersController {
   @ApiBearerAuth(BearerAuth.RefreshToken)
   @HttpCode(AuthenticationApiResponse.RefreshTokens.status)
   @Post(RouteAlias.Refresh)
-  public async refreshToken({ requestId, bearerAuth }: RequestWithRequestIdAndBearerAuth): Promise<UserTokenRdo> {
-    const url = `${this.apiOptions.accountServiceUrl}/refresh`;
-    const { data } = await this.httpService.axiosRef.post<UserTokenRdo>(url, null, this.makeHeaders(requestId, bearerAuth));
+  public async refreshToken(@Req() { requestId, bearerAuth }: RequestWithRequestIdAndBearerAuth): Promise<UserTokenRdo> {
+    const url = this.userService.getUrl(RouteAlias.Refresh);
+    const headers = makeHeaders(requestId, bearerAuth);
+    const { data } = await this.httpService.axiosRef.post<UserTokenRdo>(url, null, headers);
 
     return data;
   }
@@ -130,13 +119,11 @@ export class UsersController {
   @ApiBearerAuth(BearerAuth.AccessToken)
   @HttpCode(AuthenticationApiResponse.ChangePasswordSuccess.status)
   @Post(RouteAlias.ChangePassword)
-  public async changePassword(
-    @Body() dto: ChangePasswordDto,
-    { requestId, bearerAuth }: RequestWithRequestIdAndBearerAuth
-  ): Promise<void> {
-    const url = `${this.apiOptions.accountServiceUrl}/${RouteAlias.ChangePassword}`;
+  public async changePassword(@Body() dto: ChangePasswordDto, @Req() { requestId, bearerAuth }: RequestWithRequestIdAndBearerAuth): Promise<void> {
+    const url = this.userService.getUrl(RouteAlias.ChangePassword);
+    const headers = makeHeaders(requestId, bearerAuth);
 
-    await this.httpService.axiosRef.post(url, dto, this.makeHeaders(requestId, bearerAuth));
+    await this.httpService.axiosRef.post(url, dto, headers);
   }
 
   @ApiResponse(AuthenticationApiResponse.UserFound)
@@ -146,10 +133,24 @@ export class UsersController {
   @Get(USER_ID_PARAM)
   public async show(
     @Param(ApiParamOption.UserId.name, MongoIdValidationPipe) userId: string,
-    @Req() { requestId }: RequestWithRequestId): Promise<UserRdo> {
-    const url = `${this.apiOptions.accountServiceUrl}/${userId}`;
-    const { data } = await this.httpService.axiosRef.get<UserRdo>(url, this.makeHeaders(requestId));
+    @Req() { requestId }: RequestWithRequestId
+  ): Promise<UserRdo> {
+    const user = await this.userService.getUser(userId, requestId);
 
-    return data;
+    return user;
+  }
+
+  @ApiResponse({ ...AuthenticationApiResponse.UserFound, type: DetailUserRdo })
+  @ApiResponse(AuthenticationApiResponse.UserNotFound)
+  @ApiResponse(AuthenticationApiResponse.BadRequest)
+  @ApiParam(ApiParamOption.UserId)
+  @Get(`${USER_ID_PARAM}/detail`)
+  public async getInfo(
+    @Param(ApiParamOption.UserId.name, MongoIdValidationPipe) userId: string,
+    @Req() { requestId }: RequestWithRequestId
+  ): Promise<DetailUserRdo> {
+    const detailUser = await this.userService.getDetailUser(userId, requestId);
+
+    return detailUser;
   }
 }

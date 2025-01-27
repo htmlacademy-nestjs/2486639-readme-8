@@ -2,12 +2,12 @@ import {
   Body, Controller, Delete, Get, HttpCode, Param,
   Post, Req, UploadedFile, UseGuards, UseInterceptors
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiConsumes, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 import {
   ApiParamOption, BearerAuth, RequestWithBearerAuth, RequestWithRequestIdAndBearerAuth,
-  RequestWithTokenPayload, RouteAlias, USER_ID_PARAM
+  RequestWithTokenPayload, RouteAlias, USER_ID_PARAM, UserRdo
 } from '@project/shared/core';
 import { fillDto } from '@project/shared/helpers';
 import { MongoIdValidationPipe } from '@project/shared/pipes';
@@ -24,7 +24,6 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LoggedUserRdo } from './rdo/logged-user.rdo';
 import { UserTokenRdo } from './rdo/user-token.rdo';
 import { TokenPayloadRdo } from './rdo/token-payload.rdo';
-import { UserRdo } from './rdo/user.rdo';
 import { AuthenticationApiResponse, AvatarOption, parseFilePipeBuilder } from './authentication.constant';
 
 @ApiTags('authentication')
@@ -58,12 +57,10 @@ export class AuthenticationController {
   @ApiResponse(AuthenticationApiResponse.LoggedError)
   @ApiResponse(AuthenticationApiResponse.BadRequest)
   @ApiResponse(AuthenticationApiResponse.Unauthorized)
+  @ApiBody({ type: LoginUserDto })
   @UseGuards(LocalAuthGuard)
   @Post(RouteAlias.Login)
-  public async login(
-    @Body() _dto: LoginUserDto, // для swagger
-    @Req() { user }: RequestWithBlogUserEntity
-  ): Promise<LoggedUserRdo> {
+  public async login(@Req() { user }: RequestWithBlogUserEntity): Promise<LoggedUserRdo> {
     const userToken = await this.authService.createUserToken(user);
 
     return fillDto(LoggedUserRdo, { ...user.toPOJO(), ...userToken });
@@ -109,8 +106,8 @@ export class AuthenticationController {
   @HttpCode(AuthenticationApiResponse.ChangePasswordSuccess.status)
   @UseGuards(JwtAuthGuard)
   @Post(RouteAlias.ChangePassword)
-  public async changePassword(@Body() dto: ChangePasswordDto, @Req() { user }: RequestWithTokenPayload): Promise<void> {
-    await this.authService.changeUserPassword(user.sub, dto.password);
+  public async changePassword(@Body() dto: ChangePasswordDto, @Req() { user: { email } }: RequestWithTokenPayload): Promise<void> {
+    await this.authService.changeUserPassword(email, dto.oldPassword, dto.newPassword);
   }
 
   @ApiResponse(AuthenticationApiResponse.UserFound)

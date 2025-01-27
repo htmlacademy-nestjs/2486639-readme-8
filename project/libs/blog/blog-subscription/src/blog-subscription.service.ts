@@ -10,30 +10,30 @@ export class BlogSubscriptionService {
     private readonly blogSubscriptionRepository: BlogSubscriptionRepository
   ) { }
 
-  private checkAuthorization(currentUserId: string): void {
-    if (!currentUserId) {
+  private checkAuthorization(userId: string): void {
+    if (!userId) {
       throw new UnauthorizedException(BlogSubscriptionMessage.Unauthorized);
     }
   }
 
-  public async subscribe(authorUserId: string, currentUserId: string): Promise<void> {
-    this.checkAuthorization(currentUserId);
+  public async subscribe(authorUserId: string, userId: string): Promise<void> {
+    this.checkAuthorization(userId);
 
-    const foundLikeId = await this.blogSubscriptionRepository.findSubscriptionId(authorUserId, currentUserId);
+    const foundLikeId = await this.blogSubscriptionRepository.findSubscriptionId(authorUserId, userId);
 
     if (foundLikeId) {
       throw new ConflictException(!BlogSubscriptionMessage.SubscriptionExist);
     }
 
-    const likeEntity = new BlogSubscriptionEntity({ authorUserId, userId: currentUserId });
+    const likeEntity = new BlogSubscriptionEntity({ authorUserId, userId: userId });
 
     await this.blogSubscriptionRepository.save(likeEntity);
   }
 
-  public async unsubscribe(authorUserId: string, currentUserId: string): Promise<void> {
-    this.checkAuthorization(currentUserId);
+  public async unsubscribe(authorUserId: string, userId: string): Promise<void> {
+    this.checkAuthorization(userId);
 
-    const foundLikeId = await this.blogSubscriptionRepository.findSubscriptionId(authorUserId, currentUserId);
+    const foundLikeId = await this.blogSubscriptionRepository.findSubscriptionId(authorUserId, userId);
 
     if (!foundLikeId) {
       throw new NotFoundException(BlogSubscriptionMessage.SubscriptionNotFound);

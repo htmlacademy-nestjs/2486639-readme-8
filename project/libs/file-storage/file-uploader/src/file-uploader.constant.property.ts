@@ -1,7 +1,7 @@
 export const FileApiProperty = {
   Id: {
     description: 'The unique file ID',
-    example: '658170cbb954e9f5b905ccf4'
+    example: '658170cbb954e9f5b905dcf4'
   },
   OriginalName: {
     description: 'The original filename',
@@ -9,7 +9,7 @@ export const FileApiProperty = {
   },
   HashName: {
     description: 'The hash filename',
-    example: '658170cbb954e9f5b905ccf4.txt'
+    example: '658170cbb954e9f5b905dcf4.txt'
   },
   SubDirectory: {
     description: 'The file sub directory',

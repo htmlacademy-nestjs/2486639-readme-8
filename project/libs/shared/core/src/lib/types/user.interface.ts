@@ -3,4 +3,5 @@ export interface User {
   email: string;
   name: string;
   avatarPath: string;
+  createdAt?: Date;
 }

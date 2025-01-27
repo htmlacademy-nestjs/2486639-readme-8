@@ -1,11 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsOptional, IsString, Matches, MaxLength, MinLength } from 'class-validator';
 
-import { PostType, SortType } from '@project/shared/core';
+import { ApiPropertyOption, PageQuery, PostType, SortType } from '@project/shared/core';
 
-import { Default, PostValidation } from '../blog-post.constant';
-import { PostApiProperty, PostQueryApiProperty } from '../blog-post.constant.property';
-import { PageQuery } from './page.query';
+import { Default, PostValidation, PostQueryApiProperty } from '../blog-post.constant';
 
 export class BaseBlogPostQuery extends PageQuery {
   @ApiProperty(PostQueryApiProperty.SortType)
@@ -13,7 +11,7 @@ export class BaseBlogPostQuery extends PageQuery {
   @IsOptional()
   public sortType?: SortType = Default.SORT_TYPE;
 
-  @ApiProperty({ ...PostApiProperty.Type, required: false })
+  @ApiProperty({ ...ApiPropertyOption.Post.Type, required: false })
   @IsEnum(PostType)
   @IsOptional()
   public type?: PostType;

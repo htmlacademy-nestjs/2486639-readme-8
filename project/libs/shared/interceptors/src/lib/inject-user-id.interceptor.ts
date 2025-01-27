@@ -11,7 +11,7 @@ export class InjectUserIdInterceptor implements NestInterceptor {
     const userId = request.headers[XHeader.UserId];
 
     request[RequestProperty.UserId] = userId; //  можно доделать валидацию по GuidValidationPipe
-    Logger.log(`[InjectUserIdInterceptor: ${request.method}: ${request.url}]: ${RequestProperty.UserId}: ${userId || 'empty'}`);
+    Logger.log(`${request.method}: ${request.url}: ${RequestProperty.UserId}: ${userId || 'empty'}`, InjectUserIdInterceptor.name);
 
     return next.handle();
   }
