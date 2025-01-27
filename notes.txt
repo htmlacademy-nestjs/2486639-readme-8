@@ -1,7 +1,3 @@
-1. проверить все действия с комментариями, лайками и подписками
-2. скрипт наполнения данными account
-
-
 Заметки:
   1. как же выводить подтипы ....
     не сработало export type ReturnTypeToPOJOFunction<T extends StorableEntity<T>> = ReturnType<T['toPOJO']>;
