@@ -121,7 +121,7 @@ export class BlogController {
     const url = this.blogService.getLikesUrl(postId);
     const headers = makeHeaders(requestId, null, userId);
 
-    await this.httpService.axiosRef.post(url, headers);
+    await this.httpService.axiosRef.post(url, null, headers);
   }
 
   @ApiResponse(BlogPostLikeApiResponse.PostLikeDeleted)
@@ -160,7 +160,7 @@ export class BlogController {
     const url = this.blogService.getSubscriptionsUrl(authorUserId);
     const headers = makeHeaders(requestId, null, userId);
 
-    await this.httpService.axiosRef.post(url, headers);
+    await this.httpService.axiosRef.post(url, null, headers);
   }
 
   @ApiResponse(BlogSubscriptionApiResponse.SubscriptionDeleted)
