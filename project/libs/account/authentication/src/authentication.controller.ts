@@ -2,12 +2,12 @@ import {
   Body, Controller, Delete, Get, HttpCode, Param,
   Post, Req, UploadedFile, UseGuards, UseInterceptors
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiConsumes, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 import {
   ApiParamOption, BearerAuth, RequestWithBearerAuth, RequestWithRequestIdAndBearerAuth,
-  RequestWithTokenPayload, RouteAlias, USER_ID_PARAM, UserRdo
+  RequestWithTokenPayload, RouteAlias, USER_ID_PARAM, UserRdo, ApiOperationOption
 } from '@project/shared/core';
 import { fillDto } from '@project/shared/helpers';
 import { MongoIdValidationPipe } from '@project/shared/pipes';
@@ -33,6 +33,7 @@ export class AuthenticationController {
     private readonly authService: AuthenticationService
   ) { }
 
+  @ApiOperation(ApiOperationOption.User.Register)
   @ApiResponse(AuthenticationApiResponse.UserCreated)
   @ApiResponse(AuthenticationApiResponse.UserExist)
   @ApiResponse(AuthenticationApiResponse.BadRequest)
@@ -53,6 +54,7 @@ export class AuthenticationController {
     return fillDto(UserRdo, newUser.toPOJO());
   }
 
+  @ApiOperation(ApiOperationOption.User.Login)
   @ApiResponse(AuthenticationApiResponse.LoggedSuccess)
   @ApiResponse(AuthenticationApiResponse.LoggedError)
   @ApiResponse(AuthenticationApiResponse.BadRequest)
@@ -66,6 +68,7 @@ export class AuthenticationController {
     return fillDto(LoggedUserRdo, { ...user.toPOJO(), ...userToken });
   }
 
+  @ApiOperation(ApiOperationOption.User.Logout)
   @ApiResponse(AuthenticationApiResponse.LogoutSuccess)
   @ApiBearerAuth(BearerAuth.RefreshToken)
   @UseInterceptors(InjectBearerAuthInterceptor)
@@ -75,6 +78,7 @@ export class AuthenticationController {
     await this.authService.logout(bearerAuth);
   }
 
+  @ApiOperation(ApiOperationOption.User.RefreshTokens)
   @ApiResponse(AuthenticationApiResponse.RefreshTokens)
   @ApiResponse(AuthenticationApiResponse.BadRequest)
   @ApiResponse(AuthenticationApiResponse.Unauthorized)
@@ -88,6 +92,7 @@ export class AuthenticationController {
     return fillDto(UserTokenRdo, userToken);
   }
 
+  @ApiOperation(ApiOperationOption.User.Check)
   @ApiResponse(AuthenticationApiResponse.CheckSuccess)
   @ApiResponse(AuthenticationApiResponse.BadRequest)
   @ApiResponse(AuthenticationApiResponse.Unauthorized)
@@ -99,6 +104,7 @@ export class AuthenticationController {
     return fillDto(TokenPayloadRdo, payload);
   }
 
+  @ApiOperation(ApiOperationOption.User.ChangePassword)
   @ApiResponse(AuthenticationApiResponse.ChangePasswordSuccess)
   @ApiResponse(AuthenticationApiResponse.BadRequest)
   @ApiResponse(AuthenticationApiResponse.Unauthorized)
@@ -110,6 +116,7 @@ export class AuthenticationController {
     await this.authService.changeUserPassword(email, dto.oldPassword, dto.newPassword);
   }
 
+  @ApiOperation(ApiOperationOption.User.Show)
   @ApiResponse(AuthenticationApiResponse.UserFound)
   @ApiResponse(AuthenticationApiResponse.UserNotFound)
   @ApiResponse(AuthenticationApiResponse.BadRequest)

@@ -1,16 +1,16 @@
 import {
-  Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Query, Req,
-  UploadedFile, UseFilters, UseGuards, UseInterceptors
+  Body, Controller, Delete, Get, HttpCode, Param, Patch, Query,
+  Post, Req, UploadedFile, UseFilters, UseGuards, UseInterceptors
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBearerAuth, ApiConsumes, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiConsumes, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { HttpService } from '@nestjs/axios';
 import { join } from 'path/posix';
 
 import {
   RequestWithRequestIdAndUserId, RouteAlias, PostWithUserRdo, PageQuery, ApiParamOption,
   BearerAuth, DetailPostWithUserIdRdo, DetailPostWithUserRdo, PostWithUserIdRdo, POST_ID_PARAM,
-  PostWithUserAndPaginationRdo, PostWithUserIdAndPaginationRdo, RequestWithRequestId
+  PostWithUserAndPaginationRdo, PostWithUserIdAndPaginationRdo, RequestWithRequestId, ApiOperationOption
 } from '@project/shared/core';
 import { makeHeaders } from '@project/shared/helpers';
 import { AxiosExceptionFilter } from '@project/shared/exception-filters';
@@ -32,6 +32,7 @@ export class BlogPostController {
     private blogService: BlogService
   ) { }
 
+  @ApiOperation(ApiOperationOption.Post.Index)
   @ApiResponse({ ...BlogPostApiResponse.PostsFound, type: PostWithUserAndPaginationRdo })
   @ApiResponse(BlogPostApiResponse.BadRequest)
   @Get('')
@@ -44,6 +45,7 @@ export class BlogPostController {
     return newData;
   }
 
+  @ApiOperation(ApiOperationOption.Post.Search)
   @ApiResponse({ ...BlogPostApiResponse.SearchPosts, type: PostWithUserRdo })
   @ApiResponse(BlogPostApiResponse.BadRequest)
   @Get(RouteAlias.Search)
@@ -56,6 +58,7 @@ export class BlogPostController {
     return items;
   }
 
+  @ApiOperation(ApiOperationOption.Post.MyPosts)
   @ApiResponse({ ...BlogPostApiResponse.PostsFound, type: PostWithUserAndPaginationRdo })
   @ApiResponse(BlogPostApiResponse.Unauthorized)
   @ApiBearerAuth(BearerAuth.AccessToken)
@@ -73,6 +76,7 @@ export class BlogPostController {
     return newData;
   }
 
+  @ApiOperation(ApiOperationOption.Post.MyFeed)
   @ApiResponse({ ...BlogPostApiResponse.PostsFound, type: PostWithUserAndPaginationRdo })
   @ApiResponse(BlogPostApiResponse.Unauthorized)
   @ApiBearerAuth(BearerAuth.AccessToken)
@@ -90,6 +94,7 @@ export class BlogPostController {
     return newData;
   }
 
+  @ApiOperation(ApiOperationOption.Post.Detail)
   @ApiResponse({ ...BlogPostApiResponse.PostFound, type: DetailPostWithUserRdo })
   @ApiResponse(BlogPostApiResponse.PostNotFound)
   @ApiParam(ApiParamOption.PostId)
@@ -106,6 +111,7 @@ export class BlogPostController {
     return postWithUser;
   }
 
+  @ApiOperation(ApiOperationOption.Post.Create)
   @ApiResponse({ ...BlogPostApiResponse.PostCreated, type: DetailPostWithUserRdo })
   @ApiResponse(BlogPostApiResponse.Unauthorized)
   @ApiResponse(BlogPostApiResponse.BadRequest)
@@ -124,6 +130,7 @@ export class BlogPostController {
     return post;
   }
 
+  @ApiOperation(ApiOperationOption.Post.Update)
   @ApiResponse({ ...BlogPostApiResponse.PostUpdated, type: DetailPostWithUserRdo })
   @ApiResponse(BlogPostApiResponse.Unauthorized)
   @ApiResponse(BlogPostApiResponse.PostNotFound)
@@ -145,6 +152,7 @@ export class BlogPostController {
     return post;
   }
 
+  @ApiOperation(ApiOperationOption.Post.Repost)
   @ApiResponse({ ...BlogPostApiResponse.PostReposted, type: DetailPostWithUserRdo })
   @ApiResponse(BlogPostApiResponse.Unauthorized)
   @ApiResponse(BlogPostApiResponse.PostNotFound)
@@ -165,6 +173,7 @@ export class BlogPostController {
     return postWithUser;
   }
 
+  @ApiOperation(ApiOperationOption.Post.Delete)
   @ApiResponse(BlogPostApiResponse.PostDeleted)
   @ApiResponse(BlogPostApiResponse.Unauthorized)
   @ApiResponse(BlogPostApiResponse.PostNotFound)

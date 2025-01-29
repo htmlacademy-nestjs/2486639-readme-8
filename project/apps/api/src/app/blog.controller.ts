@@ -3,13 +3,13 @@ import {
   Post, Query, Req, UseFilters, UseGuards
 } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
-import { ApiBearerAuth, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { join } from 'path/posix';
 
 import {
   ApiParamOption, BearerAuth, COMMENT_ID_PARAM, CommentWithUserAndPaginationRdo, RouteAlias,
-  CommentWithUserRdo, PageQuery, POST_ID_PARAM, RequestWithRequestId, UserRdo, USER_ID_PARAM,
-  CommentWithUserIdRdo, CommentWithUserIdAndPaginationRdo, RequestWithRequestIdAndUserId
+  CommentWithUserRdo, PageQuery, POST_ID_PARAM, RequestWithRequestId, USER_ID_PARAM, UserRdo,
+  CommentWithUserIdRdo, CommentWithUserIdAndPaginationRdo, RequestWithRequestIdAndUserId, ApiOperationOption
 } from '@project/shared/core';
 import { fillDto, makeHeaders } from '@project/shared/helpers';
 import { GuidValidationPipe, MongoIdValidationPipe } from '@project/shared/pipes';
@@ -33,6 +33,7 @@ export class BlogController {
   ) { }
 
   // Комметарии
+  @ApiOperation(ApiOperationOption.Comment.Index)
   @ApiResponse({ ...BlogPostCommentApiResponse.PostCommentsFound, type: CommentWithUserAndPaginationRdo })
   @ApiResponse(BlogPostCommentApiResponse.BadRequest)
   @ApiResponse(BlogPostCommentApiResponse.PostNotFound)
@@ -63,6 +64,7 @@ export class BlogController {
     return fillDto(CommentWithUserAndPaginationRdo, { entities: comments, currentPage, itemsPerPage, totalItems, totalPages });
   }
 
+  @ApiOperation(ApiOperationOption.Comment.Add)
   @ApiResponse(BlogPostCommentApiResponse.PostCommentCreated)
   @ApiResponse(BlogPostCommentApiResponse.Unauthorized)
   @ApiResponse(BlogPostCommentApiResponse.BadRequest)
@@ -85,6 +87,7 @@ export class BlogController {
     return fillDto(CommentWithUserRdo, { ...comment, user });
   }
 
+  @ApiOperation(ApiOperationOption.Comment.Delete)
   @ApiResponse(BlogPostCommentApiResponse.PostCommentDeleted)
   @ApiResponse(BlogPostCommentApiResponse.Unauthorized)
   @ApiResponse(BlogPostCommentApiResponse.BadRequest)
@@ -105,6 +108,7 @@ export class BlogController {
   }
 
   // Лайки
+  @ApiOperation(ApiOperationOption.Like.Add)
   @ApiResponse(BlogPostLikeApiResponse.PostLikeCreated)
   @ApiResponse(BlogPostLikeApiResponse.Unauthorized)
   @ApiResponse(BlogPostLikeApiResponse.BadRequest)
@@ -124,6 +128,7 @@ export class BlogController {
     await this.httpService.axiosRef.post(url, null, headers);
   }
 
+  @ApiOperation(ApiOperationOption.Like.Delete)
   @ApiResponse(BlogPostLikeApiResponse.PostLikeDeleted)
   @ApiResponse(BlogPostLikeApiResponse.Unauthorized)
   @ApiResponse(BlogPostLikeApiResponse.BadRequest)
@@ -145,6 +150,7 @@ export class BlogController {
   }
 
   // Подписки
+  @ApiOperation(ApiOperationOption.Subscription.Add)
   @ApiResponse(BlogSubscriptionApiResponse.SubscriptionCreated)
   @ApiResponse(BlogSubscriptionApiResponse.Unauthorized)
   @ApiResponse(BlogSubscriptionApiResponse.BadRequest)
@@ -163,6 +169,7 @@ export class BlogController {
     await this.httpService.axiosRef.post(url, null, headers);
   }
 
+  @ApiOperation(ApiOperationOption.Subscription.Delete)
   @ApiResponse(BlogSubscriptionApiResponse.SubscriptionDeleted)
   @ApiResponse(BlogSubscriptionApiResponse.Unauthorized)
   @ApiResponse(BlogSubscriptionApiResponse.BadRequest)

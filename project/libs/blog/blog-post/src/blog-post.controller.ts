@@ -2,7 +2,7 @@ import {
   Body, Controller, Delete, Get, HttpCode, Param, Patch,
   Post, Query, Req, UploadedFile, UseInterceptors
 } from '@nestjs/common';
-import { ApiConsumes, ApiHeader, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiConsumes, ApiHeader, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { join } from 'path/posix';
 
@@ -10,8 +10,7 @@ import { fillDto } from '@project/shared/helpers';
 import {
   ApiParamOption, RequestWithRequestIdAndUserId, RequestWithUserId, RouteAlias,
   USER_ID_PARAM, POST_ID_PARAM, ApiHeaderOption, DetailPostWithUserIdRdo, PageQuery,
-  PostWithUserIdAndPaginationRdo,
-  PostWithUserIdRdo
+  PostWithUserIdAndPaginationRdo, PostWithUserIdRdo, ApiOperationOption
 } from '@project/shared/core';
 import { GuidValidationPipe, MongoIdValidationPipe } from '@project/shared/pipes';
 
@@ -47,6 +46,7 @@ export class BlogPostController {
     return fillDto(PostWithUserIdAndPaginationRdo, result);
   }
 
+  @ApiOperation(ApiOperationOption.Post.Index)
   @ApiResponse(BlogPostApiResponse.PostsFound)
   @ApiResponse(BlogPostApiResponse.BadRequest)
   @Get('')
@@ -56,6 +56,7 @@ export class BlogPostController {
     return posts;
   }
 
+  @ApiOperation(ApiOperationOption.Post.Search)
   @ApiResponse(BlogPostApiResponse.SearchPosts)
   @ApiResponse(BlogPostApiResponse.BadRequest)
   @Get(RouteAlias.Search)
@@ -65,6 +66,7 @@ export class BlogPostController {
     return postEntities.map((postEntity) => fillDto(PostWithUserIdRdo, postEntity.toPOJO()));
   }
 
+  @ApiOperation(ApiOperationOption.Post.MyPosts)
   @ApiResponse(BlogPostApiResponse.PostsFound)
   @ApiResponse(BlogPostApiResponse.Unauthorized)
   @Get(RouteAlias.MyPosts)
@@ -78,6 +80,7 @@ export class BlogPostController {
     return posts;
   }
 
+  @ApiOperation(ApiOperationOption.Post.MyFeed)
   @ApiResponse(BlogPostApiResponse.PostsFound)
   @ApiResponse(BlogPostApiResponse.Unauthorized)
   @Get(RouteAlias.MyDtafts)
@@ -91,6 +94,7 @@ export class BlogPostController {
     return posts;
   }
 
+  @ApiOperation(ApiOperationOption.Post.Detail)
   @ApiResponse(BlogPostApiResponse.PostsFound)
   @ApiResponse(BlogPostApiResponse.Unauthorized)
   @Get(RouteAlias.MyFeed)
@@ -107,6 +111,7 @@ export class BlogPostController {
     return fillDto(PostWithUserIdAndPaginationRdo, result);
   }
 
+  @ApiOperation(ApiOperationOption.Post.Create)
   @ApiResponse(BlogPostApiResponse.PostFound)
   @ApiResponse(BlogPostApiResponse.PostNotFound)
   @ApiParam(ApiParamOption.PostId)
@@ -120,6 +125,7 @@ export class BlogPostController {
     return fillDto(DetailPostWithUserIdRdo, existPost.toPOJO());
   }
 
+  @ApiOperation(ApiOperationOption.Post.Create)
   @ApiResponse(BlogPostApiResponse.PostCreated)
   @ApiResponse(BlogPostApiResponse.Unauthorized)
   @ApiResponse(BlogPostApiResponse.BadRequest)
@@ -137,6 +143,7 @@ export class BlogPostController {
     return fillDto(DetailPostWithUserIdRdo, newPost.toPOJO());
   }
 
+  @ApiOperation(ApiOperationOption.Post.Update)
   @ApiResponse(BlogPostApiResponse.PostUpdated)
   @ApiResponse(BlogPostApiResponse.Unauthorized)
   @ApiResponse(BlogPostApiResponse.PostNotFound)
@@ -157,6 +164,7 @@ export class BlogPostController {
     return fillDto(DetailPostWithUserIdRdo, updatedPost.toPOJO());
   }
 
+  @ApiOperation(ApiOperationOption.Post.Repost)
   @ApiResponse(BlogPostApiResponse.PostReposted)
   @ApiResponse(BlogPostApiResponse.Unauthorized)
   @ApiResponse(BlogPostApiResponse.PostNotFound)
@@ -172,6 +180,7 @@ export class BlogPostController {
     return fillDto(DetailPostWithUserIdRdo, repostedPost.toPOJO());
   }
 
+  @ApiOperation(ApiOperationOption.Post.Delete)
   @ApiResponse(BlogPostApiResponse.PostDeleted)
   @ApiResponse(BlogPostApiResponse.Unauthorized)
   @ApiResponse(BlogPostApiResponse.PostNotFound)
@@ -186,6 +195,7 @@ export class BlogPostController {
     await this.blogPostService.deletePost(postId, userId);
   }
 
+  @ApiOperation(ApiOperationOption.Post.Count)
   @ApiResponse(BlogPostApiResponse.UserPostsCount)
   @ApiResponse(BlogPostApiResponse.BadRequest)
   @ApiParam(ApiParamOption.UserId)

@@ -1,8 +1,8 @@
 import { Controller, Delete, HttpCode, Param, Post, Req } from '@nestjs/common';
-import { ApiHeader, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiHeader, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { GuidValidationPipe } from '@project/shared/pipes';
-import { ApiHeaderOption, ApiParamOption, POST_ID_PARAM, RequestWithUserId, RouteAlias } from '@project/shared/core';
+import { ApiHeaderOption, ApiOperationOption, ApiParamOption, POST_ID_PARAM, RequestWithUserId, RouteAlias } from '@project/shared/core';
 
 import { BlogPostLikeApiResponse } from './blog-post-like.constant';
 import { BlogPostLikeService } from './blog-post-like.service';
@@ -15,6 +15,7 @@ export class BlogPostLikeController {
     private readonly blogPostLikeService: BlogPostLikeService
   ) { }
 
+  @ApiOperation(ApiOperationOption.Like.Add)
   @ApiResponse(BlogPostLikeApiResponse.PostLikeCreated)
   @ApiResponse(BlogPostLikeApiResponse.Unauthorized)
   @ApiResponse(BlogPostLikeApiResponse.BadRequest)
@@ -29,6 +30,7 @@ export class BlogPostLikeController {
     await this.blogPostLikeService.like(postId, userId);
   }
 
+  @ApiOperation(ApiOperationOption.Like.Delete)
   @ApiResponse(BlogPostLikeApiResponse.PostLikeDeleted)
   @ApiResponse(BlogPostLikeApiResponse.Unauthorized)
   @ApiResponse(BlogPostLikeApiResponse.BadRequest)

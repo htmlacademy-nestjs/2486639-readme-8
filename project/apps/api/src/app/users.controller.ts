@@ -3,12 +3,12 @@ import {
   Req, UploadedFile, UseFilters, UseGuards, UseInterceptors
 } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
-import { ApiBearerAuth, ApiConsumes, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiConsumes, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 import {
   ApiParamOption, BearerAuth, RequestWithRequestId, RequestWithRequestIdAndBearerAuth,
-  DetailUserRdo, RequestWithTokenPayload, RouteAlias, USER_ID_PARAM, UserRdo
+  DetailUserRdo, RequestWithTokenPayload, RouteAlias, USER_ID_PARAM, UserRdo, ApiOperationOption
 } from '@project/shared/core';
 import { dtoToFormData, makeHeaders, multerFileToFormData } from '@project/shared/helpers';
 import { MongoIdValidationPipe } from '@project/shared/pipes';
@@ -30,6 +30,7 @@ export class UsersController {
     private userService: UserService
   ) { }
 
+  @ApiOperation(ApiOperationOption.User.Register)
   @ApiResponse(AuthenticationApiResponse.UserCreated)
   @ApiResponse(AuthenticationApiResponse.UserExist)
   @ApiResponse(AuthenticationApiResponse.BadRequest)
@@ -64,6 +65,7 @@ export class UsersController {
     return registerData;
   }
 
+  @ApiOperation(ApiOperationOption.User.Login)
   @ApiResponse(AuthenticationApiResponse.LoggedSuccess)
   @ApiResponse(AuthenticationApiResponse.LoggedError)
   @ApiResponse(AuthenticationApiResponse.BadRequest)
@@ -77,6 +79,7 @@ export class UsersController {
     return data;
   }
 
+  @ApiOperation(ApiOperationOption.User.Logout)
   @ApiResponse(AuthenticationApiResponse.LogoutSuccess)
   @ApiBearerAuth(BearerAuth.RefreshToken)
   @HttpCode(AuthenticationApiResponse.LogoutSuccess.status)
@@ -88,6 +91,7 @@ export class UsersController {
     await this.httpService.axiosRef.delete(url, headers);
   }
 
+  @ApiOperation(ApiOperationOption.User.RefreshTokens)
   @ApiResponse(AuthenticationApiResponse.RefreshTokens)
   @ApiResponse(AuthenticationApiResponse.BadRequest)
   @ApiResponse(AuthenticationApiResponse.Unauthorized)
@@ -102,6 +106,7 @@ export class UsersController {
     return data;
   }
 
+  @ApiOperation(ApiOperationOption.User.Check)
   @ApiResponse(AuthenticationApiResponse.CheckSuccess)
   @ApiResponse(AuthenticationApiResponse.BadRequest)
   @ApiResponse(AuthenticationApiResponse.Unauthorized)
@@ -113,6 +118,7 @@ export class UsersController {
     return payload;
   }
 
+  @ApiOperation(ApiOperationOption.User.ChangePassword)
   @ApiResponse(AuthenticationApiResponse.ChangePasswordSuccess)
   @ApiResponse(AuthenticationApiResponse.BadRequest)
   @ApiResponse(AuthenticationApiResponse.Unauthorized)
@@ -126,6 +132,7 @@ export class UsersController {
     await this.httpService.axiosRef.post(url, dto, headers);
   }
 
+  @ApiOperation(ApiOperationOption.User.Show)
   @ApiResponse(AuthenticationApiResponse.UserFound)
   @ApiResponse(AuthenticationApiResponse.UserNotFound)
   @ApiResponse(AuthenticationApiResponse.BadRequest)
@@ -140,6 +147,7 @@ export class UsersController {
     return user;
   }
 
+  @ApiOperation(ApiOperationOption.User.ShowDetail)
   @ApiResponse({ ...AuthenticationApiResponse.UserFound, type: DetailUserRdo })
   @ApiResponse(AuthenticationApiResponse.UserNotFound)
   @ApiResponse(AuthenticationApiResponse.BadRequest)
