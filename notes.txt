@@ -1,4 +1,5 @@
 Заметки:
+  0. Доделать деплой
   1. как же выводить подтипы ....
     не сработало export type ReturnTypeToPOJOFunction<T extends StorableEntity<T>> = ReturnType<T['toPOJO']>;
     а как T['id']
