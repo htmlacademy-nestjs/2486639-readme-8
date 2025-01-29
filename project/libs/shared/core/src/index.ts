@@ -1,6 +1,7 @@
 export { Entity } from './lib/base/entity';
 
 export { ApiHeaderOption } from './lib/constants/api-header-option';
+export { ApiOperationOption } from './lib/constants/api-operation-option';
 export * from './lib/constants/api-param-option';
 export { ApiPropertyOption } from './lib/constants/api-property-option';
 export * from './lib/constants/bearer-auth';

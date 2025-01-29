@@ -1,10 +1,10 @@
 import { Controller, Delete, Get, HttpCode, Param, Post, Req } from '@nestjs/common';
-import { ApiHeader, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiHeader, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { join } from 'path/posix';
 
 import { fillDto } from '@project/shared/helpers';
 import { MongoIdValidationPipe } from '@project/shared/pipes';
-import { ApiHeaderOption, ApiParamOption, RequestWithUserId, RouteAlias, USER_ID_PARAM } from '@project/shared/core';
+import { ApiHeaderOption, ApiOperationOption, ApiParamOption, RequestWithUserId, RouteAlias, USER_ID_PARAM } from '@project/shared/core';
 
 import { BlogSubscriptionService } from './blog-subscription.service';
 import { UserSubscriptionsCountRdo } from './rdo/user-subscriptions-count.rdo';
@@ -18,6 +18,7 @@ export class BlogSubscriptionController {
     private readonly blogSubscriptionService: BlogSubscriptionService
   ) { }
 
+  @ApiOperation(ApiOperationOption.Subscription.Add)
   @ApiResponse(BlogSubscriptionApiResponse.SubscriptionCreated)
   @ApiResponse(BlogSubscriptionApiResponse.Unauthorized)
   @ApiResponse(BlogSubscriptionApiResponse.BadRequest)
@@ -31,6 +32,7 @@ export class BlogSubscriptionController {
     await this.blogSubscriptionService.subscribe(authorUserId, userId);
   }
 
+  @ApiOperation(ApiOperationOption.Subscription.Delete)
   @ApiResponse(BlogSubscriptionApiResponse.SubscriptionDeleted)
   @ApiResponse(BlogSubscriptionApiResponse.Unauthorized)
   @ApiResponse(BlogSubscriptionApiResponse.BadRequest)
@@ -45,6 +47,7 @@ export class BlogSubscriptionController {
     await this.blogSubscriptionService.unsubscribe(authorUserId, userId);
   }
 
+  @ApiOperation(ApiOperationOption.Subscription.Count)
   @ApiResponse(BlogSubscriptionApiResponse.UserSubscriptionsCount)
   @ApiResponse(BlogSubscriptionApiResponse.BadRequest)
   @ApiParam(ApiParamOption.UserId)

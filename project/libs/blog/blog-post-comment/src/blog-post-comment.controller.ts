@@ -1,11 +1,11 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Post, Query, Req } from '@nestjs/common';
-import { ApiHeader, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiHeader, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { fillDto } from '@project/shared/helpers';
 import { GuidValidationPipe } from '@project/shared/pipes';
 import {
-  ApiHeaderOption, ApiParamOption, CommentWithUserIdRdo, RequestWithUserId, PageQuery,
-  CommentWithUserIdAndPaginationRdo, POST_ID_PARAM, RouteAlias, COMMENT_ID_PARAM
+  ApiHeaderOption, ApiParamOption, CommentWithUserIdRdo, RequestWithUserId, PageQuery, RouteAlias,
+  CommentWithUserIdAndPaginationRdo, POST_ID_PARAM, COMMENT_ID_PARAM, ApiOperationOption
 } from '@project/shared/core';
 
 import { BlogPostCommentApiResponse } from './blog-post-comment.constant';
@@ -20,6 +20,7 @@ export class BlogPostCommentController {
     private readonly blogPostCommentService: BlogPostCommentService
   ) { }
 
+  @ApiOperation(ApiOperationOption.Comment.Index)
   @ApiResponse(BlogPostCommentApiResponse.PostCommentsFound)
   @ApiResponse(BlogPostCommentApiResponse.BadRequest)
   @ApiResponse(BlogPostCommentApiResponse.PostNotFound)
@@ -39,6 +40,7 @@ export class BlogPostCommentController {
     return fillDto(CommentWithUserIdAndPaginationRdo, result);
   }
 
+  @ApiOperation(ApiOperationOption.Comment.Add)
   @ApiResponse(BlogPostCommentApiResponse.PostCommentCreated)
   @ApiResponse(BlogPostCommentApiResponse.Unauthorized)
   @ApiResponse(BlogPostCommentApiResponse.BadRequest)
@@ -56,6 +58,7 @@ export class BlogPostCommentController {
     return fillDto(CommentWithUserIdRdo, newComment.toPOJO());
   }
 
+  @ApiOperation(ApiOperationOption.Comment.Delete)
   @ApiResponse(BlogPostCommentApiResponse.PostCommentDeleted)
   @ApiResponse(BlogPostCommentApiResponse.Unauthorized)
   @ApiResponse(BlogPostCommentApiResponse.BadRequest)
